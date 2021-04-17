@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "arcanus",
+	"version": "${version}",
+	"name": "Arcanus",
+	"description": "",
+	"authors": [
+		"ComradeCammie"
+	],
+	"contact": {
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/arcanus",
+		"sources": "https://github.com/CammiePone/Arcanus"
+	},
+	"license": "MIT",
+	"icon": "assets/arcanus/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"dev.cammiescorner.arcanus.Arcanus"
+		],
+		"client": [
+			"dev.cammiescorner.arcanus.client.ArcanusClient"
+		]
+	},
+	"mixins": [
+		"arcanus.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.7.4",
+		"fabric": "*",
+		"minecraft": "1.16.5"
+	},
+	"suggests": {
+		"flamingo": "*"
+	}
+}
