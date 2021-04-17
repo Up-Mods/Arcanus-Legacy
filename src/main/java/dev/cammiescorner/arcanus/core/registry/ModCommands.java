@@ -126,8 +126,6 @@ public class ModCommands
 
 			if(StringArgumentType.getString(context, "all").equals("all"))
 			{
-				user.getKnownSpells().clear();
-
 				Arcanus.SPELL.forEach(spell -> user.setKnownSpell(Arcanus.SPELL.getId(spell)));
 				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.added_all", player.getEntityName()), false);
 			}
@@ -143,8 +141,15 @@ public class ModCommands
 			MagicUser user = (MagicUser) player;
 			Spell spell = ModCommands.SpellArgumentType.getSpell(context, "spell");
 
-			user.getKnownSpells().add(spell);
-			context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.added", Arcanus.SPELL.getId(spell), player.getEntityName()), false);
+			if(!user.getKnownSpells().contains(spell))
+			{
+				user.getKnownSpells().add(spell);
+				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.added", Arcanus.SPELL.getId(spell), player.getEntityName()), false);
+			}
+			else
+			{
+				context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.already_known", player.getEntityName(), Arcanus.SPELL.getId(spell)));
+			}
 
 			return Command.SINGLE_SUCCESS;
 		}
@@ -156,8 +161,6 @@ public class ModCommands
 
 			if(StringArgumentType.getString(context, "all").equals("all"))
 			{
-				user.getKnownSpells().clear();
-
 				Arcanus.SPELL.forEach(spell -> user.setKnownSpell(Arcanus.SPELL.getId(spell)));
 				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.added_all", player.getEntityName()), false);
 			}
@@ -173,8 +176,15 @@ public class ModCommands
 			MagicUser user = (MagicUser) player;
 			Spell spell = ModCommands.SpellArgumentType.getSpell(context, "spell");
 
-			user.getKnownSpells().add(spell);
-			context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.added", Arcanus.SPELL.getId(spell), player.getEntityName()), false);
+			if(!user.getKnownSpells().contains(spell))
+			{
+				user.getKnownSpells().add(spell);
+				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.added", Arcanus.SPELL.getId(spell), player.getEntityName()), false);
+			}
+			else
+			{
+				context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.already_known", player.getEntityName(), Arcanus.SPELL.getId(spell)));
+			}
 
 			return Command.SINGLE_SUCCESS;
 		}
@@ -195,19 +205,14 @@ public class ModCommands
 			MagicUser user = (MagicUser) player;
 			Spell spell = ModCommands.SpellArgumentType.getSpell(context, "spell");
 
-			for(Spell knownSpell : user.getKnownSpells())
+			if(user.getKnownSpells().contains(spell))
 			{
-				if(knownSpell.equals(spell))
-				{
-					user.getKnownSpells().remove(spell);
-					context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.removed", Arcanus.SPELL.getId(spell), player.getEntityName()), false);
-				}
-				else
-				{
-					context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.does_not_have", player.getEntityName(), Arcanus.SPELL.getId(spell)));
-				}
-
-				break;
+				user.getKnownSpells().remove(spell);
+				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.removed", Arcanus.SPELL.getId(spell), player.getEntityName()), false);
+			}
+			else
+			{
+				context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.does_not_have", player.getEntityName(), Arcanus.SPELL.getId(spell)));
 			}
 
 			return Command.SINGLE_SUCCESS;
@@ -229,19 +234,14 @@ public class ModCommands
 			MagicUser user = (MagicUser) player;
 			Spell spell = ModCommands.SpellArgumentType.getSpell(context, "spell");
 
-			for(Spell knownSpell : user.getKnownSpells())
+			if(user.getKnownSpells().contains(spell))
 			{
-				if(knownSpell.equals(spell))
-				{
-					user.getKnownSpells().remove(spell);
-					context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.removed", Arcanus.SPELL.getId(spell), player.getEntityName()), false);
-				}
-				else
-				{
-					context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.does_not_have", player.getEntityName(), Arcanus.SPELL.getId(spell)));
-				}
-
-				break;
+				user.getKnownSpells().remove(spell);
+				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.removed", Arcanus.SPELL.getId(spell), player.getEntityName()), false);
+			}
+			else
+			{
+				context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.does_not_have", player.getEntityName(), Arcanus.SPELL.getId(spell)));
 			}
 
 			return Command.SINGLE_SUCCESS;
