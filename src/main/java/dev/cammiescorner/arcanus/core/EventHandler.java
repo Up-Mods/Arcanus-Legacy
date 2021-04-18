@@ -55,7 +55,7 @@ public class EventHandler
 			int scaledWidth = client.getWindow().getScaledWidth();
 			int scaledHeight = client.getWindow().getScaledHeight();
 			int x = scaledWidth / 2 + 82;
-			int y = scaledHeight - 49;
+			int y = scaledHeight - (player.isCreative() ? 34 : 49);
 
 			client.getTextureManager().bindTexture(HUD_ELEMENTS);
 

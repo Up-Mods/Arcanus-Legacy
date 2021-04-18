@@ -52,12 +52,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	{
 		if(!world.isClient() && world.getTime() >= lastCastTime + 20)
 		{
-			if(getMana() < getMaxMana() - getBurnout() && world.getTime() % 15 == 0)
+			if(getMana() < getMaxMana() - getBurnout() && world.getTime() % 20 == 0)
 			{
 				addMana(1);
 			}
 
-			if(getBurnout() > 0 && world.getTime() % 40 == 0)
+			if(getBurnout() > 0 && world.getTime() % 60 == 0)
 			{
 				addBurnout(-1);
 				addExhaustion(5F);

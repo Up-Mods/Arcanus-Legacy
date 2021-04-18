@@ -4,6 +4,7 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.items.WandItem;
 import dev.cammiescorner.arcanus.common.packets.CastSpellMessage;
 import dev.cammiescorner.arcanus.common.spells.Spell;
+import dev.cammiescorner.arcanus.core.util.ClientUtils;
 import dev.cammiescorner.arcanus.core.util.Pattern;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(MinecraftClient.class)
-public class MinecraftClientMixin
+public class MinecraftClientMixin implements ClientUtils
 {
 	@Unique
 	private boolean unfinishedSpell = true;
@@ -98,7 +99,7 @@ public class MinecraftClientMixin
 			unfinishedSpell = true;
 			pattern.add(Pattern.RIGHT);
 			player.swingHand(Hand.MAIN_HAND);
-			player.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 1F, 1F);
+			player.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 1F, 1.1F);
 			info.cancel();
 		}
 	}
@@ -115,5 +116,23 @@ public class MinecraftClientMixin
 			player.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 1F, 1.3F);
 			info.cancel();
 		}
+	}
+
+	@Override
+	public List<Pattern> getPattern()
+	{
+		return pattern;
+	}
+
+	@Override
+	public void setTimer(int value)
+	{
+		timer = value;
+	}
+
+	@Override
+	public void setUnfinishedSpell(boolean value)
+	{
+		unfinishedSpell = value;
 	}
 }
