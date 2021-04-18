@@ -15,5 +15,10 @@ public interface MagicUser
 	void setMana(int amount);
 	void addMana(int amount);
 
-	void setLastCastTime(long time);
+	int getBurnout();
+	int getMaxBurnout();
+	void setBurnout(int amount);
+	void addBurnout(int amount);
+
+	void setLastCastTime(long lastCastTime);
 }

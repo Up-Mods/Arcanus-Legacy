@@ -17,6 +17,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -28,23 +29,40 @@ import java.util.List;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements MagicUser
 {
+	@Shadow
+	public abstract void addExhaustion(float exhaustion);
+
 	@Unique
-	private List<Spell> knownSpells = new ArrayList<>(16);
+	private List<Spell> knownSpells = new ArrayList<>(8);
 	@Unique
 	private long lastCastTime = 0;
 	@Unique
+	private static final int MAX_MANA = 20;
+	@Unique
+	private static final int MAX_BURNOUT = 20;
+	@Unique
 	private static final TrackedData<Integer> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	@Unique
-	private static final int MAX_MANA = 64;
+	private static final TrackedData<Integer> BURNOUT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) { super(entityType, world); }
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void tick(CallbackInfo info)
 	{
-		if(!world.isClient())
-			if(dataTracker.get(MANA) < MAX_MANA && world.getTime() >= lastCastTime + 40 && world.getTime() % 2 == 0)
-				dataTracker.set(MANA, dataTracker.get(MANA) + 1);
+		if(!world.isClient() && world.getTime() >= lastCastTime + 20)
+		{
+			if(getMana() < getMaxMana() - getBurnout() && world.getTime() % 15 == 0)
+			{
+				addMana(1);
+			}
+
+			if(getBurnout() > 0 && world.getTime() % 40 == 0)
+			{
+				addBurnout(-1);
+				addExhaustion(5F);
+			}
+		}
 	}
 
 	@Inject(method = "readCustomDataFromTag", at = @At("TAIL"))
@@ -57,6 +75,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			knownSpells.add(Arcanus.SPELL.get(new Identifier(listTag.getString(i))));
 
 		dataTracker.set(MANA, tag.getInt("Mana"));
+		dataTracker.set(BURNOUT, tag.getInt("Burnout"));
 		lastCastTime = tag.getLong("LastCastTime");
 	}
 
@@ -70,13 +89,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		rootTag.put("KnownSpells", listTag);
 		tag.put(Arcanus.MOD_ID, rootTag);
 		tag.putInt("Mana", dataTracker.get(MANA));
+		tag.putInt("Burnout", dataTracker.get(BURNOUT));
 		tag.putLong("LastCastTime", lastCastTime);
 	}
 
 	@Inject(method = "initDataTracker", at = @At("TAIL"))
 	public void initTracker(CallbackInfo info)
 	{
-		dataTracker.startTracking(MANA, 0);
+		dataTracker.startTracking(MANA, MAX_MANA);
+		dataTracker.startTracking(BURNOUT, 0);
 	}
 
 	@Override
@@ -118,6 +139,30 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	public void addMana(int amount)
 	{
 		setMana(Math.min(getMana() + amount, MAX_MANA));
+	}
+
+	@Override
+	public int getBurnout()
+	{
+		return dataTracker.get(BURNOUT);
+	}
+
+	@Override
+	public int getMaxBurnout()
+	{
+		return MAX_BURNOUT;
+	}
+
+	@Override
+	public void setBurnout(int amount)
+	{
+		dataTracker.set(BURNOUT, MathHelper.clamp(amount, 0, MAX_BURNOUT));
+	}
+
+	@Override
+	public void addBurnout(int amount)
+	{
+		setBurnout(Math.min(getBurnout() + amount, MAX_BURNOUT));
 	}
 
 	@Override

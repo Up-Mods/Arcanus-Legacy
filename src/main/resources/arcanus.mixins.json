@@ -8,6 +8,7 @@
 		"WrittenBookItemMixin"
 	],
 	"client": [
+		"client.InGameHudMixin",
 		"client.MinecraftClientMixin"
 	],
 	"injectors": {

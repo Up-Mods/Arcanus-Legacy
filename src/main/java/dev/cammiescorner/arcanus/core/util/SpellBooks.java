@@ -26,7 +26,7 @@ public class SpellBooks
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(Arcanus.getSpellInputs(spell.getSpellPattern(), 0) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 1) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 2)));
+		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -42,7 +42,7 @@ public class SpellBooks
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(Arcanus.getSpellInputs(spell.getSpellPattern(), 0) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 1) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 2)));
+		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -58,7 +58,7 @@ public class SpellBooks
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(Arcanus.getSpellInputs(spell.getSpellPattern(), 0) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 1) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 2)));
+		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -74,7 +74,7 @@ public class SpellBooks
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(Arcanus.getSpellInputs(spell.getSpellPattern(), 0) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 1) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 2)));
+		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -90,7 +90,7 @@ public class SpellBooks
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(Arcanus.getSpellInputs(spell.getSpellPattern(), 0) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 1) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 2)));
+		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -106,7 +106,7 @@ public class SpellBooks
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(Arcanus.getSpellInputs(spell.getSpellPattern(), 0) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 1) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 2)));
+		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -122,7 +122,7 @@ public class SpellBooks
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(Arcanus.getSpellInputs(spell.getSpellPattern(), 0) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 1) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 2)));
+		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -138,7 +138,7 @@ public class SpellBooks
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(Arcanus.getSpellInputs(spell.getSpellPattern(), 0) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 1) + "-" + Arcanus.getSpellInputs(spell.getSpellPattern(), 2)));
+		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -149,21 +149,21 @@ public class SpellBooks
 		switch(Arcanus.SPELL.getRawId(spell))
 		{
 			case 0:
-				return SpellBooks.getLungeBook().copy();
+				return SpellBooks.getLungeBook();
 			case 1:
-				return SpellBooks.getFissureBook().copy();
+				return SpellBooks.getFissureBook();
 			case 2:
-				return SpellBooks.getMagicMissileBook().copy();
+				return SpellBooks.getMagicMissileBook();
 			case 3:
-				return SpellBooks.getVanishBook().copy();
+				return SpellBooks.getVanishBook();
 			case 4:
-				return SpellBooks.getHealBook().copy();
+				return SpellBooks.getHealBook();
 			case 5:
-				return SpellBooks.getMeteorBook().copy();
+				return SpellBooks.getMeteorBook();
 			case 6:
-				return SpellBooks.getIceSpireBook().copy();
+				return SpellBooks.getIceSpireBook();
 			case 7:
-				return SpellBooks.getMineBook().copy();
+				return SpellBooks.getMineBook();
 		}
 
 		return new ItemStack(Items.AIR);

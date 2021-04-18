@@ -6,9 +6,11 @@ import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.SpellBooks;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -48,8 +50,45 @@ public class EventHandler
 			MagicUser user = (MagicUser) player;
 			int mana = user.getMana();
 			int maxMana = user.getMaxMana();
+			int burnout = user.getBurnout();
+			int maxBurnout = user.getMaxBurnout();
+			int scaledWidth = client.getWindow().getScaledWidth();
+			int scaledHeight = client.getWindow().getScaledHeight();
+			int x = scaledWidth / 2 + 82;
+			int y = scaledHeight - 49;
 
+			client.getTextureManager().bindTexture(HUD_ELEMENTS);
 
+			for(int i = 0; i < maxMana / 2; i++)
+			{
+				int halfOrFullOrb = i * 2 + 1;
+				DrawableHelper.drawTexture(matrices, x - (i * 8), y, 0, 15, 9, 9, 256, 256);
+
+				if(halfOrFullOrb < mana)
+				{
+					DrawableHelper.drawTexture(matrices, x - (i * 8), y, 0, 0, 8, 8, 256, 256);
+				}
+
+				if(halfOrFullOrb == mana)
+				{
+					DrawableHelper.drawTexture(matrices, x - (i * 8), y, 8, 0, 8, 8, 256, 256);
+				}
+			}
+
+			for(int i = 0; i < maxBurnout / 2; i++)
+			{
+				int halfOrFullOrb = i * 2 + 1;
+
+				if(halfOrFullOrb < burnout)
+				{
+					DrawableHelper.drawTexture(matrices, (x - 72) + (i * 8), y, 16, 0, 8, 8, 256, 256);
+				}
+
+				if(halfOrFullOrb == burnout)
+				{
+					DrawableHelper.drawTexture(matrices, (x - 72) + (i * 8), y, 24, 0, 8, 8, 256, 256);
+				}
+			}
 		});
 	}
 
@@ -69,6 +108,13 @@ public class EventHandler
 						.rolls(range).withEntry(createItemEntry(selectBook()).build());
 				supplier.withPool(poolBuilder.build());
 			}
+		});
+
+		//-----Copy Player Data Callback-----//
+		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) ->
+		{
+			((MagicUser) newPlayer).setBurnout(((MagicUser) oldPlayer).getBurnout());
+			((MagicUser) oldPlayer).getKnownSpells().forEach(spell -> ((MagicUser) newPlayer).setKnownSpell(Arcanus.SPELL.getId(spell)));
 		});
 
 		//-----Command Callback-----//

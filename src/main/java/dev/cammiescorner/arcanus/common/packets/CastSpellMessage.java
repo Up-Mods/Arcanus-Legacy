@@ -37,16 +37,23 @@ public class CastSpellMessage
 
 			if(user.getKnownSpells().contains(spell))
 			{
-				if(user.getMana() >= spell.getManaCost())
+				if(user.getBurnout() <= 0)
 				{
 					player.sendMessage(new TranslatableText(spell.getTranslationKey()).formatted(Formatting.GREEN), true);
 					spell.onCast(player.world, player);
 					user.setLastCastTime(player.world.getTime());
+
+					if(user.getMana() < spell.getManaCost())
+					{
+						user.addBurnout(spell.getManaCost() - user.getMana());
+						player.sendMessage(new TranslatableText("error." + Arcanus.MOD_ID + ".burnout").formatted(Formatting.RED), true);
+					}
+
 					user.addMana(-spell.getManaCost());
 				}
 				else
 				{
-					player.sendMessage(new TranslatableText("error." + Arcanus.MOD_ID + ".not_enough_mana").formatted(Formatting.RED), true);
+					player.sendMessage(new TranslatableText("error." + Arcanus.MOD_ID + ".burnout").formatted(Formatting.RED), true);
 				}
 			}
 			else

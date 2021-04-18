@@ -2,7 +2,7 @@
 	"#comment": "Errors",
 	"error.arcanus.missing_spell": "CRITICAL: Spell does not exist. This should not appear!",
 	"error.arcanus.unknown_spell": "You don't know this spell yet",
-	"error.arcanus.not_enough_mana": "You don't have enough mana for this spell",
+	"error.arcanus.burnout": "You're feeling a bit worn out...",
 
 	"#comment": "Spells",
 	"spell.arcanus.lunge": "Lunge",

@@ -7,7 +7,6 @@ import dev.cammiescorner.arcanus.common.spells.Spell;
 import dev.cammiescorner.arcanus.core.util.Pattern;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.options.GameOptions;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
@@ -16,7 +15,6 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -40,8 +38,6 @@ public class MinecraftClientMixin
 	@Shadow
 	@Nullable
 	public ClientPlayerEntity player;
-
-	@Shadow @Final public GameOptions options;
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void tick(CallbackInfo info)
@@ -72,8 +68,11 @@ public class MinecraftClientMixin
 						}
 						else
 						{
-							player.sendMessage(new TranslatableText("error." + Arcanus.MOD_ID + ".missing_spell").formatted(Formatting.RED), true);
-							unfinishedSpell = false;
+							if(Arcanus.SPELL.getRawId(spell) + 1 == Arcanus.SPELL.getIds().size())
+							{
+								player.sendMessage(new TranslatableText("error." + Arcanus.MOD_ID + ".missing_spell").formatted(Formatting.RED), true);
+								unfinishedSpell = false;
+							}
 						}
 					}
 
