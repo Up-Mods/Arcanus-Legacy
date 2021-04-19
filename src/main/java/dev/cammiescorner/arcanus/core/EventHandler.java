@@ -124,7 +124,7 @@ public class EventHandler
 	private static ItemEntry.Builder<?> createItemEntry(ItemStack stack)
 	{
 		ItemEntry.Builder<?> builder = ItemEntry.builder(stack.getItem());
-
+		
 		if(stack.hasTag())
 			builder.apply(SetNbtLootFunction.builder(stack.getTag()));
 		if(stack.getCount() > 1)
