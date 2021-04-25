@@ -12,7 +12,7 @@ import java.util.List;
 public class Spell
 {
 	private List<Pattern> spellPattern = new ArrayList<>(3);
-	private int manaCost = 0;
+	private int manaCost;
 	private String translationKey;
 
 	public Spell(Pattern first, Pattern second, Pattern last, int manaCost)

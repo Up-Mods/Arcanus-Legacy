@@ -14,6 +14,8 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+import static dev.cammiescorner.arcanus.Arcanus.config;
+
 public class CastSpellMessage
 {
 	public static final Identifier ID = new Identifier(Arcanus.MOD_ID, "cast_spell");
@@ -37,13 +39,13 @@ public class CastSpellMessage
 
 			if(user.getKnownSpells().contains(spell))
 			{
-				if(user.getMana() > 0)
+				if((config.doBurnout && user.getMana() > 0) || (!config.doBurnout && user.getMana() >= spell.getManaCost()))
 				{
 					player.sendMessage(new TranslatableText(spell.getTranslationKey()).formatted(Formatting.GREEN), true);
 					spell.onCast(player.world, player);
 					user.setLastCastTime(player.world.getTime());
 
-					if(user.getMana() < spell.getManaCost())
+					if(user.getMana() < spell.getManaCost() && config.doBurnout)
 					{
 						user.addBurnout(spell.getManaCost() - user.getMana());
 						player.sendMessage(new TranslatableText("error." + Arcanus.MOD_ID + ".burnout").formatted(Formatting.RED), false);

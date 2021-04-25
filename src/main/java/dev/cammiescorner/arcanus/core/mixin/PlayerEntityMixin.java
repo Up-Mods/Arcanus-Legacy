@@ -26,6 +26,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.cammiescorner.arcanus.Arcanus.*;
+
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements MagicUser
 {
@@ -52,12 +54,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	{
 		if(!world.isClient() && world.getTime() >= lastCastTime + 20)
 		{
-			if(getMana() < getMaxMana() - getBurnout() && world.getTime() % 20 == 0)
+			if(getMana() < getMaxMana() - getBurnout() && world.getTime() % config.manaCooldown == 0)
 			{
 				addMana(1);
 			}
 
-			if(getBurnout() > 0 && world.getTime() % 60 == 0)
+			if(getBurnout() > 0 && world.getTime() % config.burnoutCooldown == 0)
 			{
 				addBurnout(-1);
 				addExhaustion(5F);

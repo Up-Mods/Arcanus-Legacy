@@ -3,10 +3,13 @@ package dev.cammiescorner.arcanus;
 import dev.cammiescorner.arcanus.common.packets.CastSpellMessage;
 import dev.cammiescorner.arcanus.common.spells.Spell;
 import dev.cammiescorner.arcanus.core.EventHandler;
+import dev.cammiescorner.arcanus.core.config.ArcanusConfig;
 import dev.cammiescorner.arcanus.core.registry.ModItems;
 import dev.cammiescorner.arcanus.core.registry.ModSpells;
 import dev.cammiescorner.arcanus.core.util.Pattern;
 import dev.cammiescorner.arcanus.core.util.SpellBooks;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -36,10 +39,14 @@ public class Arcanus implements ModInitializer
 		Registry.ITEM.forEach(item -> item.appendStacks(Arcanus.ITEM_GROUP, (DefaultedList<ItemStack>) list));
 		Arcanus.SPELL.forEach(spell -> list.add(SpellBooks.getBookFromSpell(spell)));
 	}).icon(() -> new ItemStack(ModItems.WAND)).build();
+	public static ArcanusConfig config;
 
 	@Override
 	public void onInitialize()
 	{
+		AutoConfig.register(ArcanusConfig.class, GsonConfigSerializer::new);
+		config = AutoConfig.getConfigHolder(ArcanusConfig.class).getConfig();
+
 		ServerPlayNetworking.registerGlobalReceiver(CastSpellMessage.ID, CastSpellMessage::handle);
 
 		ModItems.register();
@@ -47,7 +54,7 @@ public class Arcanus implements ModInitializer
 
 		EventHandler.commonEvents();
 
-		LOGGER.info("e");
+		LOGGER.info("eee");
 	}
 
 	@SuppressWarnings("unchecked")
