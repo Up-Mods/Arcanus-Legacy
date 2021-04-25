@@ -121,7 +121,7 @@ public class EventHandler
 		CommandRegistrationCallback.EVENT.register(ModCommands::init);
 	}
 
-	//TODO new loot table entry
+	//TODO new loot pool entry
 	private static ItemEntry.Builder<?> createItemEntry(ItemStack stack)
 	{
 		ItemEntry.Builder<?> builder = ItemEntry.builder(stack.getItem());
