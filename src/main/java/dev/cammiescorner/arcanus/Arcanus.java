@@ -47,7 +47,7 @@ public class Arcanus implements ModInitializer
 
 		EventHandler.commonEvents();
 
-		LOGGER.info("A new magical force awakens...");
+		LOGGER.info("e");
 	}
 
 	@SuppressWarnings("unchecked")
