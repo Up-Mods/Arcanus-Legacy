@@ -1,7 +1,6 @@
 package dev.cammiescorner.arcanus.core.util;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.common.spells.Spell;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;

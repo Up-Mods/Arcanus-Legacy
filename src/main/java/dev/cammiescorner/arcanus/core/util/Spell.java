@@ -1,7 +1,6 @@
-package dev.cammiescorner.arcanus.common.spells;
+package dev.cammiescorner.arcanus.core.util;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.core.util.Pattern;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Util;
 import net.minecraft.world.World;

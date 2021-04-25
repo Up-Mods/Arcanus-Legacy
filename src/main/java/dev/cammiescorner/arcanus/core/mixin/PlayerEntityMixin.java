@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus.core.mixin;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.common.spells.Spell;
+import dev.cammiescorner.arcanus.core.util.Spell;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.EntityType;

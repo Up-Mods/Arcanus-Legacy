@@ -11,7 +11,7 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.common.spells.Spell;
+import dev.cammiescorner.arcanus.core.util.Spell;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.ArgumentTypes;

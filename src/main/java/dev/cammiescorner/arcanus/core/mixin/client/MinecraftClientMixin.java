@@ -3,7 +3,7 @@ package dev.cammiescorner.arcanus.core.mixin.client;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.items.WandItem;
 import dev.cammiescorner.arcanus.common.packets.CastSpellMessage;
-import dev.cammiescorner.arcanus.common.spells.Spell;
+import dev.cammiescorner.arcanus.core.util.Spell;
 import dev.cammiescorner.arcanus.core.util.ClientUtils;
 import dev.cammiescorner.arcanus.core.util.Pattern;
 import net.minecraft.client.MinecraftClient;

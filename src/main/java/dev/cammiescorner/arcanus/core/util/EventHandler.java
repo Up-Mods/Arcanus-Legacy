@@ -1,9 +1,7 @@
-package dev.cammiescorner.arcanus.core;
+package dev.cammiescorner.arcanus.core.util;
 
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.core.registry.ModCommands;
-import dev.cammiescorner.arcanus.core.util.MagicUser;
-import dev.cammiescorner.arcanus.core.util.SpellBooks;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;

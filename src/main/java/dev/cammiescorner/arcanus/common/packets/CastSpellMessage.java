@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus.common.packets;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.common.spells.Spell;
+import dev.cammiescorner.arcanus.core.util.Spell;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

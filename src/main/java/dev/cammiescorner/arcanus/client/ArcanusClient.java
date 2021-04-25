@@ -1,6 +1,6 @@
 package dev.cammiescorner.arcanus.client;
 
-import dev.cammiescorner.arcanus.core.EventHandler;
+import dev.cammiescorner.arcanus.core.util.EventHandler;
 import net.fabricmc.api.ClientModInitializer;
 
 public class ArcanusClient implements ClientModInitializer

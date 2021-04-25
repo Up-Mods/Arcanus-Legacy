@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanus;
 
 import dev.cammiescorner.arcanus.common.packets.CastSpellMessage;
-import dev.cammiescorner.arcanus.common.spells.Spell;
-import dev.cammiescorner.arcanus.core.EventHandler;
+import dev.cammiescorner.arcanus.core.util.Spell;
+import dev.cammiescorner.arcanus.core.util.EventHandler;
 import dev.cammiescorner.arcanus.core.config.ArcanusConfig;
 import dev.cammiescorner.arcanus.core.registry.ModItems;
 import dev.cammiescorner.arcanus.core.registry.ModSpells;

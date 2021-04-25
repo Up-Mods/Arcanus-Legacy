@@ -1,6 +1,5 @@
 package dev.cammiescorner.arcanus.core.util;
 
-import dev.cammiescorner.arcanus.common.spells.Spell;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
