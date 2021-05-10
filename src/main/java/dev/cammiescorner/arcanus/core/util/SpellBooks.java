@@ -23,7 +23,7 @@ public class SpellBooks
 		ListTag listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
 		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
@@ -39,7 +39,7 @@ public class SpellBooks
 		ListTag listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
 		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
@@ -55,7 +55,7 @@ public class SpellBooks
 		ListTag listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
 		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
@@ -71,7 +71,7 @@ public class SpellBooks
 		ListTag listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
 		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
@@ -87,7 +87,7 @@ public class SpellBooks
 		ListTag listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
 		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
@@ -103,7 +103,7 @@ public class SpellBooks
 		ListTag listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
 		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
@@ -119,7 +119,7 @@ public class SpellBooks
 		ListTag listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
 		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
@@ -135,7 +135,7 @@ public class SpellBooks
 		ListTag listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
 		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);

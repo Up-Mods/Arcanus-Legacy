@@ -13,6 +13,7 @@ group = project.maven_group
 repositories {
     jcenter()
     maven { url 'https://maven.shedaniel.me' }
+    maven { url 'https://www.cursemaven.com' }
 }
 
 dependencies {
@@ -21,7 +22,7 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "io.github.ladysnake:Satin:${project.satin_version}"
+    modImplementation "curse.maven:mei-479584:${project.mc_effekseer_version}"
 
     modApi(include("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")) {
         exclude(group: "net.fabricmc.fabric-api")
