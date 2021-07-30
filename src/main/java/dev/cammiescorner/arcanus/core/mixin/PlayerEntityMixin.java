@@ -217,16 +217,23 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		float adjustedPitch = MathHelper.abs(MathHelper.abs(getPitch() / 90F) - 1);
 
 		if(spellTimer > 0)
+		{
 			addVelocity((getRotationVector().x * 0.05F + (getRotationVector().x * 1.5D - getVelocity().x)) * adjustedPitch, 0F, (getRotationVector().z * 0.05F + (getRotationVector().z * 1.5D - getVelocity().z)) * adjustedPitch);
+			world.getOtherEntities(null, getBoundingBox().expand(2)).forEach(entity ->
+			{
+				if(entity != this)
+					entity.damage(DamageSource.player((PlayerEntity) (Object) this), 5);
+			});
 
-		world.getOtherEntities(null, getBoundingBox().expand(2)).forEach(entity -> entity.damage(DamageSource.player((PlayerEntity) (Object) this), 5));
+			velocityModified = true;
+		}
+
 		fallDistance = 0;
-		velocityModified = true;
 
 		if(isOnGround())
 		{
 			spellTimer = 0;
-			world.createExplosion(this, getX(), getY(), getZ(), 1, Explosion.DestructionType.NONE);
+			world.createExplosion(this, getX(), getY() + 0.5, getZ(), 1, Explosion.DestructionType.NONE);
 			activeSpell = null;
 		}
 	}
