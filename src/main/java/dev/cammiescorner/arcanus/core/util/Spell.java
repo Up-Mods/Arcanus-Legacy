@@ -8,10 +8,10 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Spell
+public abstract class Spell
 {
-	private List<Pattern> spellPattern = new ArrayList<>(3);
-	private int manaCost;
+	private final List<Pattern> spellPattern = new ArrayList<>(3);
+	private final int manaCost;
 	private String translationKey;
 
 	public Spell(Pattern first, Pattern second, Pattern last, int manaCost)
@@ -27,10 +27,7 @@ public class Spell
 		return spellPattern;
 	}
 
-	public void onCast(World world, PlayerEntity player)
-	{
-		// player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 10 * 20, 0));
-	}
+	public abstract void onCast(World world, PlayerEntity player);
 
 	public int getManaCost()
 	{

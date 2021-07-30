@@ -1,5 +1,6 @@
 package dev.cammiescorner.arcanus.common.spells;
 
+import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Pattern;
 import dev.cammiescorner.arcanus.core.util.Spell;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,6 +16,7 @@ public class MineSpell extends Spell
 	@Override
 	public void onCast(World world, PlayerEntity player)
 	{
-		super.onCast(world, player);
+		MagicUser user = (MagicUser) player;
+		user.setActiveSpell(this, 0);
 	}
 }

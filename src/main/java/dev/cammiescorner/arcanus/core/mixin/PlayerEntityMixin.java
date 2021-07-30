@@ -1,11 +1,13 @@
 package dev.cammiescorner.arcanus.core.mixin;
 
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.core.registry.ModSpells;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -16,6 +18,7 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -35,9 +38,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	public abstract void addExhaustion(float exhaustion);
 
 	@Unique
-	private List<Spell> knownSpells = new ArrayList<>(8);
+	private final List<Spell> knownSpells = new ArrayList<>(8);
+	@Unique
+	private Spell activeSpell = null;
 	@Unique
 	private long lastCastTime = 0;
+	@Unique
+	private int spellTimer = 0;
 	@Unique
 	private static final int MAX_MANA = 20;
 	@Unique
@@ -52,17 +59,41 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void tick(CallbackInfo info)
 	{
-		if(!world.isClient() && world.getTime() >= lastCastTime + 20)
+		if(!world.isClient())
 		{
-			if(getMana() < getMaxMana() - getBurnout() && world.getTime() % config.manaCooldown == 0)
+			if(activeSpell != null)
 			{
-				addMana(1);
+				if(ModSpells.LUNGE.equals(activeSpell))
+					castLunge();
+				if(ModSpells.FISSURE.equals(activeSpell))
+					castFissure();
+				if(ModSpells.MAGIC_MISSILE.equals(activeSpell))
+					castMagicMissile();
+				if(ModSpells.VANISH.equals(activeSpell))
+					castVanish();
+				if(ModSpells.HEAL.equals(activeSpell))
+					castHeal();
+				if(ModSpells.METEOR.equals(activeSpell))
+					castMeteor();
+				if(ModSpells.ICE_SPIRE.equals(activeSpell))
+					castIceSpire();
+				if(ModSpells.MINE.equals(activeSpell))
+					castMine();
 			}
 
-			if(getBurnout() > 0 && world.getTime() % config.burnoutCooldown == 0)
+			if(spellTimer-- <= 0)
+				spellTimer = 0;
+
+			if(world.getTime() >= lastCastTime + 20)
 			{
-				addBurnout(-1);
-				addExhaustion(5F);
+				if(getMana() < getMaxMana() - getBurnout() && world.getTime() % config.manaCooldown == 0)
+					addMana(1);
+
+				if(getBurnout() > 0 && world.getTime() % config.burnoutCooldown == 0)
+				{
+					addBurnout(-1);
+					addExhaustion(5F);
+				}
 			}
 		}
 	}
@@ -171,5 +202,68 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	public void setLastCastTime(long lastCastTime)
 	{
 		this.lastCastTime = lastCastTime;
+	}
+
+	@Override
+	public void setActiveSpell(Spell spell, int timer)
+	{
+		this.activeSpell = spell;
+		this.spellTimer = timer;
+	}
+
+	@Unique
+	public void castLunge()
+	{
+		float adjustedPitch = MathHelper.abs(MathHelper.abs(getPitch() / 90F) - 1);
+
+		if(spellTimer > 0)
+			addVelocity((getRotationVector().x * 0.05F + (getRotationVector().x * 1.5D - getVelocity().x)) * adjustedPitch, 0F, (getRotationVector().z * 0.05F + (getRotationVector().z * 1.5D - getVelocity().z)) * adjustedPitch);
+
+		world.getOtherEntities(null, getBoundingBox().expand(2)).forEach(entity -> entity.damage(DamageSource.player((PlayerEntity) (Object) this), 5));
+		fallDistance = 0;
+		velocityModified = true;
+
+		if(isOnGround())
+		{
+			spellTimer = 0;
+			world.createExplosion(this, getX(), getY(), getZ(), 1, Explosion.DestructionType.NONE);
+			activeSpell = null;
+		}
+	}
+
+	public void castFissure()
+	{
+		activeSpell = null;
+	}
+
+	public void castMagicMissile()
+	{
+		activeSpell = null;
+	}
+
+	public void castVanish()
+	{
+		activeSpell = null;
+	}
+
+	public void castHeal()
+	{
+		heal(4);
+		activeSpell = null;
+	}
+
+	public void castMeteor()
+	{
+		activeSpell = null;
+	}
+
+	public void castIceSpire()
+	{
+		activeSpell = null;
+	}
+
+	public void castMine()
+	{
+		activeSpell = null;
 	}
 }

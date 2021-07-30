@@ -20,4 +20,5 @@ public interface MagicUser
 	void addBurnout(int amount);
 
 	void setLastCastTime(long lastCastTime);
+	void setActiveSpell(Spell spell, int timer);
 }
