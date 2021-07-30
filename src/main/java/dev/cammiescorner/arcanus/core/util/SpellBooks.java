@@ -4,28 +4,28 @@ import dev.cammiescorner.arcanus.Arcanus;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.util.Identifier;
 
 import java.util.Random;
 
 public class SpellBooks
 {
-	private static Random random = new Random();
+	private static final Random RAND = new Random();
 
 	public static ItemStack getLungeBook()
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:lunge"));
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
-		CompoundTag tag = stack.getOrCreateTag();
-		ListTag listTag = tag.getList("pages", NbtType.STRING);
+		NbtCompound tag = stack.getOrCreateNbt();
+		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + "." + RAND.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
+		listTag.add(NbtString.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -35,13 +35,13 @@ public class SpellBooks
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:fissure"));
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
-		CompoundTag tag = stack.getOrCreateTag();
-		ListTag listTag = tag.getList("pages", NbtType.STRING);
+		NbtCompound tag = stack.getOrCreateNbt();
+		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + "." + RAND.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
+		listTag.add(NbtString.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -51,13 +51,13 @@ public class SpellBooks
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:magic_missile"));
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
-		CompoundTag tag = stack.getOrCreateTag();
-		ListTag listTag = tag.getList("pages", NbtType.STRING);
+		NbtCompound tag = stack.getOrCreateNbt();
+		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + "." + RAND.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
+		listTag.add(NbtString.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -67,13 +67,13 @@ public class SpellBooks
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:vanish"));
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
-		CompoundTag tag = stack.getOrCreateTag();
-		ListTag listTag = tag.getList("pages", NbtType.STRING);
+		NbtCompound tag = stack.getOrCreateNbt();
+		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + "." + RAND.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
+		listTag.add(NbtString.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -83,13 +83,13 @@ public class SpellBooks
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:heal"));
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
-		CompoundTag tag = stack.getOrCreateTag();
-		ListTag listTag = tag.getList("pages", NbtType.STRING);
+		NbtCompound tag = stack.getOrCreateNbt();
+		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + "." + RAND.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
+		listTag.add(NbtString.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -99,13 +99,13 @@ public class SpellBooks
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:meteor"));
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
-		CompoundTag tag = stack.getOrCreateTag();
-		ListTag listTag = tag.getList("pages", NbtType.STRING);
+		NbtCompound tag = stack.getOrCreateNbt();
+		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + "." + RAND.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
+		listTag.add(NbtString.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -115,13 +115,13 @@ public class SpellBooks
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:ice_spire"));
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
-		CompoundTag tag = stack.getOrCreateTag();
-		ListTag listTag = tag.getList("pages", NbtType.STRING);
+		NbtCompound tag = stack.getOrCreateNbt();
+		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + "." + RAND.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
+		listTag.add(NbtString.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -131,13 +131,13 @@ public class SpellBooks
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:mine"));
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
-		CompoundTag tag = stack.getOrCreateTag();
-		ListTag listTag = tag.getList("pages", NbtType.STRING);
+		NbtCompound tag = stack.getOrCreateNbt();
+		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + random.nextInt(16) + ".author");
+		tag.putString("author", "book." + Arcanus.MOD_ID + "." + RAND.nextInt(16) + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(StringTag.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
+		listTag.add(NbtString.of(spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol()));
 		tag.put("pages", listTag);
 
 		return stack;

@@ -1,0 +1,35 @@
+{
+	"parent": "minecraft:adventure/root",
+	"display": {
+		"icon": {
+			"item": "arcanus:wand"
+		},
+		"title": {
+			"translate": "advancements.arcanus.wand.title"
+		},
+		"description": {
+			"translate": "advancements.arcanus.wand.description"
+		},
+		"frame": "task",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {
+		"has_wand": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [ "arcanus:wand" ]
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_wand"
+		]
+	]
+}

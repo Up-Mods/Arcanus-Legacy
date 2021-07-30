@@ -1,19 +1,17 @@
 plugins {
-    id 'fabric-loom' version '0.7-SNAPSHOT'
+    id 'fabric-loom' version '0.9-SNAPSHOT'
     id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
 repositories {
-    jcenter()
-    maven { url 'https://maven.shedaniel.me' }
-    maven { url 'https://www.cursemaven.com' }
+    maven { url "https://maven.shedaniel.me" }
 }
 
 dependencies {
@@ -22,7 +20,6 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "curse.maven:mei-479584:${project.mc_effekseer_version}"
 
     modApi(include("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")) {
         exclude(group: "net.fabricmc.fabric-api")
@@ -32,13 +29,10 @@ dependencies {
 processResources {
     inputs.property "version", project.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
-        expand "version": project.version
-    }
+    filteringCharset = "UTF-8"
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
     }
 }
 

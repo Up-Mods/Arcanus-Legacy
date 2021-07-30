@@ -49,6 +49,28 @@
 	//-----Item Groups-----//
 	"itemGroup.arcanus.general": "Arcanus",
 
+	//-----Advancements-----//
+	"advancements.arcanus.wand.title": "<-----PLACEHOLDER----->",
+	"advancements.arcanus.wand.description": "Craft a Wand.",
+	"advancements.arcanus.lunge.title": "<-----PLACEHOLDER----->",
+	"advancements.arcanus.lunge.description": "Find the Lunge Spell Book in a dungeon.",
+	"advancements.arcanus.fissure.title": "...But it missed.",
+	"advancements.arcanus.fissure.description": "Find the Fissure Spell Book in a dungeon.",
+	"advancements.arcanus.magic_missile.title": "A Wizard's Best Friend",
+	"advancements.arcanus.magic_missile.description": "Find the Magic Missile Spell Book in a dungeon.",
+	"advancements.arcanus.vanish.title": "Like a Ghost!",
+	"advancements.arcanus.vanish.description": "Find the Vanish Spell Book in a dungeon.",
+	"advancements.arcanus.heal.title": "Tis but a scratch!",
+	"advancements.arcanus.heal.description": "Find the Heal Spell Book in a dungeon.",
+	"advancements.arcanus.meteor.title": "RIP Dinosaurs",
+	"advancements.arcanus.meteor.description": "Find the Meteor Spell Book in a dungeon.",
+	"advancements.arcanus.ice_spire.title": "<-----PLACEHOLDER----->",
+	"advancements.arcanus.ice_spire.description": "Find the Ice Spire Spell Book in a dungeon.",
+	"advancements.arcanus.mine.title": "Diggy Diggy Hole",
+	"advancements.arcanus.mine.description": "Find the Mine Spell Book in a dungeon.",
+	"advancements.arcanus.all_spells.title": "Unlimited Power!",
+	"advancements.arcanus.all_spells.description": "Craft a Wand and collect all 8 Spell Books.",
+
 	//-----Commands-----//
 	"commands.arcanus.spells.list": "%s's Known Spells: %s",
 	"commands.arcanus.spells.added": "Gave [%s] to %s",

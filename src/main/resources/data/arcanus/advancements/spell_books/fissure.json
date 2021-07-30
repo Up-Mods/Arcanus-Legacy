@@ -1,0 +1,36 @@
+{
+	"parent": "arcanus:wand",
+	"display": {
+		"icon": {
+			"item": "minecraft:written_book"
+		},
+		"title": {
+			"translate": "advancements.arcanus.fissure.title"
+		},
+		"description": {
+			"translate": "advancements.arcanus.fissure.description"
+		},
+		"frame": "goal",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": true
+	},
+	"criteria": {
+		"has_spell_books": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items":[ "minecraft:written_book" ],
+						"nbt": "{spell:\"arcanus:fissure\"}"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_spell_books"
+		]
+	]
+}

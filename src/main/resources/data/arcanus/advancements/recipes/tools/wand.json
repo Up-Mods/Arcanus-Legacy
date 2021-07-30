@@ -1,0 +1,34 @@
+{
+	"parent": "recipes/root",
+	"rewards": {
+		"recipes": [
+			"arcanus:wand"
+		]
+	},
+	"criteria": {
+		"has_amethyst": {
+			"trigger": "inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"minecraft:amethyst_shard"
+						]
+					}
+				]
+			}
+		},
+		"has_the_recipe": {
+			"trigger": "recipe_unlocked",
+			"conditions": {
+				"recipe": "arcanus:wand"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_amethyst",
+			"has_the_recipe"
+		]
+	]
+}

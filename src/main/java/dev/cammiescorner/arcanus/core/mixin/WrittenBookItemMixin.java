@@ -6,7 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.WrittenBookItem;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -33,22 +33,22 @@ public abstract class WrittenBookItemMixin extends Item
 	public void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> info, ItemStack stack)
 	{
 		if(!world.isClient())
-			((MagicUser) user).setKnownSpell(new Identifier(stack.getOrCreateTag().getString("spell")));
+			((MagicUser) user).setKnownSpell(new Identifier(stack.getOrCreateNbt().getString("spell")));
 	}
 
 	@Inject(method = "getName", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/LiteralText;<init>(Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
-	public void getName(ItemStack stack, CallbackInfoReturnable<Text> info, CompoundTag compoundTag, String string)
+	public void getName(ItemStack stack, CallbackInfoReturnable<Text> info, NbtCompound nbtCompound, String string)
 	{
-		if(stack.getOrCreateTag().contains("spell"))
+		if(stack.hasNbt() && stack.getNbt().contains("spell"))
 		{
 			info.setReturnValue(new TranslatableText(string));
 		}
 	}
 
 	@Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
-	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context, CallbackInfo info, CompoundTag compoundTag, String string)
+	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context, CallbackInfo info, NbtCompound nbtCompound, String string)
 	{
-		if(stack.getOrCreateTag().contains("spell"))
+		if(stack.hasNbt() && stack.getNbt().contains("spell"))
 		{
 			tooltip.add(new TranslatableText("book.byAuthor").append(new TranslatableText(string)).formatted(Formatting.GRAY));
 			info.cancel();

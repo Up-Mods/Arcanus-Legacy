@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanus.core.mixin;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.core.util.Spell;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
+import dev.cammiescorner.arcanus.core.util.Spell;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -10,9 +10,9 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.cammiescorner.arcanus.Arcanus.*;
+import static dev.cammiescorner.arcanus.Arcanus.config;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements MagicUser
@@ -67,11 +67,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		}
 	}
 
-	@Inject(method = "readCustomDataFromTag", at = @At("TAIL"))
-	public void readNbt(CompoundTag tag, CallbackInfo info)
+	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+	public void readNbt(NbtCompound tag, CallbackInfo info)
 	{
-		CompoundTag rootTag = tag.getCompound(Arcanus.MOD_ID);
-		ListTag listTag = rootTag.getList("KnownSpells", NbtType.STRING);
+		NbtCompound rootTag = tag.getCompound(Arcanus.MOD_ID);
+		NbtList listTag = rootTag.getList("KnownSpells", NbtType.STRING);
 
 		for(int i = 0; i < listTag.size(); i++)
 			knownSpells.add(Arcanus.SPELL.get(new Identifier(listTag.getString(i))));
@@ -81,13 +81,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		lastCastTime = tag.getLong("LastCastTime");
 	}
 
-	@Inject(method = "writeCustomDataToTag", at = @At("TAIL"))
-	public void writeNbt(CompoundTag tag, CallbackInfo info)
+	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+	public void writeNbt(NbtCompound tag, CallbackInfo info)
 	{
-		CompoundTag rootTag = new CompoundTag();
-		ListTag listTag = new ListTag();
+		NbtCompound rootTag = new NbtCompound();
+		NbtList listTag = new NbtList();
 
-		knownSpells.forEach(spell -> listTag.add(StringTag.of(Arcanus.SPELL.getId(spell).toString())));
+		knownSpells.forEach(spell -> listTag.add(NbtString.of(Arcanus.SPELL.getId(spell).toString())));
 		rootTag.put("KnownSpells", listTag);
 		tag.put(Arcanus.MOD_ID, rootTag);
 		tag.putInt("Mana", dataTracker.get(MANA));

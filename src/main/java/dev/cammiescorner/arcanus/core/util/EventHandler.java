@@ -1,22 +1,16 @@
 package dev.cammiescorner.arcanus.core.util;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.core.registry.ModCommands;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
-import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.loot.ConstantLootTableRange;
-import net.minecraft.loot.UniformLootTableRange;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.SetCountLootFunction;
-import net.minecraft.loot.function.SetNbtLootFunction;
 import net.minecraft.util.Identifier;
 
 import java.util.Random;
@@ -36,63 +30,68 @@ public class EventHandler
 	private static final Identifier FORTRESS_LOOT_TABLE = new Identifier("minecraft", "chests/nether_bridge");
 	private static final Identifier RUIN_LOOT_TABLE = new Identifier("minecraft", "chests/underwater_ruin_big");
 
-	private static MinecraftClient client = MinecraftClient.getInstance();
-	private static Random random = new Random();
+	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final Random RAND = new Random();
 
 	public static void clientEvents()
 	{
 		//-----HUD Render Callback-----//
 		HudRenderCallback.EVENT.register((matrices, tickDelta) ->
 		{
-			PlayerEntity player = (PlayerEntity) client.cameraEntity;
-			MagicUser user = (MagicUser) player;
-			int mana = user.getMana();
-			int maxMana = user.getMaxMana();
-			int burnout = user.getBurnout();
-			int maxBurnout = user.getMaxBurnout();
-			int scaledWidth = client.getWindow().getScaledWidth();
-			int scaledHeight = client.getWindow().getScaledHeight();
-			int x = scaledWidth / 2 + 82;
-			int y = scaledHeight - (player.isCreative() ? 34 : 49);
+			PlayerEntity player = (PlayerEntity) CLIENT.cameraEntity;
 
-			client.getTextureManager().bindTexture(HUD_ELEMENTS);
-
-			for(int i = 0; i < maxMana / 2; i++)
+			if(player != null)
 			{
-				int halfOrFullOrb = i * 2 + 1;
-				DrawableHelper.drawTexture(matrices, x - (i * 8), y, 0, 15, 9, 9, 256, 256);
+				MagicUser user = (MagicUser) player;
+				int mana = user.getMana();
+				int maxMana = user.getMaxMana();
+				int burnout = user.getBurnout();
+				int maxBurnout = user.getMaxBurnout();
+				int scaledWidth = CLIENT.getWindow().getScaledWidth();
+				int scaledHeight = CLIENT.getWindow().getScaledHeight();
+				int x = scaledWidth / 2 + 82;
+				int y = scaledHeight - (player.isCreative() ? 34 : 49);
 
-				if(halfOrFullOrb < mana)
+				RenderSystem.setShaderTexture(0, HUD_ELEMENTS);
+
+				for(int i = 0; i < maxMana / 2; i++)
 				{
-					DrawableHelper.drawTexture(matrices, x - (i * 8), y, 0, 0, 8, 8, 256, 256);
+					int halfOrFullOrb = i * 2 + 1;
+					DrawableHelper.drawTexture(matrices, x - (i * 8), y, 0, 15, 9, 9, 256, 256);
+
+					if(halfOrFullOrb < mana)
+					{
+						DrawableHelper.drawTexture(matrices, x - (i * 8), y, 0, 0, 8, 8, 256, 256);
+					}
+
+					if(halfOrFullOrb == mana)
+					{
+						DrawableHelper.drawTexture(matrices, x - (i * 8), y, 8, 0, 8, 8, 256, 256);
+					}
 				}
 
-				if(halfOrFullOrb == mana)
+				for(int i = 0; i < maxBurnout / 2; i++)
 				{
-					DrawableHelper.drawTexture(matrices, x - (i * 8), y, 8, 0, 8, 8, 256, 256);
-				}
-			}
+					int halfOrFullOrb = i * 2 + 1;
 
-			for(int i = 0; i < maxBurnout / 2; i++)
-			{
-				int halfOrFullOrb = i * 2 + 1;
+					if(halfOrFullOrb < burnout)
+					{
+						DrawableHelper.drawTexture(matrices, (x - 72) + (i * 8), y, 16, 0, 8, 8, 256, 256);
+					}
 
-				if(halfOrFullOrb < burnout)
-				{
-					DrawableHelper.drawTexture(matrices, (x - 72) + (i * 8), y, 16, 0, 8, 8, 256, 256);
-				}
-
-				if(halfOrFullOrb == burnout)
-				{
-					DrawableHelper.drawTexture(matrices, (x - 72) + (i * 8), y, 24, 0, 8, 8, 256, 256);
+					if(halfOrFullOrb == burnout)
+					{
+						DrawableHelper.drawTexture(matrices, (x - 72) + (i * 8), y, 24, 0, 8, 8, 256, 256);
+					}
 				}
 			}
 		});
 	}
 
+	// TODO Fix UniformLootTableRange and ConstantLootTableRange
 	public static void commonEvents()
 	{
-		UniformLootTableRange range = UniformLootTableRange.between(0, 1);
+		/*UniformLootTableRange range = UniformLootTableRange.between(0, 1);
 
 		//-----Loot Table Callback-----//
 		LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, id, supplier, setter) ->
@@ -106,7 +105,7 @@ public class EventHandler
 						.rolls(range).withEntry(createItemEntry(selectBook()).build());
 				supplier.withPool(poolBuilder.build());
 			}
-		});
+		});*/
 
 		//-----Copy Player Data Callback-----//
 		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) ->
@@ -120,21 +119,21 @@ public class EventHandler
 	}
 
 	//TODO new loot pool entry
-	private static ItemEntry.Builder<?> createItemEntry(ItemStack stack)
+	/*private static ItemEntry.Builder<?> createItemEntry(ItemStack stack)
 	{
 		ItemEntry.Builder<?> builder = ItemEntry.builder(stack.getItem());
 		
-		if(stack.hasTag())
-			builder.apply(SetNbtLootFunction.builder(stack.getTag()));
+		if(stack.hasNbt())
+			builder.apply(SetNbtLootFunction.builder(stack.getNbt()));
 		if(stack.getCount() > 1)
 			builder.apply(SetCountLootFunction.builder(ConstantLootTableRange.create(stack.getCount())));
 
 		return builder;
-	}
+	}*/
 
 	private static ItemStack selectBook()
 	{
-		switch(random.nextInt(Arcanus.SPELL.getIds().size()))
+		switch(RAND.nextInt(Arcanus.SPELL.getIds().size()))
 		{
 			case 0:
 				return SpellBooks.getLungeBook();

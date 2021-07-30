@@ -32,29 +32,31 @@ public class ModCommands
 		if(dedicated)
 			ArgumentTypes.register("spells", SpellArgumentType.class, new ConstantArgumentSerializer<>(SpellArgumentType::new));
 
-		dispatcher.register(CommandManager.literal("spells").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(3))
-				.then(CommandManager.literal("list")
+		dispatcher.register(CommandManager.literal("spells")
+				.then(CommandManager.literal("list").requires(source -> source.hasPermissionLevel(0))
 						.executes(SpellsCommand::listSelfSpells)
-						.then(CommandManager.argument("player", EntityArgumentType.player())
+						.then(CommandManager.argument("player", EntityArgumentType.player()).requires(source -> source.hasPermissionLevel(3))
 								.executes(SpellsCommand::listPlayerSpells)))
-				.then(CommandManager.literal("add").then(CommandManager.argument("all", StringArgumentType.word())
-						.executes(SpellsCommand::addAllSpellsToSelf))
-						.then(CommandManager.argument("spell", SpellArgumentType.spell())
-								.executes(SpellsCommand::addSpellToSelf))
-								.then(CommandManager.argument("player", EntityArgumentType.player())
-										.then(CommandManager.argument("all", StringArgumentType.word())
-											.executes(SpellsCommand::addAllSpellsToPlayer))
-											.then(CommandManager.argument("spell", SpellArgumentType.spell())
-													.executes(SpellsCommand::addSpellToPlayer))))
-				.then(CommandManager.literal("remove").then(CommandManager.argument("all", StringArgumentType.word())
-						.executes(SpellsCommand::removeAllSpellsFromSelf))
-						.then(CommandManager.argument("spell", SpellArgumentType.spell())
-							.executes(SpellsCommand::removeSpellFromSelf))
-								.then(CommandManager.argument("player", EntityArgumentType.player())
-										.then(CommandManager.argument("all", StringArgumentType.word())
-											.executes(SpellsCommand::removeAllSpellsFromPlayer))
-											.then(CommandManager.argument("spell", SpellArgumentType.spell())
-												.executes(SpellsCommand::removeSpellFromPlayer)))));
+				.then(CommandManager.literal("add").requires(source -> source.hasPermissionLevel(3))
+						.then(CommandManager.argument("all", StringArgumentType.word())
+								.executes(SpellsCommand::addAllSpellsToSelf))
+								.then(CommandManager.argument("spell", SpellArgumentType.spell())
+										.executes(SpellsCommand::addSpellToSelf))
+										.then(CommandManager.argument("player", EntityArgumentType.player())
+												.then(CommandManager.argument("all", StringArgumentType.word())
+													.executes(SpellsCommand::addAllSpellsToPlayer))
+													.then(CommandManager.argument("spell", SpellArgumentType.spell())
+															.executes(SpellsCommand::addSpellToPlayer))))
+				.then(CommandManager.literal("remove").requires(source -> source.hasPermissionLevel(3))
+						.then(CommandManager.argument("all", StringArgumentType.word())
+								.executes(SpellsCommand::removeAllSpellsFromSelf))
+								.then(CommandManager.argument("spell", SpellArgumentType.spell())
+									.executes(SpellsCommand::removeSpellFromSelf))
+										.then(CommandManager.argument("player", EntityArgumentType.player())
+												.then(CommandManager.argument("all", StringArgumentType.word())
+													.executes(SpellsCommand::removeAllSpellsFromPlayer))
+													.then(CommandManager.argument("spell", SpellArgumentType.spell())
+														.executes(SpellsCommand::removeSpellFromPlayer)))));
 	}
 
 	private static class SpellArgumentType implements ArgumentType<Spell>
@@ -93,7 +95,7 @@ public class ModCommands
 			String knownSpells = "";
 
 			for(Spell spell : ((MagicUser) player).getKnownSpells())
-				knownSpells = knownSpells.concat("\n    [" + Arcanus.SPELL.getId(spell)) + "]";
+				knownSpells = knownSpells.concat("\n    - " + new TranslatableText(spell.getTranslationKey()).getString() + " (" + spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol() + ")");
 
 			if(!knownSpells.isEmpty())
 				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.list", player.getEntityName(), knownSpells), false);
@@ -109,7 +111,7 @@ public class ModCommands
 			String knownSpells = "";
 
 			for(Spell spell : ((MagicUser) player).getKnownSpells())
-				knownSpells = knownSpells.concat("\n    [" + Arcanus.SPELL.getId(spell)) + "]";
+				knownSpells = knownSpells.concat("\n    - " + new TranslatableText(spell.getTranslationKey()).getString() + " (" + spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol() + ")");
 
 			if(!knownSpells.isEmpty())
 				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.list", player.getEntityName(), knownSpells), false);
