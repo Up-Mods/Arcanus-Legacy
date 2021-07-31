@@ -11,6 +11,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -37,6 +38,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Shadow
 	public abstract void addExhaustion(float exhaustion);
 
+	@Shadow protected HungerManager hungerManager;
 	@Unique
 	private final List<Spell> knownSpells = new ArrayList<>(8);
 	@Unique
@@ -89,7 +91,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				if(getMana() < getMaxMana() - getBurnout() && world.getTime() % config.manaCooldown == 0)
 					addMana(1);
 
-				if(getBurnout() > 0 && world.getTime() % config.burnoutCooldown == 0)
+				if(getBurnout() > 0 && hungerManager.getFoodLevel() > 0 && world.getTime() % config.burnoutCooldown == 0)
 				{
 					addBurnout(-1);
 					addExhaustion(5F);
@@ -221,7 +223,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			addVelocity((getRotationVector().x * 0.05F + (getRotationVector().x * 1.5D - getVelocity().x)) * adjustedPitch, 0F, (getRotationVector().z * 0.05F + (getRotationVector().z * 1.5D - getVelocity().z)) * adjustedPitch);
 			world.getOtherEntities(null, getBoundingBox().expand(2)).forEach(entity ->
 			{
-				if(entity != this)
+				if(entity != this && entity instanceof LivingEntity)
 					entity.damage(DamageSource.player((PlayerEntity) (Object) this), 5);
 			});
 
