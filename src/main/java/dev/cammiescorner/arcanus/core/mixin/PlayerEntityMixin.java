@@ -240,37 +240,44 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		}
 	}
 
+	@Unique
 	public void castFissure()
 	{
 		activeSpell = null;
 	}
 
+	@Unique
 	public void castMagicMissile()
 	{
 		activeSpell = null;
 	}
 
+	@Unique
 	public void castVanish()
 	{
 		activeSpell = null;
 	}
 
+	@Unique
 	public void castHeal()
 	{
 		heal(4);
 		activeSpell = null;
 	}
 
+	@Unique
 	public void castMeteor()
 	{
 		activeSpell = null;
 	}
 
+	@Unique
 	public void castIceSpire()
 	{
 		activeSpell = null;
 	}
 
+	@Unique
 	public void castMine()
 	{
 		activeSpell = null;

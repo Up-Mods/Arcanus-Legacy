@@ -15,10 +15,9 @@ public class SpellBooks
 {
 	private static final Random RAND = new Random();
 
-	public static ItemStack getLungeBook()
+	public static ItemStack getLungeBook(ItemStack stack)
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:lunge"));
-		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -31,10 +30,9 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getFissureBook()
+	public static ItemStack getFissureBook(ItemStack stack)
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:fissure"));
-		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -47,10 +45,9 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getMagicMissileBook()
+	public static ItemStack getMagicMissileBook(ItemStack stack)
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:magic_missile"));
-		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -63,10 +60,9 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getVanishBook()
+	public static ItemStack getVanishBook(ItemStack stack)
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:vanish"));
-		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -79,10 +75,9 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getHealBook()
+	public static ItemStack getHealBook(ItemStack stack)
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:heal"));
-		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -95,10 +90,9 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getMeteorBook()
+	public static ItemStack getMeteorBook(ItemStack stack)
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:meteor"));
-		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -111,10 +105,9 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getIceSpireBook()
+	public static ItemStack getIceSpireBook(ItemStack stack)
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:ice_spire"));
-		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -127,10 +120,9 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getMineBook()
+	public static ItemStack getMineBook(ItemStack stack)
 	{
 		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:mine"));
-		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -145,26 +137,18 @@ public class SpellBooks
 
 	public static ItemStack getBookFromSpell(Spell spell)
 	{
-		switch(Arcanus.SPELL.getRawId(spell))
-		{
-			case 0:
-				return SpellBooks.getLungeBook();
-			case 1:
-				return SpellBooks.getFissureBook();
-			case 2:
-				return SpellBooks.getMagicMissileBook();
-			case 3:
-				return SpellBooks.getVanishBook();
-			case 4:
-				return SpellBooks.getHealBook();
-			case 5:
-				return SpellBooks.getMeteorBook();
-			case 6:
-				return SpellBooks.getIceSpireBook();
-			case 7:
-				return SpellBooks.getMineBook();
-		}
+		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 
-		return new ItemStack(Items.AIR);
+		return switch(Arcanus.SPELL.getRawId(spell)) {
+			case 0 -> SpellBooks.getLungeBook(stack);
+			case 1 -> SpellBooks.getFissureBook(stack);
+			case 2 -> SpellBooks.getMagicMissileBook(stack);
+			case 3 -> SpellBooks.getVanishBook(stack);
+			case 4 -> SpellBooks.getHealBook(stack);
+			case 5 -> SpellBooks.getMeteorBook(stack);
+			case 6 -> SpellBooks.getIceSpireBook(stack);
+			case 7 -> SpellBooks.getMineBook(stack);
+			default -> throw new IndexOutOfBoundsException("SOMETING WENT VEWY VEWY WWONG! THIWS SHOUWD NEVEW HAPPEN!");
+		};
 	}
 }

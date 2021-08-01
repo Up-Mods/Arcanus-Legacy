@@ -3,17 +3,23 @@ package dev.cammiescorner.arcanus.core.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.core.registry.ModCommands;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
+import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.loot.condition.RandomChanceLootCondition;
+import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.function.SetCountLootFunction;
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.util.Identifier;
-
-import java.util.Random;
 
 public class EventHandler
 {
@@ -30,15 +36,15 @@ public class EventHandler
 	private static final Identifier FORTRESS_LOOT_TABLE = new Identifier("minecraft", "chests/nether_bridge");
 	private static final Identifier RUIN_LOOT_TABLE = new Identifier("minecraft", "chests/underwater_ruin_big");
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
-	private static final Random RAND = new Random();
-
+	@Environment(EnvType.CLIENT)
 	public static void clientEvents()
 	{
+		final MinecraftClient client = MinecraftClient.getInstance();
+
 		//-----HUD Render Callback-----//
 		HudRenderCallback.EVENT.register((matrices, tickDelta) ->
 		{
-			PlayerEntity player = (PlayerEntity) CLIENT.cameraEntity;
+			PlayerEntity player = (PlayerEntity) client.cameraEntity;
 
 			if(player != null)
 			{
@@ -47,8 +53,8 @@ public class EventHandler
 				int maxMana = user.getMaxMana();
 				int burnout = user.getBurnout();
 				int maxBurnout = user.getMaxBurnout();
-				int scaledWidth = CLIENT.getWindow().getScaledWidth();
-				int scaledHeight = CLIENT.getWindow().getScaledHeight();
+				int scaledWidth = client.getWindow().getScaledWidth();
+				int scaledHeight = client.getWindow().getScaledHeight();
 				int x = scaledWidth / 2 + 82;
 				int y = scaledHeight - (player.isCreative() ? 34 : 49);
 
@@ -88,11 +94,8 @@ public class EventHandler
 		});
 	}
 
-	// TODO Fix UniformLootTableRange and ConstantLootTableRange
 	public static void commonEvents()
 	{
-		/*UniformLootTableRange range = UniformLootTableRange.between(0, 1);
-
 		//-----Loot Table Callback-----//
 		LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, id, supplier, setter) ->
 		{
@@ -102,10 +105,12 @@ public class EventHandler
 				FORTRESS_LOOT_TABLE.equals(id) || RUIN_LOOT_TABLE.equals(id))
 			{
 				FabricLootPoolBuilder poolBuilder = FabricLootPoolBuilder.builder()
-						.rolls(range).withEntry(createItemEntry(selectBook()).build());
+						.rolls(ConstantLootNumberProvider.create(1))
+						.withCondition(RandomChanceLootCondition.builder(0.15F).build())
+						.withEntry(createItemEntry(new ItemStack(Items.WRITTEN_BOOK)).build());
 				supplier.withPool(poolBuilder.build());
 			}
-		});*/
+		});
 
 		//-----Copy Player Data Callback-----//
 		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) ->
@@ -118,41 +123,15 @@ public class EventHandler
 		CommandRegistrationCallback.EVENT.register(ModCommands::init);
 	}
 
-	//TODO new loot pool entry
-	/*private static ItemEntry.Builder<?> createItemEntry(ItemStack stack)
+	private static ItemEntry.Builder<?> createItemEntry(ItemStack stack)
 	{
 		ItemEntry.Builder<?> builder = ItemEntry.builder(stack.getItem());
-		
-		if(stack.hasNbt())
-			builder.apply(SetNbtLootFunction.builder(stack.getNbt()));
+
+		builder.apply(new ArcanusLootFunction.Builder());
+
 		if(stack.getCount() > 1)
-			builder.apply(SetCountLootFunction.builder(ConstantLootTableRange.create(stack.getCount())));
+			builder.apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(stack.getCount())));
 
 		return builder;
-	}*/
-
-	private static ItemStack selectBook()
-	{
-		switch(RAND.nextInt(Arcanus.SPELL.getIds().size()))
-		{
-			case 0:
-				return SpellBooks.getLungeBook();
-			case 1:
-				return SpellBooks.getFissureBook();
-			case 2:
-				return SpellBooks.getMagicMissileBook();
-			case 3:
-				return SpellBooks.getVanishBook();
-			case 4:
-				return SpellBooks.getHealBook();
-			case 5:
-				return SpellBooks.getMeteorBook();
-			case 6:
-				return SpellBooks.getIceSpireBook();
-			case 7:
-				return SpellBooks.getMineBook();
-		}
-
-		return new ItemStack(Items.AIR);
 	}
 }
