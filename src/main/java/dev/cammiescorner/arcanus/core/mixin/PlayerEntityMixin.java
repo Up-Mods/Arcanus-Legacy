@@ -1,6 +1,7 @@
 package dev.cammiescorner.arcanus.core.mixin;
 
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
 import dev.cammiescorner.arcanus.core.registry.ModSpells;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
@@ -17,6 +18,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -77,8 +79,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 					castHeal();
 				if(ModSpells.METEOR.equals(activeSpell))
 					castMeteor();
-				if(ModSpells.ICE_SPIRE.equals(activeSpell))
-					castIceSpire();
+				if(ModSpells.SOLAR_STRIKE.equals(activeSpell))
+					castSolarStrike();
 				if(ModSpells.MINE.equals(activeSpell))
 					castMine();
 			}
@@ -109,9 +111,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		for(int i = 0; i < listTag.size(); i++)
 			knownSpells.add(Arcanus.SPELL.get(new Identifier(listTag.getString(i))));
 
-		dataTracker.set(MANA, tag.getInt("Mana"));
-		dataTracker.set(BURNOUT, tag.getInt("Burnout"));
-		lastCastTime = tag.getLong("LastCastTime");
+		dataTracker.set(MANA, rootTag.getInt("Mana"));
+		dataTracker.set(BURNOUT, rootTag.getInt("Burnout"));
+		activeSpell = Arcanus.SPELL.get(new Identifier(rootTag.getString("ActiveSpell")));
+		lastCastTime = rootTag.getLong("LastCastTime");
+		spellTimer = rootTag.getInt("SpellTimer");
 	}
 
 	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
@@ -120,12 +124,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		NbtCompound rootTag = new NbtCompound();
 		NbtList listTag = new NbtList();
 
+		tag.put(Arcanus.MOD_ID, rootTag);
 		knownSpells.forEach(spell -> listTag.add(NbtString.of(Arcanus.SPELL.getId(spell).toString())));
 		rootTag.put("KnownSpells", listTag);
-		tag.put(Arcanus.MOD_ID, rootTag);
-		tag.putInt("Mana", dataTracker.get(MANA));
-		tag.putInt("Burnout", dataTracker.get(BURNOUT));
-		tag.putLong("LastCastTime", lastCastTime);
+		rootTag.putInt("Mana", dataTracker.get(MANA));
+		rootTag.putInt("Burnout", dataTracker.get(BURNOUT));
+		rootTag.putString("ActiveSpell", activeSpell != null ? Arcanus.SPELL.getId(activeSpell).toString() : "");
+		rootTag.putLong("LastCastTime", lastCastTime);
+		rootTag.putInt("SpellTimer", spellTimer);
 	}
 
 	@Inject(method = "initDataTracker", at = @At("TAIL"))
@@ -149,7 +155,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		if(!knownSpells.contains(spell))
 			knownSpells.add(spell);
 		else
-			Arcanus.LOGGER.warn("Spell " + spellId.toString() + " is already known!");
+			Arcanus.LOGGER.warn("Spell " + spell.getTranslationKey() + " is already known!");
 	}
 
 	@Override
@@ -216,6 +222,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique
 	public void castLunge()
 	{
+		if(isOnGround() && spellTimer == 10)
+			setVelocity(0F, 0.75F, 0F);
+
 		float adjustedPitch = MathHelper.abs(MathHelper.abs(getPitch() / 90F) - 1);
 
 		if(spellTimer > 0)
@@ -272,8 +281,17 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	}
 
 	@Unique
-	public void castIceSpire()
+	public void castSolarStrike()
 	{
+		HitResult result = raycast(64F, 1F, false);
+
+		if(result.getType() != HitResult.Type.MISS)
+		{
+			SolarStrikeEntity solarStrikeEntity = new SolarStrikeEntity(world);
+			solarStrikeEntity.setPosition(result.getPos());
+			world.spawnEntity(solarStrikeEntity);
+		}
+
 		activeSpell = null;
 	}
 

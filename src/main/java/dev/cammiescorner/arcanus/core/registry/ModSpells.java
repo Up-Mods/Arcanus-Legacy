@@ -24,7 +24,7 @@ public class ModSpells
 	public static final Spell VANISH = create("vanish", new VanishSpell(RIGHT, LEFT, RIGHT, config.vanishCastingCost));
 	public static final Spell HEAL = create("heal", new HealSpell(RIGHT, LEFT, LEFT, config.healCastingCost));
 	public static final Spell METEOR = create("meteor", new MeteorSpell(LEFT, RIGHT, RIGHT, config.meteorCastingCost));
-	public static final Spell ICE_SPIRE = create("ice_spire", new IceSpireSpell(LEFT, LEFT, RIGHT, config.iceSpireCastingCost));
+	public static final Spell SOLAR_STRIKE = create("solar_strike", new SolarStrikeSpell(LEFT, LEFT, RIGHT, config.solarStrikeCastingCost));
 	public static final Spell MINE = create("mine", new MineSpell(RIGHT, RIGHT, LEFT, config.mineCastingCost));
 
 	//-----Registry-----//

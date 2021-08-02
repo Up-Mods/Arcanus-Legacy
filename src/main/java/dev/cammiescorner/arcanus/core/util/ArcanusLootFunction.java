@@ -24,7 +24,7 @@ public class ArcanusLootFunction extends ConditionalLootFunction {
 			case 3 -> SpellBooks.getVanishBook(stack);
 			case 4 -> SpellBooks.getHealBook(stack);
 			case 5 -> SpellBooks.getMeteorBook(stack);
-			case 6 -> SpellBooks.getIceSpireBook(stack);
+			case 6 -> SpellBooks.getSolarStrikeBook(stack);
 			case 7 -> SpellBooks.getMineBook(stack);
 			default -> throw new IndexOutOfBoundsException("SOMETING WENT VEWY VEWY WWONG! THIWS SHOUWD NEVEW HAPPEN!");
 		};

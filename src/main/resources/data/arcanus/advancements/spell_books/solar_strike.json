@@ -5,10 +5,10 @@
 			"item": "minecraft:written_book"
 		},
 		"title": {
-			"translate": "advancements.arcanus.ice_spire.title"
+			"translate": "advancements.arcanus.solar_strike.title"
 		},
 		"description": {
-			"translate": "advancements.arcanus.ice_spire.description"
+			"translate": "advancements.arcanus.solar_strike.description"
 		},
 		"frame": "goal",
 		"show_toast": true,
@@ -22,7 +22,7 @@
 				"items": [
 					{
 						"items":[ "minecraft:written_book" ],
-						"nbt": "{spell:\"arcanus:ice_spire\"}"
+						"nbt": "{spell:\"arcanus:solar_strike\"}"
 					}
 				]
 			}

@@ -1,13 +1,13 @@
 package dev.cammiescorner.arcanus.core.util;
 
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.core.registry.ModSpells;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.util.Identifier;
 
 import java.util.Random;
 
@@ -17,7 +17,7 @@ public class SpellBooks
 
 	public static ItemStack getLungeBook(ItemStack stack)
 	{
-		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:lunge"));
+		Spell spell = ModSpells.LUNGE;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -32,7 +32,7 @@ public class SpellBooks
 
 	public static ItemStack getFissureBook(ItemStack stack)
 	{
-		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:fissure"));
+		Spell spell = ModSpells.FISSURE;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -47,7 +47,7 @@ public class SpellBooks
 
 	public static ItemStack getMagicMissileBook(ItemStack stack)
 	{
-		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:magic_missile"));
+		Spell spell = ModSpells.MAGIC_MISSILE;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -62,7 +62,7 @@ public class SpellBooks
 
 	public static ItemStack getVanishBook(ItemStack stack)
 	{
-		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:vanish"));
+		Spell spell = ModSpells.VANISH;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -77,7 +77,7 @@ public class SpellBooks
 
 	public static ItemStack getHealBook(ItemStack stack)
 	{
-		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:heal"));
+		Spell spell = ModSpells.HEAL;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -92,7 +92,7 @@ public class SpellBooks
 
 	public static ItemStack getMeteorBook(ItemStack stack)
 	{
-		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:meteor"));
+		Spell spell = ModSpells.METEOR;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -105,9 +105,9 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getIceSpireBook(ItemStack stack)
+	public static ItemStack getSolarStrikeBook(ItemStack stack)
 	{
-		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:ice_spire"));
+		Spell spell = ModSpells.SOLAR_STRIKE;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -122,7 +122,7 @@ public class SpellBooks
 
 	public static ItemStack getMineBook(ItemStack stack)
 	{
-		Spell spell = Arcanus.SPELL.get(new Identifier("arcanus:mine"));
+		Spell spell = ModSpells.MINE;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
 
@@ -146,7 +146,7 @@ public class SpellBooks
 			case 3 -> SpellBooks.getVanishBook(stack);
 			case 4 -> SpellBooks.getHealBook(stack);
 			case 5 -> SpellBooks.getMeteorBook(stack);
-			case 6 -> SpellBooks.getIceSpireBook(stack);
+			case 6 -> SpellBooks.getSolarStrikeBook(stack);
 			case 7 -> SpellBooks.getMineBook(stack);
 			default -> throw new IndexOutOfBoundsException("SOMETING WENT VEWY VEWY WWONG! THIWS SHOUWD NEVEW HAPPEN!");
 		};

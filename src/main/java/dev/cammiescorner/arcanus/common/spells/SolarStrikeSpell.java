@@ -6,9 +6,9 @@ import dev.cammiescorner.arcanus.core.util.Spell;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
-public class IceSpireSpell extends Spell
+public class SolarStrikeSpell extends Spell
 {
-	public IceSpireSpell(Pattern first, Pattern second, Pattern last, int manaCost)
+	public SolarStrikeSpell(Pattern first, Pattern second, Pattern last, int manaCost)
 	{
 		super(first, second, last, manaCost);
 	}

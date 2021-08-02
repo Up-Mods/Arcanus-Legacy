@@ -12,7 +12,7 @@
 	"spell.arcanus.vanish": "Vanish",
 	"spell.arcanus.heal": "Heal",
 	"spell.arcanus.meteor": "Meteor",
-	"spell.arcanus.ice_spire": "Ice Spire",
+	"spell.arcanus.solar_strike": "Solar Strike",
 	"spell.arcanus.mine": "Mine",
 
 	//-----Book Titles-----//
@@ -22,7 +22,7 @@
 	"book.arcanus.vanish.title": "Vanish Spell Book",
 	"book.arcanus.heal.title": "Heal Spell Book",
 	"book.arcanus.meteor.title": "Meteor Spell Book",
-	"book.arcanus.ice_spire.title": "Ice Spire Spell Book",
+	"book.arcanus.solar_strike.title": "Solar Strike Spell Book",
 	"book.arcanus.mine.title": "Mine Spell Book",
 
 	//-----Book Authors-----//
@@ -64,8 +64,8 @@
 	"advancements.arcanus.heal.description": "Find the Heal Spell Book in a dungeon.",
 	"advancements.arcanus.meteor.title": "RIP Dinosaurs",
 	"advancements.arcanus.meteor.description": "Find the Meteor Spell Book in a dungeon.",
-	"advancements.arcanus.ice_spire.title": "<-----PLACEHOLDER----->",
-	"advancements.arcanus.ice_spire.description": "Find the Ice Spire Spell Book in a dungeon.",
+	"advancements.arcanus.solar_strike.title": "That Lucky Old Sun",
+	"advancements.arcanus.solar_strike.description": "Find the Solar Strike Spell Book in a dungeon.",
 	"advancements.arcanus.mine.title": "Diggy Diggy Hole",
 	"advancements.arcanus.mine.description": "Find the Mine Spell Book in a dungeon.",
 	"advancements.arcanus.all_spells.title": "Unlimited Power!",

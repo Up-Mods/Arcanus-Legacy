@@ -16,6 +16,6 @@ public class ArcanusConfig implements ConfigData
 	public int vanishCastingCost = 3;
 	public int healCastingCost = 3;
 	public int meteorCastingCost = 6;
-	public int iceSpireCastingCost = 6;
+	public int solarStrikeCastingCost = 20;
 	public int mineCastingCost = 2;
 }

@@ -17,7 +17,6 @@ public class LungeSpell extends Spell
 	public void onCast(World world, PlayerEntity player)
 	{
 		MagicUser user = (MagicUser) player;
-		player.setVelocity(0F, 0.75F, 0F);
 		user.setActiveSpell(this, 10);
 		player.velocityModified = true;
 	}
