@@ -6,6 +6,7 @@ import dev.cammiescorner.arcanus.core.util.MagicUser;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -42,7 +43,9 @@ public class CastSpellMessage {
 						user.setLastCastTime(player.world.getTime());
 
 						if(user.getMana() < spell.getManaCost() && config.haveBurnout) {
-							user.addBurnout(spell.getManaCost() - user.getMana());
+							int burnoutAmount = spell.getManaCost() - user.getMana();
+							user.addBurnout(burnoutAmount);
+							player.damage(DamageSource.MAGIC, burnoutAmount);
 							player.sendMessage(new TranslatableText("error." + Arcanus.MOD_ID + ".burnout").formatted(Formatting.RED), false);
 						}
 

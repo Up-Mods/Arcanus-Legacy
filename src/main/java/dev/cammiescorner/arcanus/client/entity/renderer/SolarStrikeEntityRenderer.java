@@ -2,10 +2,7 @@ package dev.cammiescorner.arcanus.client.entity.renderer;
 
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -22,8 +19,7 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 
 	@Override
 	public void render(SolarStrikeEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider provider, int light) {
-		renderBeam(0, (float) ((entity.world.getHeight() + 64) - entity.getY()), 0, tickDelta, entity.age, matrices, provider, light);
-		super.render(entity, yaw, tickDelta, matrices, provider, light);
+		renderBeam(0, (float) ((entity.world.getHeight() + 192) - entity.getY()), 0, tickDelta, entity.age, matrices, provider, light);
 	}
 
 	public void renderBeam(float x, float y, float z, float tickDelta, int age, MatrixStack matrices, VertexConsumerProvider provider, int light) {
@@ -62,6 +58,11 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 		}
 
 		matrices.pop();
+	}
+
+	@Override
+	public boolean shouldRender(SolarStrikeEntity entity, Frustum frustum, double x, double y, double z) {
+		return true;
 	}
 
 	@Override
