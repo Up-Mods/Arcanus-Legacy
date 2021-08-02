@@ -5,9 +5,8 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 
 @Config(name = Arcanus.MOD_ID)
-public class ArcanusConfig implements ConfigData
-{
-	public boolean doBurnout = true;
+public class ArcanusConfig implements ConfigData {
+	public boolean haveBurnout = true;
 	public boolean orangeSolarStrike = true;
 	public int manaCooldown = 20;
 	public int burnoutCooldown = 60;

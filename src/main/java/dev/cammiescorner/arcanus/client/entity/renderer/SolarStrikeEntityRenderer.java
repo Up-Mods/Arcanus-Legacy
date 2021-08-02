@@ -15,22 +15,18 @@ import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
 
-public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
-{
-	public SolarStrikeEntityRenderer(EntityRendererFactory.Context context)
-	{
+public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity> {
+	public SolarStrikeEntityRenderer(EntityRendererFactory.Context context) {
 		super(context);
 	}
 
 	@Override
-	public void render(SolarStrikeEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider provider, int light)
-	{
+	public void render(SolarStrikeEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider provider, int light) {
 		renderBeam(0, (float) ((entity.world.getHeight() + 64) - entity.getY()), 0, tickDelta, entity.age, matrices, provider, light);
 		super.render(entity, yaw, tickDelta, matrices, provider, light);
 	}
 
-	public void renderBeam(float x, float y, float z, float tickDelta, int age, MatrixStack matrices, VertexConsumerProvider provider, int light)
-	{
+	public void renderBeam(float x, float y, float z, float tickDelta, int age, MatrixStack matrices, VertexConsumerProvider provider, int light) {
 		float squaredLength = x * x + y * y + z * z;
 		float length = MathHelper.sqrt(squaredLength);
 		float ageDelta = (age - 1) + tickDelta;
@@ -52,8 +48,7 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 		float vertX1 = 0F;
 		float vertY1 = radius;
 
-		for(int i = 1; i <= maxQuads; i++)
-		{
+		for(int i = 1; i <= maxQuads; i++) {
 			float vertX2 = MathHelper.sin(i * 6.2831855F / maxQuads) * radius;
 			float vertY2 = MathHelper.cos(i * 6.2831855F / maxQuads) * radius;
 
@@ -70,8 +65,7 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 	}
 
 	@Override
-	public Identifier getTexture(SolarStrikeEntity entity)
-	{
+	public Identifier getTexture(SolarStrikeEntity entity) {
 		return null;
 	}
 }

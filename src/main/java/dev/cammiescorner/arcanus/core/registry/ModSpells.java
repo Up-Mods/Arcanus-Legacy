@@ -12,8 +12,7 @@ import static dev.cammiescorner.arcanus.Arcanus.config;
 import static dev.cammiescorner.arcanus.core.util.Pattern.LEFT;
 import static dev.cammiescorner.arcanus.core.util.Pattern.RIGHT;
 
-public class ModSpells
-{
+public class ModSpells {
 	//-----Spell Map-----//
 	public static final LinkedHashMap<Spell, Identifier> SPELLS = new LinkedHashMap<>();
 
@@ -28,13 +27,11 @@ public class ModSpells
 	public static final Spell MINE = create("mine", new MineSpell(RIGHT, RIGHT, LEFT, config.mineCastingCost));
 
 	//-----Registry-----//
-	public static void register()
-	{
+	public static void register() {
 		SPELLS.keySet().forEach(item -> Registry.register(Arcanus.SPELL, SPELLS.get(item), item));
 	}
 
-	private static <T extends Spell> T create(String name, T spell)
-	{
+	private static <T extends Spell> T create(String name, T spell) {
 		SPELLS.put(spell, new Identifier(Arcanus.MOD_ID, name));
 		return spell;
 	}

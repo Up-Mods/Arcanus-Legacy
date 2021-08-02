@@ -25,10 +25,8 @@ import net.minecraft.util.Identifier;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModCommands
-{
-	public static void init(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated)
-	{
+public class ModCommands {
+	public static void init(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {
 		if(dedicated)
 			ArgumentTypes.register("spells", SpellArgumentType.class, new ConstantArgumentSerializer<>(SpellArgumentType::new));
 
@@ -59,38 +57,31 @@ public class ModCommands
 														.executes(SpellsCommand::removeSpellFromPlayer)))));
 	}
 
-	private static class SpellArgumentType implements ArgumentType<Spell>
-	{
+	private static class SpellArgumentType implements ArgumentType<Spell> {
 		public static final DynamicCommandExceptionType INVALID_SPELL_EXCEPTION = new DynamicCommandExceptionType(object -> new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.not_found", object));
 
-		public static SpellArgumentType spell()
-		{
+		public static SpellArgumentType spell() {
 			return new SpellArgumentType();
 		}
 
-		public static Spell getSpell(CommandContext<ServerCommandSource> commandContext, String string)
-		{
+		public static Spell getSpell(CommandContext<ServerCommandSource> commandContext, String string) {
 			return commandContext.getArgument(string, Spell.class);
 		}
 
 		@Override
-		public Spell parse(StringReader reader) throws CommandSyntaxException
-		{
+		public Spell parse(StringReader reader) throws CommandSyntaxException {
 			Identifier identifier = Identifier.fromCommandInput(reader);
 			return Arcanus.SPELL.getOrEmpty(identifier).orElseThrow(() -> INVALID_SPELL_EXCEPTION.create(identifier));
 		}
 
 		@Override
-		public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder)
-		{
+		public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
 			return CommandSource.suggestIdentifiers(Arcanus.SPELL.getIds(), builder);
 		}
 	}
 
-	private static class SpellsCommand
-	{
-		public static int listSelfSpells(CommandContext<ServerCommandSource> context) throws CommandSyntaxException
-		{
+	private static class SpellsCommand {
+		public static int listSelfSpells(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = context.getSource().getPlayer();
 			String knownSpells = "";
 
@@ -105,8 +96,7 @@ public class ModCommands
 			return Command.SINGLE_SUCCESS;
 		}
 
-		public static int listPlayerSpells(CommandContext<ServerCommandSource> context) throws CommandSyntaxException
-		{
+		public static int listPlayerSpells(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
 			String knownSpells = "";
 
@@ -121,13 +111,11 @@ public class ModCommands
 			return Command.SINGLE_SUCCESS;
 		}
 
-		public static int addAllSpellsToSelf(CommandContext<ServerCommandSource> context) throws CommandSyntaxException
-		{
+		public static int addAllSpellsToSelf(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = context.getSource().getPlayer();
 			MagicUser user = (MagicUser) player;
 
-			if(StringArgumentType.getString(context, "all").equals("all"))
-			{
+			if(StringArgumentType.getString(context, "all").equals("all")) {
 				Arcanus.SPELL.forEach(spell -> user.setKnownSpell(Arcanus.SPELL.getId(spell)));
 				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.added_all", player.getEntityName()), false);
 			}
@@ -137,32 +125,26 @@ public class ModCommands
 			return Command.SINGLE_SUCCESS;
 		}
 
-		public static int addSpellToSelf(CommandContext<ServerCommandSource> context) throws CommandSyntaxException
-		{
+		public static int addSpellToSelf(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = context.getSource().getPlayer();
 			MagicUser user = (MagicUser) player;
 			Spell spell = ModCommands.SpellArgumentType.getSpell(context, "spell");
 
-			if(!user.getKnownSpells().contains(spell))
-			{
+			if(!user.getKnownSpells().contains(spell)) {
 				user.getKnownSpells().add(spell);
 				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.added", Arcanus.SPELL.getId(spell), player.getEntityName()), false);
 			}
 			else
-			{
 				context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.already_known", player.getEntityName(), Arcanus.SPELL.getId(spell)));
-			}
 
 			return Command.SINGLE_SUCCESS;
 		}
 
-		public static int addAllSpellsToPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException
-		{
+		public static int addAllSpellsToPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
 			MagicUser user = (MagicUser) player;
 
-			if(StringArgumentType.getString(context, "all").equals("all"))
-			{
+			if(StringArgumentType.getString(context, "all").equals("all")) {
 				Arcanus.SPELL.forEach(spell -> user.setKnownSpell(Arcanus.SPELL.getId(spell)));
 				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.added_all", player.getEntityName()), false);
 			}
@@ -172,27 +154,22 @@ public class ModCommands
 			return Command.SINGLE_SUCCESS;
 		}
 
-		public static int addSpellToPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException
-		{
+		public static int addSpellToPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
 			MagicUser user = (MagicUser) player;
 			Spell spell = ModCommands.SpellArgumentType.getSpell(context, "spell");
 
-			if(!user.getKnownSpells().contains(spell))
-			{
+			if(!user.getKnownSpells().contains(spell)) {
 				user.getKnownSpells().add(spell);
 				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.added", Arcanus.SPELL.getId(spell), player.getEntityName()), false);
 			}
 			else
-			{
 				context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.already_known", player.getEntityName(), Arcanus.SPELL.getId(spell)));
-			}
 
 			return Command.SINGLE_SUCCESS;
 		}
 
-		public static int removeAllSpellsFromSelf(CommandContext<ServerCommandSource> context) throws CommandSyntaxException
-		{
+		public static int removeAllSpellsFromSelf(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = context.getSource().getPlayer();
 
 			((MagicUser) player).getKnownSpells().clear();
@@ -201,27 +178,22 @@ public class ModCommands
 			return Command.SINGLE_SUCCESS;
 		}
 
-		public static int removeSpellFromSelf(CommandContext<ServerCommandSource> context) throws CommandSyntaxException
-		{
+		public static int removeSpellFromSelf(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = context.getSource().getPlayer();
 			MagicUser user = (MagicUser) player;
 			Spell spell = ModCommands.SpellArgumentType.getSpell(context, "spell");
 
-			if(user.getKnownSpells().contains(spell))
-			{
+			if(user.getKnownSpells().contains(spell)) {
 				user.getKnownSpells().remove(spell);
 				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.removed", Arcanus.SPELL.getId(spell), player.getEntityName()), false);
 			}
 			else
-			{
 				context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.does_not_have", player.getEntityName(), Arcanus.SPELL.getId(spell)));
-			}
 
 			return Command.SINGLE_SUCCESS;
 		}
 
-		public static int removeAllSpellsFromPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException
-		{
+		public static int removeAllSpellsFromPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
 
 			((MagicUser) player).getKnownSpells().clear();
@@ -230,21 +202,17 @@ public class ModCommands
 			return Command.SINGLE_SUCCESS;
 		}
 
-		public static int removeSpellFromPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException
-		{
+		public static int removeSpellFromPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
 			MagicUser user = (MagicUser) player;
 			Spell spell = ModCommands.SpellArgumentType.getSpell(context, "spell");
 
-			if(user.getKnownSpells().contains(spell))
-			{
+			if(user.getKnownSpells().contains(spell)) {
 				user.getKnownSpells().remove(spell);
 				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.removed", Arcanus.SPELL.getId(spell), player.getEntityName()), false);
 			}
 			else
-			{
 				context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.does_not_have", player.getEntityName(), Arcanus.SPELL.getId(spell)));
-			}
 
 			return Command.SINGLE_SUCCESS;
 		}

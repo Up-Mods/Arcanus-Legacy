@@ -11,12 +11,10 @@ import net.minecraft.nbt.NbtString;
 
 import java.util.Random;
 
-public class SpellBooks
-{
+public class SpellBooks {
 	private static final Random RAND = new Random();
 
-	public static ItemStack getLungeBook(ItemStack stack)
-	{
+	public static ItemStack getLungeBook(ItemStack stack) {
 		Spell spell = ModSpells.LUNGE;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
@@ -30,8 +28,7 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getFissureBook(ItemStack stack)
-	{
+	public static ItemStack getFissureBook(ItemStack stack) {
 		Spell spell = ModSpells.FISSURE;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
@@ -45,8 +42,7 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getMagicMissileBook(ItemStack stack)
-	{
+	public static ItemStack getMagicMissileBook(ItemStack stack) {
 		Spell spell = ModSpells.MAGIC_MISSILE;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
@@ -60,8 +56,7 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getVanishBook(ItemStack stack)
-	{
+	public static ItemStack getVanishBook(ItemStack stack) {
 		Spell spell = ModSpells.VANISH;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
@@ -75,8 +70,7 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getHealBook(ItemStack stack)
-	{
+	public static ItemStack getHealBook(ItemStack stack) {
 		Spell spell = ModSpells.HEAL;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
@@ -90,8 +84,7 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getMeteorBook(ItemStack stack)
-	{
+	public static ItemStack getMeteorBook(ItemStack stack) {
 		Spell spell = ModSpells.METEOR;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
@@ -105,8 +98,7 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getSolarStrikeBook(ItemStack stack)
-	{
+	public static ItemStack getSolarStrikeBook(ItemStack stack) {
 		Spell spell = ModSpells.SOLAR_STRIKE;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
@@ -120,8 +112,7 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getMineBook(ItemStack stack)
-	{
+	public static ItemStack getMineBook(ItemStack stack) {
 		Spell spell = ModSpells.MINE;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtType.STRING);
@@ -135,8 +126,7 @@ public class SpellBooks
 		return stack;
 	}
 
-	public static ItemStack getBookFromSpell(Spell spell)
-	{
+	public static ItemStack getBookFromSpell(Spell spell) {
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 
 		return switch(Arcanus.SPELL.getRawId(spell)) {

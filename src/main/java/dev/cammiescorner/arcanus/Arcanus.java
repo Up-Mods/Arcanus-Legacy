@@ -2,6 +2,7 @@ package dev.cammiescorner.arcanus;
 
 import dev.cammiescorner.arcanus.common.packets.CastSpellMessage;
 import dev.cammiescorner.arcanus.core.config.ArcanusConfig;
+import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import dev.cammiescorner.arcanus.core.registry.ModItems;
 import dev.cammiescorner.arcanus.core.registry.ModSoundEvents;
 import dev.cammiescorner.arcanus.core.registry.ModSpells;
@@ -52,6 +53,7 @@ public class Arcanus implements ModInitializer
 
 		ModItems.register();
 		ModSpells.register();
+		ModEntities.register();
 		ModSoundEvents.register();
 
 		EventHandler.commonEvents();

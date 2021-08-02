@@ -25,31 +25,27 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.List;
 
 @Mixin(WrittenBookItem.class)
-public abstract class WrittenBookItemMixin extends Item
-{
-	public WrittenBookItemMixin(Settings settings) { super(settings); }
+public abstract class WrittenBookItemMixin extends Item {
+	public WrittenBookItemMixin(Settings settings) {
+		super(settings);
+	}
 
 	@Inject(method = "use", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
-	public void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> info, ItemStack stack)
-	{
+	public void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> info, ItemStack stack) {
 		if(!world.isClient())
 			((MagicUser) user).setKnownSpell(new Identifier(stack.getOrCreateNbt().getString("spell")));
 	}
 
 	@Inject(method = "getName", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/LiteralText;<init>(Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
-	public void getName(ItemStack stack, CallbackInfoReturnable<Text> info, NbtCompound nbtCompound, String string)
-	{
-		if(stack.hasNbt() && stack.getNbt().contains("spell"))
-		{
+	public void getName(ItemStack stack, CallbackInfoReturnable<Text> info, NbtCompound nbtCompound, String string) {
+		if(stack.hasNbt() && stack.getNbt().contains("spell")) {
 			info.setReturnValue(new TranslatableText(string));
 		}
 	}
 
 	@Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
-	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context, CallbackInfo info, NbtCompound nbtCompound, String string)
-	{
-		if(stack.hasNbt() && stack.getNbt().contains("spell"))
-		{
+	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context, CallbackInfo info, NbtCompound nbtCompound, String string) {
+		if(stack.hasNbt() && stack.getNbt().contains("spell")) {
 			tooltip.add(new TranslatableText("book.byAuthor").append(new TranslatableText(string)).formatted(Formatting.GRAY));
 			info.cancel();
 		}

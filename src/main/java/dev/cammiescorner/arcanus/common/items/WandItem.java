@@ -7,22 +7,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class WandItem extends Item
-{
-	public WandItem(Settings settings)
-	{
+public class WandItem extends Item {
+	public WandItem(Settings settings) {
 		super(settings);
 	}
 
 	@Override
-	public float getMiningSpeedMultiplier(ItemStack stack, BlockState state)
-	{
+	public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
 		return 100;
 	}
 
 	@Override
-	public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner)
-	{
+	public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
 		return false;
 	}
 }

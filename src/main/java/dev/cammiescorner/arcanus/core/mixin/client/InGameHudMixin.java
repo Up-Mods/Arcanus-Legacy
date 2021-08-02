@@ -7,11 +7,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(InGameHud.class)
-public abstract class InGameHudMixin
-{
+public abstract class InGameHudMixin {
 	@Inject(method = "getHeartRows", at = @At("RETURN"), cancellable = true)
-	public void getHeartRows(int heartCount, CallbackInfoReturnable<Integer> info)
-	{
+	public void getHeartRows(int heartCount, CallbackInfoReturnable<Integer> info) {
 		info.setReturnValue(info.getReturnValueI() + 1);
 	}
 }

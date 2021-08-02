@@ -27,8 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(MinecraftClient.class)
-public class MinecraftClientMixin implements ClientUtils
-{
+public class MinecraftClientMixin implements ClientUtils {
 	@Unique
 	private boolean unfinishedSpell = true;
 	@Unique
@@ -41,36 +40,28 @@ public class MinecraftClientMixin implements ClientUtils
 	public ClientPlayerEntity player;
 
 	@Inject(method = "tick", at = @At("HEAD"))
-	public void tick(CallbackInfo info)
-	{
+	public void tick(CallbackInfo info) {
 		if(timer == 0 && !pattern.isEmpty())
 			pattern.clear();
 
 		if(player == null)
 			return;
 
-		if(player.getMainHandStack().getItem() instanceof WandItem)
-		{
-			if(timer > 0)
-			{
+		if(player.getMainHandStack().getItem() instanceof WandItem) {
+			if(timer > 0) {
 				MutableText hyphen = new LiteralText("-").formatted(Formatting.GRAY);
 
 				player.sendMessage(Arcanus.getSpellInputs(pattern, 0).append(hyphen).append(Arcanus.getSpellInputs(pattern, 1)).append(hyphen).append(Arcanus.getSpellInputs(pattern, 2)), true);
 
-				if(pattern.size() == 3)
-				{
-					for(Spell spell : Arcanus.SPELL)
-					{
-						if(pattern.equals(spell.getSpellPattern()))
-						{
+				if(pattern.size() == 3) {
+					for(Spell spell : Arcanus.SPELL) {
+						if(pattern.equals(spell.getSpellPattern())) {
 							CastSpellMessage.send(Arcanus.SPELL.getId(spell).toString());
 							unfinishedSpell = false;
 							break;
 						}
-						else
-						{
-							if(Arcanus.SPELL.getRawId(spell) + 1 == Arcanus.SPELL.getIds().size())
-							{
+						else {
+							if(Arcanus.SPELL.getRawId(spell) + 1 == Arcanus.SPELL.getIds().size()) {
 								player.sendMessage(new TranslatableText("error." + Arcanus.MOD_ID + ".missing_spell").formatted(Formatting.RED), true);
 								unfinishedSpell = false;
 							}
@@ -91,10 +82,8 @@ public class MinecraftClientMixin implements ClientUtils
 	}
 
 	@Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doItemUse()V", ordinal = 0), cancellable = true)
-	public void onRightClick(CallbackInfo info)
-	{
-		if(player != null && player.getMainHandStack().getItem() instanceof WandItem)
-		{
+	public void onRightClick(CallbackInfo info) {
+		if(player != null && player.getMainHandStack().getItem() instanceof WandItem) {
 			timer = 20;
 			unfinishedSpell = true;
 			pattern.add(Pattern.RIGHT);
@@ -105,10 +94,8 @@ public class MinecraftClientMixin implements ClientUtils
 	}
 
 	@Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doAttack()V", ordinal = 0), cancellable = true)
-	public void onLeftClick(CallbackInfo info)
-	{
-		if(player != null && player.getMainHandStack().getItem() instanceof WandItem)
-		{
+	public void onLeftClick(CallbackInfo info) {
+		if(player != null && player.getMainHandStack().getItem() instanceof WandItem) {
 			timer = 20;
 			unfinishedSpell = true;
 			pattern.add(Pattern.LEFT);
@@ -119,20 +106,17 @@ public class MinecraftClientMixin implements ClientUtils
 	}
 
 	@Override
-	public List<Pattern> getPattern()
-	{
+	public List<Pattern> getPattern() {
 		return pattern;
 	}
 
 	@Override
-	public void setTimer(int value)
-	{
+	public void setTimer(int value) {
 		timer = value;
 	}
 
 	@Override
-	public void setUnfinishedSpell(boolean value)
-	{
+	public void setUnfinishedSpell(boolean value) {
 		unfinishedSpell = value;
 	}
 }

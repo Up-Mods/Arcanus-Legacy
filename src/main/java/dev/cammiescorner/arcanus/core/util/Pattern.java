@@ -1,18 +1,15 @@
 package dev.cammiescorner.arcanus.core.util;
 
-public enum Pattern
-{
+public enum Pattern {
 	LEFT("L"), RIGHT("R");
 
 	String symbol;
 
-	Pattern(String symbol)
-	{
+	Pattern(String symbol) {
 		this.symbol = symbol;
 	}
 
-	public String getSymbol()
-	{
+	public String getSymbol() {
 		return symbol;
 	}
 }

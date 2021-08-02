@@ -43,6 +43,9 @@
 			}
 		}
 	},
+	"rewards": {
+		"experience": 1000
+	},
 	"requirements": [
 		[
 			"has_spells_unlocked"
