@@ -12,6 +12,7 @@ public class ArcanusClient implements ClientModInitializer
 	public void onInitializeClient()
 	{
 		EntityRendererRegistry.INSTANCE.register(ModEntities.SOLAR_STRIKE, SolarStrikeEntityRenderer::new);
+
 		EventHandler.clientEvents();
 	}
 }

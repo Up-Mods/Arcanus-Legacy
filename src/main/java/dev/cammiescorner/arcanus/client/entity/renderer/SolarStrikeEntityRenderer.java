@@ -1,5 +1,6 @@
 package dev.cammiescorner.arcanus.client.entity.renderer;
 
+import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -24,7 +25,7 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 	@Override
 	public void render(SolarStrikeEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider provider, int light)
 	{
-		renderBeam(0, 64, 0, tickDelta, entity.age, matrices, provider, light);
+		renderBeam(0, (float) ((entity.world.getHeight() + 64) - entity.getY()), 0, tickDelta, entity.age, matrices, provider, light);
 		super.render(entity, yaw, tickDelta, matrices, provider, light);
 	}
 
@@ -37,7 +38,8 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 		int alpha = ageDelta < 3 ? 255 : (int) (255 * (1 - ((ageDelta - 3) / 23F)));
 
 		final int maxQuads = 16;
-		final float radius = 2F;
+		final float radius = 2.25F;
+		final boolean orangeLaser = Arcanus.config.orangeSolarStrike;
 
 		matrices.push();
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90));
@@ -55,10 +57,10 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 			float vertX2 = MathHelper.sin(i * 6.2831855F / maxQuads) * radius;
 			float vertY2 = MathHelper.cos(i * 6.2831855F / maxQuads) * radius;
 
-			vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(126, 205, 251, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
-			vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(126, 205, 251, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
-			vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(126, 205, 251, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
-			vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(126, 205, 251, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
+			vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(orangeLaser ? 255 : 126, orangeLaser ? 187 : 205, orangeLaser ? 63 : 251, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
+			vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(orangeLaser ? 255 : 126, orangeLaser ? 187 : 205, orangeLaser ? 63 : 251, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
+			vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(orangeLaser ? 255 : 126, orangeLaser ? 187 : 205, orangeLaser ? 63 : 251, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
+			vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(orangeLaser ? 255 : 126, orangeLaser ? 187 : 205, orangeLaser ? 63 : 251, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
 
 			vertX1 = vertX2;
 			vertY1 = vertY2;

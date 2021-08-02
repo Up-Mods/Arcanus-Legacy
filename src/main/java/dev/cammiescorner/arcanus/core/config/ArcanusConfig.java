@@ -8,6 +8,7 @@ import me.shedaniel.autoconfig.annotation.Config;
 public class ArcanusConfig implements ConfigData
 {
 	public boolean doBurnout = true;
+	public boolean orangeSolarStrike = true;
 	public int manaCooldown = 20;
 	public int burnoutCooldown = 60;
 	public int lungeCastingCost = 3;

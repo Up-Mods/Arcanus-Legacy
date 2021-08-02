@@ -81,5 +81,8 @@
 	"commands.arcanus.spells.does_not_have": "%s does not have [%s]",
 	"commands.arcanus.spells.already_known": "%s already knows [%s]",
 	"commands.arcanus.spells.not_valid_spell": "Must be a valid spell",
-	"commands.arcanus.spells.no_known_spells": "%s doesn't know any spells. What a nerd!"
+	"commands.arcanus.spells.no_known_spells": "%s doesn't know any spells. What a nerd!",
+
+	//-----Subtitles-----//
+	"subtitles.arcanus.solar_strike": "Solar Strike Spell"
 }

@@ -283,7 +283,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique
 	public void castSolarStrike()
 	{
-		HitResult result = raycast(64F, 1F, false);
+		HitResult result = raycast(256F, 1F, false);
 
 		if(result.getType() != HitResult.Type.MISS)
 		{
