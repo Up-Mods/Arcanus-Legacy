@@ -246,7 +246,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Unique
 	public void castTelekinesis() {
-		HitResult result = ArcanusHelper.raycast(this, 20F, true);
+		HitResult result = ArcanusHelper.raycast(this, 5F, true);
 
 		if(result.getType() == HitResult.Type.ENTITY) {
 			Entity target = ((EntityHitResult) result).getEntity();
