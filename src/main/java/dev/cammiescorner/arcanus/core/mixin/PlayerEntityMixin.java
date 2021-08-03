@@ -19,7 +19,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -38,6 +43,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static dev.cammiescorner.arcanus.Arcanus.config;
 
@@ -45,9 +51,11 @@ import static dev.cammiescorner.arcanus.Arcanus.config;
 public abstract class PlayerEntityMixin extends LivingEntity implements MagicUser {
 	@Shadow
 	public abstract void addExhaustion(float exhaustion);
-
 	@Shadow
 	protected HungerManager hungerManager;
+	@Shadow
+	public abstract void sendMessage(Text message, boolean actionBar);
+
 	@Unique
 	private final List<Spell> knownSpells = new ArrayList<>(8);
 	@Unique
@@ -75,8 +83,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			if(activeSpell != null) {
 				if(ModSpells.LUNGE.equals(activeSpell))
 					castLunge();
-				if(ModSpells.FISSURE.equals(activeSpell))
-					castFissure();
+				if(ModSpells.DREAM_WARP.equals(activeSpell))
+					castDreamWarp();
 				if(ModSpells.MAGIC_MISSILE.equals(activeSpell))
 					castMagicMissile();
 				if(ModSpells.TELEKINESIS.equals(activeSpell))
@@ -235,7 +243,29 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	}
 
 	@Unique
-	public void castFissure() {
+	public void castDreamWarp() {
+		ServerPlayerEntity serverPlayer = (ServerPlayerEntity) (Object) this;
+		ServerWorld serverWorld = serverPlayer.getServer().getWorld(serverPlayer.getSpawnPointDimension());
+		BlockPos spawnPos = serverPlayer.getSpawnPointPosition();
+		Vec3d rotation = serverPlayer.getRotationVec(1F);
+		Optional<Vec3d> optionalSpawnPoint;
+		float spawnAngle = serverPlayer.getSpawnAngle();
+		boolean hasSpawnPoint = serverPlayer.isSpawnPointSet();
+
+		if(serverWorld != null && spawnPos != null)
+			optionalSpawnPoint = PlayerEntity.findRespawnPosition(serverWorld, spawnPos, spawnAngle, hasSpawnPoint, true);
+		else
+			optionalSpawnPoint = Optional.empty();
+
+		if(optionalSpawnPoint.isPresent()) {
+			Vec3d spawnPoint = optionalSpawnPoint.get();
+			System.out.println(spawnPoint);
+			world.playSound(null, prevX, prevY, prevZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+			serverPlayer.teleport(serverWorld, spawnPoint.x, spawnPoint.y, spawnPoint.z, (float) rotation.x, (float) rotation.y);
+		}
+		else
+			sendMessage(new TranslatableText("block.minecraft.spawn.not_valid"), false);
+
 		activeSpell = null;
 	}
 
@@ -261,7 +291,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Unique
 	public void castHeal() {
-		heal(5);
+		heal(8);
 		activeSpell = null;
 	}
 

@@ -55,7 +55,7 @@ public class Arcanus implements ModInitializer {
 
 		EventHandler.commonEvents();
 
-		LOGGER.info("eee");
+		LOGGER.info("imagine people still looking for these :hahayes:");
 	}
 
 	@SuppressWarnings("unchecked")

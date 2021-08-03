@@ -5,10 +5,10 @@
 			"item": "minecraft:written_book"
 		},
 		"title": {
-			"translate": "advancements.arcanus.vanish.title"
+			"translate": "advancements.arcanus.dream_warp.title"
 		},
 		"description": {
-			"translate": "advancements.arcanus.vanish.description"
+			"translate": "advancements.arcanus.dream_warp.description"
 		},
 		"frame": "goal",
 		"show_toast": true,
@@ -22,7 +22,7 @@
 				"items": [
 					{
 						"items":[ "minecraft:written_book" ],
-						"nbt": "{spell:\"arcanus:vanish\"}"
+						"nbt": "{spell:\"arcanus:dream_warp\"}"
 					}
 				]
 			}

@@ -6,8 +6,8 @@ import dev.cammiescorner.arcanus.core.util.Spell;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
-public class FissureSpell extends Spell {
-	public FissureSpell(Pattern first, Pattern second, Pattern last, int manaCost) {
+public class DreamWarpSpell extends Spell {
+	public DreamWarpSpell(Pattern first, Pattern second, Pattern last, int manaCost) {
 		super(first, second, last, manaCost);
 	}
 
