@@ -7,6 +7,7 @@ import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
 import net.fabricmc.fabric.api.util.NbtType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -20,10 +21,12 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Mixin;
@@ -76,8 +79,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 					castFissure();
 				if(ModSpells.MAGIC_MISSILE.equals(activeSpell))
 					castMagicMissile();
-				if(ModSpells.VANISH.equals(activeSpell))
-					castVanish();
+				if(ModSpells.TELEKINESIS.equals(activeSpell))
+					castTelekinesis();
 				if(ModSpells.HEAL.equals(activeSpell))
 					castHeal();
 				if(ModSpells.METEOR.equals(activeSpell))
@@ -242,13 +245,23 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	}
 
 	@Unique
-	public void castVanish() {
+	public void castTelekinesis() {
+		HitResult result = ArcanusHelper.raycast(this, 20F, true);
+
+		if(result.getType() == HitResult.Type.ENTITY) {
+			Entity target = ((EntityHitResult) result).getEntity();
+			Vec3d rotation = getRotationVec(1F);
+
+			target.setVelocity(rotation.multiply(2.5F));
+			target.velocityModified = true;
+		}
+
 		activeSpell = null;
 	}
 
 	@Unique
 	public void castHeal() {
-		heal(4);
+		heal(5);
 		activeSpell = null;
 	}
 
@@ -259,9 +272,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Unique
 	public void castSolarStrike() {
-		HitResult result = ArcanusHelper.raycast(this, 640F);
+		HitResult result = ArcanusHelper.raycast(this, 640F, false);
 
-		if(result.getType() != HitResult.Type.MISS && !world.isClient()) {
+		if(result.getType() != HitResult.Type.MISS) {
 			ChunkPos chunkPos = new ChunkPos(new BlockPos(result.getPos()));
 			((ServerWorld) world).setChunkForced(chunkPos.x, chunkPos.z, true);
 			SolarStrikeEntity solarStrike = new SolarStrikeEntity(this, world);

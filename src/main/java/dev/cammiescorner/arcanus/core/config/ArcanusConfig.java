@@ -10,11 +10,11 @@ public class ArcanusConfig implements ConfigData {
 	public boolean orangeSolarStrike = true;
 	public int manaCooldown = 20;
 	public int burnoutCooldown = 60;
-	public int lungeCastingCost = 3;
+	public int lungeCastingCost = 4;
 	public int fissureCastingCost = 6;
-	public int magicMissileCastingCost = 1;
-	public int vanishCastingCost = 3;
-	public int healCastingCost = 3;
+	public int magicMissileCastingCost = 3;
+	public int telekinesisCastingCost = 5;
+	public int healCastingCost = 4;
 	public int meteorCastingCost = 6;
 	public int solarStrikeCastingCost = 20;
 	public int mineCastingCost = 2;

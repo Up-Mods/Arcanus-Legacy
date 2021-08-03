@@ -68,10 +68,10 @@ public class SpellBooks {
 		return stack;
 	}
 
-	public static ItemStack getVanishBook(ItemStack stack) {
+	public static ItemStack getTelekinesisBook(ItemStack stack) {
 		int randInt = RAND.nextInt(16);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
-		Spell spell = ModSpells.VANISH;
+		Spell spell = ModSpells.TELEKINESIS;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
 
@@ -160,7 +160,7 @@ public class SpellBooks {
 			case 0 -> SpellBooks.getLungeBook(stack);
 			case 1 -> SpellBooks.getFissureBook(stack);
 			case 2 -> SpellBooks.getMagicMissileBook(stack);
-			case 3 -> SpellBooks.getVanishBook(stack);
+			case 3 -> SpellBooks.getTelekinesisBook(stack);
 			case 4 -> SpellBooks.getHealBook(stack);
 			case 5 -> SpellBooks.getMeteorBook(stack);
 			case 6 -> SpellBooks.getSolarStrikeBook(stack);

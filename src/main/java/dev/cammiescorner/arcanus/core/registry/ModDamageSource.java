@@ -11,7 +11,7 @@ public class ModDamageSource extends DamageSource {
 		super(name);
 	}
 
-	public static DamageSource solarStrike(Entity attacker) {
-		return new EntityDamageSource("solar_strike", attacker).setUsesMagic();
+	public static EntityDamageSource solarStrike(Entity attacker) {
+		return (EntityDamageSource) new EntityDamageSource("solar_strike", attacker).setUsesMagic();
 	}
 }

@@ -20,7 +20,7 @@ public class ModSpells {
 	public static final Spell LUNGE = create("lunge", new LungeSpell(RIGHT, RIGHT, RIGHT, config.lungeCastingCost));
 	public static final Spell FISSURE = create("fissure", new FissureSpell(LEFT, RIGHT, LEFT, config.fissureCastingCost));
 	public static final Spell MAGIC_MISSILE = create("magic_missile", new MagicMissileSpell(LEFT, LEFT, LEFT, config.magicMissileCastingCost));
-	public static final Spell VANISH = create("vanish", new VanishSpell(RIGHT, LEFT, RIGHT, config.vanishCastingCost));
+	public static final Spell TELEKINESIS = create("telekinesis", new TelekinesisSpell(RIGHT, LEFT, RIGHT, config.telekinesisCastingCost));
 	public static final Spell HEAL = create("heal", new HealSpell(RIGHT, LEFT, LEFT, config.healCastingCost));
 	public static final Spell METEOR = create("meteor", new MeteorSpell(LEFT, RIGHT, RIGHT, config.meteorCastingCost));
 	public static final Spell SOLAR_STRIKE = create("solar_strike", new SolarStrikeSpell(LEFT, LEFT, RIGHT, config.solarStrikeCastingCost));

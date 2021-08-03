@@ -1,15 +1,26 @@
 package dev.cammiescorner.arcanus.core.util;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 
 public class ArcanusHelper {
-	public static HitResult raycast(Entity entity, double maxDistance) {
-		Vec3d vec3d = entity.getCameraPosVec(1F);
-		Vec3d vec3d2 = entity.getRotationVec(1F);
-		Vec3d vec3d3 = vec3d.add(vec3d2.x * maxDistance, vec3d2.y * maxDistance, vec3d2.z * maxDistance);
-		return entity.world.raycast(new RaycastContext(vec3d, vec3d3, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, entity));
+	public static HitResult raycast(Entity origin, double maxDistance, boolean hitsEntities) {
+		Vec3d startPos = origin.getCameraPosVec(1F);
+		Vec3d rotation = origin.getRotationVec(1F);
+		Vec3d endPos = startPos.add(rotation.x * maxDistance, rotation.y * maxDistance, rotation.z * maxDistance);
+		HitResult hitResult = origin.world.raycast(new RaycastContext(startPos, endPos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, origin));
+
+		if(hitResult.getType() != HitResult.Type.MISS)
+			endPos = hitResult.getPos();
+
+		HitResult entityHitResult = ProjectileUtil.raycast(origin, startPos, endPos, origin.getBoundingBox().stretch(rotation.multiply(maxDistance)).expand(1.0D, 1.0D, 1.0D), entity -> !entity.isSpectator() && entity.collides(), maxDistance);
+
+		if(hitsEntities && entityHitResult != null)
+			hitResult = entityHitResult;
+
+		return hitResult;
 	}
 }
