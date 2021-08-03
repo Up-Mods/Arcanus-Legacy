@@ -22,7 +22,6 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 					.writeMaskState(RenderLayer.ALL_MASK)
 					.transparency(RenderLayer.LIGHTNING_TRANSPARENCY)
 					.target(RenderLayer.WEATHER_TARGET)
-					.depthTest(RenderLayer.ALWAYS_DEPTH_TEST)
 					.build(false));
 
 	public SolarStrikeEntityRenderer(EntityRendererFactory.Context context) {

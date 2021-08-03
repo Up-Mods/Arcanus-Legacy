@@ -18,8 +18,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -256,12 +259,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Unique
 	public void castSolarStrike() {
-		HitResult result = ArcanusHelper.raycast(this, 256F);
+		HitResult result = ArcanusHelper.raycast(this, 640F);
 
-		if(result.getType() != HitResult.Type.MISS) {
-			SolarStrikeEntity solarStrikeEntity = new SolarStrikeEntity(this, world);
-			solarStrikeEntity.setPosition(result.getPos());
-			world.spawnEntity(solarStrikeEntity);
+		if(result.getType() != HitResult.Type.MISS && !world.isClient()) {
+			ChunkPos chunkPos = new ChunkPos(new BlockPos(result.getPos()));
+			((ServerWorld) world).setChunkForced(chunkPos.x, chunkPos.z, true);
+			SolarStrikeEntity solarStrike = new SolarStrikeEntity(this, world);
+			solarStrike.setPosition(result.getPos());
+			world.spawnEntity(solarStrike);
 		}
 
 		activeSpell = null;

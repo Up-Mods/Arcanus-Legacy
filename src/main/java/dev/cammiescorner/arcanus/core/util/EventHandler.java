@@ -95,6 +95,7 @@ public class EventHandler {
 
 		//-----Copy Player Data Callback-----//
 		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
+			((MagicUser) newPlayer).setMana(((MagicUser) oldPlayer).getMana());
 			((MagicUser) newPlayer).setBurnout(((MagicUser) oldPlayer).getBurnout());
 			((MagicUser) oldPlayer).getKnownSpells().forEach(spell -> ((MagicUser) newPlayer).setKnownSpell(Arcanus.SPELL.getId(spell)));
 		});

@@ -18,8 +18,10 @@ public class ModEntities {
 
 	//-----Entities-----//
 	public static final EntityType<SolarStrikeEntity> SOLAR_STRIKE = create("solar_strike",
-			FabricEntityTypeBuilder.<SolarStrikeEntity>create(SpawnGroup.MISC, (type, world) ->
-					new SolarStrikeEntity(world)).dimensions(EntityDimensions.fixed(0.5f, 0.5f)).trackRangeChunks(128).build());
+			FabricEntityTypeBuilder.<SolarStrikeEntity>create(SpawnGroup.MISC, (type, world) -> new SolarStrikeEntity(world))
+					.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+					.trackRangeChunks(640)
+					.build());
 
 	//-----Registry-----//
 	public static void register() {

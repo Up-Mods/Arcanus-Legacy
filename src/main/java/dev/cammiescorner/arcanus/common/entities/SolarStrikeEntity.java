@@ -8,6 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -26,7 +27,7 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
 	@Override
 	public void tick() {
 		if(!world.isClient()) {
-			if(age <= 3) {
+			if(age <= 9) {
 				Box box = Box.of(getPos(), 8, (world.getHeight() + 2048) - getY(), 8);
 				float radius = (float) (box.maxX - box.minX) / 2;
 
@@ -36,7 +37,7 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
 
 					if(entity instanceof LivingEntity) {
 						entity.setOnFireFor(4);
-						entity.damage(ModDamageSource.solarStrike(getOwner()), Math.max(10F, 40F * (1 - (MathHelper.sqrt(pos1.distanceSquared(pos2)) / radius))));
+						entity.damage(ModDamageSource.solarStrike(getOwner()), Math.max(10F, 80F * (1 - (MathHelper.sqrt(pos1.distanceSquared(pos2)) / radius))));
 					}
 				});
 			}
@@ -55,6 +56,14 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
 				world.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ() - 2, 1.0D, 0.0D, 0.0D);
 			}
 		}
+	}
+
+	@Override
+	public void kill() {
+		if(!world.isClient())
+			((ServerWorld) world).setChunkForced(getChunkPos().x, getChunkPos().z, false);
+
+		super.kill();
 	}
 
 	@Override
