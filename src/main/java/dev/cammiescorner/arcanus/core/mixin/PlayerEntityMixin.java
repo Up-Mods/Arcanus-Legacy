@@ -3,6 +3,7 @@ package dev.cammiescorner.arcanus.core.mixin;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
 import dev.cammiescorner.arcanus.core.registry.ModSpells;
+import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
 import net.fabricmc.fabric.api.util.NbtType;
@@ -255,10 +256,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Unique
 	public void castSolarStrike() {
-		HitResult result = raycast(256F, 1F, false);
+		HitResult result = ArcanusHelper.raycast(this, 256F);
 
 		if(result.getType() != HitResult.Type.MISS) {
-			SolarStrikeEntity solarStrikeEntity = new SolarStrikeEntity(world);
+			SolarStrikeEntity solarStrikeEntity = new SolarStrikeEntity(this, world);
 			solarStrikeEntity.setPosition(result.getPos());
 			world.spawnEntity(solarStrikeEntity);
 		}

@@ -26,6 +26,10 @@ dependencies {
     }
 }
 
+minecraft {
+    accessWidener = project.file("src/main/resources/META-INF/arcanus.accesswidener")
+}
+
 processResources {
     inputs.property "version", project.version
 

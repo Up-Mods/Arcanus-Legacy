@@ -1,12 +1,12 @@
 package dev.cammiescorner.arcanus.common.packets;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.core.util.Spell;
+import dev.cammiescorner.arcanus.core.registry.ModDamageSource;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
+import dev.cammiescorner.arcanus.core.util.Spell;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -45,7 +45,7 @@ public class CastSpellMessage {
 						if(user.getMana() < spell.getManaCost() && config.haveBurnout) {
 							int burnoutAmount = spell.getManaCost() - user.getMana();
 							user.addBurnout(burnoutAmount);
-							player.damage(DamageSource.MAGIC, burnoutAmount);
+							player.damage(ModDamageSource.MAGIC_BURNOUT, burnoutAmount);
 							player.sendMessage(new TranslatableText("error." + Arcanus.MOD_ID + ".burnout").formatted(Formatting.RED), false);
 						}
 

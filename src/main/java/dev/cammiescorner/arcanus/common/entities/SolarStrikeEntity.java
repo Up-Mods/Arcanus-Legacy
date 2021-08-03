@@ -1,9 +1,10 @@
 package dev.cammiescorner.arcanus.common.entities;
 
+import dev.cammiescorner.arcanus.core.registry.ModDamageSource;
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import dev.cammiescorner.arcanus.core.registry.ModSoundEvents;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
@@ -18,14 +19,15 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
 		super(ModEntities.SOLAR_STRIKE, world);
 	}
 
+	public SolarStrikeEntity(LivingEntity owner, World world) {
+		super(ModEntities.SOLAR_STRIKE, owner, world);
+	}
+
 	@Override
 	public void tick() {
 		if(!world.isClient()) {
 			if(age <= 3) {
-				if(age == 1)
-					world.playSound(null, getBlockPos(), ModSoundEvents.SOLAR_STRIKE, SoundCategory.HOSTILE, 6F, (1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F) * 0.7F);
-
-				Box box = Box.of(getPos(), 8, (world.getHeight() + 64) - getY(), 8);
+				Box box = Box.of(getPos(), 8, (world.getHeight() + 2048) - getY(), 8);
 				float radius = (float) (box.maxX - box.minX) / 2;
 
 				world.getOtherEntities(null, box).forEach(entity -> {
@@ -34,7 +36,7 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
 
 					if(entity instanceof LivingEntity) {
 						entity.setOnFireFor(4);
-						entity.damage(DamageSource.GENERIC, Math.max(10F, 40F * (1 - (MathHelper.sqrt(pos1.distanceSquared(pos2)) / radius))));
+						entity.damage(ModDamageSource.solarStrike(getOwner()), Math.max(10F, 40F * (1 - (MathHelper.sqrt(pos1.distanceSquared(pos2)) / radius))));
 					}
 				});
 			}
@@ -44,6 +46,9 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
 		}
 		else {
 			if(age <= 3) {
+				if(age == 1)
+					world.playSound(getX(), getY(), getZ(), ModSoundEvents.SOLAR_STRIKE, SoundCategory.PLAYERS, MathHelper.clamp(1 - (MinecraftClient.getInstance().player.distanceTo(this) / 256F), 0, 1), (1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F) * 0.7F, false);
+
 				world.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() + 2, getY(), getZ(), 1.0D, 0.0D, 0.0D);
 				world.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() - 2, getY(), getZ(), 1.0D, 0.0D, 0.0D);
 				world.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ() + 2, 1.0D, 0.0D, 0.0D);

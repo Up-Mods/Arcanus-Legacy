@@ -17,7 +17,9 @@ public class ModEntities {
 	public static final LinkedHashMap<EntityType, Identifier> ENTITIES = new LinkedHashMap<>();
 
 	//-----Entities-----//
-	public static final EntityType<SolarStrikeEntity> SOLAR_STRIKE = create("solar_strike", FabricEntityTypeBuilder.<SolarStrikeEntity>create(SpawnGroup.MISC, (type, world) -> new SolarStrikeEntity(world)).dimensions(EntityDimensions.fixed(0.5f, 0.5f)).build());
+	public static final EntityType<SolarStrikeEntity> SOLAR_STRIKE = create("solar_strike",
+			FabricEntityTypeBuilder.<SolarStrikeEntity>create(SpawnGroup.MISC, (type, world) ->
+					new SolarStrikeEntity(world)).dimensions(EntityDimensions.fixed(0.5f, 0.5f)).trackRangeChunks(128).build());
 
 	//-----Registry-----//
 	public static void register() {

@@ -9,6 +9,7 @@
 		"WrittenBookItemMixin"
 	],
 	"client": [
+		"client.GameRendererMixin",
 		"client.InGameHudMixin",
 		"client.MinecraftClientMixin"
 	],

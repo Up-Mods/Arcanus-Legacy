@@ -11,15 +11,27 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
+import org.jetbrains.annotations.Nullable;
 
 public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity> {
+	@Nullable
+	public static Shader renderTypeSolarStrikeShader;
+	public static final RenderLayer SOLAR_STRIKE = RenderLayer.of("solar_strike", VertexFormats.POSITION_COLOR,
+			VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder()
+					.shader(new RenderPhase.Shader(() -> renderTypeSolarStrikeShader))
+					.writeMaskState(RenderLayer.ALL_MASK)
+					.transparency(RenderLayer.LIGHTNING_TRANSPARENCY)
+					.target(RenderLayer.WEATHER_TARGET)
+					.depthTest(RenderLayer.ALWAYS_DEPTH_TEST)
+					.build(false));
+
 	public SolarStrikeEntityRenderer(EntityRendererFactory.Context context) {
 		super(context);
 	}
 
 	@Override
 	public void render(SolarStrikeEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider provider, int light) {
-		renderBeam(0, (float) ((entity.world.getHeight() + 192) - entity.getY()), 0, tickDelta, entity.age, matrices, provider, light);
+		renderBeam(0, (float) ((entity.world.getHeight() + 2048) - entity.getY()), 0, tickDelta, entity.age, matrices, provider, light);
 	}
 
 	public void renderBeam(float x, float y, float z, float tickDelta, int age, MatrixStack matrices, VertexConsumerProvider provider, int light) {
@@ -37,7 +49,7 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90));
 		matrices.scale(scale, scale, 1);
 
-		VertexConsumer vertexConsumer = provider.getBuffer(RenderLayer.getLightning());
+		VertexConsumer vertexConsumer = provider.getBuffer(SOLAR_STRIKE);
 		MatrixStack.Entry entry = matrices.peek();
 		Matrix4f matrix4f = entry.getModel();
 		Matrix3f matrix3f = entry.getNormal();
