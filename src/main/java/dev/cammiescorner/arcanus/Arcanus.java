@@ -27,15 +27,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class Arcanus implements ModInitializer
-{
+public class Arcanus implements ModInitializer {
 	//-----Custom Registries-----//
 	public static final Registry<Spell> SPELL = createRegistry("spell", Spell.class);
 
 	public static final String MOD_ID = "arcanus";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-	public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.create(new Identifier(MOD_ID, "general")).appendItems(list ->
-	{
+	public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.create(new Identifier(MOD_ID, "general")).appendItems(list -> {
 		Registry.ITEM.forEach(item -> item.appendStacks(Arcanus.ITEM_GROUP, (DefaultedList<ItemStack>) list));
 		Arcanus.SPELL.forEach(spell -> list.add(SpellBooks.getBookFromSpell(spell)));
 	}).icon(() -> new ItemStack(ModItems.WAND)).build();
@@ -43,8 +41,7 @@ public class Arcanus implements ModInitializer
 	public static ArcanusConfig config;
 
 	@Override
-	public void onInitialize()
-	{
+	public void onInitialize() {
 		AutoConfig.register(ArcanusConfig.class, GsonConfigSerializer::new);
 		config = AutoConfig.getConfigHolder(ArcanusConfig.class).getConfig();
 
@@ -62,15 +59,12 @@ public class Arcanus implements ModInitializer
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> Registry<T> createRegistry(String name, Class<?> clazz)
-	{
+	private static <T> Registry<T> createRegistry(String name, Class<?> clazz) {
 		Registry<?> registry = FabricRegistryBuilder.createSimple(clazz, new Identifier(MOD_ID, name)).buildAndRegister();
 		return (Registry<T>) registry;
 	}
 
-	public static MutableText getSpellInputs(List<Pattern> pattern, int index)
-	{
-		return index >= pattern.size() || pattern.get(index) == null ? new LiteralText("?").formatted(Formatting.GRAY, Formatting.UNDERLINE) :
-				new LiteralText(pattern.get(index).getSymbol()).formatted(Formatting.GREEN);
+	public static MutableText getSpellInputs(List<Pattern> pattern, int index) {
+		return index >= pattern.size() || pattern.get(index) == null ? new LiteralText("?").formatted(Formatting.GRAY, Formatting.UNDERLINE) : new LiteralText(pattern.get(index).getSymbol()).formatted(Formatting.GREEN);
 	}
 }

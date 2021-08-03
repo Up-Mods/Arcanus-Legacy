@@ -3,13 +3,11 @@ package dev.cammiescorner.arcanus.core.mixin.client;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.items.WandItem;
 import dev.cammiescorner.arcanus.common.packets.CastSpellMessage;
-import dev.cammiescorner.arcanus.core.registry.ModKeybinds;
-import dev.cammiescorner.arcanus.core.util.Spell;
 import dev.cammiescorner.arcanus.core.util.ClientUtils;
 import dev.cammiescorner.arcanus.core.util.Pattern;
+import dev.cammiescorner.arcanus.core.util.Spell;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.option.GameOptions;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
@@ -18,7 +16,6 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -36,13 +33,11 @@ public class MinecraftClientMixin implements ClientUtils {
 	@Unique
 	private int timer = 0;
 	@Unique
-	private List<Pattern> pattern = new ArrayList<>(3);
+	private final List<Pattern> pattern = new ArrayList<>(3);
 
 	@Shadow
 	@Nullable
 	public ClientPlayerEntity player;
-
-	@Shadow @Final public GameOptions options;
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void tick(CallbackInfo info) {
@@ -91,7 +86,7 @@ public class MinecraftClientMixin implements ClientUtils {
 		if(player != null && player.getMainHandStack().getItem() instanceof WandItem) {
 			timer = 20;
 			unfinishedSpell = true;
-			pattern.add(ModKeybinds.SPELL_MODIFIER.isPressed() ? Pattern.ALT_RIGHT : Pattern.RIGHT);
+			pattern.add(Pattern.RIGHT);
 			player.swingHand(Hand.MAIN_HAND);
 			player.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 1F, 1.1F);
 			info.cancel();
@@ -103,7 +98,7 @@ public class MinecraftClientMixin implements ClientUtils {
 		if(player != null && player.getMainHandStack().getItem() instanceof WandItem) {
 			timer = 20;
 			unfinishedSpell = true;
-			pattern.add(ModKeybinds.SPELL_MODIFIER.isPressed() ? Pattern.ALT_LEFT : Pattern.LEFT);
+			pattern.add(Pattern.LEFT);
 			player.swingHand(Hand.MAIN_HAND);
 			player.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 1F, 1.3F);
 			info.cancel();

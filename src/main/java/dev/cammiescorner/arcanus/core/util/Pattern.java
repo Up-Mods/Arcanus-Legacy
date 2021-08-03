@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus.core.util;
 
 public enum Pattern {
-	LEFT("L"), RIGHT("R"), ALT_LEFT("AL"), ALT_RIGHT("AR");
+	LEFT("L"), RIGHT("R");
 
 	String symbol;
 
