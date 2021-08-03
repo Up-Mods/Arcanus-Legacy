@@ -96,5 +96,8 @@
 	//-----Death Messages-----//
 	"death.attack.magic_burnout": "%s found out what it feels like to be a mod developer",
 	"death.attack.solar_strike": "%s got a severe sunburn while spending time with %s",
-	"death.attack.solar_strike.item": "%s got a severe sunburn from %s using %s"
+	"death.attack.solar_strike.item": "%s got a severe sunburn from %s using %s",
+
+	//-----Subtitles-----//
+	"subtitles.arcanus.solar_strike": "Solar Strike"
 }

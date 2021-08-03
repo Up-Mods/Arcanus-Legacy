@@ -77,7 +77,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		super(entityType, world);
 	}
 
-	@Inject(method = "tick", at = @At("TAIL"))
+	@Inject(method = "tick", at = @At("TAIL"), cancellable = true)
 	public void tick(CallbackInfo info) {
 		if(!world.isClient()) {
 			if(activeSpell != null) {
