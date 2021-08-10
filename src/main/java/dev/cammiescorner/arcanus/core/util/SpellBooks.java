@@ -139,7 +139,7 @@ public class SpellBooks {
 	public static ItemStack getMineBook(ItemStack stack) {
 		int randInt = RAND.nextInt(16);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
-		Spell spell = ModSpells.MINE;
+		Spell spell = ModSpells.ARCANE_WALL;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
 

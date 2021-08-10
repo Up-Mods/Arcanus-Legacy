@@ -24,7 +24,7 @@ public class ModSpells {
 	public static final Spell HEAL = create("heal", new HealSpell(RIGHT, LEFT, LEFT, config.healCastingCost));
 	public static final Spell METEOR = create("meteor", new MeteorSpell(LEFT, RIGHT, RIGHT, config.meteorCastingCost));
 	public static final Spell SOLAR_STRIKE = create("solar_strike", new SolarStrikeSpell(LEFT, LEFT, RIGHT, config.solarStrikeCastingCost));
-	public static final Spell MINE = create("mine", new MineSpell(RIGHT, RIGHT, LEFT, config.mineCastingCost));
+	public static final Spell ARCANE_WALL = create("arcane_wall", new ArcaneWallSpell(RIGHT, RIGHT, LEFT, config.arcaneWallCastingCost));
 
 	//-----Registry-----//
 	public static void register() {

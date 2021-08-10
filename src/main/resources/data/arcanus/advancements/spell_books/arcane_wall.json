@@ -5,10 +5,10 @@
 			"item": "minecraft:written_book"
 		},
 		"title": {
-			"translate": "advancements.arcanus.mine.title"
+			"translate": "advancements.arcanus.arcane_wall.title"
 		},
 		"description": {
-			"translate": "advancements.arcanus.mine.description"
+			"translate": "advancements.arcanus.arcane_wall.description"
 		},
 		"frame": "goal",
 		"show_toast": true,
@@ -22,7 +22,7 @@
 				"items": [
 					{
 						"items":[ "minecraft:written_book" ],
-						"nbt": "{spell:\"arcanus:mine\"}"
+						"nbt": "{spell:\"arcanus:arcane_wall\"}"
 					}
 				]
 			}

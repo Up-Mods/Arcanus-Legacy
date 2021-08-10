@@ -13,7 +13,7 @@
 	"spell.arcanus.heal": "Heal",
 	"spell.arcanus.meteor": "Meteor",
 	"spell.arcanus.solar_strike": "Solar Strike",
-	"spell.arcanus.mine": "Mine",
+	"spell.arcanus.arcane_wall": "Arcane Wall",
 
 	//-----Book Titles-----//
 	"book.arcanus.lunge.title": "Lunge Spell Book",
@@ -23,7 +23,7 @@
 	"book.arcanus.heal.title": "Heal Spell Book",
 	"book.arcanus.meteor.title": "Meteor Spell Book",
 	"book.arcanus.solar_strike.title": "Solar Strike Spell Book",
-	"book.arcanus.mine.title": "Mine Spell Book",
+	"book.arcanus.arcane_wall.title": "Arcane Wall Spell Book",
 
 	//-----Book Authors-----//
 	"book.arcanus.00.author": "Grand Mage fizzgig511",
@@ -51,7 +51,7 @@
 	"book.arcanus.heal.description": "Call upon magical energy to heal wounds quickly. This spell is useful when in a pinch.",
 	"book.arcanus.meteor.description": "",
 	"book.arcanus.solar_strike.description": "Casting this spell will call down a beam of light from the Sun itself, incinerating most foes.",
-	"book.arcanus.mine.description": "",
+	"book.arcanus.arcane_wall.description": "",
 
 	//-----Items-----//
 	"item.arcanus.wand": "Wand",
@@ -76,8 +76,8 @@
 	"advancements.arcanus.meteor.description": "Find the Meteor Spell Book in a dungeon.",
 	"advancements.arcanus.solar_strike.title": "That Lucky Old Sun",
 	"advancements.arcanus.solar_strike.description": "Find the Solar Strike Spell Book in a dungeon.",
-	"advancements.arcanus.mine.title": "Diggy Diggy Hole",
-	"advancements.arcanus.mine.description": "Find the Mine Spell Book in a dungeon.",
+	"advancements.arcanus.arcane_wall.title": "You shall not... PASS!",
+	"advancements.arcanus.arcane_wall.description": "Find the Arcane Wall Spell Book in a dungeon.",
 	"advancements.arcanus.all_spells.title": "Unlimited Power!",
 	"advancements.arcanus.all_spells.description": "Craft a Wand and collect all 8 Spell Books.",
 

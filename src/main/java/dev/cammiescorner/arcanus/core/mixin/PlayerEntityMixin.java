@@ -1,6 +1,7 @@
 package dev.cammiescorner.arcanus.core.mixin;
 
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.common.entities.MagicMissileEntity;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
 import dev.cammiescorner.arcanus.core.registry.ModSpells;
 import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
@@ -95,8 +96,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 					castMeteor();
 				if(ModSpells.SOLAR_STRIKE.equals(activeSpell))
 					castSolarStrike();
-				if(ModSpells.MINE.equals(activeSpell))
-					castMine();
+				if(ModSpells.ARCANE_WALL.equals(activeSpell))
+					castArcaneWall();
 			}
 
 			if(spellTimer-- <= 0)
@@ -271,6 +272,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Unique
 	public void castMagicMissile() {
+		MagicMissileEntity magicMissile = new MagicMissileEntity(this, world);
+		world.spawnEntity(magicMissile);
 		activeSpell = null;
 	}
 
@@ -316,7 +319,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	}
 
 	@Unique
-	public void castMine() {
+	public void castArcaneWall() {
 		activeSpell = null;
 	}
 }

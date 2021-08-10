@@ -4,6 +4,7 @@ import dev.cammiescorner.arcanus.core.registry.ModDamageSource;
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import dev.cammiescorner.arcanus.core.registry.ModSoundEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -22,6 +23,10 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
 
 	public SolarStrikeEntity(LivingEntity owner, World world) {
 		super(ModEntities.SOLAR_STRIKE, owner, world);
+	}
+
+	public SolarStrikeEntity(EntityType type, World world) {
+		super(type, world);
 	}
 
 	@Override
