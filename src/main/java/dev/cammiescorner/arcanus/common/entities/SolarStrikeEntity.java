@@ -17,12 +17,12 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.world.World;
 
 public class SolarStrikeEntity extends PersistentProjectileEntity {
-	public SolarStrikeEntity(World world) {
-		super(ModEntities.SOLAR_STRIKE, world);
-	}
-
 	public SolarStrikeEntity(LivingEntity owner, World world) {
 		super(ModEntities.SOLAR_STRIKE, owner, world);
+	}
+
+	public SolarStrikeEntity(World world, double x, double y, double z) {
+		super(ModEntities.SOLAR_STRIKE, x, y, z, world);
 	}
 
 	public SolarStrikeEntity(EntityType type, World world) {

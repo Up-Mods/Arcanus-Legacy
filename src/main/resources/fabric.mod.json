@@ -20,6 +20,9 @@
 		],
 		"client": [
 			"dev.cammiescorner.arcanus.client.ArcanusClient"
+		],
+		"modmenu": [
+			"dev.cammiescorner.arcanus.core.integration.ArcanusModMenu"
 		]
 	},
 	"mixins": [

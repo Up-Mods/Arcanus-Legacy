@@ -1,6 +1,7 @@
 package dev.cammiescorner.arcanus.core.mixin;
 
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.common.entities.ArcaneWallEntity;
 import dev.cammiescorner.arcanus.common.entities.MagicMissileEntity;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
 import dev.cammiescorner.arcanus.core.registry.ModSpells;
@@ -8,18 +9,22 @@ import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.entity.Entity;
+import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.TntEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -27,12 +32,10 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Mixin;
@@ -273,6 +276,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique
 	public void castMagicMissile() {
 		MagicMissileEntity magicMissile = new MagicMissileEntity(this, world);
+		magicMissile.setProperties(this, getPitch(), getYaw(), getRoll(), 2.5F, 0F);
 		world.spawnEntity(magicMissile);
 		activeSpell = null;
 	}
@@ -280,13 +284,45 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique
 	public void castTelekinesis() {
 		HitResult result = ArcanusHelper.raycast(this, 5F, true);
+		Vec3d rotation = getRotationVec(1F);
 
-		if(result.getType() == HitResult.Type.ENTITY) {
-			Entity target = ((EntityHitResult) result).getEntity();
-			Vec3d rotation = getRotationVec(1F);
+		switch(result.getType()) {
+			case ENTITY -> {
+				BlockPos pos = ((EntityHitResult) result).getEntity().getBlockPos();
+				Box box = new Box(pos);
 
-			target.setVelocity(rotation.multiply(2.5F));
-			target.velocityModified = true;
+				world.getOtherEntities(this, box, EntityPredicates.VALID_ENTITY).forEach(target -> {
+					if(target instanceof PersistentProjectileEntity projectile)
+						projectile.fall();
+
+					target.setVelocity(rotation.multiply(2.5F));
+					target.velocityModified = true;
+				});
+			}
+			case BLOCK -> {
+				BlockPos pos = ((BlockHitResult) result).getBlockPos();
+				Box box = new Box(pos);
+				BlockState state = world.getBlockState(pos);
+				Block block = state.getBlock();
+
+				if(block instanceof TntBlock) {
+					TntBlock.primeTnt(world, pos, this);
+					world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+
+					world.getEntitiesByClass(TntEntity.class, box, tnt -> tnt.isAlive() && tnt.getCausingEntity() == this).forEach(target -> {
+						target.setVelocity(rotation.multiply(2.5F));
+						target.velocityModified = true;
+					});
+				}
+
+				if(block instanceof FallingBlock fallingBlock) {
+					FallingBlockEntity target = new FallingBlockEntity(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
+					fallingBlock.configureFallingBlockEntity(target);
+					target.setVelocity(rotation.multiply(2.5F));
+					target.velocityModified = true;
+					world.spawnEntity(target);
+				}
+			}
 		}
 
 		activeSpell = null;
@@ -314,12 +350,26 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			solarStrike.setPosition(result.getPos());
 			world.spawnEntity(solarStrike);
 		}
+		else {
+			sendMessage(new TranslatableText("spell." + Arcanus.MOD_ID + ".no_target"), false);
+		}
 
 		activeSpell = null;
 	}
 
 	@Unique
 	public void castArcaneWall() {
+		HitResult result = ArcanusHelper.raycast(this, 24F, false);
+
+		if(result.getType() != HitResult.Type.MISS) {
+			ArcaneWallEntity solarStrike = new ArcaneWallEntity(this, world);
+			solarStrike.setPosition(result.getPos());
+			world.spawnEntity(solarStrike);
+		}
+		else {
+			sendMessage(new TranslatableText("spell." + Arcanus.MOD_ID + ".no_target"), false);
+		}
+
 		activeSpell = null;
 	}
 }

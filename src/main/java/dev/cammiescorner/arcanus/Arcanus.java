@@ -1,14 +1,14 @@
 package dev.cammiescorner.arcanus;
 
 import dev.cammiescorner.arcanus.common.packets.CastSpellMessage;
-import dev.cammiescorner.arcanus.core.config.ArcanusConfig;
+import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import dev.cammiescorner.arcanus.core.registry.ModItems;
 import dev.cammiescorner.arcanus.core.registry.ModSoundEvents;
 import dev.cammiescorner.arcanus.core.registry.ModSpells;
 import dev.cammiescorner.arcanus.core.util.*;
 import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -42,7 +42,7 @@ public class Arcanus implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		AutoConfig.register(ArcanusConfig.class, GsonConfigSerializer::new);
+		AutoConfig.register(ArcanusConfig.class, JanksonConfigSerializer::new);
 		config = AutoConfig.getConfigHolder(ArcanusConfig.class).getConfig();
 
 		ServerPlayNetworking.registerGlobalReceiver(CastSpellMessage.ID, CastSpellMessage::handle);

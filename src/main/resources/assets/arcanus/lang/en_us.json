@@ -14,6 +14,7 @@
 	"spell.arcanus.meteor": "Meteor",
 	"spell.arcanus.solar_strike": "Solar Strike",
 	"spell.arcanus.arcane_wall": "Arcane Wall",
+	"spell.arcanus.no_target": "Spell missed",
 
 	//-----Book Titles-----//
 	"book.arcanus.lunge.title": "Lunge Spell Book",
@@ -99,5 +100,20 @@
 	"death.attack.solar_strike.item": "%s got a severe sunburn from %s using %s",
 
 	//-----Subtitles-----//
-	"subtitles.arcanus.solar_strike": "Solar Strike"
+	"subtitles.arcanus.solar_strike": "Solar Strike",
+
+	//-----ModMenu-----//
+	"text.autoconfig.arcanus.title": "Arcanus",
+	"text.autoconfig.arcanus.option.haveBurnout": "Should players have Burnout?",
+	"text.autoconfig.arcanus.option.magicColour": "The colour of objects created by spells.",
+	"text.autoconfig.arcanus.option.manaCooldown": "The time Mana takes to refill by 1 in ticks.",
+	"text.autoconfig.arcanus.option.burnoutCooldown": "The time Burnout takes to reduce by 1 in ticks.",
+	"text.autoconfig.arcanus.option.lungeCastingCost": "The Mana cost for the Lunge spell.",
+	"text.autoconfig.arcanus.option.dreamWarpCastingCost": "The Mana cost for the Dream Warp spell.",
+	"text.autoconfig.arcanus.option.magicMissileCastingCost": "The Mana cost for the Magic Missile spell.",
+	"text.autoconfig.arcanus.option.telekinesisCastingCost": "The Mana cost for the Telekinetic Shock spell.",
+	"text.autoconfig.arcanus.option.healCastingCost": "The Mana cost for the Heal spell.",
+	"text.autoconfig.arcanus.option.meteorCastingCost": "The Mana cost for the Meteor spell.",
+	"text.autoconfig.arcanus.option.solarStrikeCastingCost": "The Mana cost for the Solar Strike spell.",
+	"text.autoconfig.arcanus.option.arcaneWallCastingCost": "The Mana cost for the Arcane Wall spell."
 }

@@ -6,7 +6,8 @@
 	"mixins": [
 		"LecternBlockMixin",
 		"PlayerEntityMixin",
-		"WrittenBookItemMixin"
+		"WrittenBookItemMixin",
+		"client.ClientPlayNetworkHandlerMixin"
 	],
 	"client": [
 		"client.GameRendererMixin",

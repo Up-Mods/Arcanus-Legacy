@@ -4,8 +4,8 @@
 		"srcrgb": "srcalpha",
 		"dstrgb": "1-srcalpha"
 	},
-	"vertex": "rendertype_solar_strike",
-	"fragment": "rendertype_solar_strike",
+	"vertex": "rendertype_arcanus_magic",
+	"fragment": "rendertype_arcanus_magic",
 	"attributes": [
 		"Color"
 	],

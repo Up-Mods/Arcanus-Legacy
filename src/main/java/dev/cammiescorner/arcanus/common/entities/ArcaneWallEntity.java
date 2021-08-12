@@ -6,10 +6,11 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.world.World;
 
 public class ArcaneWallEntity extends Entity {
-	private LivingEntity owner;
+	private Entity owner;
 
 	public ArcaneWallEntity(World world) {
 		super(ModEntities.ARCANE_WALL, world);
@@ -18,6 +19,11 @@ public class ArcaneWallEntity extends Entity {
 	public ArcaneWallEntity(LivingEntity owner, World world) {
 		this(world);
 		this.owner = owner;
+	}
+
+	public ArcaneWallEntity(World world, double x, double y, double z) {
+		this(world);
+		this.setPos(x, y, z);
 	}
 
 	public ArcaneWallEntity(EntityType<?> type, World world) {
@@ -39,8 +45,12 @@ public class ArcaneWallEntity extends Entity {
 
 	}
 
+	public void setOwner(Entity owner) {
+		this.owner = owner;
+	}
+
 	@Override
 	public Packet<?> createSpawnPacket() {
-		return null;
+		return new EntitySpawnS2CPacket(this, owner == null ? 0 : owner.getId());
 	}
 }
