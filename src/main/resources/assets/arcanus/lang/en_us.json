@@ -45,14 +45,15 @@
 	"book.arcanus.15.author": "rad_alix, Destroyer of Kingdoms",
 
 	//-----Book Descriptions-----//
+	"book.arcanus.casting_pattern": "\n\n-------------------\n\n    Casting Pattern:\n",
 	"book.arcanus.lunge.description": "This spell will launch you forward with enough force to hurt anything you collide with.",
 	"book.arcanus.dream_warp.description": "Utilising planar travel, you can \"teleport\" home to escape even the most awkward of dinner parties.",
-	"book.arcanus.magic_missile.description": "Creates a fast-moving, low-damage projectile of magical energy. A valuable tool in any Mage's arsenal.",
-	"book.arcanus.telekinetic_shock.description": "With a little magical assistance, this spell will send any foe (or friend) flying. Just be careful with it around cliffs...",
+	"book.arcanus.magic_missile.description": "Creates a fast moving, low damage projectile of magical energy.\n\nA valuable tool in any Mage's arsenal.",
+	"book.arcanus.telekinetic_shock.description": "With a little magical assistance, this spell will send any foe (or friend) flying.\n\nJust be careful with it around cliffs...",
 	"book.arcanus.heal.description": "Call upon magical energy to heal wounds quickly. This spell is useful when in a pinch.",
 	"book.arcanus.meteor.description": "",
 	"book.arcanus.solar_strike.description": "Casting this spell will call down a beam of light from the Sun itself, incinerating most foes.",
-	"book.arcanus.arcane_wall.description": "",
+	"book.arcanus.arcane_wall.description": "Building is overrated. In this house we use walls made of magical energy to keep the monsters out.",
 
 	//-----Items-----//
 	"item.arcanus.wand": "Wand",

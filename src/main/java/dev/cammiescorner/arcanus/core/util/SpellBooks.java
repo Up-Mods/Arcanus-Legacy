@@ -27,14 +27,15 @@ public class SpellBooks {
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")));
-		listTag.add(stringToNbt(spellToPattern(spell)));
+		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
+				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
+				.append("          " + spellToPattern(spell))));
 		tag.put("pages", listTag);
 
 		return stack;
 	}
 
-	public static ItemStack getFissureBook(ItemStack stack) {
+	public static ItemStack getDreamWarpBook(ItemStack stack) {
 		int randInt = RAND.nextInt(16);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
 		Spell spell = ModSpells.DREAM_WARP;
@@ -44,8 +45,9 @@ public class SpellBooks {
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")));
-		listTag.add(stringToNbt(spellToPattern(spell)));
+		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
+				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
+				.append("          " + spellToPattern(spell))));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -61,8 +63,9 @@ public class SpellBooks {
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")));
-		listTag.add(stringToNbt(spellToPattern(spell)));
+		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
+				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
+				.append("          " + spellToPattern(spell))));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -78,8 +81,9 @@ public class SpellBooks {
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")));
-		listTag.add(stringToNbt(spellToPattern(spell)));
+		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
+				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
+				.append("          " + spellToPattern(spell))));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -95,8 +99,9 @@ public class SpellBooks {
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")));
-		listTag.add(stringToNbt(spellToPattern(spell)));
+		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
+				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
+				.append("          " + spellToPattern(spell))));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -112,8 +117,9 @@ public class SpellBooks {
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")));
-		listTag.add(stringToNbt(spellToPattern(spell)));
+		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
+				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
+				.append("          " + spellToPattern(spell))));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -129,14 +135,15 @@ public class SpellBooks {
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")));
-		listTag.add(stringToNbt(spellToPattern(spell)));
+		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
+				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
+				.append("          " + spellToPattern(spell))));
 		tag.put("pages", listTag);
 
 		return stack;
 	}
 
-	public static ItemStack getMineBook(ItemStack stack) {
+	public static ItemStack getArcaneWallBook(ItemStack stack) {
 		int randInt = RAND.nextInt(16);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
 		Spell spell = ModSpells.ARCANE_WALL;
@@ -146,8 +153,9 @@ public class SpellBooks {
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")));
-		listTag.add(stringToNbt(spellToPattern(spell)));
+		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
+				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
+				.append("          " + spellToPattern(spell))));
 		tag.put("pages", listTag);
 
 		return stack;
@@ -158,13 +166,13 @@ public class SpellBooks {
 
 		return switch(Arcanus.SPELL.getRawId(spell)) {
 			case 0 -> SpellBooks.getLungeBook(stack);
-			case 1 -> SpellBooks.getFissureBook(stack);
+			case 1 -> SpellBooks.getDreamWarpBook(stack);
 			case 2 -> SpellBooks.getMagicMissileBook(stack);
 			case 3 -> SpellBooks.getTelekinesisBook(stack);
 			case 4 -> SpellBooks.getHealBook(stack);
 			case 5 -> SpellBooks.getMeteorBook(stack);
 			case 6 -> SpellBooks.getSolarStrikeBook(stack);
-			case 7 -> SpellBooks.getMineBook(stack);
+			case 7 -> SpellBooks.getArcaneWallBook(stack);
 			default -> throw new IndexOutOfBoundsException("SOMETING WENT VEWY VEWY WWONG! THIWS SHOUWD NEVEW HAPPEN!");
 		};
 	}

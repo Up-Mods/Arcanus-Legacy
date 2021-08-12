@@ -5,6 +5,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.WritableBookItem;
 import net.minecraft.item.WrittenBookItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
@@ -16,6 +17,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -49,5 +51,19 @@ public abstract class WrittenBookItemMixin extends Item {
 			tooltip.add(new TranslatableText("book.byAuthor").append(new TranslatableText(string)).formatted(Formatting.GRAY));
 			info.cancel();
 		}
+	}
+
+	/**
+	 * @author Cammie
+	 * @reason Mojang stupid and capped book titles at 32 characters
+	 */
+	@Overwrite
+	public static boolean isValid(@Nullable NbtCompound nbt) {
+		if(!WritableBookItem.isValid(nbt))
+			return false;
+		else if(!nbt.contains("title", 8))
+			return false;
+		else
+			return nbt.getString("title").length() <= 40 && nbt.contains("author", 8);
 	}
 }
