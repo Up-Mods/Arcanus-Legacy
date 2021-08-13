@@ -1,8 +1,26 @@
 {
+	"magic_missile": {
+		"subtitle": "subtitles.arcanus.magic_missile",
+		"sounds": [
+			"arcanus:magic_missile"
+		]
+	},
+	"telekinetic_shock": {
+		"subtitle": "subtitles.arcanus.telekinetic_shock",
+		"sounds": [
+			"arcanus:telekinetic_shock"
+		]
+	},
 	"solar_strike": {
 		"subtitle": "subtitles.arcanus.solar_strike",
 		"sounds": [
 			"arcanus:solar_strike"
+		]
+	},
+	"heal": {
+		"subtitle": "subtitles.arcanus.heal",
+		"sounds": [
+			"arcanus:heal"
 		]
 	}
 }

@@ -31,7 +31,7 @@ public class MagicMissileEntity extends PersistentProjectileEntity {
 
 	@Override
 	protected SoundEvent getHitSound() {
-		return SoundEvents.ENTITY_VILLAGER_NO;
+		return SoundEvents.BLOCK_AMETHYST_BLOCK_STEP;
 	}
 
 	@Override

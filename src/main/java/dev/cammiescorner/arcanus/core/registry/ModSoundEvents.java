@@ -12,7 +12,10 @@ public class ModSoundEvents {
 	public static final LinkedHashMap<SoundEvent, Identifier> SOUNDS = new LinkedHashMap<>();
 
 	//-----Sound Events-----//
+	public static final SoundEvent MAGIC_MISSILE = create("magic_missile");
+	public static final SoundEvent TELEKINETIC_SHOCK = create("telekinetic_shock");
 	public static final SoundEvent SOLAR_STRIKE = create("solar_strike");
+	public static final SoundEvent HEAL = create("heal");
 
 	//-----Registry-----//
 	public static void register() {

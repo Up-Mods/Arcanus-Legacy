@@ -4,6 +4,7 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.entities.ArcaneWallEntity;
 import dev.cammiescorner.arcanus.common.entities.MagicMissileEntity;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
+import dev.cammiescorner.arcanus.core.registry.ModSoundEvents;
 import dev.cammiescorner.arcanus.core.registry.ModSpells;
 import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
@@ -222,8 +223,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Unique
 	public void castLunge() {
-		if(spellTimer == 10)
+		if(spellTimer == 10) {
 			setVelocity(0F, 0.75F, 0F);
+			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+		}
 
 		float adjustedPitch = MathHelper.abs(MathHelper.abs(getPitch() / 90F) - 1);
 
@@ -264,8 +267,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		if(optionalSpawnPoint.isPresent()) {
 			Vec3d spawnPoint = optionalSpawnPoint.get();
 			System.out.println(spawnPoint);
-			world.playSound(null, prevX, prevY, prevZ, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
 			serverPlayer.teleport(serverWorld, spawnPoint.x, spawnPoint.y, spawnPoint.z, (float) rotation.x, (float) rotation.y);
+			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
 		}
 		else
 			sendMessage(new TranslatableText("block.minecraft.spawn.not_valid"), false);
@@ -278,6 +282,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		MagicMissileEntity magicMissile = new MagicMissileEntity(this, world);
 		magicMissile.setProperties(this, getPitch(), getYaw(), getRoll(), 2.5F, 0F);
 		world.spawnEntity(magicMissile);
+		world.playSound(null, getBlockPos(), ModSoundEvents.MAGIC_MISSILE, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 		activeSpell = null;
 	}
 
@@ -285,6 +290,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	public void castTelekinesis() {
 		HitResult result = ArcanusHelper.raycast(this, 5F, true);
 		Vec3d rotation = getRotationVec(1F);
+
+		world.playSound(null, getBlockPos(), ModSoundEvents.TELEKINETIC_SHOCK, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 
 		switch(result.getType()) {
 			case ENTITY -> {
@@ -331,6 +338,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique
 	public void castHeal() {
 		heal(8);
+		world.playSound(null, getBlockPos(), ModSoundEvents.HEAL, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 		activeSpell = null;
 	}
 
