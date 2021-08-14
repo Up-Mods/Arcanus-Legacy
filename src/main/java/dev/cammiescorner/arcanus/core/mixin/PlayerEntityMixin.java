@@ -7,10 +7,12 @@ import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
 import dev.cammiescorner.arcanus.core.registry.ModSoundEvents;
 import dev.cammiescorner.arcanus.core.registry.ModSpells;
 import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
+import dev.cammiescorner.arcanus.core.util.CanBeDiscombobulated;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.*;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -96,8 +98,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 					castTelekinesis();
 				if(ModSpells.HEAL.equals(activeSpell))
 					castHeal();
-				if(ModSpells.METEOR.equals(activeSpell))
-					castMeteor();
+				if(ModSpells.DISCOMBOBULATE.equals(activeSpell))
+					castDiscombobulate();
 				if(ModSpells.SOLAR_STRIKE.equals(activeSpell))
 					castSolarStrike();
 				if(ModSpells.ARCANE_WALL.equals(activeSpell))
@@ -116,6 +118,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 					addExhaustion(5F);
 				}
 			}
+		}
+		else {
+			MinecraftClient.getInstance().options.invertYMouse = ((CanBeDiscombobulated) this).isDiscombobulated();
 		}
 	}
 
@@ -343,7 +348,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	}
 
 	@Unique
-	public void castMeteor() {
+	public void castDiscombobulate() {
+		HitResult result = ArcanusHelper.raycast(this, 8F, true);
+
+		if(result.getType() == HitResult.Type.ENTITY) {
+			if(((EntityHitResult) result).getEntity() instanceof CanBeDiscombobulated target) {
+				target.setDiscombobulated(true);
+				target.setDiscombobulatedTimer(60);
+			}
+		}
+		else {
+			sendMessage(new TranslatableText("spell." + Arcanus.MOD_ID + ".no_target"), false);
+		}
+
 		activeSpell = null;
 	}
 

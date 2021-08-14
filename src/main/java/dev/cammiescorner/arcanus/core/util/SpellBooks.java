@@ -107,10 +107,10 @@ public class SpellBooks {
 		return stack;
 	}
 
-	public static ItemStack getMeteorBook(ItemStack stack) {
+	public static ItemStack getDiscombobulateBook(ItemStack stack) {
 		int randInt = RAND.nextInt(16);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
-		Spell spell = ModSpells.METEOR;
+		Spell spell = ModSpells.DISCOMBOBULATE;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
 
@@ -170,7 +170,7 @@ public class SpellBooks {
 			case 2 -> SpellBooks.getMagicMissileBook(stack);
 			case 3 -> SpellBooks.getTelekinesisBook(stack);
 			case 4 -> SpellBooks.getHealBook(stack);
-			case 5 -> SpellBooks.getMeteorBook(stack);
+			case 5 -> SpellBooks.getDiscombobulateBook(stack);
 			case 6 -> SpellBooks.getSolarStrikeBook(stack);
 			case 7 -> SpellBooks.getArcaneWallBook(stack);
 			default -> throw new IndexOutOfBoundsException("SOMETING WENT VEWY VEWY WWONG! THIWS SHOUWD NEVEW HAPPEN!");

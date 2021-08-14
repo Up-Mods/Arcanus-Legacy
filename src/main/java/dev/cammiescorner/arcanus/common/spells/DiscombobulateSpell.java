@@ -6,8 +6,8 @@ import dev.cammiescorner.arcanus.core.util.Spell;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
-public class MeteorSpell extends Spell {
-	public MeteorSpell(Pattern first, Pattern second, Pattern last, int manaCost) {
+public class DiscombobulateSpell extends Spell {
+	public DiscombobulateSpell(Pattern first, Pattern second, Pattern last, int manaCost) {
 		super(first, second, last, manaCost);
 	}
 

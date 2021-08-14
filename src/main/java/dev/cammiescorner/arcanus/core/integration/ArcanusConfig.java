@@ -36,8 +36,8 @@ public class ArcanusConfig implements ConfigData {
 	@Comment("The Mana cost for the Heal spell.")
 	public int healCastingCost = 10;
 
-	@Comment("The Mana cost for the Unown spell.")
-	public int unknownCastingCost = 6;
+	@Comment("The Mana cost for the Discombobulate spell.")
+	public int discombobulateCastingCost = 10;
 
 	@Comment("The Mana cost for the Solar Strike spell.")
 	public int solarStrikeCastingCost = 20;

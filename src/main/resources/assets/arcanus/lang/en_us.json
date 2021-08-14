@@ -11,7 +11,7 @@
 	"spell.arcanus.magic_missile": "Magic Missile",
 	"spell.arcanus.telekinetic_shock": "Telekinetic Shock",
 	"spell.arcanus.heal": "Heal",
-	"spell.arcanus.meteor": "Unknown",
+	"spell.arcanus.discombobulate": "Discombobulate",
 	"spell.arcanus.solar_strike": "Solar Strike",
 	"spell.arcanus.arcane_wall": "Arcane Wall (WIP)",
 	"spell.arcanus.no_target": "Spell missed",
@@ -22,7 +22,7 @@
 	"book.arcanus.magic_missile.title": "Magic Missile Spell Book",
 	"book.arcanus.telekinetic_shock.title": "Telekinetic Shock Spell Book",
 	"book.arcanus.heal.title": "Heal Spell Book",
-	"book.arcanus.meteor.title": "Unknown Spell Book",
+	"book.arcanus.discombobulate.title": "Discombobulate Spell Book",
 	"book.arcanus.solar_strike.title": "Solar Strike Spell Book",
 	"book.arcanus.arcane_wall.title": "Arcane Wall (WIP) Spell Book",
 
@@ -51,7 +51,7 @@
 	"book.arcanus.magic_missile.description": "Creates a fast moving, low damage projectile of magical energy.\n\nA valuable tool in any Mage's arsenal.",
 	"book.arcanus.telekinetic_shock.description": "With a little magical assistance, this spell will send any foe (or friend) flying.\n\nJust be careful with it around cliffs...",
 	"book.arcanus.heal.description": "Call upon magical energy to heal wounds quickly. This spell is useful when in a pinch.",
-	"book.arcanus.meteor.description": "",
+	"book.arcanus.discombobulate.description": "Severely mess with your enemies' perception of the world... for about 3 seconds.\n\nIt's still enough time to escape.",
 	"book.arcanus.solar_strike.description": "Casting this spell will call down a beam of light from the Sun itself, incinerating most foes.",
 	"book.arcanus.arcane_wall.description": "Building is overrated. In this house we use walls made of magical energy to keep the monsters out.",
 
@@ -74,8 +74,8 @@
 	"advancements.arcanus.telekinetic_shock.description": "Find the Telekinetic Shock Spell Book in a dungeon.",
 	"advancements.arcanus.heal.title": "Tis but a scratch!",
 	"advancements.arcanus.heal.description": "Find the Heal Spell Book in a dungeon.",
-	"advancements.arcanus.meteor.title": "You fell for one of the classic blunders",
-	"advancements.arcanus.meteor.description": "Find the WIP Spell Book in a dungeon.",
+	"advancements.arcanus.discombobulate.title": "You dumb fucking cretin, you fucking fool, absolute fucking buffoon, you bumbling idiot. Fuck you.",
+	"advancements.arcanus.discombobulate.description": "Find the Discombobulate Spell Book in a dungeon.",
 	"advancements.arcanus.solar_strike.title": "That Lucky Old Sun",
 	"advancements.arcanus.solar_strike.description": "Find the Solar Strike Spell Book in a dungeon.",
 	"advancements.arcanus.arcane_wall.title": "You shall not... PASS!",
@@ -117,7 +117,7 @@
 	"text.autoconfig.arcanus.option.magicMissileCastingCost": "The Mana cost for the Magic Missile spell.",
 	"text.autoconfig.arcanus.option.telekinesisCastingCost": "The Mana cost for the Telekinetic Shock spell.",
 	"text.autoconfig.arcanus.option.healCastingCost": "The Mana cost for the Heal spell.",
-	"text.autoconfig.arcanus.option.unknownCastingCost": "The Mana cost for the Unknown spell.",
+	"text.autoconfig.arcanus.option.discombobulateCastingCost": "The Mana cost for the Discombobulate spell.",
 	"text.autoconfig.arcanus.option.solarStrikeCastingCost": "The Mana cost for the Solar Strike spell.",
 	"text.autoconfig.arcanus.option.arcaneWallCastingCost": "The Mana cost for the Arcane Wall spell."
 }

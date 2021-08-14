@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
 
 public class MagicMissileEntity extends PersistentProjectileEntity {
@@ -38,6 +39,14 @@ public class MagicMissileEntity extends PersistentProjectileEntity {
 	protected void onBlockHit(BlockHitResult blockHitResult) {
 		super.onBlockHit(blockHitResult);
 		kill();
+	}
+
+	@Override
+	protected void onEntityHit(EntityHitResult entityHitResult) {
+		super.onEntityHit(entityHitResult);
+
+		if(entityHitResult.getEntity() instanceof LivingEntity target)
+			target.hurtTime = 0;
 	}
 
 	@Override

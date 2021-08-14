@@ -5,14 +5,16 @@
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
 		"LecternBlockMixin",
+		"LivingEntityMixin",
 		"PlayerEntityMixin",
-		"WrittenBookItemMixin",
-		"client.ClientPlayNetworkHandlerMixin"
+		"WrittenBookItemMixin"
 	],
 	"client": [
+		"client.ClientPlayNetworkHandlerMixin",
 		"client.GameRendererMixin",
 		"client.InGameHudMixin",
-		"client.MinecraftClientMixin"
+		"client.MinecraftClientMixin",
+		"client.MouseMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
