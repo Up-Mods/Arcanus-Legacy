@@ -364,12 +364,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Unique
 	public void castDiscombobulate() {
-		HitResult result = ArcanusHelper.raycast(this, 8F, true);
+		HitResult result = ArcanusHelper.raycast(this, 4F, true);
 
 		if(result.getType() == HitResult.Type.ENTITY) {
 			if(((EntityHitResult) result).getEntity() instanceof CanBeDiscombobulated target) {
 				target.setDiscombobulated(true);
-				target.setDiscombobulatedTimer(60);
+				target.setDiscombobulatedTimer(160);
 			}
 		}
 		else {
