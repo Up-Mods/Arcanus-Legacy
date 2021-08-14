@@ -34,7 +34,7 @@ public class ArcanusConfig implements ConfigData {
 	public int telekinesisCastingCost = 4;
 
 	@Comment("The Mana cost for the Heal spell.")
-	public int healCastingCost = 10;
+	public int healCastingCost = 12;
 
 	@Comment("The Mana cost for the Discombobulate spell.")
 	public int discombobulateCastingCost = 10;
@@ -43,5 +43,5 @@ public class ArcanusConfig implements ConfigData {
 	public int solarStrikeCastingCost = 20;
 
 	@Comment("The Mana cost for the Arcane Wall (WIP) spell.")
-	public int arcaneWallCastingCost = 4;
+	public int arcaneWallCastingCost = 5;
 }
