@@ -2,10 +2,7 @@ package dev.cammiescorner.arcanus;
 
 import dev.cammiescorner.arcanus.common.packets.CastSpellMessage;
 import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
-import dev.cammiescorner.arcanus.core.registry.ModEntities;
-import dev.cammiescorner.arcanus.core.registry.ModItems;
-import dev.cammiescorner.arcanus.core.registry.ModSoundEvents;
-import dev.cammiescorner.arcanus.core.registry.ModSpells;
+import dev.cammiescorner.arcanus.core.registry.*;
 import dev.cammiescorner.arcanus.core.util.*;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;

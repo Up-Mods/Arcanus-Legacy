@@ -51,10 +51,10 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
 				kill();
 		}
 		else {
-			if(age <= 3) {
-				if(age == 1)
-					world.playSound(getX(), getY(), getZ(), ModSoundEvents.SOLAR_STRIKE, SoundCategory.PLAYERS, MathHelper.clamp(1 - (MinecraftClient.getInstance().player.distanceTo(this) / 256F), 0, 1), (1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F) * 0.7F, false);
+			if(age == 1)
+				world.playSound(getX(), getY(), getZ(), ModSoundEvents.SOLAR_STRIKE, SoundCategory.PLAYERS, MathHelper.clamp(1 - (MinecraftClient.getInstance().player.distanceTo(this) / 256F), 0, 1), (1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F) * 0.7F, false);
 
+			if(age >= 2 && age <= 5) {
 				world.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() + 2, getY(), getZ(), 1.0D, 0.0D, 0.0D);
 				world.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() - 2, getY(), getZ(), 1.0D, 0.0D, 0.0D);
 				world.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ() + 2, 1.0D, 0.0D, 0.0D);

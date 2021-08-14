@@ -4,6 +4,7 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.entities.ArcaneWallEntity;
 import dev.cammiescorner.arcanus.common.entities.MagicMissileEntity;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
+import dev.cammiescorner.arcanus.core.registry.ModParticles;
 import dev.cammiescorner.arcanus.core.registry.ModSoundEvents;
 import dev.cammiescorner.arcanus.core.registry.ModSpells;
 import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
@@ -27,6 +28,7 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -86,26 +88,26 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Inject(method = "tick", at = @At("TAIL"), cancellable = true)
 	public void tick(CallbackInfo info) {
-		if(!world.isClient()) {
-			if(activeSpell != null) {
-				if(ModSpells.LUNGE.equals(activeSpell))
-					castLunge();
-				if(ModSpells.DREAM_WARP.equals(activeSpell))
-					castDreamWarp();
-				if(ModSpells.MAGIC_MISSILE.equals(activeSpell))
-					castMagicMissile();
-				if(ModSpells.TELEKINESIS.equals(activeSpell))
-					castTelekinesis();
-				if(ModSpells.HEAL.equals(activeSpell))
-					castHeal();
-				if(ModSpells.DISCOMBOBULATE.equals(activeSpell))
-					castDiscombobulate();
-				if(ModSpells.SOLAR_STRIKE.equals(activeSpell))
-					castSolarStrike();
-				if(ModSpells.ARCANE_WALL.equals(activeSpell))
-					castArcaneWall();
-			}
+		if(activeSpell != null) {
+			if(ModSpells.LUNGE.equals(activeSpell))
+				castLunge();
+			if(ModSpells.DREAM_WARP.equals(activeSpell))
+				castDreamWarp();
+			if(ModSpells.MAGIC_MISSILE.equals(activeSpell))
+				castMagicMissile();
+			if(ModSpells.TELEKINESIS.equals(activeSpell))
+				castTelekinesis();
+			if(ModSpells.HEAL.equals(activeSpell))
+				castHeal();
+			if(ModSpells.DISCOMBOBULATE.equals(activeSpell))
+				castDiscombobulate();
+			if(ModSpells.SOLAR_STRIKE.equals(activeSpell))
+				castSolarStrike();
+			if(ModSpells.ARCANE_WALL.equals(activeSpell))
+				castArcaneWall();
+		}
 
+		if(!world.isClient()) {
 			if(spellTimer-- <= 0)
 				spellTimer = 0;
 
@@ -276,8 +278,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			serverPlayer.teleport(serverWorld, spawnPoint.x, spawnPoint.y, spawnPoint.z, (float) rotation.x, (float) rotation.y);
 			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
 		}
-		else
+		else {
 			sendMessage(new TranslatableText("block.minecraft.spawn.not_valid"), false);
+		}
 
 		activeSpell = null;
 	}
@@ -344,6 +347,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	public void castHeal() {
 		heal(8);
 		world.playSound(null, getBlockPos(), ModSoundEvents.HEAL, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+		world.addParticle((ParticleEffect) ModParticles.HEAL, getX() + 0.5, getY() + 1.5, getZ() + 0.5, 0, 0, 0);
+
 		activeSpell = null;
 	}
 
