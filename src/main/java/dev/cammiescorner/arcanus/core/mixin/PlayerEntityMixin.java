@@ -60,8 +60,10 @@ import static dev.cammiescorner.arcanus.Arcanus.config;
 public abstract class PlayerEntityMixin extends LivingEntity implements MagicUser {
 	@Shadow
 	public abstract void addExhaustion(float exhaustion);
+
 	@Shadow
 	protected HungerManager hungerManager;
+
 	@Shadow
 	public abstract void sendMessage(Text message, boolean actionBar);
 
@@ -88,26 +90,26 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Inject(method = "tick", at = @At("TAIL"), cancellable = true)
 	public void tick(CallbackInfo info) {
-		if(activeSpell != null) {
-			if(ModSpells.LUNGE.equals(activeSpell))
-				castLunge();
-			if(ModSpells.DREAM_WARP.equals(activeSpell))
-				castDreamWarp();
-			if(ModSpells.MAGIC_MISSILE.equals(activeSpell))
-				castMagicMissile();
-			if(ModSpells.TELEKINESIS.equals(activeSpell))
-				castTelekinesis();
-			if(ModSpells.HEAL.equals(activeSpell))
-				castHeal();
-			if(ModSpells.DISCOMBOBULATE.equals(activeSpell))
-				castDiscombobulate();
-			if(ModSpells.SOLAR_STRIKE.equals(activeSpell))
-				castSolarStrike();
-			if(ModSpells.ARCANE_WALL.equals(activeSpell))
-				castArcaneWall();
-		}
-
 		if(!world.isClient()) {
+			if(activeSpell != null) {
+				if(ModSpells.LUNGE.equals(activeSpell))
+					castLunge();
+				if(ModSpells.DREAM_WARP.equals(activeSpell))
+					castDreamWarp();
+				if(ModSpells.MAGIC_MISSILE.equals(activeSpell))
+					castMagicMissile();
+				if(ModSpells.TELEKINESIS.equals(activeSpell))
+					castTelekinesis();
+				if(ModSpells.HEAL.equals(activeSpell))
+					castHeal();
+				if(ModSpells.DISCOMBOBULATE.equals(activeSpell))
+					castDiscombobulate();
+				if(ModSpells.SOLAR_STRIKE.equals(activeSpell))
+					castSolarStrike();
+				if(ModSpells.ARCANE_WALL.equals(activeSpell))
+					castArcaneWall();
+			}
+
 			if(spellTimer-- <= 0)
 				spellTimer = 0;
 
@@ -296,7 +298,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Unique
 	public void castTelekinesis() {
-		HitResult result = ArcanusHelper.raycast(this, 5F, true);
+		HitResult result = ArcanusHelper.raycast(this, 10F, true);
 		Vec3d rotation = getRotationVec(1F);
 
 		world.playSound(null, getBlockPos(), ModSoundEvents.TELEKINETIC_SHOCK, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
@@ -347,7 +349,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	public void castHeal() {
 		heal(8);
 		world.playSound(null, getBlockPos(), ModSoundEvents.HEAL, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
-		world.addParticle((ParticleEffect) ModParticles.HEAL, getX() + 0.5, getY() + 1.5, getZ() + 0.5, 0, 0, 0);
+
+
+		for(int amount = 0; amount < 32; amount++) {
+			float offsetX = ((random.nextInt(3) - 1) * random.nextFloat());
+			float offsetY = random.nextFloat() * 2F;
+			float offsetZ = ((random.nextInt(3) - 1) * random.nextFloat());
+
+			((ServerWorld) world).spawnParticles((ParticleEffect) ModParticles.HEAL, getX() + offsetX, getY() - 0.5 + offsetY, getZ() + offsetZ, 1, 0, 0, 0, 0);
+		}
 
 		activeSpell = null;
 	}
