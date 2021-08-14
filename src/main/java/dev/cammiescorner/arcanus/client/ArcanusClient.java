@@ -34,7 +34,6 @@ public class ArcanusClient implements ClientModInitializer {
 		ParticleFactoryRegistry.getInstance().register(ModParticles.HEAL, HealParticle.Factory::new);
 
 		ModKeybinds.register();
-		ModParticles.register();
 
 		EventHandler.clientEvents();
 	}

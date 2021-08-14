@@ -48,6 +48,7 @@ public class Arcanus implements ModInitializer {
 		ModItems.register();
 		ModSpells.register();
 		ModEntities.register();
+		ModParticles.register();
 		ModSoundEvents.register();
 
 		EventHandler.commonEvents();
