@@ -4,6 +4,7 @@
 	"package": "dev.cammiescorner.arcanus.core.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
+		"HungerManagerMixin",
 		"LecternBlockMixin",
 		"LivingEntityMixin",
 		"PlayerEntityMixin",
