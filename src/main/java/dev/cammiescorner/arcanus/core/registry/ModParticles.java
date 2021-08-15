@@ -15,7 +15,10 @@ public class ModParticles {
 	public static final LinkedHashMap<ParticleType<?>, Identifier> PARTICLE_TYPES = new LinkedHashMap<>();
 
 	//-----Particles-----//
+	public static final ParticleType<DefaultParticleType> MAGIC_MISSILE = create("magic_missile", FabricParticleTypes.simple());
+	public static final ParticleType<DefaultParticleType> TELEKINETIC_SHOCK = create("telekinetic_shock", FabricParticleTypes.simple());
 	public static final ParticleType<DefaultParticleType> HEAL = create("heal", FabricParticleTypes.simple());
+	public static final ParticleType<DefaultParticleType> DISCOMBOBULATE = create("discombobulate", FabricParticleTypes.simple());
 
 	//-----Registry-----//
 	public static void register() {

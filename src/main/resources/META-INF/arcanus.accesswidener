@@ -6,6 +6,12 @@ accessible method net/minecraft/block/FallingBlock configureFallingBlockEntity (
 
 accessible method net/minecraft/entity/projectile/PersistentProjectileEntity fall ()V
 
+accessible field net/minecraft/structure/pool/StructurePool elements Ljava/util/List;
+
+accessible field net/minecraft/structure/pool/SinglePoolElement processors Ljava/util/function/Supplier;
+mutable field net/minecraft/structure/pool/SinglePoolElement processors Ljava/util/function/Supplier;
+accessible field net/minecraft/structure/pool/SinglePoolElement location Lcom/mojang/datafixers/util/Either;
+
 accessible method net/minecraft/entity/damage/DamageSource setBypassesArmor ()Lnet/minecraft/entity/damage/DamageSource;
 accessible method net/minecraft/entity/damage/DamageSource setFallingBlock ()Lnet/minecraft/entity/damage/DamageSource;
 accessible method net/minecraft/entity/damage/DamageSource setOutOfWorld ()Lnet/minecraft/entity/damage/DamageSource;

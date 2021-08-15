@@ -16,7 +16,7 @@ import java.util.Random;
 
 public class SpellBooks {
 	private static final Random RAND = new Random();
-	private static final int MAX_AUTHORS = 17;
+	private static final int MAX_AUTHORS = 18;
 
 	public static ItemStack getLungeBook(ItemStack stack) {
 		int randInt = RAND.nextInt(MAX_AUTHORS);
@@ -166,6 +166,22 @@ public class SpellBooks {
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 
 		return switch(Arcanus.SPELL.getRawId(spell)) {
+			case 0 -> SpellBooks.getLungeBook(stack);
+			case 1 -> SpellBooks.getDreamWarpBook(stack);
+			case 2 -> SpellBooks.getMagicMissileBook(stack);
+			case 3 -> SpellBooks.getTelekinesisBook(stack);
+			case 4 -> SpellBooks.getHealBook(stack);
+			case 5 -> SpellBooks.getDiscombobulateBook(stack);
+			case 6 -> SpellBooks.getSolarStrikeBook(stack);
+			case 7 -> SpellBooks.getArcaneWallBook(stack);
+			default -> throw new IndexOutOfBoundsException("SOMETING WENT VEWY VEWY WWONG! THIWS SHOUWD NEVEW HAPPEN!");
+		};
+	}
+
+	public static ItemStack getRandomSpellBook() {
+		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
+
+		return switch(RAND.nextInt(8)) {
 			case 0 -> SpellBooks.getLungeBook(stack);
 			case 1 -> SpellBooks.getDreamWarpBook(stack);
 			case 2 -> SpellBooks.getMagicMissileBook(stack);

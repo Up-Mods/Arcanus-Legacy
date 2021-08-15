@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(LecternBlock.class)
-public class LecternBlockMixin {
+public class LecternBlockMixin{
 	@Inject(method = "openScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;openHandledScreen(Lnet/minecraft/screen/NamedScreenHandlerFactory;)Ljava/util/OptionalInt;"), locals = LocalCapture.CAPTURE_FAILSOFT)
 	public void openScreen(World world, BlockPos pos, PlayerEntity player, CallbackInfo info, BlockEntity blockEntity) {
 		ItemStack stack = ((LecternBlockEntity) blockEntity).getBook();

@@ -1,6 +1,7 @@
 package dev.cammiescorner.arcanus;
 
 import dev.cammiescorner.arcanus.common.packets.CastSpellMessage;
+import dev.cammiescorner.arcanus.common.structure.processor.LecternStructureProcessor;
 import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
 import dev.cammiescorner.arcanus.core.registry.*;
 import dev.cammiescorner.arcanus.core.util.*;
@@ -13,6 +14,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.function.LootFunctionType;
+import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
@@ -35,6 +37,7 @@ public class Arcanus implements ModInitializer {
 		Arcanus.SPELL.forEach(spell -> list.add(SpellBooks.getBookFromSpell(spell)));
 	}).icon(() -> new ItemStack(ModItems.WAND)).build();
 	public static final LootFunctionType ARCANUS_LOOT_FUNCTION = new LootFunctionType(new ArcanusLootFunction.Serializer());
+	public static final StructureProcessorType<LecternStructureProcessor> LECTERN = StructureProcessorType.register("set_lectern_book", LecternStructureProcessor.CODEC);
 	public static ArcanusConfig config;
 
 	@Override

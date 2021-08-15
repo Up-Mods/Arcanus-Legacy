@@ -3,7 +3,10 @@ package dev.cammiescorner.arcanus.client;
 import dev.cammiescorner.arcanus.client.entity.renderer.ArcaneWallEntityRenderer;
 import dev.cammiescorner.arcanus.client.entity.renderer.MagicMissileEntityRenderer;
 import dev.cammiescorner.arcanus.client.entity.renderer.SolarStrikeEntityRenderer;
+import dev.cammiescorner.arcanus.client.particle.DiscombobulateParticle;
 import dev.cammiescorner.arcanus.client.particle.HealParticle;
+import dev.cammiescorner.arcanus.client.particle.MagicMissileParticle;
+import dev.cammiescorner.arcanus.client.particle.TelekineticShockParticle;
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import dev.cammiescorner.arcanus.core.registry.ModKeybinds;
 import dev.cammiescorner.arcanus.core.registry.ModParticles;
@@ -31,7 +34,10 @@ public class ArcanusClient implements ClientModInitializer {
 		EntityRendererRegistry.INSTANCE.register(ModEntities.ARCANE_WALL, ArcaneWallEntityRenderer::new);
 		EntityRendererRegistry.INSTANCE.register(ModEntities.MAGIC_MISSILE, MagicMissileEntityRenderer::new);
 
+		ParticleFactoryRegistry.getInstance().register(ModParticles.MAGIC_MISSILE, MagicMissileParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(ModParticles.TELEKINETIC_SHOCK, TelekineticShockParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(ModParticles.HEAL, HealParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(ModParticles.DISCOMBOBULATE, DiscombobulateParticle.Factory::new);
 
 		ModKeybinds.register();
 

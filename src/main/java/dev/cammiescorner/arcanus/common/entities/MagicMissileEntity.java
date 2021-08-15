@@ -31,6 +31,14 @@ public class MagicMissileEntity extends PersistentProjectileEntity {
 	}
 
 	@Override
+	public void tick() {
+		super.tick();
+
+		if(age > 60)
+			kill();
+	}
+
+	@Override
 	protected SoundEvent getHitSound() {
 		return SoundEvents.BLOCK_AMETHYST_BLOCK_STEP;
 	}
