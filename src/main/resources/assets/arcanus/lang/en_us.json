@@ -29,10 +29,10 @@
 	//-----Book Authors-----//
 	"book.arcanus.00.author": "Grand Mage fizzgig511",
 	"book.arcanus.01.author": "ComradeCammie the Seer",
-	"book.arcanus.02.author": "",
+	"book.arcanus.02.author": "Kiori the Alchemist",
 	"book.arcanus.03.author": "SmallEnderman the Sorcerer",
 	"book.arcanus.04.author": "Old Wizard UpcraftLP",
-	"book.arcanus.05.author": "",
+	"book.arcanus.05.author": "Truentyena the Explorer",
 	"book.arcanus.06.author": "Arathain the Eternally Lost",
 	"book.arcanus.07.author": "doctor4t, Jarl of Rattenheim",
 	"book.arcanus.08.author": "ProxyCattus, Lord of Cats",
@@ -42,7 +42,8 @@
 	"book.arcanus.12.author": "TheSilkMiner the Necromancer",
 	"book.arcanus.13.author": "Curle the Festive Bolb",
 	"book.arcanus.14.author": "Polymath DauthiumSilencer",
-	"book.arcanus.15.author": "",
+	"book.arcanus.15.author": "Coven Witch AmyMialee",
+	"book.arcanus.16.author": "Suspect_Potato the Criminal Fortune Teller",
 
 	//-----Book Descriptions-----//
 	"book.arcanus.casting_pattern": "\n\n-------------------\n\n    Casting Pattern:\n",

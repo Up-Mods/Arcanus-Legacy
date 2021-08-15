@@ -16,9 +16,10 @@ import java.util.Random;
 
 public class SpellBooks {
 	private static final Random RAND = new Random();
+	private static final int MAX_AUTHORS = 17;
 
 	public static ItemStack getLungeBook(ItemStack stack) {
-		int randInt = RAND.nextInt(16);
+		int randInt = RAND.nextInt(MAX_AUTHORS);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
 		Spell spell = ModSpells.LUNGE;
 		NbtCompound tag = stack.getOrCreateNbt();
@@ -36,7 +37,7 @@ public class SpellBooks {
 	}
 
 	public static ItemStack getDreamWarpBook(ItemStack stack) {
-		int randInt = RAND.nextInt(16);
+		int randInt = RAND.nextInt(MAX_AUTHORS);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
 		Spell spell = ModSpells.DREAM_WARP;
 		NbtCompound tag = stack.getOrCreateNbt();
@@ -54,7 +55,7 @@ public class SpellBooks {
 	}
 
 	public static ItemStack getMagicMissileBook(ItemStack stack) {
-		int randInt = RAND.nextInt(16);
+		int randInt = RAND.nextInt(MAX_AUTHORS);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
 		Spell spell = ModSpells.MAGIC_MISSILE;
 		NbtCompound tag = stack.getOrCreateNbt();
@@ -72,7 +73,7 @@ public class SpellBooks {
 	}
 
 	public static ItemStack getTelekinesisBook(ItemStack stack) {
-		int randInt = RAND.nextInt(16);
+		int randInt = RAND.nextInt(MAX_AUTHORS);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
 		Spell spell = ModSpells.TELEKINESIS;
 		NbtCompound tag = stack.getOrCreateNbt();
@@ -90,7 +91,7 @@ public class SpellBooks {
 	}
 
 	public static ItemStack getHealBook(ItemStack stack) {
-		int randInt = RAND.nextInt(16);
+		int randInt = RAND.nextInt(MAX_AUTHORS);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
 		Spell spell = ModSpells.HEAL;
 		NbtCompound tag = stack.getOrCreateNbt();
@@ -108,7 +109,7 @@ public class SpellBooks {
 	}
 
 	public static ItemStack getDiscombobulateBook(ItemStack stack) {
-		int randInt = RAND.nextInt(16);
+		int randInt = RAND.nextInt(MAX_AUTHORS);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
 		Spell spell = ModSpells.DISCOMBOBULATE;
 		NbtCompound tag = stack.getOrCreateNbt();
@@ -126,7 +127,7 @@ public class SpellBooks {
 	}
 
 	public static ItemStack getSolarStrikeBook(ItemStack stack) {
-		int randInt = RAND.nextInt(16);
+		int randInt = RAND.nextInt(MAX_AUTHORS);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
 		Spell spell = ModSpells.SOLAR_STRIKE;
 		NbtCompound tag = stack.getOrCreateNbt();
@@ -144,7 +145,7 @@ public class SpellBooks {
 	}
 
 	public static ItemStack getArcaneWallBook(ItemStack stack) {
-		int randInt = RAND.nextInt(16);
+		int randInt = RAND.nextInt(MAX_AUTHORS);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
 		Spell spell = ModSpells.ARCANE_WALL;
 		NbtCompound tag = stack.getOrCreateNbt();
