@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class SpellBooks {
 	private static final Random RAND = new Random();
-	private static final int MAX_AUTHORS = 18;
+	private static final int MAX_AUTHORS = 20;
 
 	public static ItemStack getLungeBook(ItemStack stack) {
 		int randInt = RAND.nextInt(MAX_AUTHORS);

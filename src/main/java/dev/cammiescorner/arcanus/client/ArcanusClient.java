@@ -1,5 +1,6 @@
 package dev.cammiescorner.arcanus.client;
 
+import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.client.entity.renderer.ArcaneWallEntityRenderer;
 import dev.cammiescorner.arcanus.client.entity.renderer.MagicMissileEntityRenderer;
 import dev.cammiescorner.arcanus.client.entity.renderer.SolarStrikeEntityRenderer;
@@ -7,6 +8,7 @@ import dev.cammiescorner.arcanus.client.particle.DiscombobulateParticle;
 import dev.cammiescorner.arcanus.client.particle.HealParticle;
 import dev.cammiescorner.arcanus.client.particle.MagicMissileParticle;
 import dev.cammiescorner.arcanus.client.particle.TelekineticShockParticle;
+import dev.cammiescorner.arcanus.client.screens.BookshelfScreen;
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import dev.cammiescorner.arcanus.core.registry.ModKeybinds;
 import dev.cammiescorner.arcanus.core.registry.ModParticles;
@@ -14,6 +16,7 @@ import dev.cammiescorner.arcanus.core.util.EventHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.render.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +33,8 @@ public class ArcanusClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		ScreenRegistry.register(Arcanus.BOOKSHELF_SCREEN_HANDLER, BookshelfScreen::new);
+
 		EntityRendererRegistry.INSTANCE.register(ModEntities.SOLAR_STRIKE, SolarStrikeEntityRenderer::new);
 		EntityRendererRegistry.INSTANCE.register(ModEntities.ARCANE_WALL, ArcaneWallEntityRenderer::new);
 		EntityRendererRegistry.INSTANCE.register(ModEntities.MAGIC_MISSILE, MagicMissileEntityRenderer::new);

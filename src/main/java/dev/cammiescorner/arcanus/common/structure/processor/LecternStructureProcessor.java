@@ -31,6 +31,6 @@ public class LecternStructureProcessor extends StructureProcessor {
 
 	@Override
 	protected StructureProcessorType<?> getType() {
-		return Arcanus.LECTERN;
+		return Arcanus.LECTERN_PROCESSOR;
 	}
 }

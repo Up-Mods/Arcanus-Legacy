@@ -45,6 +45,8 @@
 	"book.arcanus.15.author": "Coven Witch AmyMialee",
 	"book.arcanus.16.author": "Suspect_Potato the Criminal Fortune Teller",
 	"book.arcanus.17.author": "Inkybun the Master",
+	"book.arcanus.18.author": "MoriyaShiine the King",
+	"book.arcanus.19.author": "Aelpecyem the Heretic",
 
 	//-----Book Descriptions-----//
 	"book.arcanus.casting_pattern": "\n\n-------------------\n\n    Casting Pattern:\n",
@@ -59,6 +61,9 @@
 
 	//-----Items-----//
 	"item.arcanus.wand": "Wand",
+
+	//-----Blocks-----//
+	"block.arcanus.fillable_bookshelf": "Bookshelf",
 
 	//-----Item Groups-----//
 	"itemGroup.arcanus.general": "Arcanus",
