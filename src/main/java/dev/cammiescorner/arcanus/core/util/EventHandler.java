@@ -3,10 +3,12 @@ package dev.cammiescorner.arcanus.core.util;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.common.structure.processor.BookshelfReplacerStructureProcessor;
 import dev.cammiescorner.arcanus.common.structure.processor.LecternStructureProcessor;
 import dev.cammiescorner.arcanus.core.registry.ModCommands;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -39,6 +41,12 @@ public class EventHandler {
 
 	@Environment(EnvType.CLIENT)
 	public static void clientEvents() {
+		//-----Client Tick Callback-----//
+		ClientTickEvents.START_CLIENT_TICK.register(client -> {
+			if(client.player instanceof CanBeDiscombobulated player)
+				client.options.invertYMouse = player.isDiscombobulated();
+		});
+
 		final MinecraftClient client = MinecraftClient.getInstance();
 
 		//-----HUD Render Callback-----//
@@ -91,20 +99,20 @@ public class EventHandler {
 		ServerLifecycleEvents.SERVER_STARTING.register(server -> {
 			MutableRegistry<StructurePool> templatePoolRegistry = server.getRegistryManager().getMutable(Registry.STRUCTURE_POOL_KEY);
 
-			EventHandler.addBookToLectern(templatePoolRegistry, new Identifier("minecraft", "village/desert/houses"), ImmutableList.of(
+			EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier("minecraft", "village/desert/houses"), ImmutableList.of(
 					new Identifier("minecraft", "village/desert/houses/desert_library_1")
 			));
-			EventHandler.addBookToLectern(templatePoolRegistry, new Identifier("minecraft", "village/plains/houses"), ImmutableList.of(
+			EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier("minecraft", "village/plains/houses"), ImmutableList.of(
 					new Identifier("minecraft", "village/plains/houses/plains_library_1"),
 					new Identifier("minecraft", "village/plains/houses/plains_library_2")
 			));
-			EventHandler.addBookToLectern(templatePoolRegistry, new Identifier("minecraft", "village/savanna/houses"), ImmutableList.of(
+			EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier("minecraft", "village/savanna/houses"), ImmutableList.of(
 					new Identifier("minecraft", "village/savanna/houses/savanna_library_1")
 			));
-			EventHandler.addBookToLectern(templatePoolRegistry, new Identifier("minecraft", "village/snowy/houses"), ImmutableList.of(
+			EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier("minecraft", "village/snowy/houses"), ImmutableList.of(
 					new Identifier("minecraft", "village/snowy/houses/snowy_library_1")
 			));
-			EventHandler.addBookToLectern(templatePoolRegistry, new Identifier("minecraft", "village/taiga/houses"), ImmutableList.of(
+			EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier("minecraft", "village/taiga/houses"), ImmutableList.of(
 					new Identifier("minecraft", "village/taiga/houses/taiga_library_1")
 			));
 		});
@@ -122,7 +130,7 @@ public class EventHandler {
 			if(RUINED_PORTAL_LOOT_TABLE.equals(id)) {
 				FabricLootPoolBuilder poolBuilder = FabricLootPoolBuilder.builder()
 						.rolls(ConstantLootNumberProvider.create(1))
-						.withCondition(RandomChanceLootCondition.builder(0.15F).build())
+						.withCondition(RandomChanceLootCondition.builder(0.1F).build())
 						.withEntry(createItemEntry(new ItemStack(Items.WRITTEN_BOOK)).build());
 				supplier.withPool(poolBuilder.build());
 			}
@@ -147,7 +155,7 @@ public class EventHandler {
 		return builder;
 	}
 
-	public static void addBookToLectern(MutableRegistry<StructurePool> templatePoolRegistry, Identifier poolId, List<Identifier> nbtPieceIdList) {
+	public static void addStructureProcessors(MutableRegistry<StructurePool> templatePoolRegistry, Identifier poolId, List<Identifier> nbtPieceIdList) {
 		StructurePool pool = templatePoolRegistry.get(poolId);
 
 		if(pool == null)
@@ -163,6 +171,7 @@ public class EventHandler {
 					List<StructureProcessor> mutableProcessorList = new ArrayList<>(originalProcessorList.getList());
 
 					mutableProcessorList.add(LecternStructureProcessor.INSTANCE);
+					mutableProcessorList.add(BookshelfReplacerStructureProcessor.INSTANCE);
 					StructureProcessorList newProcessorList = new StructureProcessorList(mutableProcessorList);
 
 					piece.processors = () -> newProcessorList;

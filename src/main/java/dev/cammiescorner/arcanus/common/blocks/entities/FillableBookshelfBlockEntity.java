@@ -64,7 +64,7 @@ public class FillableBookshelfBlockEntity extends BlockEntity implements NamedSc
 
 	@Override
 	public boolean canPlayerUse(PlayerEntity player) {
-		return player.squaredDistanceTo(this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5) < 16;
+		return !(player.squaredDistanceTo(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) > 64.0D);
 	}
 
 	@Override

@@ -56,7 +56,7 @@ public class MinecraftClientMixin implements ClientUtils {
 				if(pattern.size() == 3) {
 					for(Spell spell : Arcanus.SPELL) {
 						if(pattern.equals(spell.getSpellPattern())) {
-							CastSpellMessage.send(Arcanus.SPELL.getId(spell).toString());
+							CastSpellMessage.send(Arcanus.SPELL.getRawId(spell));
 							unfinishedSpell = false;
 							break;
 						}

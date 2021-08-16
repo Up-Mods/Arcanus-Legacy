@@ -20,19 +20,19 @@ import static dev.cammiescorner.arcanus.Arcanus.config;
 public class CastSpellMessage {
 	public static final Identifier ID = new Identifier(Arcanus.MOD_ID, "cast_spell");
 
-	public static void send(String spellId) {
+	public static void send(int spellId) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-		buf.writeString(spellId);
+		buf.writeVarInt(spellId);
 
 		ClientSidePacketRegistryImpl.INSTANCE.sendToServer(ID, buf);
 	}
 
 	public static void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler network, PacketByteBuf buf, PacketSender sender) {
-		String spellId = buf.readString();
+		int spellId = buf.readVarInt();
 
 		server.execute(() -> {
 			MagicUser user = (MagicUser) player;
-			Spell spell = Arcanus.SPELL.get(new Identifier(spellId));
+			Spell spell = Arcanus.SPELL.get(spellId);
 
 			if(user.getKnownSpells().contains(spell)) {
 				if((config.haveBurnout && user.getMana() > 0) || (!config.haveBurnout && user.getMana() >= spell.getManaCost())) {

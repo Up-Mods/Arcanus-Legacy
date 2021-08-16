@@ -1,0 +1,14 @@
+{
+	"replace": false,
+	"values": [
+		"minecraft:book",
+		"minecraft:writable_book",
+		"minecraft:written_book",
+		"minecraft:enchanted_book",
+		"minecraft:knowledge_book",
+		{
+			"id": "patchouli:guide_book",
+			"required": false
+		}
+	]
+}

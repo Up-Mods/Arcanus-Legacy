@@ -13,7 +13,6 @@ import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.*;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -123,9 +122,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				}
 			}
 		}
-		else {
-			MinecraftClient.getInstance().options.invertYMouse = ((CanBeDiscombobulated) this).isDiscombobulated();
-		}
 	}
 
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
@@ -134,7 +130,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		NbtList listTag = rootTag.getList("KnownSpells", NbtType.STRING);
 
 		for(int i = 0; i < listTag.size(); i++)
-			knownSpells.add(Arcanus.SPELL.get(new Identifier(listTag.getString(i))));
+			Arcanus.SPELL.getOrEmpty(new Identifier(listTag.getString(i))).ifPresent(knownSpells::add);
 
 		dataTracker.set(MANA, rootTag.getInt("Mana"));
 		dataTracker.set(BURNOUT, rootTag.getInt("Burnout"));
@@ -175,7 +171,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 		if(!knownSpells.contains(spell))
 			knownSpells.add(spell);
-		else
+		else if(spell != null)
 			Arcanus.LOGGER.warn("Spell " + spell.getTranslationKey() + " is already known!");
 	}
 
