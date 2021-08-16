@@ -75,7 +75,8 @@ public class FillableBookshelfBlockEntity extends BlockEntity implements NamedSc
 
 	public void notifyListeners() {
 		this.markDirty();
-		this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState().with(FillableBookshelfBlock.BOOK_COUNT, fullSlots()), Block.NOTIFY_ALL);
+		world.setBlockState(getPos(), world.getBlockState(getPos()).with(FillableBookshelfBlock.BOOK_COUNT, fullSlots()));
+		this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
 	}
 
 	public int fullSlots() {

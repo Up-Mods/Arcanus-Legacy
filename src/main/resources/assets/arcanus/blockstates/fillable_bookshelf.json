@@ -1,0 +1,55 @@
+{
+	"variants": {
+		"book_count=0": {
+			"model": "arcanus:block/bookshelf_empty"
+		},
+		"book_count=1": {
+			"model": "arcanus:block/bookshelf_1_book"
+		},
+		"book_count=2": {
+			"model": "arcanus:block/bookshelf_2_book"
+		},
+		"book_count=3": {
+			"model": "arcanus:block/bookshelf_3_book"
+		},
+		"book_count=4": {
+			"model": "arcanus:block/bookshelf_4_book"
+		},
+		"book_count=5": {
+			"model": "arcanus:block/bookshelf_5_book"
+		},
+		"book_count=6": {
+			"model": "arcanus:block/bookshelf_6_book"
+		},
+		"book_count=7": {
+			"model": "arcanus:block/bookshelf_7_book"
+		},
+		"book_count=8": {
+			"model": "arcanus:block/bookshelf_8_book"
+		},
+		"book_count=9": {
+			"model": "arcanus:block/bookshelf_9_book"
+		},
+		"book_count=10": {
+			"model": "arcanus:block/bookshelf_10_book"
+		},
+		"book_count=11": {
+			"model": "arcanus:block/bookshelf_11_book"
+		},
+		"book_count=12": {
+			"model": "arcanus:block/bookshelf_12_book"
+		},
+		"book_count=13": {
+			"model": "arcanus:block/bookshelf_13_book"
+		},
+		"book_count=14": {
+			"model": "arcanus:block/bookshelf_14_book"
+		},
+		"book_count=15": {
+			"model": "arcanus:block/bookshelf_15_book"
+		},
+		"book_count=16": {
+			"model": "arcanus:block/bookshelf_16_book"
+		}
+	}
+}

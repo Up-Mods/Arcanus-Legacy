@@ -190,5 +190,10 @@ public class BookshelfScreenHandler extends ScreenHandler {
 		public int getMaxItemCount() {
 			return 1;
 		}
+
+		@Override
+		public void setStack(ItemStack stack) {
+			super.setStack(stack);
+		}
 	}
 }
