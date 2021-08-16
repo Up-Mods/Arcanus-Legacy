@@ -8,7 +8,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
@@ -178,10 +177,8 @@ public class SpellBooks {
 		};
 	}
 
-	public static ItemStack getRandomSpellBook() {
-		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
-
-		return switch(RAND.nextInt(8)) {
+	public static ItemStack getRandomSpellBook(ItemStack stack) {
+		return switch(RAND.nextInt(7)) {
 			case 0 -> SpellBooks.getLungeBook(stack);
 			case 1 -> SpellBooks.getDreamWarpBook(stack);
 			case 2 -> SpellBooks.getMagicMissileBook(stack);
@@ -194,8 +191,8 @@ public class SpellBooks {
 		};
 	}
 
-	private static NbtString stringToNbt(String string) {
-		return NbtString.of(Text.Serializer.toJson(new LiteralText(string)));
+	public static ItemStack getRandomSpellBook() {
+		return getRandomSpellBook(new ItemStack(Items.WRITTEN_BOOK));
 	}
 
 	private static NbtString textToNbt(Text text) {

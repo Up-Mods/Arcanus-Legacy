@@ -17,17 +17,7 @@ public class ArcanusLootFunction extends ConditionalLootFunction {
 
 	@Override
 	protected ItemStack process(ItemStack stack, LootContext context) {
-		return switch(context.getRandom().nextInt(8)) {
-			case 0 -> SpellBooks.getLungeBook(stack);
-			case 1 -> SpellBooks.getDreamWarpBook(stack);
-			case 2 -> SpellBooks.getMagicMissileBook(stack);
-			case 3 -> SpellBooks.getTelekinesisBook(stack);
-			case 4 -> SpellBooks.getHealBook(stack);
-			case 5 -> SpellBooks.getDiscombobulateBook(stack);
-			case 6 -> SpellBooks.getSolarStrikeBook(stack);
-			case 7 -> SpellBooks.getArcaneWallBook(stack);
-			default -> throw new IndexOutOfBoundsException("SOMETING WENT VEWY VEWY WWONG! THIWS SHOUWD NEVEW HAPPEN!");
-		};
+		return SpellBooks.getRandomSpellBook(stack);
 	}
 
 	@Override
