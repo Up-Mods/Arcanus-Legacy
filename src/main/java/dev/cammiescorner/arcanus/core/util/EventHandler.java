@@ -76,6 +76,7 @@ public class EventHandler {
 					int y = scaledHeight - (player.isCreative() ? 34 : 49);
 					float alpha = manaTimer.value > 20 ? 1F : manaTimer.value / 20F;
 
+					RenderSystem.enableBlend();
 					RenderSystem.setShaderTexture(0, HUD_ELEMENTS);
 					RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
 
