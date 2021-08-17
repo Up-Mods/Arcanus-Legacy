@@ -25,6 +25,10 @@ public interface MagicUser {
 
 	void addBurnout(int amount);
 
+	boolean isManaVisible();
+
+	void shouldShowMana(boolean shouldShowMana);
+
 	void setLastCastTime(long lastCastTime);
 
 	void setActiveSpell(Spell spell, int timer);

@@ -6,6 +6,7 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.structure.processor.BookshelfReplacerStructureProcessor;
 import dev.cammiescorner.arcanus.common.structure.processor.LecternStructureProcessor;
 import dev.cammiescorner.arcanus.core.registry.ModCommands;
+import dev.cammiescorner.arcanus.core.registry.ModItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -48,48 +49,64 @@ public class EventHandler {
 		});
 
 		final MinecraftClient client = MinecraftClient.getInstance();
+		var manaTimer = new Object() {
+			int value;
+		};
 
 		//-----HUD Render Callback-----//
 		HudRenderCallback.EVENT.register((matrices, tickDelta) -> {
 			PlayerEntity player = (PlayerEntity) client.cameraEntity;
 
-			if(player != null) {
+			if(player != null && !player.isSpectator()) {
 				MagicUser user = (MagicUser) player;
 				int mana = user.getMana();
 				int maxMana = user.getMaxMana();
 				int burnout = user.getBurnout();
 				int maxBurnout = user.getMaxBurnout();
-				int scaledWidth = client.getWindow().getScaledWidth();
-				int scaledHeight = client.getWindow().getScaledHeight();
-				int x = scaledWidth / 2 + 82;
-				int y = scaledHeight - (player.isCreative() ? 34 : 49);
 
-				RenderSystem.setShaderTexture(0, HUD_ELEMENTS);
+				if(player.getMainHandStack().isOf(ModItems.WAND) || mana < maxMana)
+					manaTimer.value = 40;
+				else
+					manaTimer.value = Math.max(manaTimer.value - 1, 0);
 
-				for(int i = 0; i < maxMana / 2; i++) {
-					int halfOrFullOrb = i * 2 + 1;
-					DrawableHelper.drawTexture(matrices, x - (i * 8), y, 0, 15, 9, 9, 256, 256);
+				if(manaTimer.value > 0) {
+					user.shouldShowMana(true);
+					int scaledWidth = client.getWindow().getScaledWidth();
+					int scaledHeight = client.getWindow().getScaledHeight();
+					int x = scaledWidth / 2 + 82;
+					int y = scaledHeight - (player.isCreative() ? 34 : 49);
+					float alpha = manaTimer.value > 20 ? 1F : manaTimer.value / 20F;
 
-					if(halfOrFullOrb < mana) {
-						DrawableHelper.drawTexture(matrices, x - (i * 8), y, 0, 0, 8, 8, 256, 256);
+					RenderSystem.setShaderTexture(0, HUD_ELEMENTS);
+					RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
+
+					for(int i = 0; i < maxMana / 2; i++) {
+						int halfOrFullOrb = i * 2 + 1;
+						DrawableHelper.drawTexture(matrices, x - (i * 8), y, 0, 15, 9, 9, 256, 256);
+
+						if(halfOrFullOrb < mana) {
+							DrawableHelper.drawTexture(matrices, x - (i * 8), y, 0, 0, 8, 8, 256, 256);
+						}
+
+						if(halfOrFullOrb == mana) {
+							DrawableHelper.drawTexture(matrices, x - (i * 8), y, 8, 0, 8, 8, 256, 256);
+						}
 					}
 
-					if(halfOrFullOrb == mana) {
-						DrawableHelper.drawTexture(matrices, x - (i * 8), y, 8, 0, 8, 8, 256, 256);
+					for(int i = 0; i < maxBurnout / 2; i++) {
+						int halfOrFullOrb = i * 2 + 1;
+
+						if(halfOrFullOrb < burnout) {
+							DrawableHelper.drawTexture(matrices, (x - 72) + (i * 8), y, 16, 0, 8, 8, 256, 256);
+						}
+
+						if(halfOrFullOrb == burnout) {
+							DrawableHelper.drawTexture(matrices, (x - 72) + (i * 8), y, 24, 0, 8, 8, 256, 256);
+						}
 					}
 				}
-
-				for(int i = 0; i < maxBurnout / 2; i++) {
-					int halfOrFullOrb = i * 2 + 1;
-
-					if(halfOrFullOrb < burnout) {
-						DrawableHelper.drawTexture(matrices, (x - 72) + (i * 8), y, 16, 0, 8, 8, 256, 256);
-					}
-
-					if(halfOrFullOrb == burnout) {
-						DrawableHelper.drawTexture(matrices, (x - 72) + (i * 8), y, 24, 0, 8, 8, 256, 256);
-					}
-				}
+				else
+					user.shouldShowMana(false);
 			}
 		});
 	}

@@ -42,6 +42,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -66,6 +67,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Shadow
 	public abstract void sendMessage(Text message, boolean actionBar);
 
+	@Shadow @Final private static TrackedData<Integer> SCORE;
 	@Unique
 	private final List<Spell> knownSpells = new ArrayList<>(8);
 	@Unique
@@ -82,6 +84,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	private static final TrackedData<Integer> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	@Unique
 	private static final TrackedData<Integer> BURNOUT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	@Unique
+	private static final TrackedData<Boolean> SHOW_MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
 		super(entityType, world);
@@ -134,6 +138,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 		dataTracker.set(MANA, rootTag.getInt("Mana"));
 		dataTracker.set(BURNOUT, rootTag.getInt("Burnout"));
+		dataTracker.set(SHOW_MANA, rootTag.getBoolean("ShowMana"));
 		activeSpell = Arcanus.SPELL.get(new Identifier(rootTag.getString("ActiveSpell")));
 		lastCastTime = rootTag.getLong("LastCastTime");
 		spellTimer = rootTag.getInt("SpellTimer");
@@ -149,6 +154,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		rootTag.put("KnownSpells", listTag);
 		rootTag.putInt("Mana", dataTracker.get(MANA));
 		rootTag.putInt("Burnout", dataTracker.get(BURNOUT));
+		rootTag.putBoolean("ShowMana", dataTracker.get(SHOW_MANA));
 		rootTag.putString("ActiveSpell", activeSpell != null ? Arcanus.SPELL.getId(activeSpell).toString() : "");
 		rootTag.putLong("LastCastTime", lastCastTime);
 		rootTag.putInt("SpellTimer", spellTimer);
@@ -158,6 +164,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	public void initTracker(CallbackInfo info) {
 		dataTracker.startTracking(MANA, MAX_MANA);
 		dataTracker.startTracking(BURNOUT, 0);
+		dataTracker.startTracking(SHOW_MANA, false);
 	}
 
 	@Override
@@ -213,6 +220,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Override
 	public void addBurnout(int amount) {
 		setBurnout(Math.min(getBurnout() + amount, MAX_BURNOUT));
+	}
+
+	@Override
+	public boolean isManaVisible() {
+		return dataTracker.get(SHOW_MANA);
+	}
+
+	@Override
+	public void shouldShowMana(boolean shouldShowMana) {
+		dataTracker.set(SHOW_MANA, shouldShowMana);
 	}
 
 	@Override
