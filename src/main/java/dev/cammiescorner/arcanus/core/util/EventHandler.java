@@ -59,12 +59,11 @@ public class EventHandler {
 
 			if(player != null && !player.isSpectator()) {
 				MagicUser user = (MagicUser) player;
-				int mana = user.getMana();
-				int maxMana = user.getMaxMana();
+				int mana = Math.min(user.getMana(), user.getMaxMana() - user.getBurnout());
 				int burnout = user.getBurnout();
-				int maxBurnout = user.getMaxBurnout();
+				int manaLock = user.getManaLock();
 
-				if(player.getMainHandStack().isOf(ModItems.WAND) || mana < maxMana)
+				if(player.getMainHandStack().isOf(ModItems.WAND) || mana < user.getMaxMana())
 					manaTimer.value = 40;
 				else
 					manaTimer.value = Math.max(manaTimer.value - 1, 0);
@@ -80,30 +79,43 @@ public class EventHandler {
 					RenderSystem.setShaderTexture(0, HUD_ELEMENTS);
 					RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
 
-					for(int i = 0; i < maxMana / 2; i++) {
-						int halfOrFullOrb = i * 2 + 1;
+					// Draw background
+					for(int i = 0; i < 10; i++)
 						DrawableHelper.drawTexture(matrices, x - (i * 8), y, 0, 15, 9, 9, 256, 256);
 
-						if(halfOrFullOrb < mana) {
-							DrawableHelper.drawTexture(matrices, x - (i * 8), y, 0, 0, 8, 8, 256, 256);
-						}
+					// Draw full mana orb
+					for(int i = 0; i < mana / 2; i++)
+						DrawableHelper.drawTexture(matrices, x - (i * 8), y, 0, 0, 8, 8, 256, 256);
 
-						if(halfOrFullOrb == mana) {
-							DrawableHelper.drawTexture(matrices, x - (i * 8), y, 8, 0, 8, 8, 256, 256);
-						}
-					}
+					// Draw half mana orb
+					if(mana % 2 == 1)
+						DrawableHelper.drawTexture(matrices, x - ((mana / 2) * 8), y, 8, 0, 8, 8, 256, 256);
 
-					for(int i = 0; i < maxBurnout / 2; i++) {
-						int halfOrFullOrb = i * 2 + 1;
+					boolean manaLockOdd = manaLock % 2 == 1;
+					boolean burnoutOdd = burnout % 2 == 1;
+					int adjustedBurnout = manaLockOdd && burnoutOdd ? burnout / 2 + 1 : burnout / 2;
+					int adjustedManaLock = (manaLock / 2) * 8;
+					x -= 72;
 
-						if(halfOrFullOrb < burnout) {
-							DrawableHelper.drawTexture(matrices, (x - 72) + (i * 8), y, 16, 0, 8, 8, 256, 256);
-						}
 
-						if(halfOrFullOrb == burnout) {
-							DrawableHelper.drawTexture(matrices, (x - 72) + (i * 8), y, 24, 0, 8, 8, 256, 256);
-						}
-					}
+					// Draw full burnout orb
+					for(int i = 0; i < adjustedBurnout; i++)
+						if(manaLockOdd && i == 0)
+							DrawableHelper.drawTexture(matrices, x + adjustedManaLock, y, 32, 0, 8, 8, 256, 256);
+						else
+							DrawableHelper.drawTexture(matrices, x + adjustedManaLock + (i * 8), y, 16, 0, 8, 8, 256, 256);
+
+					// Draw half burnout orb
+					if(burnoutOdd != manaLockOdd && burnout > 0)
+						DrawableHelper.drawTexture(matrices, x + adjustedManaLock + (adjustedBurnout * 8), y, 24, 0, 8, 8, 256, 256);
+
+					// Draw full mana lock orb
+					for(int i = 0; i < manaLock / 2; i++)
+						DrawableHelper.drawTexture(matrices, x + (i * 8), y, 40, 0, 8, 8, 256, 256);
+
+					// Draw half mana lock orb
+					if(manaLock % 2 == 1)
+						DrawableHelper.drawTexture(matrices, x + adjustedManaLock, y, 48, 0, 8, 8, 256, 256);
 				}
 				else
 					user.shouldShowMana(false);

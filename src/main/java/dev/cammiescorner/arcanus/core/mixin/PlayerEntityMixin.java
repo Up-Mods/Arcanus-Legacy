@@ -85,6 +85,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique
 	private static final TrackedData<Integer> BURNOUT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	@Unique
+	private static final TrackedData<Integer> MANA_LOCK = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	@Unique
 	private static final TrackedData<Boolean> SHOW_MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
@@ -138,6 +140,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 		dataTracker.set(MANA, rootTag.getInt("Mana"));
 		dataTracker.set(BURNOUT, rootTag.getInt("Burnout"));
+		dataTracker.set(MANA_LOCK, rootTag.getInt("ManaLock"));
 		dataTracker.set(SHOW_MANA, rootTag.getBoolean("ShowMana"));
 		activeSpell = Arcanus.SPELL.get(new Identifier(rootTag.getString("ActiveSpell")));
 		lastCastTime = rootTag.getLong("LastCastTime");
@@ -154,6 +157,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		rootTag.put("KnownSpells", listTag);
 		rootTag.putInt("Mana", dataTracker.get(MANA));
 		rootTag.putInt("Burnout", dataTracker.get(BURNOUT));
+		rootTag.putInt("ManaLock", dataTracker.get(MANA_LOCK));
 		rootTag.putBoolean("ShowMana", dataTracker.get(SHOW_MANA));
 		rootTag.putString("ActiveSpell", activeSpell != null ? Arcanus.SPELL.getId(activeSpell).toString() : "");
 		rootTag.putLong("LastCastTime", lastCastTime);
@@ -164,6 +168,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	public void initTracker(CallbackInfo info) {
 		dataTracker.startTracking(MANA, MAX_MANA);
 		dataTracker.startTracking(BURNOUT, 0);
+		dataTracker.startTracking(MANA_LOCK, 0);
 		dataTracker.startTracking(SHOW_MANA, false);
 	}
 
@@ -189,17 +194,17 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Override
 	public int getMaxMana() {
-		return MAX_MANA;
+		return MAX_MANA - getManaLock();
 	}
 
 	@Override
 	public void setMana(int amount) {
-		dataTracker.set(MANA, MathHelper.clamp(amount, 0, MAX_MANA));
+		dataTracker.set(MANA, MathHelper.clamp(amount, 0, getMaxMana()));
 	}
 
 	@Override
 	public void addMana(int amount) {
-		setMana(Math.min(getMana() + amount, MAX_MANA));
+		setMana(Math.min(getMana() + amount, getMaxMana()));
 	}
 
 	@Override
@@ -220,6 +225,22 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Override
 	public void addBurnout(int amount) {
 		setBurnout(Math.min(getBurnout() + amount, MAX_BURNOUT));
+	}
+
+	@Override
+	public int getManaLock() {
+		return dataTracker.get(MANA_LOCK);
+	}
+
+	@Override
+	public void setManaLock(int amount) {
+		dataTracker.set(MANA_LOCK, amount);
+		setMana(getMana());
+	}
+
+	@Override
+	public void removeManaLock() {
+		dataTracker.set(MANA_LOCK, 0);
 	}
 
 	@Override

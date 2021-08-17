@@ -33,7 +33,7 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
 	public void tick() {
 		if(!world.isClient()) {
 			if(age <= 9) {
-				Box box = Box.of(getPos(), 8, (world.getHeight() + 2048) - getY(), 8);
+				Box box = new Box(getX() - 4, getY() - 1, getZ() - 4, getX() + 4, (world.getHeight() + 2048) - getY(), getZ() + 4);
 				float radius = (float) (box.maxX - box.minX) / 2;
 
 				world.getOtherEntities(null, box).forEach(entity -> {

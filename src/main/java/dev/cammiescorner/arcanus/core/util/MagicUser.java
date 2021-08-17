@@ -25,6 +25,12 @@ public interface MagicUser {
 
 	void addBurnout(int amount);
 
+	int getManaLock();
+
+	void setManaLock(int amount);
+
+	void removeManaLock();
+
 	boolean isManaVisible();
 
 	void shouldShowMana(boolean shouldShowMana);
