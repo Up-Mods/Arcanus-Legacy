@@ -2,9 +2,12 @@ package dev.cammiescorner.arcanus.core.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
+import net.minecraft.world.World;
 
 public class ArcanusHelper {
 	public static HitResult raycast(Entity origin, double maxDistance, boolean hitsEntities) {
@@ -23,5 +26,25 @@ public class ArcanusHelper {
 			hitResult = entityHitResult;
 
 		return hitResult;
+	}
+
+	public static void drawLine(Vec3d start, Vec3d end, World world, double density, ParticleEffect particle) {
+		double totalDistance = start.distanceTo(end);
+
+		for(double distanceTraveled = 0; distanceTraveled < totalDistance; distanceTraveled += density) {
+			double alpha = distanceTraveled / totalDistance;
+			double x = interpolate(start.x, end.x, alpha);
+			double y = interpolate(start.y, end.y, alpha);
+			double z = interpolate(start.z, end.z, alpha);
+
+			if(world.isClient())
+				world.addParticle(particle, x, y, z, 0, 0, 0);
+			else
+				((ServerWorld) world).spawnParticles(particle, x, y, z, 1, 0, 0, 0, 0);
+		}
+	}
+
+	private static double interpolate(double start, double end, double alpha) {
+		return start + (end - start) * alpha;
 	}
 }

@@ -1,5 +1,10 @@
 {
 	"textures": [
-		"arcanus:heal_0"
+		"arcanus:heal_0",
+		"arcanus:heal_1",
+		"arcanus:heal_2",
+		"arcanus:heal_3",
+		"arcanus:heal_4",
+		"arcanus:heal_4"
 	]
 }

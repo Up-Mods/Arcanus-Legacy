@@ -67,7 +67,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Shadow
 	public abstract void sendMessage(Text message, boolean actionBar);
 
-	@Shadow @Final private static TrackedData<Integer> SCORE;
+	@Shadow
+	@Final
+	private static TrackedData<Integer> SCORE;
 	@Unique
 	private final List<Spell> knownSpells = new ArrayList<>(8);
 	@Unique
@@ -78,8 +80,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	private int spellTimer = 0;
 	@Unique
 	private static final int MAX_MANA = 20;
-	@Unique
-	private static final int MAX_BURNOUT = 20;
 	@Unique
 	private static final TrackedData<Integer> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	@Unique
@@ -214,17 +214,17 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Override
 	public int getMaxBurnout() {
-		return MAX_BURNOUT;
+		return getMaxMana();
 	}
 
 	@Override
 	public void setBurnout(int amount) {
-		dataTracker.set(BURNOUT, MathHelper.clamp(amount, 0, MAX_BURNOUT));
+		dataTracker.set(BURNOUT, MathHelper.clamp(amount, 0, getMaxBurnout()));
 	}
 
 	@Override
 	public void addBurnout(int amount) {
-		setBurnout(Math.min(getBurnout() + amount, MAX_BURNOUT));
+		setBurnout(Math.min(getBurnout() + amount, getMaxBurnout()));
 	}
 
 	@Override
@@ -236,6 +236,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	public void setManaLock(int amount) {
 		dataTracker.set(MANA_LOCK, amount);
 		setMana(getMana());
+		setBurnout(getBurnout());
 	}
 
 	@Override
@@ -324,7 +325,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique
 	public void castMagicMissile() {
 		MagicMissileEntity magicMissile = new MagicMissileEntity(this, world);
-		magicMissile.setProperties(this, getPitch(), getYaw(), getRoll(), 2.5F, 0F);
+		magicMissile.setProperties(this, getPitch(), getYaw(), getRoll(), 4.5F, 0F);
+
 		world.spawnEntity(magicMissile);
 		world.playSound(null, getBlockPos(), ModSoundEvents.MAGIC_MISSILE, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 		activeSpell = null;
@@ -334,6 +336,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	public void castTelekinesis() {
 		HitResult result = ArcanusHelper.raycast(this, 10F, true);
 		Vec3d rotation = getRotationVec(1F);
+		double startDivisor = 5D;
+		double endDivisor = 15D;
+
+		for(int count = 0; count < 8; count++) {
+			Vec3d startPos = getCameraPosVec(1F).add((world.random.nextInt(3) - 1) / startDivisor,
+					(world.random.nextInt(3) - 1) / startDivisor,
+					(world.random.nextInt(3) - 1) / startDivisor);
+			Vec3d endPos = result.getPos().add((world.random.nextInt(3) - 1) / endDivisor,
+					(world.random.nextInt(3) - 1) / endDivisor,
+					(world.random.nextInt(3) - 1) / endDivisor);
+
+			ArcanusHelper.drawLine(startPos, endPos, world, 0.5F, (ParticleEffect) ModParticles.TELEKINETIC_SHOCK);
+		}
 
 		world.playSound(null, getBlockPos(), ModSoundEvents.TELEKINETIC_SHOCK, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 
@@ -384,7 +399,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		heal(8);
 		world.playSound(null, getBlockPos(), ModSoundEvents.HEAL, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 
-
 		for(int amount = 0; amount < 32; amount++) {
 			float offsetX = ((random.nextInt(3) - 1) * random.nextFloat());
 			float offsetY = random.nextFloat() * 2F;
@@ -399,6 +413,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique
 	public void castDiscombobulate() {
 		HitResult result = ArcanusHelper.raycast(this, 4F, true);
+		double startDivisor = 5D;
+		double endDivisor = 15D;
+
+		for(int count = 0; count < 8; count++) {
+			Vec3d startPos = getCameraPosVec(1F).add((world.random.nextInt(3) - 1) / startDivisor,
+					(world.random.nextInt(3) - 1) / startDivisor,
+					(world.random.nextInt(3) - 1) / startDivisor);
+			Vec3d endPos = result.getPos().add((world.random.nextInt(3) - 1) / endDivisor,
+					(world.random.nextInt(3) - 1) / endDivisor,
+					(world.random.nextInt(3) - 1) / endDivisor);
+
+			ArcanusHelper.drawLine(startPos, endPos, world, 0.5F, (ParticleEffect) ModParticles.DISCOMBOBULATE);
+		}
 
 		if(result.getType() == HitResult.Type.ENTITY) {
 			if(((EntityHitResult) result).getEntity() instanceof CanBeDiscombobulated target) {

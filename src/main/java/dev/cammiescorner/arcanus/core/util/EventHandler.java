@@ -98,7 +98,6 @@ public class EventHandler {
 					int adjustedManaLock = (manaLock / 2) * 8;
 					x -= 72;
 
-
 					// Draw full burnout orb
 					for(int i = 0; i < adjustedBurnout; i++)
 						if(manaLockOdd && i == 0)

@@ -12,7 +12,7 @@ public class ArcanusConfig implements ConfigData {
 	public boolean haveBurnout = true;
 
 	@Comment("The colour of objects created by spells (i.e. the laser" +
-			"\n    from Solar Strike and the wall from Arcane Wall.")
+			"\n    from Solar Strike and the wall from Arcane Wall).")
 	public String magicColour = Integer.toString(0x7ecdfb, 16);
 
 	@Comment("The time Mana takes to refill by 1 in ticks.")

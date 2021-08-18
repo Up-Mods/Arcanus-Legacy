@@ -10,13 +10,13 @@ import net.minecraft.util.math.MathHelper;
 public class MagicMissileParticle extends SpriteBillboardParticle {
 	private final SpriteProvider spriteProvider;
 
-	public MagicMissileParticle(ClientWorld clientWorld, double posX, double posY, double posZ, SpriteProvider spriteProvider) {
-		super(clientWorld, posX, posY, posZ, 0, 0, 0);
-		this.maxAge = (int) (40 * MathHelper.clamp(random.nextFloat(), 0.5, 1.0));
+	public MagicMissileParticle(ClientWorld world, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ, SpriteProvider spriteProvider) {
+		super(world, posX, posY, posZ, 0, 0, 0);
+		this.maxAge = (int) (15 * MathHelper.clamp(random.nextFloat(), 0.5, 1.0));
 		this.spriteProvider = spriteProvider;
-		this.velocityX = 0;
-		this.velocityY = 0;
-		this.velocityZ = 0;
+		this.velocityX = velocityX;
+		this.velocityY = velocityY;
+		this.velocityZ = velocityZ;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class MagicMissileParticle extends SpriteBillboardParticle {
 
 		@Override
 		public Particle createParticle(DefaultParticleType defaultParticleType, ClientWorld clientWorld, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ) {
-			MagicMissileParticle particle = new MagicMissileParticle(clientWorld, posX, posY, posZ, spriteProvider);
+			MagicMissileParticle particle = new MagicMissileParticle(clientWorld, posX, posY, posZ, velocityX, velocityY, velocityZ, spriteProvider);
 			particle.setSpriteForAge(spriteProvider);
 			return particle;
 		}

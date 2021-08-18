@@ -31,7 +31,7 @@ public class ModEntities {
 	public static final EntityType<MagicMissileEntity> MAGIC_MISSILE = create("magic_missile",
 			FabricEntityTypeBuilder.<MagicMissileEntity>create(SpawnGroup.MISC, MagicMissileEntity::new)
 					.dimensions(EntityDimensions.fixed(0.5F, 0.5F))
-					.trackRangeChunks(32)
+					.trackRangeChunks(64)
 					.build());
 
 	//-----Registry-----//

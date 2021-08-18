@@ -1,10 +1,14 @@
 package dev.cammiescorner.arcanus.common.entities;
 
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
+import dev.cammiescorner.arcanus.core.registry.ModParticles;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
@@ -15,26 +19,39 @@ public class MagicMissileEntity extends PersistentProjectileEntity {
 	public MagicMissileEntity(LivingEntity owner, World world) {
 		super(ModEntities.MAGIC_MISSILE, owner, world);
 		setNoGravity(true);
-		setDamage(2D);
+		setDamage(1.5D);
 	}
 
 	public MagicMissileEntity(World world, double x, double y, double z) {
 		super(ModEntities.MAGIC_MISSILE, x, y, z, world);
 		setNoGravity(true);
-		setDamage(2D);
+		setDamage(1.5D);
 	}
 
 	public MagicMissileEntity(EntityType type, World world) {
 		super(type, world);
 		setNoGravity(true);
-		setDamage(2D);
+		setDamage(1.5D);
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
 
-		if(age > 60)
+		if(!world.isClient()) {
+			for(int count = 0; count < 8; count++) {
+				double x = getX() + (world.random.nextInt(3) - 1) / 4D;
+				double y = getY() + 0.2F + (world.random.nextInt(3) - 1) / 4D;
+				double z = getZ() + (world.random.nextInt(3) - 1) / 4D;
+				double deltaX = (world.random.nextInt(3) - 1) * world.random.nextDouble();
+				double deltaY = (world.random.nextInt(3) - 1) * world.random.nextDouble();
+				double deltaZ = (world.random.nextInt(3) - 1) * world.random.nextDouble();
+
+				((ServerWorld) world).spawnParticles((ServerPlayerEntity) getOwner(), (ParticleEffect) ModParticles.MAGIC_MISSILE, true, x, y, z, 1, deltaX, deltaY, deltaZ, 0.1);
+			}
+		}
+
+		if(age > 40)
 			kill();
 	}
 
