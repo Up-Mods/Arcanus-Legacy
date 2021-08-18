@@ -1,4 +1,4 @@
-package dev.cammiescorner.arcanus.client.entity.renderer;
+package dev.cammiescorner.arcanus.client.renderer.entity;
 
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.client.ArcanusClient;

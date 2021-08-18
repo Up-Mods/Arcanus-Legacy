@@ -1,20 +1,21 @@
 package dev.cammiescorner.arcanus.client;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.client.entity.renderer.ArcaneWallEntityRenderer;
-import dev.cammiescorner.arcanus.client.entity.renderer.MagicMissileEntityRenderer;
-import dev.cammiescorner.arcanus.client.entity.renderer.SolarStrikeEntityRenderer;
+import dev.cammiescorner.arcanus.client.renderer.blockentity.DisplayCaseBlockEntityRenderer;
+import dev.cammiescorner.arcanus.client.renderer.entity.ArcaneWallEntityRenderer;
+import dev.cammiescorner.arcanus.client.renderer.entity.MagicMissileEntityRenderer;
+import dev.cammiescorner.arcanus.client.renderer.entity.SolarStrikeEntityRenderer;
 import dev.cammiescorner.arcanus.client.particle.DiscombobulateParticle;
 import dev.cammiescorner.arcanus.client.particle.HealParticle;
 import dev.cammiescorner.arcanus.client.particle.MagicMissileParticle;
 import dev.cammiescorner.arcanus.client.particle.TelekineticShockParticle;
 import dev.cammiescorner.arcanus.client.screens.BookshelfScreen;
-import dev.cammiescorner.arcanus.core.registry.ModEntities;
-import dev.cammiescorner.arcanus.core.registry.ModKeybinds;
-import dev.cammiescorner.arcanus.core.registry.ModParticles;
+import dev.cammiescorner.arcanus.core.registry.*;
 import dev.cammiescorner.arcanus.core.util.EventHandler;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.render.*;
@@ -45,6 +46,10 @@ public class ArcanusClient implements ClientModInitializer {
 		ParticleFactoryRegistry.getInstance().register(ModParticles.DISCOMBOBULATE, DiscombobulateParticle.Factory::new);
 
 		ModKeybinds.register();
+
+		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.DISPLAY_CASE);
+
+		BlockEntityRendererRegistry.INSTANCE.register(ModBlockEntities.DISPLAY_CASE, DisplayCaseBlockEntityRenderer::new);
 
 		EventHandler.clientEvents();
 	}

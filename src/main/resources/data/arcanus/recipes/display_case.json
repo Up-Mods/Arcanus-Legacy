@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"BGB",
+		" B ",
+		"SSS"
+	],
+	"key": {
+		"G": {
+			"item": "minecraft:glass_pane"
+		},
+		"B": {
+			"item": "minecraft:stone_bricks"
+		},
+		"S": {
+			"item": "minecraft:smooth_stone"
+		}
+	},
+	"result": {
+		"item": "arcanus:display_case"
+	}
+}

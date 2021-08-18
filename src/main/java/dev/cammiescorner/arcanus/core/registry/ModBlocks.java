@@ -1,8 +1,10 @@
 package dev.cammiescorner.arcanus.core.registry;
 
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.common.blocks.DisplayCaseBlock;
 import dev.cammiescorner.arcanus.common.blocks.FillableBookshelfBlock;
-import net.minecraft.block.AbstractBlock;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
@@ -17,7 +19,8 @@ public class ModBlocks {
 	public static final LinkedHashMap<Block, Identifier> BLOCKS = new LinkedHashMap<>();
 
 	//-----Blocks-----//
-	public static final Block BOOKSHELF = create("fillable_bookshelf", new FillableBookshelfBlock(AbstractBlock.Settings.copy(Blocks.BOOKSHELF)));
+	public static final Block BOOKSHELF = create("fillable_bookshelf", new FillableBookshelfBlock(FabricBlockSettings.copyOf(Blocks.BOOKSHELF).breakByTool(FabricToolTags.AXES)));
+	public static final Block DISPLAY_CASE = create("display_case", new DisplayCaseBlock(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE).breakByTool(FabricToolTags.PICKAXES).requiresTool().nonOpaque()));
 
 	//-----Registry-----//
 	public static void register() {

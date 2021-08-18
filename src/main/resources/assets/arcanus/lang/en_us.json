@@ -65,6 +65,7 @@
 
 	//-----Blocks-----//
 	"block.arcanus.fillable_bookshelf": "Bookshelf",
+	"block.arcanus.display_case": "Display Case",
 
 	//-----Item Groups-----//
 	"itemGroup.arcanus.general": "Arcanus",

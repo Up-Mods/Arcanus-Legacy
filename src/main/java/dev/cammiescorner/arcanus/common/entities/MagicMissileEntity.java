@@ -39,7 +39,7 @@ public class MagicMissileEntity extends PersistentProjectileEntity {
 		super.tick();
 
 		if(!world.isClient()) {
-			for(int count = 0; count < 8; count++) {
+			for(int count = 0; count < 16; count++) {
 				double x = getX() + (world.random.nextInt(3) - 1) / 4D;
 				double y = getY() + 0.2F + (world.random.nextInt(3) - 1) / 4D;
 				double z = getZ() + (world.random.nextInt(3) - 1) / 4D;

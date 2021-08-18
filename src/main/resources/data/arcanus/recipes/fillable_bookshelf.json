@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "minecraft:bookshelf"
+		}
+	],
+	"result": {
+		"item": "arcanus:fillable_bookshelf"
+	}
+}
