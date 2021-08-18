@@ -8,7 +8,7 @@
 
 ---
 
-Esoterica is a small mod with a magic system inspired by Wynncraft and Electroblob's Wizardry, along with new trinkets, structures, and threats sometime Soon<sup>TM</sup> in future updates.
+Arcanus is a small mod with a magic system inspired by Wynncraft and Electroblob's Wizardry, along with new trinkets, structures, and threats sometime Soon<sup>TM</sup> in future updates.
 
 ---
 
