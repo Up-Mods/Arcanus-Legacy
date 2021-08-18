@@ -1,4 +1,4 @@
-# **Esoterica**
+# **Arcanus**
 
 <p align="center">
 <img src="https://cdn.discordapp.com/attachments/732731816250834965/853310224828203078/ispentwaytoolongonthispleasehelp.png" width="322" height="109" title="Do not ask for Forge :)" alt="Do not ask for Forge :)">
