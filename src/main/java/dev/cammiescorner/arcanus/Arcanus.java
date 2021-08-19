@@ -34,18 +34,24 @@ public class Arcanus implements ModInitializer {
 	//-----Custom Registries-----//
 	public static final Registry<Spell> SPELL = createRegistry("spell", Spell.class);
 
+	//-----Miscellaneous-----//
+	public static ArcanusConfig config;
 	public static final String MOD_ID = "arcanus";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 	public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.create(new Identifier(MOD_ID, "general")).appendItems(list -> {
 		Registry.ITEM.forEach(item -> item.appendStacks(Arcanus.ITEM_GROUP, (DefaultedList<ItemStack>) list));
 		Arcanus.SPELL.forEach(spell -> list.add(SpellBooks.getBookFromSpell(spell)));
 	}).icon(() -> new ItemStack(ModItems.WAND)).build();
+
+	//-----Loot Functions-----//
 	public static final LootFunctionType ARCANUS_LOOT_FUNCTION = new LootFunctionType(new ArcanusLootFunction.Serializer());
+
+	//-----Structure Processors-----//
 	public static final StructureProcessorType<LecternStructureProcessor> LECTERN_PROCESSOR = StructureProcessorType.register("set_lectern_book", LecternStructureProcessor.CODEC);
 	public static final StructureProcessorType<BookshelfReplacerStructureProcessor> BOOKSHELF_PROCESSOR = StructureProcessorType.register("replace_bookshelf", BookshelfReplacerStructureProcessor.CODEC);
-	public static final ScreenHandlerType<BookshelfScreenHandler> BOOKSHELF_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(Arcanus.MOD_ID, "fillable_bookshelf"), BookshelfScreenHandler::new);
 
-	public static ArcanusConfig config;
+	//-----Screen Handlers-----//
+	public static final ScreenHandlerType<BookshelfScreenHandler> BOOKSHELF_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(Arcanus.MOD_ID, "fillable_bookshelf"), BookshelfScreenHandler::new);
 
 	@Override
 	public void onInitialize() {
