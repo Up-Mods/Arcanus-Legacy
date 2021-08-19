@@ -95,6 +95,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Inject(method = "tick", at = @At("TAIL"), cancellable = true)
 	public void tick(CallbackInfo info) {
+		setManaLock(10);
+
 		if(!world.isClient()) {
 			if(activeSpell != null) {
 				if(ModSpells.LUNGE.equals(activeSpell))

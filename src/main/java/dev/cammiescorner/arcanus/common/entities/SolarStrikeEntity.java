@@ -42,7 +42,7 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
 
 					if(entity instanceof LivingEntity) {
 						entity.setOnFireFor(4);
-						entity.damage(ModDamageSource.solarStrike(getOwner()), Math.max(10F, 80F * (1 - (MathHelper.sqrt(pos1.distanceSquared(pos2)) / radius))));
+						entity.damage(ModDamageSource.solarStrike(getOwner()), Math.max(10F, 50F * (1 - (MathHelper.sqrt(pos1.distanceSquared(pos2)) / radius))));
 					}
 				});
 			}

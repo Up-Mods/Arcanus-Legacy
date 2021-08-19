@@ -33,7 +33,7 @@ public class DisplayCaseBlock extends BlockWithEntity {
 			createCuboidShape(5, 0, 1, 11, 4, 15),
 			createCuboidShape(1, 0, 5, 15, 4, 11),
 			createCuboidShape(4, 2, 4, 12, 12, 12),
-			createCuboidShape(2, 12, 2, 14, 16, 14)
+			createCuboidShape(1, 12, 1, 15, 16, 15)
 	);
 
 	public DisplayCaseBlock(Settings settings) {
@@ -81,7 +81,38 @@ public class DisplayCaseBlock extends BlockWithEntity {
 
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		return SHAPE;
+		VoxelShape directionalTop = state.get(FACING) == Direction.NORTH ?
+			VoxelShapes.union(
+					createCuboidShape(1, 13, 1, 2, 16, 15),
+					createCuboidShape(14, 13, 1, 15, 16, 15),
+					createCuboidShape(2, 13, 14, 14, 16, 15)
+			) : state.get(FACING) == Direction.EAST ?
+			VoxelShapes.union(
+					createCuboidShape(1, 13, 1, 15, 16, 2),
+					createCuboidShape(1, 13, 14, 15, 16, 15),
+					createCuboidShape(1, 13, 2, 2, 16, 14)
+			) : state.get(FACING) == Direction.SOUTH ?
+			VoxelShapes.union(
+					createCuboidShape(1, 13, 1, 2, 16, 15),
+					createCuboidShape(14, 13, 1, 15, 16, 15),
+					createCuboidShape(2, 13, 1, 14, 16, 2)
+			) :
+			VoxelShapes.union(
+					createCuboidShape(1, 13, 1, 15, 16, 2),
+					createCuboidShape(1, 13, 14, 15, 16, 15),
+					createCuboidShape(14, 13, 2, 15, 16, 14)
+			);
+
+		VoxelShape openShape = VoxelShapes.union(
+				createCuboidShape(2, 0, 2, 14, 2, 14),
+				createCuboidShape(5, 0, 1, 11, 4, 15),
+				createCuboidShape(1, 0, 5, 15, 4, 11),
+				createCuboidShape(4, 2, 4, 12, 12, 12),
+				createCuboidShape(1, 12, 1, 15, 13, 15),
+				directionalTop
+		);
+
+		return state.get(OPEN) ? openShape : SHAPE;
 	}
 
 	@Nullable

@@ -27,19 +27,18 @@ public class DisplayCaseBlockEntityRenderer implements BlockEntityRenderer<Displ
 		if(stack.getCount() > 0) {
 			World world = entity.getWorld();
 			Direction direction = world.getBlockState(entity.getPos()).get(DisplayCaseBlock.FACING);
-			float rotation = direction == Direction.NORTH ? 90 : direction == Direction.EAST ? 0 : direction == Direction.SOUTH ? 270 : 180;
+			float rotation = direction == Direction.NORTH ? 0 : direction == Direction.EAST ? 270 : direction == Direction.SOUTH ? 180 : 90;
 
 					matrices.push();
 
 			if(stack.getItem() instanceof BlockItem) {
 				matrices.translate(0.5D, 0.9D, 0.5D);
 				matrices.scale(0.35F, 0.35F, 0.35F);
-				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90));
 				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rotation));
 			}
 			else {
 				matrices.translate(0.5D, 0.84D, 0.5D);
-				matrices.scale(0.5F, 0.5F, 0.5F);
+				matrices.scale(0.7F, 0.7F, 0.7F);
 				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rotation));
 				matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(90));
 			}
