@@ -3,7 +3,7 @@
 	"id": "arcanus",
 	"version": "${version}",
 	"name": "Arcanus",
-	"description": "",
+	"description": "A magic mod with a magic system inspired by Wynncraft and Electroblob's Wizardry",
 	"authors": [
 		"ComradeCammie"
 	],
@@ -12,7 +12,7 @@
 		"sources": "https://github.com/CammiePone/Arcanus"
 	},
 	"license": "MIT",
-	"icon": "assets/arcanus/textures/item/wand.png",
+	"icon": "assets/arcanus/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
