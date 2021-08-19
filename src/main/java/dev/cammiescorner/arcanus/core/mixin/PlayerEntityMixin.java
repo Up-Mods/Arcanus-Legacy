@@ -278,7 +278,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			addVelocity((getRotationVector().x * 0.025F + (getRotationVector().x - getVelocity().x)) * adjustedPitch, 0F, (getRotationVector().z * 0.025F + (getRotationVector().z - getVelocity().z)) * adjustedPitch);
 			world.getOtherEntities(null, getBoundingBox().expand(2)).forEach(entity -> {
 				if(entity != this && entity instanceof LivingEntity)
-					entity.damage(DamageSource.player((PlayerEntity) (Object) this), 5);
+					entity.damage(DamageSource.player((PlayerEntity) (Object) this), 10);
 			});
 
 			velocityModified = true;

@@ -64,7 +64,7 @@ public class EventHandler {
 				int manaLock = user.getManaLock();
 
 				if(player.getMainHandStack().isOf(ModItems.WAND) || mana < user.getMaxMana())
-					manaTimer.value = 40;
+					manaTimer.value = Math.min(manaTimer.value + 1, 40);
 				else
 					manaTimer.value = Math.max(manaTimer.value - 1, 0);
 
