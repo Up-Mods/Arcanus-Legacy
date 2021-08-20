@@ -4,6 +4,7 @@ import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -32,7 +33,7 @@ public class ArcaneWallEntity extends Entity {
 
 	@Override
 	public boolean collidesWith(Entity other) {
-		return (other.isCollidable() || other.isPushable()) && !isConnectedThroughVehicle(other);
+		return true;
 	}
 
 	@Override
@@ -41,12 +42,9 @@ public class ArcaneWallEntity extends Entity {
 	}
 
 	@Override
-	public boolean isPushable() {
-		return true;
-	}
-
-	@Override
 	public void tick() {
+		world.getOtherEntities(null, getBoundingBox().expand(0.1), this::shouldKillEntity).forEach(Entity::kill);
+
 		super.tick();
 	}
 
@@ -63,6 +61,17 @@ public class ArcaneWallEntity extends Entity {
 	@Override
 	protected void writeCustomDataToNbt(NbtCompound nbt) {
 
+	}
+
+	@Override
+	public boolean damage(DamageSource source, float amount) {
+		return true;
+	}
+
+	public boolean shouldKillEntity(Entity entity) {
+		return !(entity instanceof ArcaneWallEntity) &&
+				!(entity instanceof LivingEntity) &&
+				getBoundingBox().expand(0.1).intersects(entity.getBoundingBox());
 	}
 
 	public void setOwner(Entity owner) {

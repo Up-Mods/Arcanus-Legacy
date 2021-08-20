@@ -26,7 +26,7 @@ public class ModEntities {
 					.build());
 	public static final EntityType<ArcaneWallEntity> ARCANE_WALL = create("arcane_wall",
 			FabricEntityTypeBuilder.<ArcaneWallEntity>create(SpawnGroup.MISC, ArcaneWallEntity::new)
-					.dimensions(EntityDimensions.fixed(1F, 4F))
+					.dimensions(EntityDimensions.changing(1F, 3F))
 					.build());
 	public static final EntityType<MagicMissileEntity> MAGIC_MISSILE = create("magic_missile",
 			FabricEntityTypeBuilder.<MagicMissileEntity>create(SpawnGroup.MISC, MagicMissileEntity::new)
