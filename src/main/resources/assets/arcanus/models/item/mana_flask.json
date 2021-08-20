@@ -1,0 +1,32 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "arcanus:item/mana_flask_empty"
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"arcanus:mana": 0.25
+			},
+			"model": "arcanus:item/mana_flask_1_charge"
+		},
+		{
+			"predicate": {
+				"arcanus:mana": 0.5
+			},
+			"model": "arcanus:item/mana_flask_2_charge"
+		},
+		{
+			"predicate": {
+				"arcanus:mana": 0.75
+			},
+			"model": "arcanus:item/mana_flask_3_charge"
+		},
+		{
+			"predicate": {
+				"arcanus:mana": 1
+			},
+			"model": "arcanus:item/mana_flask_4_charge"
+		}
+	]
+}

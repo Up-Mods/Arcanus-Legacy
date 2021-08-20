@@ -1,7 +1,9 @@
 package dev.cammiescorner.arcanus.core.registry;
 
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.common.items.ManaFlaskItem;
 import dev.cammiescorner.arcanus.common.items.WandItem;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -13,7 +15,8 @@ public class ModItems {
 	public static final LinkedHashMap<Item, Identifier> ITEMS = new LinkedHashMap<>();
 
 	//-----Items-----//
-	public static final Item WAND = create("wand", new WandItem(new Item.Settings().maxCount(1).group(Arcanus.ITEM_GROUP)));
+	public static final Item WAND = create("wand", new WandItem(new FabricItemSettings().maxCount(1).group(Arcanus.ITEM_GROUP)));
+	public static final Item MANA_FLASK = create("mana_flask", new ManaFlaskItem(new FabricItemSettings().maxCount(1).group(Arcanus.ITEM_GROUP)));
 
 	//-----Registry-----//
 	public static void register() {

@@ -31,6 +31,26 @@ public class ArcaneWallEntity extends Entity {
 	}
 
 	@Override
+	public boolean collidesWith(Entity other) {
+		return (other.isCollidable() || other.isPushable()) && !isConnectedThroughVehicle(other);
+	}
+
+	@Override
+	public boolean isCollidable() {
+		return true;
+	}
+
+	@Override
+	public boolean isPushable() {
+		return true;
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+	}
+
+	@Override
 	protected void initDataTracker() {
 
 	}

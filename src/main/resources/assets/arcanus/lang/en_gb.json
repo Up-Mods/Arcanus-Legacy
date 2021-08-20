@@ -62,6 +62,8 @@
 
 	//-----Items-----//
 	"item.arcanus.wand": "Wand",
+	"item.arcanus.mana_flask_empty": "Empty Mana Flask",
+	"item.arcanus.mana_flask": "Mana Flask",
 
 	//-----Blocks-----//
 	"block.arcanus.fillable_bookshelf": "Bookshelf",

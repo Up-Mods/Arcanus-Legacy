@@ -396,7 +396,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Unique
 	public void castHeal() {
-		heal(8);
+		heal(10);
 		world.playSound(null, getBlockPos(), ModSoundEvents.HEAL, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 
 		for(int amount = 0; amount < 32; amount++) {
@@ -463,9 +463,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		HitResult result = ArcanusHelper.raycast(this, 24F, false);
 
 		if(result.getType() != HitResult.Type.MISS) {
-			ArcaneWallEntity solarStrike = new ArcaneWallEntity(this, world);
-			solarStrike.setPosition(result.getPos());
-			world.spawnEntity(solarStrike);
+			ArcaneWallEntity arcaneWall = new ArcaneWallEntity(this, world);
+			arcaneWall.setPosition(result.getPos());
+			world.spawnEntity(arcaneWall);
 		}
 		else {
 			sendMessage(new TranslatableText("spell." + Arcanus.MOD_ID + ".no_target"), false);

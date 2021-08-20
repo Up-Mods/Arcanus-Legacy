@@ -20,12 +20,15 @@ public class ArcaneWallEntityRenderer extends EntityRenderer<ArcaneWallEntity> {
 		super(context);
 	}
 
-	public void renderBeam(float x, float y, float z, float tickDelta, int age, MatrixStack matrices, VertexConsumerProvider provider, int light) {
+	@Override
+	public void render(ArcaneWallEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider provider, int light) {
+		super.render(entity, yaw, tickDelta, matrices, provider, light);
+		renderBeam(entity, entity.getWidth(), entity.getHeight(), entity.getWidth(), matrices, provider, light);
+	}
+
+	public void renderBeam(ArcaneWallEntity entity, float x, float y, float z, MatrixStack matrices, VertexConsumerProvider provider, int light) {
 		float squaredLength = x * x + y * y + z * z;
 		float length = MathHelper.sqrt(squaredLength);
-		float ageDelta = (age - 1) + tickDelta;
-		float scale = ageDelta < 3 ? (ageDelta) / 3F : ageDelta > 9 ? 1 - ((ageDelta - 9F) / 15F) : 1F;
-		int alpha = ageDelta < 3 ? 255 : (int) (255 * (1 - ((ageDelta - 3) / 23F)));
 
 		final int maxQuads = 16;
 		final float radius = 2.25F;
@@ -35,7 +38,6 @@ public class ArcaneWallEntityRenderer extends EntityRenderer<ArcaneWallEntity> {
 
 		matrices.push();
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90));
-		matrices.scale(scale, scale, 1);
 
 		VertexConsumer vertexConsumer = provider.getBuffer(ArcanusClient.MAGIC);
 		MatrixStack.Entry entry = matrices.peek();
@@ -48,10 +50,10 @@ public class ArcaneWallEntityRenderer extends EntityRenderer<ArcaneWallEntity> {
 			float vertX2 = MathHelper.sin(i * 6.2831855F / maxQuads) * radius;
 			float vertY2 = MathHelper.cos(i * 6.2831855F / maxQuads) * radius;
 
-			vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(red, green, blue, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
-			vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(red, green, blue, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
-			vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(red, green, blue, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
-			vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(red, green, blue, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
+			vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(red, green, blue, 255).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
+			vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(red, green, blue, 255).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
+			vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(red, green, blue, 255).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
+			vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(red, green, blue, 255).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
 
 			vertX1 = vertX2;
 			vertY1 = vertY2;
