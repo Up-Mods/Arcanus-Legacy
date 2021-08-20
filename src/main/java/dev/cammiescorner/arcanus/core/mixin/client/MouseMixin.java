@@ -1,13 +1,14 @@
 package dev.cammiescorner.arcanus.core.mixin.client;
 
+import dev.cammiescorner.arcanus.core.util.CanBeDiscombobulated;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
-import net.minecraft.client.util.GlfwUtil;
 import net.minecraft.client.util.SmoothUtil;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(Mouse.class)
 public abstract class MouseMixin {
@@ -30,58 +31,19 @@ public abstract class MouseMixin {
 	@Shadow
 	public abstract boolean isCursorLocked();
 
-	/**
-	 * @author Cammie
-	 * @reason Needed to invert mouse X axis too
-	 */
-	@Overwrite
-	public void updateMouse() {
-		double time = GlfwUtil.getTime();
-		double deltaTime = time - this.lastMouseUpdateTime;
-		this.lastMouseUpdateTime = time;
+	@ModifyArg(method = "updateMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"), index = 0)
+	public double changeLookDirectionX(double x) {
+		if(client.player instanceof CanBeDiscombobulated player && player.isDiscombobulated())
+			return -x;
 
-		if(this.isCursorLocked() && this.client.isWindowFocused()) {
-			double mouseSensitivity = this.client.options.mouseSensitivity * 0.6000000238418579D + 0.20000000298023224D;
-			double mouseSensitivityCubed = mouseSensitivity * mouseSensitivity * mouseSensitivity;
-			double fuckIfIKnowDude = mouseSensitivityCubed * 8.0D;
-			double mouseX;
-			double mouseY;
+		return x;
+	}
 
-			if(this.client.options.smoothCameraEnabled) {
-				double smoothedMouseX = this.cursorXSmoother.smooth(this.cursorDeltaX * fuckIfIKnowDude, deltaTime * fuckIfIKnowDude);
-				double smoothedMouseY = this.cursorYSmoother.smooth(this.cursorDeltaY * fuckIfIKnowDude, deltaTime * fuckIfIKnowDude);
-				mouseX = smoothedMouseX;
-				mouseY = smoothedMouseY;
-			}
-			else if(this.client.options.getPerspective().isFirstPerson() && this.client.player.isUsingSpyglass()) {
-				this.cursorXSmoother.clear();
-				this.cursorYSmoother.clear();
-				mouseX = this.cursorDeltaX * mouseSensitivityCubed;
-				mouseY = this.cursorDeltaY * mouseSensitivityCubed;
-			}
-			else {
-				this.cursorXSmoother.clear();
-				this.cursorYSmoother.clear();
-				mouseX = this.cursorDeltaX * fuckIfIKnowDude;
-				mouseY = this.cursorDeltaY * fuckIfIKnowDude;
-			}
+	@ModifyArg(method = "updateMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"), index = 1)
+	public double changeLookDirectionY(double y) {
+		if(client.player instanceof CanBeDiscombobulated player && player.isDiscombobulated())
+			return -y;
 
-			this.cursorDeltaX = 0.0D;
-			this.cursorDeltaY = 0.0D;
-			int invertMouse = 1;
-
-			if(this.client.options.invertYMouse)
-				invertMouse = -1;
-
-			this.client.getTutorialManager().onUpdateMouse(mouseX, mouseY);
-
-			if(this.client.player != null)
-				this.client.player.changeLookDirection(mouseX * invertMouse, mouseY * invertMouse);
-
-		}
-		else {
-			this.cursorDeltaX = 0.0D;
-			this.cursorDeltaY = 0.0D;
-		}
+		return y;
 	}
 }

@@ -20,6 +20,8 @@ import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
@@ -32,9 +34,9 @@ public class ModCommands {
 
 		dispatcher.register(CommandManager.literal("spells")
 				.then(CommandManager.literal("list").requires(source -> source.hasPermissionLevel(0))
-						.executes(SpellsCommand::listSelfSpells)
+						.executes(context -> SpellsCommand.listPlayerSpells(context, context.getSource().getPlayer()))
 						.then(CommandManager.argument("player", EntityArgumentType.player()).requires(source -> source.hasPermissionLevel(3))
-								.executes(SpellsCommand::listPlayerSpells)))
+								.executes(context -> SpellsCommand.listPlayerSpells(context, EntityArgumentType.getPlayer(context, "player")))))
 				.then(CommandManager.literal("add").requires(source -> source.hasPermissionLevel(3))
 						.then(CommandManager.argument("all", StringArgumentType.word())
 								.executes(SpellsCommand::addAllSpellsToSelf))
@@ -81,34 +83,20 @@ public class ModCommands {
 	}
 
 	private static class SpellsCommand {
-		public static int listSelfSpells(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-			PlayerEntity player = context.getSource().getPlayer();
-			String knownSpells = "";
+		public static int listPlayerSpells(CommandContext<ServerCommandSource> context, PlayerEntity player) throws CommandSyntaxException {
+			if(((MagicUser) player).getKnownSpells().isEmpty()) {
+				context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.no_known_spells", player.getEntityName()));
+				return 0;
+			}
+
+			MutableText knownSpells = new LiteralText("");
 
 			for(Spell spell : ((MagicUser) player).getKnownSpells())
-				knownSpells = knownSpells.concat("\n    - " + new TranslatableText(spell.getTranslationKey()).getString() + " (" + spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol() + ")");
+				knownSpells = knownSpells.append("\n    - ").append(new TranslatableText(spell.getTranslationKey())).append(" (" + spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol() + ")");
 
-			if(!knownSpells.isEmpty())
-				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.list", player.getEntityName(), knownSpells), false);
-			else
-				context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.no_known_spells", player.getEntityName()));
+			context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.list", player.getEntityName(), knownSpells), false);
 
-			return Command.SINGLE_SUCCESS;
-		}
-
-		public static int listPlayerSpells(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-			PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
-			String knownSpells = "";
-
-			for(Spell spell : ((MagicUser) player).getKnownSpells())
-				knownSpells = knownSpells.concat("\n    - " + new TranslatableText(spell.getTranslationKey()).getString() + " (" + spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol() + ")");
-
-			if(!knownSpells.isEmpty())
-				context.getSource().sendFeedback(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.list", player.getEntityName(), knownSpells), false);
-			else
-				context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.no_known_spells", player.getEntityName()));
-
-			return Command.SINGLE_SUCCESS;
+			return ((MagicUser) player).getKnownSpells().size();
 		}
 
 		public static int addAllSpellsToSelf(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {

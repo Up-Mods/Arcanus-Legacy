@@ -2,12 +2,12 @@ package dev.cammiescorner.arcanus.common.entities;
 
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import dev.cammiescorner.arcanus.core.registry.ModParticles;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -47,7 +47,7 @@ public class MagicMissileEntity extends PersistentProjectileEntity {
 				double deltaY = (world.random.nextInt(3) - 1) * world.random.nextDouble();
 				double deltaZ = (world.random.nextInt(3) - 1) * world.random.nextDouble();
 
-				((ServerWorld) world).spawnParticles((ServerPlayerEntity) getOwner(), (ParticleEffect) ModParticles.MAGIC_MISSILE, true, x, y, z, 1, deltaX, deltaY, deltaZ, 0.1);
+				PlayerLookup.tracking(this).forEach(player -> ((ServerWorld) world).spawnParticles(player, (ParticleEffect) ModParticles.MAGIC_MISSILE, true, x, y, z, 1, deltaX, deltaY, deltaZ, 0.1));
 			}
 		}
 
