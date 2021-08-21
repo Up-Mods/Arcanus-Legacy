@@ -59,8 +59,10 @@ import static dev.cammiescorner.arcanus.Arcanus.config;
 public abstract class PlayerEntityMixin extends LivingEntity implements MagicUser {
 	@Shadow
 	protected HungerManager hungerManager;
+
 	@Shadow
 	public abstract void addExhaustion(float exhaustion);
+
 	@Shadow
 	public abstract void sendMessage(Text message, boolean actionBar);
 
@@ -215,8 +217,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		setMana(Math.min(getMana() + amount, getMaxMana()));
 	}
 
+	@Override
 	public float getManaRechargeRate() {
 		return dataTracker.get(MANA_RECHARGE_RATE);
+	}
+
+	@Override
+	public void setManaRechargeRate(float rate) {
+		dataTracker.set(MANA_RECHARGE_RATE, Math.min(0, rate));
+	}
+
+	@Override
+	public void resetManaRechargeRate() {
+		setManaRechargeRate(1F);
 	}
 
 	@Override
@@ -239,8 +252,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		setBurnout(Math.min(getBurnout() + amount, getMaxBurnout()));
 	}
 
+	@Override
 	public float getBurnoutRechargeRate() {
 		return dataTracker.get(BURNOUT_RECHARGE_RATE);
+	}
+
+	@Override
+	public void setBurnoutRechargeRage(float rate) {
+		dataTracker.set(BURNOUT_RECHARGE_RATE, Math.min(0, rate));
+	}
+
+	@Override
+	public void resetBurnoutRechargeRate() {
+		setBurnoutRechargeRage(1F);
 	}
 
 	@Override
@@ -356,12 +380,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		double endDivisor = 15D;
 
 		for(int count = 0; count < 8; count++) {
-			Vec3d startPos = getCameraPosVec(1F).add((world.random.nextInt(3) - 1) / startDivisor,
-					(world.random.nextInt(3) - 1) / startDivisor,
-					(world.random.nextInt(3) - 1) / startDivisor);
-			Vec3d endPos = result.getPos().add((world.random.nextInt(3) - 1) / endDivisor,
-					(world.random.nextInt(3) - 1) / endDivisor,
-					(world.random.nextInt(3) - 1) / endDivisor);
+			Vec3d startPos = getCameraPosVec(1F).add((world.random.nextInt(3) - 1) / startDivisor, (world.random.nextInt(3) - 1) / startDivisor, (world.random.nextInt(3) - 1) / startDivisor);
+			Vec3d endPos = result.getPos().add((world.random.nextInt(3) - 1) / endDivisor, (world.random.nextInt(3) - 1) / endDivisor, (world.random.nextInt(3) - 1) / endDivisor);
 
 			ArcanusHelper.drawLine(startPos, endPos, world, 0.5F, (ParticleEffect) ModParticles.TELEKINETIC_SHOCK);
 		}
@@ -433,12 +453,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		double endDivisor = 15D;
 
 		for(int count = 0; count < 8; count++) {
-			Vec3d startPos = getCameraPosVec(1F).add((world.random.nextInt(3) - 1) / startDivisor,
-					(world.random.nextInt(3) - 1) / startDivisor,
-					(world.random.nextInt(3) - 1) / startDivisor);
-			Vec3d endPos = result.getPos().add((world.random.nextInt(3) - 1) / endDivisor,
-					(world.random.nextInt(3) - 1) / endDivisor,
-					(world.random.nextInt(3) - 1) / endDivisor);
+			Vec3d startPos = getCameraPosVec(1F).add((world.random.nextInt(3) - 1) / startDivisor, (world.random.nextInt(3) - 1) / startDivisor, (world.random.nextInt(3) - 1) / startDivisor);
+			Vec3d endPos = result.getPos().add((world.random.nextInt(3) - 1) / endDivisor, (world.random.nextInt(3) - 1) / endDivisor, (world.random.nextInt(3) - 1) / endDivisor);
 
 			ArcanusHelper.drawLine(startPos, endPos, world, 0.5F, (ParticleEffect) ModParticles.DISCOMBOBULATE);
 		}
