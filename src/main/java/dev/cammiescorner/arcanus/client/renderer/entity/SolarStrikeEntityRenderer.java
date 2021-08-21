@@ -4,7 +4,6 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.client.ArcanusClient;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
 import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -54,10 +53,10 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 			float vertX2 = MathHelper.sin(i * 6.2831855F / maxQuads) * radius;
 			float vertY2 = MathHelper.cos(i * 6.2831855F / maxQuads) * radius;
 
-			vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(red, green, blue, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
-			vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(red, green, blue, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
-			vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(red, green, blue, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
-			vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(red, green, blue, alpha).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).next();
+			vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(red, green, blue, alpha).next();
+			vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(red, green, blue, alpha).next();
+			vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(red, green, blue, alpha).next();
+			vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(red, green, blue, alpha).next();
 
 			vertX1 = vertX2;
 			vertY1 = vertY2;

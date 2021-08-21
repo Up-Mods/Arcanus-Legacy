@@ -40,8 +40,10 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
 					Vec2f pos1 = new Vec2f((float) getX(), (float) getZ());
 					Vec2f pos2 = new Vec2f((float) entity.getX(), (float) entity.getZ());
 
-					if(entity instanceof LivingEntity) {
-						entity.setOnFireFor(4);
+					if(entity instanceof LivingEntity || entity instanceof ArcaneBarrierEntity) {
+						if(entity instanceof LivingEntity)
+							entity.setOnFireFor(4);
+
 						entity.damage(ModDamageSource.solarStrike(getOwner()), Math.max(10F, 50F * (1 - (MathHelper.sqrt(pos1.distanceSquared(pos2)) / radius))));
 					}
 				});

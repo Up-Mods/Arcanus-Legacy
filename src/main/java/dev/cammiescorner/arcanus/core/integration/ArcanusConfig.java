@@ -42,6 +42,6 @@ public class ArcanusConfig implements ConfigData {
 	@Comment("The Mana cost for the Solar Strike spell.")
 	public int solarStrikeCastingCost = 20;
 
-	@Comment("The Mana cost for the Arcane Wall (WIP) spell.")
-	public int arcaneWallCastingCost = 5;
+	@Comment("The Mana cost for the Arcane Barrier spell.")
+	public int arcaneBarrierCastingCost = 4;
 }

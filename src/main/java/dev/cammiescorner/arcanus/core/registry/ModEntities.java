@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus.core.registry;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.common.entities.ArcaneWallEntity;
+import dev.cammiescorner.arcanus.common.entities.ArcaneBarrierEntity;
 import dev.cammiescorner.arcanus.common.entities.MagicMissileEntity;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -24,9 +24,9 @@ public class ModEntities {
 					.dimensions(EntityDimensions.fixed(0F, 0F))
 					.trackRangeChunks(640)
 					.build());
-	public static final EntityType<ArcaneWallEntity> ARCANE_WALL = create("arcane_wall",
-			FabricEntityTypeBuilder.<ArcaneWallEntity>create(SpawnGroup.MISC, ArcaneWallEntity::new)
-					.dimensions(EntityDimensions.changing(1F, 3F))
+	public static final EntityType<ArcaneBarrierEntity> ARCANE_BARRIER = create("arcane_barrier",
+			FabricEntityTypeBuilder.<ArcaneBarrierEntity>create(SpawnGroup.MISC, ArcaneBarrierEntity::new)
+					.dimensions(EntityDimensions.changing(1F, 0F))
 					.build());
 	public static final EntityType<MagicMissileEntity> MAGIC_MISSILE = create("magic_missile",
 			FabricEntityTypeBuilder.<MagicMissileEntity>create(SpawnGroup.MISC, MagicMissileEntity::new)

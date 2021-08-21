@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus.core.mixin;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.common.entities.ArcaneWallEntity;
+import dev.cammiescorner.arcanus.common.entities.ArcaneBarrierEntity;
 import dev.cammiescorner.arcanus.common.entities.MagicMissileEntity;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
 import dev.cammiescorner.arcanus.core.registry.ModParticles;
@@ -111,8 +111,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 					castDiscombobulate();
 				if(ModSpells.SOLAR_STRIKE.equals(activeSpell))
 					castSolarStrike();
-				if(ModSpells.ARCANE_WALL.equals(activeSpell))
-					castArcaneWall();
+				if(ModSpells.ARCANE_BARRIER.equals(activeSpell))
+					castArcaneBarrier();
 			}
 
 			if(spellTimer-- <= 0)
@@ -459,12 +459,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	}
 
 	@Unique
-	public void castArcaneWall() {
+	public void castArcaneBarrier() {
 		HitResult result = ArcanusHelper.raycast(this, 24F, false);
 
-		if(result.getType() != HitResult.Type.MISS) {
-			ArcaneWallEntity arcaneWall = new ArcaneWallEntity(this, world);
-			arcaneWall.setPosition(result.getPos());
+		if(result.getType() == HitResult.Type.BLOCK) {
+			ArcaneBarrierEntity arcaneWall = new ArcaneBarrierEntity((PlayerEntity) (Object) this, world);
+			BlockPos pos = ((BlockHitResult) result).getBlockPos();
+			arcaneWall.setPosition(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
 			world.spawnEntity(arcaneWall);
 		}
 		else {

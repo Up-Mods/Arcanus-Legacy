@@ -6,7 +6,7 @@ import dev.cammiescorner.arcanus.client.particle.HealParticle;
 import dev.cammiescorner.arcanus.client.particle.MagicMissileParticle;
 import dev.cammiescorner.arcanus.client.particle.TelekineticShockParticle;
 import dev.cammiescorner.arcanus.client.renderer.blockentity.DisplayCaseBlockEntityRenderer;
-import dev.cammiescorner.arcanus.client.renderer.entity.ArcaneWallEntityRenderer;
+import dev.cammiescorner.arcanus.client.renderer.entity.ArcaneBarrierEntityRenderer;
 import dev.cammiescorner.arcanus.client.renderer.entity.MagicMissileEntityRenderer;
 import dev.cammiescorner.arcanus.client.renderer.entity.SolarStrikeEntityRenderer;
 import dev.cammiescorner.arcanus.client.screens.BookshelfScreen;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 public class ArcanusClient implements ClientModInitializer {
 	@Nullable
 	public static Shader renderTypeMagicShader;
-	public static final RenderLayer MAGIC = RenderLayer.of("solar_strike", VertexFormats.POSITION_COLOR,
+	public static final RenderLayer MAGIC = RenderLayer.of("magic", VertexFormats.POSITION_COLOR,
 			VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder()
 					.shader(new RenderPhase.Shader(() -> renderTypeMagicShader))
 					.writeMaskState(RenderLayer.ALL_MASK)
@@ -52,7 +52,7 @@ public class ArcanusClient implements ClientModInitializer {
 
 	public void entityRendererRegistry() {
 		EntityRendererRegistry.INSTANCE.register(ModEntities.SOLAR_STRIKE, SolarStrikeEntityRenderer::new);
-		EntityRendererRegistry.INSTANCE.register(ModEntities.ARCANE_WALL, ArcaneWallEntityRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(ModEntities.ARCANE_BARRIER, ArcaneBarrierEntityRenderer::new);
 		EntityRendererRegistry.INSTANCE.register(ModEntities.MAGIC_MISSILE, MagicMissileEntityRenderer::new);
 	}
 

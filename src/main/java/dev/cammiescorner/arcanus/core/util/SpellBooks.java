@@ -143,10 +143,10 @@ public class SpellBooks {
 		return stack;
 	}
 
-	public static ItemStack getArcaneWallBook(ItemStack stack) {
+	public static ItemStack getArcaneBarrierBook(ItemStack stack) {
 		int randInt = RAND.nextInt(MAX_AUTHORS);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
-		Spell spell = ModSpells.ARCANE_WALL;
+		Spell spell = ModSpells.ARCANE_BARRIER;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
 
@@ -172,13 +172,13 @@ public class SpellBooks {
 			case 4 -> SpellBooks.getHealBook(stack);
 			case 5 -> SpellBooks.getDiscombobulateBook(stack);
 			case 6 -> SpellBooks.getSolarStrikeBook(stack);
-			case 7 -> SpellBooks.getArcaneWallBook(stack);
+			case 7 -> SpellBooks.getArcaneBarrierBook(stack);
 			default -> throw new IndexOutOfBoundsException("SOMETING WENT VEWY VEWY WWONG! THIWS SHOUWD NEVEW HAPPEN!");
 		};
 	}
 
 	public static ItemStack getRandomSpellBook(ItemStack stack) {
-		return switch(RAND.nextInt(7)) {
+		return switch(RAND.nextInt(8)) {
 			case 0 -> SpellBooks.getLungeBook(stack);
 			case 1 -> SpellBooks.getDreamWarpBook(stack);
 			case 2 -> SpellBooks.getMagicMissileBook(stack);
@@ -186,7 +186,7 @@ public class SpellBooks {
 			case 4 -> SpellBooks.getHealBook(stack);
 			case 5 -> SpellBooks.getDiscombobulateBook(stack);
 			case 6 -> SpellBooks.getSolarStrikeBook(stack);
-			case 7 -> SpellBooks.getArcaneWallBook(stack);
+			case 7 -> SpellBooks.getArcaneBarrierBook(stack);
 			default -> throw new IndexOutOfBoundsException("SOMETING WENT VEWY VEWY WWONG! THIWS SHOUWD NEVEW HAPPEN!");
 		};
 	}

@@ -13,7 +13,7 @@
 	"spell.arcanus.heal": "Heal",
 	"spell.arcanus.discombobulate": "Discombobulate",
 	"spell.arcanus.solar_strike": "Solar Strike",
-	"spell.arcanus.arcane_wall": "Arcane Wall (WIP)",
+	"spell.arcanus.arcane_barrier": "Arcane Barrier",
 	"spell.arcanus.no_target": "Spell missed",
 
 	//-----Book Titles-----//
@@ -24,7 +24,7 @@
 	"book.arcanus.heal.title": "Heal Spell Book",
 	"book.arcanus.discombobulate.title": "Discombobulate Spell Book",
 	"book.arcanus.solar_strike.title": "Solar Strike Spell Book",
-	"book.arcanus.arcane_wall.title": "Arcane Wall (WIP) Spell Book",
+	"book.arcanus.arcane_barrier.title": "Arcane Barrier Spell Book",
 
 	//-----Book Authors-----//
 	"book.arcanus.00.author": "Grand Mage fizzgig511",
@@ -58,7 +58,7 @@
 	"book.arcanus.heal.description": "Call upon magical energy to heal wounds quickly. This spell is useful when in a pinch.",
 	"book.arcanus.discombobulate.description": "Severely mess with your enemies' perception of the world... for about 8 seconds.\n\nIt's still enough time to escape.",
 	"book.arcanus.solar_strike.description": "Casting this spell will call down a beam of light from the Sun itself, incinerating most foes.",
-	"book.arcanus.arcane_wall.description": "Building is overrated. In this house we use walls made of magical energy to keep the monsters out.",
+	"book.arcanus.arcane_barrier.description": "Building is overrated. In this house we use pillars made of magical energy to keep the monsters out.",
 
 	//-----Items-----//
 	"item.arcanus.wand": "Wand",
@@ -68,6 +68,11 @@
 	//-----Blocks-----//
 	"block.arcanus.fillable_bookshelf": "Bookshelf",
 	"block.arcanus.display_case": "Display Case",
+
+	//-----Entities-----//
+	"entity.arcanus.magic_missile": "Magic Missile",
+	"entity.arcanus.solar_strike": "Solar Strike",
+	"entity.arcanus.arcane_barrier": "Arcane Barrier",
 
 	//-----Item Groups-----//
 	"itemGroup.arcanus.general": "Arcanus",
@@ -89,8 +94,8 @@
 	"advancements.arcanus.discombobulate.description": "Find the Discombobulate Spell Book in a dungeon.",
 	"advancements.arcanus.solar_strike.title": "That Lucky Old Sun",
 	"advancements.arcanus.solar_strike.description": "Find the Solar Strike Spell Book in a dungeon.",
-	"advancements.arcanus.arcane_wall.title": "You shall not... PASS!",
-	"advancements.arcanus.arcane_wall.description": "Find the Arcane Wall Spell Book in a dungeon.",
+	"advancements.arcanus.arcane_barrier.title": "You shall not... PASS!",
+	"advancements.arcanus.arcane_barrier.description": "Find the Arcane Barrier Spell Book in a dungeon.",
 	"advancements.arcanus.all_spells.title": "Unlimited Power!",
 	"advancements.arcanus.all_spells.description": "Craft a Wand and collect all 8 Spell Books.",
 
@@ -130,5 +135,5 @@
 	"text.autoconfig.arcanus.option.healCastingCost": "The Mana cost for the Heal spell.",
 	"text.autoconfig.arcanus.option.discombobulateCastingCost": "The Mana cost for the Discombobulate spell.",
 	"text.autoconfig.arcanus.option.solarStrikeCastingCost": "The Mana cost for the Solar Strike spell.",
-	"text.autoconfig.arcanus.option.arcaneWallCastingCost": "The Mana cost for the Arcane Wall spell."
+	"text.autoconfig.arcanus.option.arcaneBarrierCastingCost": "The Mana cost for the Arcane Barrier spell."
 }

@@ -1,6 +1,6 @@
 package dev.cammiescorner.arcanus.core.mixin.client;
 
-import dev.cammiescorner.arcanus.common.entities.ArcaneWallEntity;
+import dev.cammiescorner.arcanus.common.entities.ArcaneBarrierEntity;
 import dev.cammiescorner.arcanus.common.entities.MagicMissileEntity;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
@@ -8,6 +8,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,16 +32,16 @@ public class ClientPlayNetworkHandlerMixin {
 
 		if(type == ModEntities.SOLAR_STRIKE)
 			entity = new SolarStrikeEntity(world, x, y, z);
-		if(type == ModEntities.ARCANE_WALL)
-			entity = new ArcaneWallEntity(world, x, y, z);
+		if(type == ModEntities.ARCANE_BARRIER)
+			entity = new ArcaneBarrierEntity(world, x, y, z);
 		if(type == ModEntities.MAGIC_MISSILE)
 			entity = new MagicMissileEntity(world, x, y, z);
 
 		if(entity != null) {
 			if(entity instanceof PersistentProjectileEntity projectile)
 				projectile.setOwner(world.getEntityById(packet.getEntityData()));
-			if(entity instanceof ArcaneWallEntity wall)
-				wall.setOwner(world.getEntityById(packet.getEntityData()));
+			if(entity instanceof ArcaneBarrierEntity wall)
+				wall.setOwner((PlayerEntity) world.getEntityById(packet.getEntityData()));
 
 			int id = packet.getId();
 			entity.updateTrackedPosition(x, y, z);
