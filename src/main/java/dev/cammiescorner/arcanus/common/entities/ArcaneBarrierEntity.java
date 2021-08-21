@@ -22,7 +22,7 @@ public class ArcaneBarrierEntity extends Entity {
 	private static final TrackedData<Float> HEALTH = DataTracker.registerData(ArcaneBarrierEntity.class, TrackedDataHandlerRegistry.FLOAT);
 	private static final TrackedData<Integer> HIT_TIMER = DataTracker.registerData(ArcaneBarrierEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private PlayerEntity owner;
-	public static final float MAX_HEIGHT = 3.5F;
+	public static final float MAX_HEIGHT = 3F;
 	public static final float GROWTH_RATE = 1F / 3F;
 
 	public ArcaneBarrierEntity(World world) {
@@ -64,15 +64,19 @@ public class ArcaneBarrierEntity extends Entity {
 
 		super.tick();
 
-		setHitTimer(Math.max(0, getHitTimer() - 1));
+		if(!world.isClient()) {
+			setHitTimer(Math.max(0, getHitTimer() - 1));
 
-		if(age > 0 && age % 600 == 0)
-			damage(DamageSource.GENERIC, 10);
+			if(age > 0 && age % 600 == 0)
+				damage(DamageSource.GENERIC, 10);
 
-		if((getHealth() <= 0 && getHitTimer() <= 0))
-			kill();
+			if((getHealth() <= 0 && getHitTimer() <= 0))
+				kill();
+		}
 	}
 
+	// Top of bounding box collision breaks at y intervals of 16, starting at y=-1
+	// (but not other y levels) if ArcaneBarrierEntity.MAX_HEIGHT is not a whole number????
 	@Override
 	protected Box calculateBoundingBox() {
 		return super.calculateBoundingBox().stretch(0F, Math.min(ArcaneBarrierEntity.MAX_HEIGHT, age * ArcaneBarrierEntity.GROWTH_RATE), 0F);
@@ -82,13 +86,11 @@ public class ArcaneBarrierEntity extends Entity {
 		if(age <= Math.ceil(ArcaneBarrierEntity.MAX_HEIGHT / ArcaneBarrierEntity.GROWTH_RATE)) {
 			refreshPosition();
 
-			List<Entity> list = world.getOtherEntities(this, getBoundingBox(), EntityPredicates.EXCEPT_SPECTATOR.and((entityx) -> !entityx.isConnectedThroughVehicle(this)));
+			List<Entity> list = world.getOtherEntities(this, getBoundingBox(), EntityPredicates.EXCEPT_SPECTATOR.and((entity) -> !entity.isConnectedThroughVehicle(this)));
 
-			for(Entity entity : list) {
-				if(!(entity instanceof ShulkerEntity || entity instanceof ArcaneBarrierEntity) && !entity.noClip) {
+			for(Entity entity : list)
+				if(!(entity instanceof ShulkerEntity || entity instanceof ArcaneBarrierEntity) && !entity.noClip)
 					entity.move(MovementType.SHULKER, new Vec3d(0, ArcaneBarrierEntity.GROWTH_RATE, 0));
-				}
-			}
 		}
 	}
 

@@ -59,13 +59,10 @@ import static dev.cammiescorner.arcanus.Arcanus.config;
 public abstract class PlayerEntityMixin extends LivingEntity implements MagicUser {
 	@Shadow
 	protected HungerManager hungerManager;
-
 	@Shadow
 	public abstract void addExhaustion(float exhaustion);
-
 	@Shadow
 	public abstract void sendMessage(Text message, boolean actionBar);
-
 
 	@Unique
 	private final List<Spell> knownSpells = new ArrayList<>(8);
