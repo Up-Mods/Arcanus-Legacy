@@ -8,12 +8,21 @@ import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.util.math.MathHelper;
 
 public class DiscombobulateParticle extends SpriteBillboardParticle {
-	public DiscombobulateParticle(ClientWorld clientWorld, double posX, double posY, double posZ) {
+	private final SpriteProvider spriteProvider;
+
+	public DiscombobulateParticle(ClientWorld clientWorld, double posX, double posY, double posZ, SpriteProvider spriteProvider) {
 		super(clientWorld, posX, posY, posZ, 0, 0, 0);
 		this.maxAge = (int) (20 * MathHelper.clamp(random.nextFloat(), 0.5, 1.0));
+		this.spriteProvider = spriteProvider;
 		this.velocityX = 0;
 		this.velocityY = 0;
 		this.velocityZ = 0;
+	}
+
+	@Override
+	public void tick() {
+		setSpriteForAge(spriteProvider);
+		super.tick();
 	}
 
 	@Override
@@ -31,7 +40,7 @@ public class DiscombobulateParticle extends SpriteBillboardParticle {
 
 		@Override
 		public Particle createParticle(DefaultParticleType defaultParticleType, ClientWorld clientWorld, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ) {
-			DiscombobulateParticle particle = new DiscombobulateParticle(clientWorld, posX, posY, posZ);
+			DiscombobulateParticle particle = new DiscombobulateParticle(clientWorld, posX, posY, posZ, spriteProvider);
 			particle.setSpriteForAge(spriteProvider);
 			return particle;
 		}

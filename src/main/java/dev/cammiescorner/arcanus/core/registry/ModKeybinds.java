@@ -14,6 +14,7 @@ public class ModKeybinds {
 	public static final List<KeyBinding> KEYBINDINGS = new ArrayList<>();
 
 	//-----Keybindings-----//
+	public static final KeyBinding ACTIVATE_AMULET = create("activate_amulet", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_G);
 	public static final KeyBinding SPELL_MODIFIER = create("spell_modifier", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT);
 
 	//-----Registry-----//

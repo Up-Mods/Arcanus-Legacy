@@ -15,11 +15,11 @@ public class ArcanusConfig implements ConfigData {
 			"\n    from Solar Strike and the wall from Arcane Wall).")
 	public String magicColour = Integer.toString(0x7ecdfb, 16);
 
-	@Comment("The time Mana takes to refill by 1 in ticks.")
-	public int manaCooldown = 20;
+	@Comment("The time Mana takes to refill by 1 in ticks before modifiers.")
+	public int baseManaCooldown = 20;
 
-	@Comment("The time Burnout takes to reduce by 1 in ticks.")
-	public int burnoutCooldown = 60;
+	@Comment("The time Burnout takes to reduce by 1 in ticks before modifiers.")
+	public int baseBurnoutCooldown = 60;
 
 	@Comment("The Mana cost for the Lunge spell.")
 	public int lungeCastingCost = 5;

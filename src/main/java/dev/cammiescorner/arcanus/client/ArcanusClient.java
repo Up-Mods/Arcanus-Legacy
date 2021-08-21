@@ -39,7 +39,7 @@ public class ArcanusClient implements ClientModInitializer {
 		screenRegistry();
 		entityRendererRegistry();
 		particleFactoryRegistry();
-		ModKeybinds.register();
+		// ModKeybinds.register();
 		itemPredicateRegistry();
 		blockRenderLayerRegistry();
 		blockEntityRendererRegistry();
