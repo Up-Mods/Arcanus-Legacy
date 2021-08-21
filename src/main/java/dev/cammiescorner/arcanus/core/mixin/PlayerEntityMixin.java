@@ -304,29 +304,55 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Unique
 	public void castLunge() {
-		if(spellTimer == 10) {
-			setVelocity(0F, 0.75F, 0F);
-			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+		if(isFallFlying()) {
+			if(spellTimer == 10)
+				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+
+			if(spellTimer > 0) {
+				Vec3d rotation = getRotationVector();
+				Vec3d velocity = getVelocity();
+				float speed = 0.75F;
+
+				setVelocity(velocity.add(rotation.x * speed + (rotation.x * 1.5D - velocity.x),
+						rotation.y * speed + (rotation.y * 1.5D - velocity.y),
+						rotation.z * speed + (rotation.z * 1.5D - velocity.z)));
+
+				world.getOtherEntities(null, getBoundingBox().expand(2)).forEach(entity -> {
+					if(entity != this && entity instanceof LivingEntity)
+						entity.damage(DamageSource.player((PlayerEntity) (Object) this), 10);
+				});
+
+				velocityModified = true;
+			}
+
+			if(isOnGround() || spellTimer <= 0)
+				activeSpell = null;
 		}
+		else {
+			if(spellTimer == 10) {
+				setVelocity(0F, 0.75F, 0F);
+				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+			}
 
-		float adjustedPitch = MathHelper.abs(MathHelper.abs(getPitch() / 90F) - 1);
+			float adjustedPitch = MathHelper.abs(MathHelper.abs(getPitch() / 90F) - 1);
 
-		if(spellTimer > 0) {
-			addVelocity((getRotationVector().x * 0.025F + (getRotationVector().x - getVelocity().x)) * adjustedPitch, 0F, (getRotationVector().z * 0.025F + (getRotationVector().z - getVelocity().z)) * adjustedPitch);
-			world.getOtherEntities(null, getBoundingBox().expand(2)).forEach(entity -> {
-				if(entity != this && entity instanceof LivingEntity)
-					entity.damage(DamageSource.player((PlayerEntity) (Object) this), 10);
-			});
+			if(spellTimer > 0) {
+				addVelocity((getRotationVector().x * 0.025F + (getRotationVector().x - getVelocity().x)) * adjustedPitch, 0F, (getRotationVector().z * 0.025F + (getRotationVector().z - getVelocity().z)) * adjustedPitch);
+				world.getOtherEntities(null, getBoundingBox().expand(2)).forEach(entity -> {
+					if(entity != this && entity instanceof LivingEntity)
+						entity.damage(DamageSource.player((PlayerEntity) (Object) this), 10);
+				});
 
-			velocityModified = true;
-		}
+				velocityModified = true;
+			}
 
-		fallDistance = 0;
+			fallDistance = 0;
 
-		if(isOnGround() && spellTimer <= 8) {
-			spellTimer = 0;
-			world.createExplosion(this, getX(), getY() + 0.5, getZ(), 1, Explosion.DestructionType.NONE);
-			activeSpell = null;
+			if(isOnGround() && spellTimer <= 8) {
+				spellTimer = 0;
+				world.createExplosion(this, getX(), getY() + 0.5, getZ(), 1, Explosion.DestructionType.NONE);
+				activeSpell = null;
+			}
 		}
 	}
 
