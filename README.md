@@ -9,6 +9,15 @@
 ---
 
 Arcanus is a small mod with a magic system inspired by Wynncraft and Electroblob's Wizardry, along with new trinkets, structures, and threats sometime Soon<sup>TM</sup> in future updates.
+<br>
+
+To get started, you want to find yourself a Library (Village or Stronghold), or a Ruined Portal. Village Libraries have a guaranteed Spell Book, the rest are up to chance.
+<br>
+
+When you find a Spell Book, all you have to do is read it to learn that spell, and you are now able to cast it using the left and right mouse buttons to create the pattern defined in the book.
+<br>
+
+You can also use `/spells list` at any time to see all the spells, as well as their patterns, that you know.
 
 ---
 
