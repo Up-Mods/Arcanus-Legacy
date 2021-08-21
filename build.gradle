@@ -1,14 +1,24 @@
+import com.modrinth.minotaur.TaskModrinthUpload
+import java.time.Year
+
 plugins {
-    id 'fabric-loom' version '0.9-SNAPSHOT'
+    id 'fabric-loom' version '0.9.+'
     id 'maven-publish'
+    id "com.modrinth.minotaur" version "1.1.0"
 }
 
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
 
+def ENV = System.getenv()
+def buildTime = ENV.BUILD_TIME ?: new Date().format('yyyyMMddHHmmss')
+
 archivesBaseName = project.archives_base_name
-version = project.mod_version
 group = project.maven_group
+
+boolean isPreviewBuild = !ENV.TAG || ENV.TAG.matches(".+-.+")
+def buildNumber = !ENV.TAG ? ("${ENV.BUILD_NUMBER ? "build.${ENV.BUILD_NUMBER}" : buildTime}-${project.minecraft_version}") : ""
+version = (ENV.TAG ?: "development") + ((isPreviewBuild && !ENV.TAG) ? "+${buildNumber}" : "")
 
 repositories {
     maven { url "https://maven.shedaniel.me" }
@@ -28,8 +38,8 @@ dependencies {
     }
 }
 
-minecraft {
-    accessWidener = project.file("src/main/resources/META-INF/arcanus.accesswidener")
+loom {
+    accessWidenerPath.set(project.file("src/main/resources/META-INF/arcanus.accesswidener"))
 }
 
 processResources {
@@ -61,14 +71,15 @@ jar {
     from "LICENSE"
 }
 
-// configure the maven publication
+artifacts {
+    archives(remapJar)
+    archives(sourcesJar)
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                builtBy remapJar
-            }
+            artifact(remapJar)
             artifact(sourcesJar) {
                 builtBy remapSourcesJar
             }
@@ -80,4 +91,23 @@ publishing {
         // uncomment to publish to the local maven
         // mavenLocal()
     }
+}
+
+task publishToModrinth(type: TaskModrinthUpload, dependsOn: assemble) {
+    if (ENV.MODRINTH_TOKEN) {
+        token = ENV.MODRINTH_TOKEN
+    }
+    projectId = project.modrinth_id
+    uploadFile = remapJar
+    versionNumber = ENV.TAG ?: version
+    versionName = versionNumber // need this here because the Modrinth API doesn't do that by default
+    releaseType = isPreviewBuild ? ((ENV.TAG && ENV.TAG.contains("-beta")) ? "beta" : "alpha") : "release"
+    "${project.modrinth_game_versions}".split(",").each {
+        addGameVersion(it)
+    }
+    addLoader("fabric")
+}
+
+if (ENV.MODRINTH_TOKEN) {
+    tasks.publish.dependsOn(publishToModrinth)
 }
