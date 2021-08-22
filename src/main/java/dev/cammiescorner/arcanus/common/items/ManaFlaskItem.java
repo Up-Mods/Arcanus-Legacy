@@ -4,10 +4,7 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsage;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -28,13 +25,19 @@ public class ManaFlaskItem extends Item {
 			NbtCompound tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
 
 			if(player.isSneaking() && tag.getInt("Mana") < 4 && magicUser.getMana() >= 5) {
-				magicUser.addMana(-5);
-				magicUser.setLastCastTime(world.getTime());
+				if(!player.isCreative()) {
+					magicUser.addMana(-5);
+					magicUser.setLastCastTime(world.getTime());
+				}
+
 				tag.putInt("Mana", tag.getInt("Mana") + 1);
 			}
 			else if(tag.getInt("Mana") > 0){
-				magicUser.addMana(5);
-				magicUser.setLastCastTime(world.getTime());
+				if(!player.isCreative()) {
+					magicUser.addMana(5);
+					magicUser.setLastCastTime(world.getTime());
+				}
+
 				tag.putInt("Mana", tag.getInt("Mana") - 1);
 				tag.putBoolean("Filling", false);
 			}
@@ -106,6 +109,6 @@ public class ManaFlaskItem extends Item {
 
 	@Override
 	public int getMaxUseTime(ItemStack stack) {
-		return 32;
+		return PotionItem.field_30888;
 	}
 }

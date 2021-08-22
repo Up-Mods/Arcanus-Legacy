@@ -20,6 +20,7 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.client.render.*;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,7 +65,14 @@ public class ArcanusClient implements ClientModInitializer {
 	}
 
 	public void itemPredicateRegistry() {
-		FabricModelPredicateProviderRegistry.register(new Identifier(Arcanus.MOD_ID, "mana"), (stack, world, entity, seed) -> stack.getSubNbt(Arcanus.MOD_ID).getInt("Mana") / 4F);
+		FabricModelPredicateProviderRegistry.register(new Identifier(Arcanus.MOD_ID, "mana"), (stack, world, entity, seed) -> {
+			NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
+
+			if(tag == null)
+				return 0;
+
+			return tag.getInt("Mana") / 4F;
+		});
 	}
 
 	public void blockRenderLayerRegistry() {
