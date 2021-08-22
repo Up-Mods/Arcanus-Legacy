@@ -21,7 +21,7 @@ public class LecternBlockMixin{
 	public void openScreen(World world, BlockPos pos, PlayerEntity player, CallbackInfo info, BlockEntity blockEntity) {
 		ItemStack stack = ((LecternBlockEntity) blockEntity).getBook();
 
-		if(!world.isClient())
+		if(!world.isClient() && stack.getOrCreateNbt().contains("spell"))
 			((MagicUser) player).setKnownSpell(new Identifier(stack.getOrCreateNbt().getString("spell")));
 	}
 }

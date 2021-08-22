@@ -32,7 +32,7 @@ public abstract class WrittenBookItemMixin extends Item {
 
 	@Inject(method = "use", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
 	public void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> info, ItemStack stack) {
-		if(!world.isClient())
+		if(!world.isClient() && stack.getOrCreateNbt().contains("spell"))
 			((MagicUser) user).setKnownSpell(new Identifier(stack.getOrCreateNbt().getString("spell")));
 	}
 
