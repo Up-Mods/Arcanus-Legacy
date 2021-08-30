@@ -39,8 +39,10 @@ public class Arcanus implements ModInitializer {
 	public static final String MOD_ID = "arcanus";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 	public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.create(new Identifier(MOD_ID, "general")).appendItems(list -> {
+		list.add(new ItemStack(ModItems.WAND));
+		// ArcanusHelper.addWandsToTab(list);
 		Registry.ITEM.forEach(item -> item.appendStacks(Arcanus.ITEM_GROUP, (DefaultedList<ItemStack>) list));
-		Arcanus.SPELL.forEach(spell -> list.add(SpellBooks.getBookFromSpell(spell)));
+		Arcanus.SPELL.forEach(spell -> list.add(SpellBooks.getSpellBook(spell)));
 	}).icon(() -> new ItemStack(ModItems.WAND)).build();
 
 	//-----Loot Functions-----//

@@ -17,10 +17,9 @@ public class SpellBooks {
 	private static final Random RAND = new Random();
 	private static final int MAX_AUTHORS = 21;
 
-	public static ItemStack getLungeBook(ItemStack stack) {
+	public static ItemStack getSpellBook(ItemStack stack, Spell spell) {
 		int randInt = RAND.nextInt(MAX_AUTHORS);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
-		Spell spell = ModSpells.LUNGE;
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
 
@@ -35,158 +34,32 @@ public class SpellBooks {
 		return stack;
 	}
 
-	public static ItemStack getDreamWarpBook(ItemStack stack) {
-		int randInt = RAND.nextInt(MAX_AUTHORS);
-		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
-		Spell spell = ModSpells.DREAM_WARP;
-		NbtCompound tag = stack.getOrCreateNbt();
-		NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
-
-		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
-		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
-				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
-				.append("          " + spellToPattern(spell))));
-		tag.put("pages", listTag);
-
-		return stack;
-	}
-
-	public static ItemStack getMagicMissileBook(ItemStack stack) {
-		int randInt = RAND.nextInt(MAX_AUTHORS);
-		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
-		Spell spell = ModSpells.MAGIC_MISSILE;
-		NbtCompound tag = stack.getOrCreateNbt();
-		NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
-
-		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
-		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
-				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
-				.append("          " + spellToPattern(spell))));
-		tag.put("pages", listTag);
-
-		return stack;
-	}
-
-	public static ItemStack getTelekinesisBook(ItemStack stack) {
-		int randInt = RAND.nextInt(MAX_AUTHORS);
-		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
-		Spell spell = ModSpells.TELEKINESIS;
-		NbtCompound tag = stack.getOrCreateNbt();
-		NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
-
-		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
-		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
-				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
-				.append("          " + spellToPattern(spell))));
-		tag.put("pages", listTag);
-
-		return stack;
-	}
-
-	public static ItemStack getHealBook(ItemStack stack) {
-		int randInt = RAND.nextInt(MAX_AUTHORS);
-		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
-		Spell spell = ModSpells.HEAL;
-		NbtCompound tag = stack.getOrCreateNbt();
-		NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
-
-		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
-		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
-				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
-				.append("          " + spellToPattern(spell))));
-		tag.put("pages", listTag);
-
-		return stack;
-	}
-
-	public static ItemStack getDiscombobulateBook(ItemStack stack) {
-		int randInt = RAND.nextInt(MAX_AUTHORS);
-		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
-		Spell spell = ModSpells.DISCOMBOBULATE;
-		NbtCompound tag = stack.getOrCreateNbt();
-		NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
-
-		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
-		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
-				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
-				.append("          " + spellToPattern(spell))));
-		tag.put("pages", listTag);
-
-		return stack;
-	}
-
-	public static ItemStack getSolarStrikeBook(ItemStack stack) {
-		int randInt = RAND.nextInt(MAX_AUTHORS);
-		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
-		Spell spell = ModSpells.SOLAR_STRIKE;
-		NbtCompound tag = stack.getOrCreateNbt();
-		NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
-
-		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
-		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
-				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
-				.append("          " + spellToPattern(spell))));
-		tag.put("pages", listTag);
-
-		return stack;
-	}
-
-	public static ItemStack getArcaneBarrierBook(ItemStack stack) {
-		int randInt = RAND.nextInt(MAX_AUTHORS);
-		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
-		Spell spell = ModSpells.ARCANE_BARRIER;
-		NbtCompound tag = stack.getOrCreateNbt();
-		NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
-
-		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
-		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
-				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
-				.append("          " + spellToPattern(spell))));
-		tag.put("pages", listTag);
-
-		return stack;
-	}
-
-	public static ItemStack getBookFromSpell(Spell spell) {
+	public static ItemStack getSpellBook(Spell spell) {
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 
 		return switch(Arcanus.SPELL.getRawId(spell)) {
-			case 0 -> SpellBooks.getLungeBook(stack);
-			case 1 -> SpellBooks.getDreamWarpBook(stack);
-			case 2 -> SpellBooks.getMagicMissileBook(stack);
-			case 3 -> SpellBooks.getTelekinesisBook(stack);
-			case 4 -> SpellBooks.getHealBook(stack);
-			case 5 -> SpellBooks.getDiscombobulateBook(stack);
-			case 6 -> SpellBooks.getSolarStrikeBook(stack);
-			case 7 -> SpellBooks.getArcaneBarrierBook(stack);
+			case 0 -> SpellBooks.getSpellBook(stack, ModSpells.LUNGE);
+			case 1 -> SpellBooks.getSpellBook(stack, ModSpells.DREAM_WARP);
+			case 2 -> SpellBooks.getSpellBook(stack, ModSpells.MAGIC_MISSILE);
+			case 3 -> SpellBooks.getSpellBook(stack, ModSpells.TELEKINESIS);
+			case 4 -> SpellBooks.getSpellBook(stack, ModSpells.HEAL);
+			case 5 -> SpellBooks.getSpellBook(stack, ModSpells.DISCOMBOBULATE);
+			case 6 -> SpellBooks.getSpellBook(stack, ModSpells.SOLAR_STRIKE);
+			case 7 -> SpellBooks.getSpellBook(stack, ModSpells.ARCANE_BARRIER);
 			default -> throw new IndexOutOfBoundsException("SOMETING WENT VEWY VEWY WWONG! THIWS SHOUWD NEVEW HAPPEN!");
 		};
 	}
 
 	public static ItemStack getRandomSpellBook(ItemStack stack) {
 		return switch(RAND.nextInt(8)) {
-			case 0 -> SpellBooks.getLungeBook(stack);
-			case 1 -> SpellBooks.getDreamWarpBook(stack);
-			case 2 -> SpellBooks.getMagicMissileBook(stack);
-			case 3 -> SpellBooks.getTelekinesisBook(stack);
-			case 4 -> SpellBooks.getHealBook(stack);
-			case 5 -> SpellBooks.getDiscombobulateBook(stack);
-			case 6 -> SpellBooks.getSolarStrikeBook(stack);
-			case 7 -> SpellBooks.getArcaneBarrierBook(stack);
+			case 0 -> SpellBooks.getSpellBook(stack, ModSpells.LUNGE);
+			case 1 -> SpellBooks.getSpellBook(stack, ModSpells.DREAM_WARP);
+			case 2 -> SpellBooks.getSpellBook(stack, ModSpells.MAGIC_MISSILE);
+			case 3 -> SpellBooks.getSpellBook(stack, ModSpells.TELEKINESIS);
+			case 4 -> SpellBooks.getSpellBook(stack, ModSpells.HEAL);
+			case 5 -> SpellBooks.getSpellBook(stack, ModSpells.DISCOMBOBULATE);
+			case 6 -> SpellBooks.getSpellBook(stack, ModSpells.SOLAR_STRIKE);
+			case 7 -> SpellBooks.getSpellBook(stack, ModSpells.ARCANE_BARRIER);
 			default -> throw new IndexOutOfBoundsException("SOMETING WENT VEWY VEWY WWONG! THIWS SHOUWD NEVEW HAPPEN!");
 		};
 	}

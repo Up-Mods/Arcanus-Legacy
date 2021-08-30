@@ -3,10 +3,10 @@ package dev.cammiescorner.arcanus.core.util;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.common.items.WandItem;
 import dev.cammiescorner.arcanus.common.structure.processor.BookshelfReplacerStructureProcessor;
 import dev.cammiescorner.arcanus.common.structure.processor.LecternStructureProcessor;
 import dev.cammiescorner.arcanus.core.registry.ModCommands;
-import dev.cammiescorner.arcanus.core.registry.ModItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -63,7 +63,7 @@ public class EventHandler {
 				int burnout = user.getBurnout();
 				int manaLock = user.getManaLock();
 
-				if(player.getMainHandStack().isOf(ModItems.WAND) || mana < user.getMaxMana())
+				if(player.getMainHandStack().getItem() instanceof WandItem || mana < user.getMaxMana())
 					manaTimer.value = Math.min(manaTimer.value + 1, 40);
 				else
 					manaTimer.value = Math.max(manaTimer.value - 1, 0);

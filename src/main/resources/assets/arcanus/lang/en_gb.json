@@ -62,6 +62,9 @@
 
 	//-----Items-----//
 	"item.arcanus.wand": "Wand",
+	"item.arcanus.initiate_wand": "Initiate Wand",
+	"item.arcanus.adept_wand": "Adept Wand",
+	"item.arcanus.master_wand": "Master Wand",
 	"item.arcanus.mana_flask_empty": "Empty Mana Flask",
 	"item.arcanus.mana_flask": "Mana Flask",
 
@@ -76,6 +79,9 @@
 
 	//-----Item Groups-----//
 	"itemGroup.arcanus.general": "Arcanus",
+
+	//-----Wand-----//
+	"wand.arcanus.casting_cost": "Casting Cost",
 
 	//-----Advancements-----//
 	"advancements.arcanus.wand.title": "Too Many Magic Mods: The Mod",

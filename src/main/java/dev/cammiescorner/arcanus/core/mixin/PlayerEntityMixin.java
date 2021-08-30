@@ -120,10 +120,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				int manaCooldown = Math.round(config.baseManaCooldown * getManaRechargeRate());
 				int burnoutCooldown = Math.round(config.baseBurnoutCooldown * getBurnoutRechargeRate());
 
-				if(getMana() < getMaxMana() - getBurnout() && world.getTime() % manaCooldown == 0)
+				if(manaCooldown != 0 && getMana() < getMaxMana() - getBurnout() && world.getTime() % manaCooldown == 0)
 					addMana(1);
 
-				if(getBurnout() > 0 && hungerManager.getFoodLevel() > 0 && world.getTime() % burnoutCooldown == 0) {
+				if(burnoutCooldown != 0 && getBurnout() > 0 && hungerManager.getFoodLevel() > 0 && world.getTime() % burnoutCooldown == 0) {
 					addBurnout(-1);
 					addExhaustion(5F);
 				}
@@ -140,9 +140,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			Arcanus.SPELL.getOrEmpty(new Identifier(listTag.getString(i))).ifPresent(knownSpells::add);
 
 		dataTracker.set(MANA, rootTag.getInt("Mana"));
-		dataTracker.set(MANA_RECHARGE_RATE, rootTag.getFloat("ManaRechargeRate"));
+		dataTracker.set(MANA_RECHARGE_RATE, rootTag.contains("ManaRechargeRate") ? rootTag.getFloat("ManaRechargeRate") : 1F);
 		dataTracker.set(BURNOUT, rootTag.getInt("Burnout"));
-		dataTracker.set(BURNOUT_RECHARGE_RATE, rootTag.getFloat("BurnoutRechargeRate"));
+		dataTracker.set(BURNOUT_RECHARGE_RATE, rootTag.contains("BurnoutRechargeRate") ? rootTag.getFloat("BurnoutRechargeRate") : 1F);
 		dataTracker.set(MANA_LOCK, rootTag.getInt("ManaLock"));
 		dataTracker.set(SHOW_MANA, rootTag.getBoolean("ShowMana"));
 		activeSpell = Arcanus.SPELL.get(new Identifier(rootTag.getString("ActiveSpell")));

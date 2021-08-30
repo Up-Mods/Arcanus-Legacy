@@ -2,6 +2,7 @@ package dev.cammiescorner.arcanus.common.items;
 
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
@@ -15,8 +16,8 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 public class ManaFlaskItem extends Item {
-	public ManaFlaskItem(Settings settings) {
-		super(settings);
+	public ManaFlaskItem() {
+		super(new FabricItemSettings().group(Arcanus.ITEM_GROUP).maxCount(1));
 	}
 
 	@Override

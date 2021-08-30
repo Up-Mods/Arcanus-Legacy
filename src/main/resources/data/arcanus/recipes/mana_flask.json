@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:smelting",
+	"base": {
+		"item": "minecraft:glass_bottle"
+	},
+	"addition": {
+		"item": "minecraft:amethyst_shard"
+	},
+	"result": {
+		"item": "arcanus:mana_flask"
+	}
+}

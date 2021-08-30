@@ -47,4 +47,19 @@ public class ArcanusHelper {
 	private static double interpolate(double start, double end, double alpha) {
 		return start + (end - start) * alpha;
 	}
+
+	/*public static void addWandsToTab(List<ItemStack> list) {
+		ItemStack stack = new ItemStack(ModItems.INITIATE_WAND);
+		list.add(stack);
+
+		stack = new ItemStack(ModItems.ADEPT_WAND);
+		NbtCompound tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
+		tag.putInt("Exp", 3200);
+		list.add(stack);
+
+		stack = new ItemStack(ModItems.MASTER_WAND);
+		tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
+		tag.putInt("Exp", 6400);
+		list.add(stack);
+	}*/
 }
