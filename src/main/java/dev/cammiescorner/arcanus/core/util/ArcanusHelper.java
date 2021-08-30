@@ -1,13 +1,19 @@
 package dev.cammiescorner.arcanus.core.util;
 
+import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.core.registry.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class ArcanusHelper {
 	public static HitResult raycast(Entity origin, double maxDistance, boolean hitsEntities) {
@@ -48,7 +54,7 @@ public class ArcanusHelper {
 		return start + (end - start) * alpha;
 	}
 
-	/*public static void addWandsToTab(List<ItemStack> list) {
+	public static void addWandsToTab(List<ItemStack> list) {
 		ItemStack stack = new ItemStack(ModItems.INITIATE_WAND);
 		list.add(stack);
 
@@ -61,5 +67,5 @@ public class ArcanusHelper {
 		tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
 		tag.putInt("Exp", 6400);
 		list.add(stack);
-	}*/
+	}
 }
