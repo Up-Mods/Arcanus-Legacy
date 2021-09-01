@@ -83,7 +83,7 @@ public class MinecraftClientMixin implements ClientUtils {
 
 	@Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doItemUse()V", ordinal = 0), cancellable = true)
 	public void onRightClick(CallbackInfo info) {
-		if(player != null && player.getMainHandStack().getItem() instanceof WandItem) {
+		if(player != null && !player.isSpectator() && player.getMainHandStack().getItem() instanceof WandItem) {
 			timer = 20;
 			unfinishedSpell = true;
 			pattern.add(Pattern.RIGHT);
@@ -95,7 +95,7 @@ public class MinecraftClientMixin implements ClientUtils {
 
 	@Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doAttack()V", ordinal = 0), cancellable = true)
 	public void onLeftClick(CallbackInfo info) {
-		if(player != null && player.getMainHandStack().getItem() instanceof WandItem) {
+		if(player != null && !player.isSpectator() && player.getMainHandStack().getItem() instanceof WandItem) {
 			timer = 20;
 			unfinishedSpell = true;
 			pattern.add(Pattern.LEFT);

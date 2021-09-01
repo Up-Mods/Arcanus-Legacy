@@ -54,7 +54,7 @@ public class ManaFlaskItem extends Item {
 
 		tag.putBoolean("Filling", user.isSneaking() && tag.getInt("Mana") < 4 && magicUser.getMana() >= 5);
 
-		if(tag.getBoolean("Filling") || magicUser.getMana() < magicUser.getMaxMana())
+		if(tag.getBoolean("Filling") || (magicUser.getMana() < magicUser.getMaxMana() && tag.getInt("Mana") > 0))
 			return ItemUsage.consumeHeldItem(world, user, hand);
 		else
 			return super.use(world, user, hand);
