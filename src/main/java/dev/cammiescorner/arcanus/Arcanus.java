@@ -14,6 +14,11 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.function.LootFunctionType;
@@ -56,6 +61,7 @@ public class Arcanus implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		DataTrackers.MANA.getId();
 		AutoConfig.register(ArcanusConfig.class, JanksonConfigSerializer::new);
 		config = AutoConfig.getConfigHolder(ArcanusConfig.class).getConfig();
 
@@ -83,5 +89,17 @@ public class Arcanus implements ModInitializer {
 
 	public static MutableText getSpellInputs(List<Pattern> pattern, int index) {
 		return index >= pattern.size() || pattern.get(index) == null ? new LiteralText("?").formatted(Formatting.GRAY, Formatting.UNDERLINE) : new LiteralText(pattern.get(index).getSymbol()).formatted(Formatting.GREEN);
+	}
+
+	public static class DataTrackers {
+		public static final TrackedData<Boolean> IS_DISCOMBOBULATED = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+		public static final TrackedData<Integer> DISCOMBOBULATED_TIMER = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+
+		public static final TrackedData<Integer> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+		public static final TrackedData<Float> MANA_RECHARGE_RATE = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
+		public static final TrackedData<Integer> BURNOUT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+		public static final TrackedData<Float> BURNOUT_RECHARGE_RATE = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
+		public static final TrackedData<Integer> MANA_LOCK = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+		public static final TrackedData<Boolean> SHOW_MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	}
 }
