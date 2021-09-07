@@ -14,6 +14,11 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.function.LootFunctionType;
@@ -39,11 +44,10 @@ public class Arcanus implements ModInitializer {
 	public static final String MOD_ID = "arcanus";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 	public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.create(new Identifier(MOD_ID, "general")).appendItems(list -> {
-		list.add(new ItemStack(ModItems.WAND));
-		// ArcanusHelper.addWandsToTab(list);
+		ArcanusHelper.addWandsToTab(list);
 		Registry.ITEM.forEach(item -> item.appendStacks(Arcanus.ITEM_GROUP, (DefaultedList<ItemStack>) list));
 		Arcanus.SPELL.forEach(spell -> list.add(SpellBooks.getSpellBook(spell)));
-	}).icon(() -> new ItemStack(ModItems.WAND)).build();
+	}).icon(() -> new ItemStack(ModItems.MASTER_WAND)).build();
 
 	//-----Loot Functions-----//
 	public static final LootFunctionType ARCANUS_LOOT_FUNCTION = new LootFunctionType(new ArcanusLootFunction.Serializer());
@@ -57,6 +61,7 @@ public class Arcanus implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		DataTrackers.MANA.getId();
 		AutoConfig.register(ArcanusConfig.class, JanksonConfigSerializer::new);
 		config = AutoConfig.getConfigHolder(ArcanusConfig.class).getConfig();
 
@@ -84,5 +89,17 @@ public class Arcanus implements ModInitializer {
 
 	public static MutableText getSpellInputs(List<Pattern> pattern, int index) {
 		return index >= pattern.size() || pattern.get(index) == null ? new LiteralText("?").formatted(Formatting.GRAY, Formatting.UNDERLINE) : new LiteralText(pattern.get(index).getSymbol()).formatted(Formatting.GREEN);
+	}
+
+	public static class DataTrackers {
+		public static final TrackedData<Boolean> IS_DISCOMBOBULATED = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+		public static final TrackedData<Integer> DISCOMBOBULATED_TIMER = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+
+		public static final TrackedData<Integer> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+		public static final TrackedData<Float> MANA_RECHARGE_RATE = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
+		public static final TrackedData<Integer> BURNOUT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+		public static final TrackedData<Float> BURNOUT_RECHARGE_RATE = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
+		public static final TrackedData<Integer> MANA_LOCK = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+		public static final TrackedData<Boolean> SHOW_MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	}
 }

@@ -2,7 +2,7 @@
 	"parent": "minecraft:adventure/root",
 	"display": {
 		"icon": {
-			"item": "arcanus:wand"
+			"item": "arcanus:initiate_wand"
 		},
 		"title": {
 			"translate": "advancements.arcanus.wand.title"
@@ -21,7 +21,7 @@
 			"conditions": {
 				"items": [
 					{
-						"items": [ "arcanus:wand" ]
+						"items": [ "arcanus:initiate_wand" ]
 					}
 				]
 			}

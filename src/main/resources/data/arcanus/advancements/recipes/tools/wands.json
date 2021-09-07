@@ -2,7 +2,9 @@
 	"parent": "recipes/root",
 	"rewards": {
 		"recipes": [
-			"arcanus:wand"
+			"arcanus:initiate_wand",
+			"arcanus:adept_wand",
+			"arcanus:master_wand"
 		]
 	},
 	"criteria": {
@@ -21,7 +23,7 @@
 		"has_the_recipe": {
 			"trigger": "recipe_unlocked",
 			"conditions": {
-				"recipe": "arcanus:wand"
+				"recipe": "arcanus:initiate_wand"
 			}
 		}
 	},

@@ -18,9 +18,6 @@ import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.TntEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -53,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static dev.cammiescorner.arcanus.Arcanus.DataTrackers.*;
 import static dev.cammiescorner.arcanus.Arcanus.config;
 
 @Mixin(PlayerEntity.class)
@@ -74,18 +72,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	private int spellTimer = 0;
 	@Unique
 	private static final int MAX_MANA = 20;
-	@Unique
-	private static final TrackedData<Integer> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
-	@Unique
-	private static final TrackedData<Float> MANA_RECHARGE_RATE = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
-	@Unique
-	private static final TrackedData<Integer> BURNOUT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
-	@Unique
-	private static final TrackedData<Float> BURNOUT_RECHARGE_RATE = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
-	@Unique
-	private static final TrackedData<Integer> MANA_LOCK = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
-	@Unique
-	private static final TrackedData<Boolean> SHOW_MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
 		super(entityType, world);
@@ -169,7 +155,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		rootTag.putInt("SpellTimer", spellTimer);
 	}
 
-	@Inject(method = "initDataTracker", at = @At("TAIL"))
+	@Inject(method = "initDataTracker", at = @At("HEAD"))
 	public void initTracker(CallbackInfo info) {
 		dataTracker.startTracking(MANA, MAX_MANA);
 		dataTracker.startTracking(MANA_RECHARGE_RATE, 1F);
