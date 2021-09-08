@@ -5,23 +5,29 @@ import dev.cammiescorner.arcanus.core.util.CanBeDiscombobulated;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static dev.cammiescorner.arcanus.Arcanus.DataTrackers.DISCOMBOBULATED_TIMER;
-import static dev.cammiescorner.arcanus.Arcanus.DataTrackers.IS_DISCOMBOBULATED;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements CanBeDiscombobulated {
 	public LivingEntityMixin(EntityType<?> type, World world) {
 		super(type, world);
 	}
+
+	@Unique
+	private static final TrackedData<Boolean> IS_DISCOMBOBULATED = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	@Unique
+	private static final TrackedData<Integer> DISCOMBOBULATED_TIMER = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 	@ModifyVariable(method = "travel", at = @At("HEAD"))
 	public Vec3d invertInput(Vec3d movementInput) {
