@@ -1,6 +1,6 @@
 {
 	"parent": "minecraft:item/handheld",
 	"textures": {
-		"layer0": "arcanus:item/wand"
+		"layer0": "arcanus:item/adept_wand"
 	}
 }
