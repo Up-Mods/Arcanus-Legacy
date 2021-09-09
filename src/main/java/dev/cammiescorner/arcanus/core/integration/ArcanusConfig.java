@@ -7,6 +7,21 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = Arcanus.MOD_ID)
 public class ArcanusConfig implements ConfigData {
+	@Comment("Should the Lectern Structure Processor run?")
+	public boolean doLecternProcessor = true;
+
+	@Comment("Should the Bookshelf Structure Processor run?")
+	public boolean doBookshelfProcessor = true;
+
+	@Comment("Should Village Libraries have Spell Books spawn?")
+	public boolean librariesHaveBooks = true;
+
+	@Comment("Should Stronghold Libraries have Spell Books spawn?")
+	public boolean strongholdsHaveBooks = true;
+
+	@Comment("Should Ruined Portals have Spell Books spawn?")
+	public boolean ruinedPortalsHaveBooks = true;
+
 	@Comment("Whether or not burnout should be applied when using too" +
 			"\n    much mana.")
 	public boolean haveBurnout = true;

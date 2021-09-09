@@ -1,5 +1,5 @@
 {
-	"type": "minecraft:smelting",
+	"type": "minecraft:smithing",
 	"base": {
 		"item": "minecraft:glass_bottle"
 	},

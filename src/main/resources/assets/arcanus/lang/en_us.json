@@ -141,6 +141,11 @@
 
 	//-----ModMenu-----//
 	"text.autoconfig.arcanus.title": "Arcanus",
+	"text.autoconfig.arcanus.option.doLecternProcessor": "Run Lectern Structure Processor",
+	"text.autoconfig.arcanus.option.doBookshelfProcessor": "Run Bookshelf Structure Processor",
+	"text.autoconfig.arcanus.option.librariesHaveBooks": "Libraries have Spell Books",
+	"text.autoconfig.arcanus.option.strongholdsHaveBooks": "Strongholds have Spell Books",
+	"text.autoconfig.arcanus.option.ruinedPortalsHaveBooks": "Ruined Portals have Spell Books",
 	"text.autoconfig.arcanus.option.haveBurnout": "Should players have Burnout?",
 	"text.autoconfig.arcanus.option.magicColour": "The color of objects created by spells.",
 	"text.autoconfig.arcanus.option.baseManaCooldown": "The time Mana takes to refill by 1 in ticks before modifiers.",

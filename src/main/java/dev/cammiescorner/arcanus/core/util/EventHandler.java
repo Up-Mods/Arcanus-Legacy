@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -128,27 +129,36 @@ public class EventHandler {
 		ServerLifecycleEvents.SERVER_STARTING.register(server -> {
 			MutableRegistry<StructurePool> templatePoolRegistry = server.getRegistryManager().getMutable(Registry.STRUCTURE_POOL_KEY);
 
-			EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier("minecraft", "village/desert/houses"), ImmutableList.of(
-					new Identifier("minecraft", "village/desert/houses/desert_library_1")
-			));
-			EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier("minecraft", "village/plains/houses"), ImmutableList.of(
-					new Identifier("minecraft", "village/plains/houses/plains_library_1"),
-					new Identifier("minecraft", "village/plains/houses/plains_library_2")
-			));
-			EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier("minecraft", "village/savanna/houses"), ImmutableList.of(
-					new Identifier("minecraft", "village/savanna/houses/savanna_library_1")
-			));
-			EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier("minecraft", "village/snowy/houses"), ImmutableList.of(
-					new Identifier("minecraft", "village/snowy/houses/snowy_library_1")
-			));
-			EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier("minecraft", "village/taiga/houses"), ImmutableList.of(
-					new Identifier("minecraft", "village/taiga/houses/taiga_library_1")
-			));
+			final String minecraftId = "minecraft";
+			final String mostructuresId = "mostructures";
+
+			if(Arcanus.config.librariesHaveBooks) {
+				EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier(minecraftId, "village/desert/houses"), ImmutableList.of(
+						new Identifier(minecraftId, "village/desert/houses/desert_library_1")
+				));
+				EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier(minecraftId, "village/plains/houses"), ImmutableList.of(
+						new Identifier(minecraftId, "village/plains/houses/plains_library_1"),
+						new Identifier(minecraftId, "village/plains/houses/plains_library_2")
+				));
+				EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier(minecraftId, "village/savanna/houses"), ImmutableList.of(
+						new Identifier(minecraftId, "village/savanna/houses/savanna_library_1")
+				));
+				EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier(minecraftId, "village/snowy/houses"), ImmutableList.of(
+						new Identifier(minecraftId, "village/snowy/houses/snowy_library_1")
+				));
+				EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier(minecraftId, "village/taiga/houses"), ImmutableList.of(
+						new Identifier(minecraftId, "village/taiga/houses/taiga_library_1")
+				));
+			}
+
+			if(FabricLoader.getInstance().isModLoaded(mostructuresId)) {
+				
+			}
 		});
 
 		//-----Loot Table Callback-----//
 		LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, id, supplier, setter) -> {
-			if(STRONGHOLD_LIBRARY_LOOT_TABLE.equals(id)) {
+			if(Arcanus.config.strongholdsHaveBooks && STRONGHOLD_LIBRARY_LOOT_TABLE.equals(id)) {
 				FabricLootPoolBuilder poolBuilder = FabricLootPoolBuilder.builder()
 						.rolls(ConstantLootNumberProvider.create(4))
 						.withCondition(RandomChanceLootCondition.builder(0.5F).build())
@@ -156,7 +166,7 @@ public class EventHandler {
 				supplier.withPool(poolBuilder.build());
 			}
 
-			if(RUINED_PORTAL_LOOT_TABLE.equals(id)) {
+			if(Arcanus.config.ruinedPortalsHaveBooks && RUINED_PORTAL_LOOT_TABLE.equals(id)) {
 				FabricLootPoolBuilder poolBuilder = FabricLootPoolBuilder.builder()
 						.rolls(ConstantLootNumberProvider.create(1))
 						.withCondition(RandomChanceLootCondition.builder(0.1F).build())
@@ -199,8 +209,11 @@ public class EventHandler {
 					StructureProcessorList originalProcessorList = piece.processors.get();
 					List<StructureProcessor> mutableProcessorList = new ArrayList<>(originalProcessorList.getList());
 
-					mutableProcessorList.add(LecternStructureProcessor.INSTANCE);
-					mutableProcessorList.add(BookshelfReplacerStructureProcessor.INSTANCE);
+					if(Arcanus.config.doLecternProcessor)
+						mutableProcessorList.add(LecternStructureProcessor.INSTANCE);
+					if(Arcanus.config.doBookshelfProcessor)
+						mutableProcessorList.add(BookshelfReplacerStructureProcessor.INSTANCE);
+
 					StructureProcessorList newProcessorList = new StructureProcessorList(mutableProcessorList);
 
 					piece.processors = () -> newProcessorList;
