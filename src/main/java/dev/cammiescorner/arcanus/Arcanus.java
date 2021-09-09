@@ -14,6 +14,8 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.minecraft.entity.attribute.ClampedEntityAttribute;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -66,10 +68,10 @@ public class Arcanus implements ModInitializer {
 
 		ServerPlayNetworking.registerGlobalReceiver(CastSpellMessage.ID, CastSpellMessage::handle);
 		Registry.register(Registry.LOOT_FUNCTION_TYPE, new Identifier(Arcanus.MOD_ID, "arcanus_loot_function"), ARCANUS_LOOT_FUNCTION);
-		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "casting_multiplier"), ArcanusHelper.MANA_COST);
-		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_regen"), ArcanusHelper.MANA_REGEN);
-		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "burnout_regen"), ArcanusHelper.BURNOUT_REGEN);
-		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_lock"), ArcanusHelper.MANA_LOCK);
+		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "casting_multiplier"), EntityAttributes.MANA_COST);
+		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_regen"), EntityAttributes.MANA_REGEN);
+		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "burnout_regen"), EntityAttributes.BURNOUT_REGEN);
+		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_lock"), EntityAttributes.MANA_LOCK);
 
 		ModItems.register();
 		ModBlocks.register();
@@ -98,5 +100,12 @@ public class Arcanus implements ModInitializer {
 		public static final TrackedData<Integer> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 		public static final TrackedData<Integer> BURNOUT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 		public static final TrackedData<Boolean> SHOW_MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	}
+
+	public static class EntityAttributes {
+		public static final EntityAttribute MANA_COST = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_cost", 1D, 0D, 1024D).setTracked(true);
+		public static final EntityAttribute MANA_REGEN = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_regen", 1D, 0D, 1024D).setTracked(true);
+		public static final EntityAttribute BURNOUT_REGEN = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".burnout_regen", 1D, 0D, 1024D).setTracked(true);
+		public static final EntityAttribute MANA_LOCK = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_lock", 0D, 0D, 20D).setTracked(true);
 	}
 }

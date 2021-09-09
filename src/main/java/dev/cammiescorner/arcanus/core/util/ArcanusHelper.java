@@ -3,8 +3,6 @@ package dev.cammiescorner.arcanus.core.util;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.core.registry.ModItems;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.attribute.ClampedEntityAttribute;
-import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
@@ -20,12 +18,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ArcanusHelper {
-	public static final EntityAttribute MANA_COST = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_cost", 1D, 0D, 1024D).setTracked(true);
-	public static final EntityAttribute MANA_REGEN = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_regen", 1D, 0D, 1024D).setTracked(true);
-	public static final EntityAttribute BURNOUT_REGEN = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".burnout_regen", 1D, 0D, 1024D).setTracked(true);
-	public static final EntityAttribute MANA_LOCK = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_lock", 0D, 0D, 20D).setTracked(true);
+import static dev.cammiescorner.arcanus.Arcanus.EntityAttributes.*;
 
+public class ArcanusHelper {
 	public static double getManaCost(PlayerEntity player) {
 		@Nullable final EntityAttributeInstance castingMultiplier = player.getAttributeInstance(MANA_COST);
 		return castingMultiplier != null ? castingMultiplier.getValue() : 1D;

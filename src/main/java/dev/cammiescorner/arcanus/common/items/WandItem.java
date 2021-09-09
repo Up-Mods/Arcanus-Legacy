@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanus.common.items;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -35,7 +34,7 @@ public class WandItem extends Item {
 		this.maxExp = maxExp;
 		this.upgrade = upgrade;
 		ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(ArcanusHelper.MANA_COST, new EntityAttributeModifier(MANA_COST, "Mana Cost", castingMultiplier, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
+		builder.put(Arcanus.EntityAttributes.MANA_COST, new EntityAttributeModifier(MANA_COST, "Mana Cost", castingMultiplier, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
 		this.attributeModifiers = builder.build();
 	}
 

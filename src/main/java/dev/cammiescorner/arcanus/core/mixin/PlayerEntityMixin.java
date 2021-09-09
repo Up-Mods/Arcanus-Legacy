@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static dev.cammiescorner.arcanus.Arcanus.DataTrackers.*;
+import static dev.cammiescorner.arcanus.Arcanus.EntityAttributes.*;
 import static dev.cammiescorner.arcanus.Arcanus.config;
 
 @Mixin(PlayerEntity.class)
@@ -76,7 +77,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Inject(method = "createPlayerAttributes", at = @At("RETURN"))
 	private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> info) {
-		info.getReturnValue().add(ArcanusHelper.MANA_COST).add(ArcanusHelper.MANA_REGEN).add(ArcanusHelper.BURNOUT_REGEN).add(ArcanusHelper.MANA_LOCK);
+		info.getReturnValue().add(MANA_COST).add(MANA_REGEN).add(BURNOUT_REGEN).add(MANA_LOCK);
 	}
 
 	@Inject(method = "tick", at = @At("TAIL"), cancellable = true)
