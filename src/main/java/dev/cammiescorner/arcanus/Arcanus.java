@@ -66,6 +66,10 @@ public class Arcanus implements ModInitializer {
 
 		ServerPlayNetworking.registerGlobalReceiver(CastSpellMessage.ID, CastSpellMessage::handle);
 		Registry.register(Registry.LOOT_FUNCTION_TYPE, new Identifier(Arcanus.MOD_ID, "arcanus_loot_function"), ARCANUS_LOOT_FUNCTION);
+		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "casting_multiplier"), ArcanusHelper.MANA_COST);
+		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_regen"), ArcanusHelper.MANA_REGEN);
+		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "burnout_regen"), ArcanusHelper.BURNOUT_REGEN);
+		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_lock"), ArcanusHelper.MANA_LOCK);
 
 		ModItems.register();
 		ModBlocks.register();
@@ -92,10 +96,7 @@ public class Arcanus implements ModInitializer {
 
 	public static class DataTrackers {
 		public static final TrackedData<Integer> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
-		public static final TrackedData<Float> MANA_RECHARGE_RATE = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
 		public static final TrackedData<Integer> BURNOUT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
-		public static final TrackedData<Float> BURNOUT_RECHARGE_RATE = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.FLOAT);
-		public static final TrackedData<Integer> MANA_LOCK = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 		public static final TrackedData<Boolean> SHOW_MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	}
 }

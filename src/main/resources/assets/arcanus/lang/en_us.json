@@ -76,6 +76,12 @@
 	"entity.arcanus.solar_strike": "Solar Strike",
 	"entity.arcanus.arcane_barrier": "Arcane Barrier",
 
+	//-----Entity Attributes-----//
+	"attribute.name.generic.arcanus.mana_cost": "Mana Cost",
+	"attribute.name.generic.arcanus.mana_regen": "Mana Regen",
+	"attribute.name.generic.arcanus.burnout_regen": "Burnout Regen",
+	"attribute.name.generic.arcanus.mana_lock": "Mana Lock",
+
 	//-----Item Groups-----//
 	"itemGroup.arcanus.general": "Arcanus",
 

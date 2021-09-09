@@ -17,6 +17,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.TntEntity;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,6 +46,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,30 +58,35 @@ import static dev.cammiescorner.arcanus.Arcanus.config;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements MagicUser {
 	@Shadow
-	protected HungerManager hungerManager;
-	@Shadow
 	public abstract void addExhaustion(float exhaustion);
+
 	@Shadow
 	public abstract void sendMessage(Text message, boolean actionBar);
 
-	@Unique
-	private final List<Spell> knownSpells = new ArrayList<>(8);
-	@Unique
-	private Spell activeSpell = null;
-	@Unique
-	private long lastCastTime = 0;
-	@Unique
-	private int spellTimer = 0;
-	@Unique
-	private static final int MAX_MANA = 20;
+	@Shadow protected HungerManager hungerManager;
+	@Unique private final List<Spell> knownSpells = new ArrayList<>(8);
+	@Unique private Spell activeSpell = null;
+	@Unique private long lastCastTime = 0;
+	@Unique private int spellTimer = 0;
+	@Unique private static final int MAX_MANA = 20;
 
 	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
 		super(entityType, world);
 	}
 
+	@Inject(method = "createPlayerAttributes", at = @At("RETURN"))
+	private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> info) {
+		info.getReturnValue().add(ArcanusHelper.MANA_COST).add(ArcanusHelper.MANA_REGEN).add(ArcanusHelper.BURNOUT_REGEN).add(ArcanusHelper.MANA_LOCK);
+	}
+
 	@Inject(method = "tick", at = @At("TAIL"), cancellable = true)
 	public void tick(CallbackInfo info) {
 		if(!world.isClient()) {
+			if(getMana() > getMaxMana())
+				setMana(getMana());
+			if(getBurnout() > getMaxBurnout())
+				setBurnout(getBurnout());
+
 			if(activeSpell != null) {
 				if(ModSpells.LUNGE.equals(activeSpell))
 					castLunge();
@@ -103,8 +110,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				spellTimer = 0;
 
 			if(world.getTime() >= lastCastTime + 20) {
-				int manaCooldown = Math.round(config.baseManaCooldown * getManaRechargeRate());
-				int burnoutCooldown = Math.round(config.baseBurnoutCooldown * getBurnoutRechargeRate());
+				int manaCooldown = (int) Math.round(config.baseManaCooldown * ArcanusHelper.getManaRegen((PlayerEntity) (Object) this));
+				int burnoutCooldown = (int) Math.round(config.baseBurnoutCooldown * ArcanusHelper.getBurnoutRegen((PlayerEntity) (Object) this));
 
 				if(manaCooldown != 0 && getMana() < getMaxMana() - getBurnout() && world.getTime() % manaCooldown == 0)
 					addMana(1);
@@ -126,10 +133,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			Arcanus.SPELL.getOrEmpty(new Identifier(listTag.getString(i))).ifPresent(knownSpells::add);
 
 		dataTracker.set(MANA, rootTag.getInt("Mana"));
-		dataTracker.set(MANA_RECHARGE_RATE, rootTag.contains("ManaRechargeRate") ? rootTag.getFloat("ManaRechargeRate") : 1F);
 		dataTracker.set(BURNOUT, rootTag.getInt("Burnout"));
-		dataTracker.set(BURNOUT_RECHARGE_RATE, rootTag.contains("BurnoutRechargeRate") ? rootTag.getFloat("BurnoutRechargeRate") : 1F);
-		dataTracker.set(MANA_LOCK, rootTag.getInt("ManaLock"));
 		dataTracker.set(SHOW_MANA, rootTag.getBoolean("ShowMana"));
 		activeSpell = Arcanus.SPELL.get(new Identifier(rootTag.getString("ActiveSpell")));
 		lastCastTime = rootTag.getLong("LastCastTime");
@@ -145,10 +149,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		knownSpells.forEach(spell -> listTag.add(NbtString.of(Arcanus.SPELL.getId(spell).toString())));
 		rootTag.put("KnownSpells", listTag);
 		rootTag.putInt("Mana", dataTracker.get(MANA));
-		rootTag.putFloat("ManaRechargeRate", dataTracker.get(MANA_RECHARGE_RATE));
 		rootTag.putInt("Burnout", dataTracker.get(BURNOUT));
-		rootTag.putFloat("BurnoutRechargeRate", dataTracker.get(BURNOUT_RECHARGE_RATE));
-		rootTag.putInt("ManaLock", dataTracker.get(MANA_LOCK));
 		rootTag.putBoolean("ShowMana", dataTracker.get(SHOW_MANA));
 		rootTag.putString("ActiveSpell", activeSpell != null ? Arcanus.SPELL.getId(activeSpell).toString() : "");
 		rootTag.putLong("LastCastTime", lastCastTime);
@@ -158,10 +159,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Inject(method = "initDataTracker", at = @At("HEAD"))
 	public void initTracker(CallbackInfo info) {
 		dataTracker.startTracking(MANA, MAX_MANA);
-		dataTracker.startTracking(MANA_RECHARGE_RATE, 1F);
 		dataTracker.startTracking(BURNOUT, 0);
-		dataTracker.startTracking(BURNOUT_RECHARGE_RATE, 1F);
-		dataTracker.startTracking(MANA_LOCK, 0);
 		dataTracker.startTracking(SHOW_MANA, false);
 	}
 
@@ -187,7 +185,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 	@Override
 	public int getMaxMana() {
-		return MAX_MANA - getManaLock();
+		return MAX_MANA - ArcanusHelper.getManaLock((PlayerEntity) (Object) this);
 	}
 
 	@Override
@@ -198,21 +196,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Override
 	public void addMana(int amount) {
 		setMana(Math.min(getMana() + amount, getMaxMana()));
-	}
-
-	@Override
-	public float getManaRechargeRate() {
-		return dataTracker.get(MANA_RECHARGE_RATE);
-	}
-
-	@Override
-	public void setManaRechargeRate(float rate) {
-		dataTracker.set(MANA_RECHARGE_RATE, Math.min(0, rate));
-	}
-
-	@Override
-	public void resetManaRechargeRate() {
-		setManaRechargeRate(1F);
 	}
 
 	@Override
@@ -235,36 +218,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		setBurnout(Math.min(getBurnout() + amount, getMaxBurnout()));
 	}
 
-	@Override
-	public float getBurnoutRechargeRate() {
-		return dataTracker.get(BURNOUT_RECHARGE_RATE);
-	}
-
-	@Override
-	public void setBurnoutRechargeRage(float rate) {
-		dataTracker.set(BURNOUT_RECHARGE_RATE, Math.min(0, rate));
-	}
-
-	@Override
-	public void resetBurnoutRechargeRate() {
-		setBurnoutRechargeRage(1F);
-	}
-
-	@Override
-	public int getManaLock() {
-		return dataTracker.get(MANA_LOCK);
-	}
-
-	@Override
 	public void setManaLock(int amount) {
-		dataTracker.set(MANA_LOCK, amount);
 		setMana(getMana());
 		setBurnout(getBurnout());
-	}
-
-	@Override
-	public void removeManaLock() {
-		dataTracker.set(MANA_LOCK, 0);
 	}
 
 	@Override
@@ -299,9 +255,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				Vec3d velocity = getVelocity();
 				float speed = 0.75F;
 
-				setVelocity(velocity.add(rotation.x * speed + (rotation.x * 1.5D - velocity.x),
-						rotation.y * speed + (rotation.y * 1.5D - velocity.y),
-						rotation.z * speed + (rotation.z * 1.5D - velocity.z)));
+				setVelocity(velocity.add(rotation.x * speed + (rotation.x * 1.5D - velocity.x), rotation.y * speed + (rotation.y * 1.5D - velocity.y), rotation.z * speed + (rotation.z * 1.5D - velocity.z)));
 
 				world.getOtherEntities(null, getBoundingBox().expand(2)).forEach(entity -> {
 					if(entity != this && entity instanceof LivingEntity)

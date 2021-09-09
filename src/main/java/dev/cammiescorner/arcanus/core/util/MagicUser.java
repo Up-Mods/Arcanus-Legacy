@@ -17,12 +17,6 @@ public interface MagicUser {
 
 	void addMana(int amount);
 
-	float getManaRechargeRate();
-
-	void setManaRechargeRate(float rate);
-
-	void resetManaRechargeRate();
-
 	int getBurnout();
 
 	int getMaxBurnout();
@@ -30,18 +24,6 @@ public interface MagicUser {
 	void setBurnout(int amount);
 
 	void addBurnout(int amount);
-
-	float getBurnoutRechargeRate();
-
-	void setBurnoutRechargeRage(float rate);
-
-	void resetBurnoutRechargeRate();
-
-	int getManaLock();
-
-	void setManaLock(int amount);
-
-	void removeManaLock();
 
 	boolean isManaVisible();
 

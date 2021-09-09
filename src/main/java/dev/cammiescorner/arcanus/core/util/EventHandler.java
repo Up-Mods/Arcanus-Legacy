@@ -61,7 +61,7 @@ public class EventHandler {
 				MagicUser user = (MagicUser) player;
 				int mana = Math.min(user.getMana(), user.getMaxMana() - user.getBurnout());
 				int burnout = user.getBurnout();
-				int manaLock = user.getManaLock();
+				int manaLock = ArcanusHelper.getManaLock(player);
 
 				if(player.getMainHandStack().getItem() instanceof WandItem || mana < user.getMaxMana())
 					manaTimer.value = Math.min(manaTimer.value + 1, 40);

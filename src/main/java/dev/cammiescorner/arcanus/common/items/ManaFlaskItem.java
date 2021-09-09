@@ -12,6 +12,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
@@ -35,7 +36,7 @@ public class ManaFlaskItem extends Item {
 			}
 			else if(tag.getInt("Mana") > 0){
 				if(!player.isCreative()) {
-					magicUser.addMana(5);
+					magicUser.addMana(MathHelper.clamp((magicUser.getMaxMana() - magicUser.getBurnout()) - magicUser.getMana(), 0, 5));
 					magicUser.setLastCastTime(world.getTime());
 				}
 
@@ -57,7 +58,7 @@ public class ManaFlaskItem extends Item {
 		if(tag.getBoolean("Filling") || (magicUser.getMana() < magicUser.getMaxMana() && tag.getInt("Mana") > 0))
 			return ItemUsage.consumeHeldItem(world, user, hand);
 		else
-			return super.use(world, user, hand);
+			return TypedActionResult.fail(user.getStackInHand(hand));
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package dev.cammiescorner.arcanus.common.packets;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.items.WandItem;
 import dev.cammiescorner.arcanus.core.registry.ModDamageSource;
+import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
 import io.netty.buffer.Unpooled;
@@ -41,7 +42,7 @@ public class CastSpellMessage {
 			Spell spell = Arcanus.SPELL.get(spellId);
 
 			if(user.getKnownSpells().contains(spell)) {
-				int realManaCost = (int) (spell.getManaCost() * wand.getCastingMultiplier());
+				int realManaCost = (int) (spell.getManaCost() * ArcanusHelper.getManaCost(player));
 
 				if(player.isCreative() || (config.haveBurnout && user.getMana() > 0) || (!config.haveBurnout && user.getMana() >= realManaCost)) {
 					player.sendMessage(new TranslatableText(spell.getTranslationKey()).formatted(Formatting.GREEN), true);

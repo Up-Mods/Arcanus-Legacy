@@ -3,6 +3,10 @@ package dev.cammiescorner.arcanus.core.util;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.core.registry.ModItems;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.attribute.ClampedEntityAttribute;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -12,10 +16,36 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class ArcanusHelper {
+	public static final EntityAttribute MANA_COST = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_cost", 1D, 0D, 1024D).setTracked(true);
+	public static final EntityAttribute MANA_REGEN = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_regen", 1D, 0D, 1024D).setTracked(true);
+	public static final EntityAttribute BURNOUT_REGEN = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".burnout_regen", 1D, 0D, 1024D).setTracked(true);
+	public static final EntityAttribute MANA_LOCK = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_lock", 0D, 0D, 20D).setTracked(true);
+
+	public static double getManaCost(PlayerEntity player) {
+		@Nullable final EntityAttributeInstance castingMultiplier = player.getAttributeInstance(MANA_COST);
+		return castingMultiplier != null ? castingMultiplier.getValue() : 1D;
+	}
+
+	public static double getManaRegen(PlayerEntity player) {
+		@Nullable final EntityAttributeInstance manaRegen = player.getAttributeInstance(MANA_REGEN);
+		return manaRegen != null ? manaRegen.getValue() : 1D;
+	}
+
+	public static double getBurnoutRegen(PlayerEntity player) {
+		@Nullable final EntityAttributeInstance burnoutRegen = player.getAttributeInstance(BURNOUT_REGEN);
+		return burnoutRegen != null ? burnoutRegen.getValue() : 1D;
+	}
+
+	public static int getManaLock(PlayerEntity player) {
+		@Nullable final EntityAttributeInstance manaLock = player.getAttributeInstance(MANA_LOCK);
+		return (int) (manaLock != null ? manaLock.getValue() : 0D);
+	}
+
 	public static HitResult raycast(Entity origin, double maxDistance, boolean hitsEntities) {
 		Vec3d startPos = origin.getCameraPosVec(1F);
 		Vec3d rotation = origin.getRotationVec(1F);
