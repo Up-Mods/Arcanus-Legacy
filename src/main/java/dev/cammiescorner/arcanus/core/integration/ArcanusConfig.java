@@ -62,8 +62,8 @@ public class ArcanusConfig implements ConfigData {
 	@Comment("The Mana cost for the Arcane Barrier spell.")
 	public int arcaneBarrierCastingCost = 4;
 
-	@Comment("A list of structures that have Bookshelves to be replaced by" +
-			"\n    Fillable Bookshelves from Arcanus.")
+	@Comment("A list of structure paths that have Bookshelves to be replaced" +
+			"\n    by Fillable Bookshelves from Arcanus.")
 	public List<String> structuresWithBookshelves = List.of(
 			"minecraft:village/desert/houses/desert_library_1",
 			"minecraft:village/plains/houses/plains_library_1",
@@ -214,8 +214,8 @@ public class ArcanusConfig implements ConfigData {
 			"stonevaults:pillager_dungeon/rooms/library"
 	);
 
-	@Comment("A list of structures that have Lecterns to be filled with" +
-			"\n    Spell Books from Arcanus.")
+	@Comment("A list of structure paths that have Lecterns to be filled" +
+			"\n    with Spell Books from Arcanus.")
 	public List<String> structuresWithLecterns = List.of(
 			"minecraft:village/desert/houses/desert_library_1",
 			"minecraft:village/plains/houses/plains_library_1",

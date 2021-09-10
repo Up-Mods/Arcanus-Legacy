@@ -141,11 +141,11 @@
 
 	//-----ModMenu-----//
 	"text.autoconfig.arcanus.title": "Arcanus",
-	"text.autoconfig.arcanus.option.doLecternProcessor": "Run Lectern Structure Processor",
-	"text.autoconfig.arcanus.option.doBookshelfProcessor": "Run Bookshelf Structure Processor",
-	"text.autoconfig.arcanus.option.librariesHaveBooks": "Libraries have Spell Books",
-	"text.autoconfig.arcanus.option.strongholdsHaveBooks": "Strongholds have Spell Books",
-	"text.autoconfig.arcanus.option.ruinedPortalsHaveBooks": "Ruined Portals have Spell Books",
+	"text.autoconfig.arcanus.option.doLecternProcessor": "Run Lectern Structure Processor.",
+	"text.autoconfig.arcanus.option.doBookshelfProcessor": "Run Bookshelf Structure Processor.",
+	"text.autoconfig.arcanus.option.librariesHaveBooks": "Libraries have Spell Books.",
+	"text.autoconfig.arcanus.option.strongholdsHaveBooks": "Strongholds have Spell Books.",
+	"text.autoconfig.arcanus.option.ruinedPortalsHaveBooks": "Ruined Portals have Spell Books.",
 	"text.autoconfig.arcanus.option.haveBurnout": "Should players have Burnout?",
 	"text.autoconfig.arcanus.option.magicColour": "The colour of objects created by spells.",
 	"text.autoconfig.arcanus.option.baseManaCooldown": "The time Mana takes to refill by 1 in ticks before modifiers.",
@@ -157,5 +157,7 @@
 	"text.autoconfig.arcanus.option.healCastingCost": "The Mana cost for the Heal spell.",
 	"text.autoconfig.arcanus.option.discombobulateCastingCost": "The Mana cost for the Discombobulate spell.",
 	"text.autoconfig.arcanus.option.solarStrikeCastingCost": "The Mana cost for the Solar Strike spell.",
-	"text.autoconfig.arcanus.option.arcaneBarrierCastingCost": "The Mana cost for the Arcane Barrier spell."
+	"text.autoconfig.arcanus.option.arcaneBarrierCastingCost": "The Mana cost for the Arcane Barrier spell.",
+	"text.autoconfig.arcanus.option.structuresWithBookshelves": "List of structure paths with Bookshelves.",
+	"text.autoconfig.arcanus.option.structuresWithLecterns": "List of structure paths with Lecterns."
 }
