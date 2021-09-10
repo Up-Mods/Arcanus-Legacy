@@ -1,6 +1,5 @@
 package dev.cammiescorner.arcanus.core.util;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.items.WandItem;
@@ -16,7 +15,6 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -126,52 +124,17 @@ public class EventHandler {
 
 	public static void commonEvents() {
 		//-----Server Starting Callback-----//
-		ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-			MutableRegistry<StructurePool> templatePoolRegistry = server.getRegistryManager().getMutable(Registry.STRUCTURE_POOL_KEY);
-
-			final String minecraftId = "minecraft";
-			final String moStructuresId = "mostructures";
-			final String dungeonsSriseId = "dungeons_arise";
-
-			if(Arcanus.config.librariesHaveBooks) {
-				EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier(minecraftId, "village/desert/houses"), ImmutableList.of(
-						new Identifier(minecraftId, "village/desert/houses/desert_library_1")
-				));
-				EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier(minecraftId, "village/plains/houses"), ImmutableList.of(
-						new Identifier(minecraftId, "village/plains/houses/plains_library_1"),
-						new Identifier(minecraftId, "village/plains/houses/plains_library_2")
-				));
-				EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier(minecraftId, "village/savanna/houses"), ImmutableList.of(
-						new Identifier(minecraftId, "village/savanna/houses/savanna_library_1")
-				));
-				EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier(minecraftId, "village/snowy/houses"), ImmutableList.of(
-						new Identifier(minecraftId, "village/snowy/houses/snowy_library_1")
-				));
-				EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier(minecraftId, "village/taiga/houses"), ImmutableList.of(
-						new Identifier(minecraftId, "village/taiga/houses/taiga_library_1")
-				));
-			}
-
-			if(FabricLoader.getInstance().isModLoaded(moStructuresId)) {
-				
-			}
-		});
+		ServerLifecycleEvents.SERVER_STARTING.register(server -> EventHandler.addStructureProcessors(server.getRegistryManager().getMutable(Registry.STRUCTURE_POOL_KEY)));
 
 		//-----Loot Table Callback-----//
 		LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, id, supplier, setter) -> {
 			if(Arcanus.config.strongholdsHaveBooks && STRONGHOLD_LIBRARY_LOOT_TABLE.equals(id)) {
-				FabricLootPoolBuilder poolBuilder = FabricLootPoolBuilder.builder()
-						.rolls(ConstantLootNumberProvider.create(4))
-						.withCondition(RandomChanceLootCondition.builder(0.5F).build())
-						.withEntry(createItemEntry(new ItemStack(Items.WRITTEN_BOOK)).build());
+				FabricLootPoolBuilder poolBuilder = FabricLootPoolBuilder.builder().rolls(ConstantLootNumberProvider.create(4)).withCondition(RandomChanceLootCondition.builder(0.5F).build()).withEntry(createItemEntry(new ItemStack(Items.WRITTEN_BOOK)).build());
 				supplier.withPool(poolBuilder.build());
 			}
 
 			if(Arcanus.config.ruinedPortalsHaveBooks && RUINED_PORTAL_LOOT_TABLE.equals(id)) {
-				FabricLootPoolBuilder poolBuilder = FabricLootPoolBuilder.builder()
-						.rolls(ConstantLootNumberProvider.create(1))
-						.withCondition(RandomChanceLootCondition.builder(0.1F).build())
-						.withEntry(createItemEntry(new ItemStack(Items.WRITTEN_BOOK)).build());
+				FabricLootPoolBuilder poolBuilder = FabricLootPoolBuilder.builder().rolls(ConstantLootNumberProvider.create(1)).withCondition(RandomChanceLootCondition.builder(0.1F).build()).withEntry(createItemEntry(new ItemStack(Items.WRITTEN_BOOK)).build());
 				supplier.withPool(poolBuilder.build());
 			}
 		});
@@ -195,19 +158,13 @@ public class EventHandler {
 		return builder;
 	}
 
-	public static void addStructureProcessors(MutableRegistry<StructurePool> templatePoolRegistry, Identifier poolId, List<Identifier> nbtPieceIdList) {
-		StructurePool pool = templatePoolRegistry.get(poolId);
+	public static void addStructureProcessors(MutableRegistry<StructurePool> templatePoolRegistry) {
+		templatePoolRegistry.forEach(pool -> pool.elements.forEach(element -> {
+			if(element instanceof SinglePoolElement singleElement && singleElement.location.left().isPresent()) {
+				String currentElement = singleElement.location.left().get().toString();
 
-		if(pool == null)
-			return;
-
-		pool.elements.forEach(element ->
-		{
-			if(element instanceof SinglePoolElement piece && piece.location.left().isPresent()) {
-				Identifier currentPiece = piece.location.left().get();
-
-				if(nbtPieceIdList.contains(currentPiece)) {
-					StructureProcessorList originalProcessorList = piece.processors.get();
+				if(Arcanus.config.structuresWithBookshelves.contains(currentElement) || Arcanus.config.structuresWithLecterns.contains(currentElement)) {
+					StructureProcessorList originalProcessorList = singleElement.processors.get();
 					List<StructureProcessor> mutableProcessorList = new ArrayList<>(originalProcessorList.getList());
 
 					if(Arcanus.config.doLecternProcessor)
@@ -217,9 +174,9 @@ public class EventHandler {
 
 					StructureProcessorList newProcessorList = new StructureProcessorList(mutableProcessorList);
 
-					piece.processors = () -> newProcessorList;
+					singleElement.processors = () -> newProcessorList;
 				}
 			}
-		});
+		}));
 	}
 }
