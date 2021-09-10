@@ -103,7 +103,7 @@ public class ManaFlaskItem extends Item {
 	public String getTranslationKey(ItemStack stack) {
 		NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
 
-		if(tag.getInt("Mana") <= 0)
+		if(tag == null || tag.getInt("Mana") <= 0)
 			return Util.createTranslationKey("item", Registry.ITEM.getId(this)) + "_empty";
 
 		return super.getTranslationKey(stack);
