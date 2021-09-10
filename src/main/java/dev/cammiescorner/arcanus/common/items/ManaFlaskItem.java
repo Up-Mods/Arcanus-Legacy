@@ -96,7 +96,7 @@ public class ManaFlaskItem extends Item {
 	@Override
 	public UseAction getUseAction(ItemStack stack) {
 		NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
-		return tag.getBoolean("Filling") ? UseAction.BOW : UseAction.DRINK;
+		return tag == null || tag.getBoolean("Filling") ? UseAction.BOW : UseAction.DRINK;
 	}
 
 	@Override

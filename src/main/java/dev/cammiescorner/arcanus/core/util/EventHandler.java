@@ -130,7 +130,8 @@ public class EventHandler {
 			MutableRegistry<StructurePool> templatePoolRegistry = server.getRegistryManager().getMutable(Registry.STRUCTURE_POOL_KEY);
 
 			final String minecraftId = "minecraft";
-			final String mostructuresId = "mostructures";
+			final String moStructuresId = "mostructures";
+			final String dungeonsSriseId = "dungeons_arise";
 
 			if(Arcanus.config.librariesHaveBooks) {
 				EventHandler.addStructureProcessors(templatePoolRegistry, new Identifier(minecraftId, "village/desert/houses"), ImmutableList.of(
@@ -151,7 +152,7 @@ public class EventHandler {
 				));
 			}
 
-			if(FabricLoader.getInstance().isModLoaded(mostructuresId)) {
+			if(FabricLoader.getInstance().isModLoaded(moStructuresId)) {
 				
 			}
 		});
