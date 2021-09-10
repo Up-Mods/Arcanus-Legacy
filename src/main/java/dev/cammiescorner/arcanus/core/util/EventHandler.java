@@ -15,6 +15,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -128,7 +129,7 @@ public class EventHandler {
 
 		//-----Loot Table Callback-----//
 		LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, id, supplier, setter) -> {
-			if(Arcanus.config.strongholdsHaveBooks && STRONGHOLD_LIBRARY_LOOT_TABLE.equals(id)) {
+			if(Arcanus.config.strongholdsHaveBooks && STRONGHOLD_LIBRARY_LOOT_TABLE.equals(id) && !FabricLoader.getInstance().isModLoaded("betterstrongholds")) {
 				FabricLootPoolBuilder poolBuilder = FabricLootPoolBuilder.builder().rolls(ConstantLootNumberProvider.create(4)).withCondition(RandomChanceLootCondition.builder(0.5F).build()).withEntry(createItemEntry(new ItemStack(Items.WRITTEN_BOOK)).build());
 				supplier.withPool(poolBuilder.build());
 			}
