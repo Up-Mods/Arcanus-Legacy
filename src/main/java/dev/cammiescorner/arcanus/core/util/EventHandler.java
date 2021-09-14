@@ -8,7 +8,6 @@ import dev.cammiescorner.arcanus.common.structure.processor.LecternStructureProc
 import dev.cammiescorner.arcanus.core.registry.ModCommands;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -42,12 +41,6 @@ public class EventHandler {
 
 	@Environment(EnvType.CLIENT)
 	public static void clientEvents() {
-		//-----Client Tick Callback-----//
-		ClientTickEvents.START_CLIENT_TICK.register(client -> {
-			if(client.player instanceof CanBeDiscombobulated player)
-				client.options.invertYMouse = player.isDiscombobulated();
-		});
-
 		final MinecraftClient client = MinecraftClient.getInstance();
 		var manaTimer = new Object() {
 			int value;
