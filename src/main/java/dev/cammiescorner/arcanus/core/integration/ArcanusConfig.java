@@ -37,9 +37,9 @@ public class ArcanusConfig implements ConfigData {
 	@Comment("The time Burnout takes to reduce by 1 in ticks before modifiers.")
 	public int baseBurnoutCooldown = 60;
 
-	@Comment("The Mana costs for all the spells.")
+	@Comment("Spells that should be enabled. (Restart Required)")
 	@ConfigEntry.Gui.CollapsibleObject
-	public ManaCosts manaCosts = new ManaCosts();
+	public SpellStuff spells = new SpellStuff();
 
 	@Comment("A list of structure paths that have Bookshelves to be replaced" +
 			"\n    by Fillable Bookshelves from Arcanus.")
@@ -235,6 +235,36 @@ public class ArcanusConfig implements ConfigData {
 			"stonevaults:pillager_dungeon/rooms/big_library",
 			"stonevaults:pillager_dungeon/rooms/storage_2"
 	);
+
+	public static class SpellStuff {
+		@Comment("Should Lunge be enabled? (Restart Required)")
+		public boolean enableLunge = true;
+
+		@Comment("Should Dream Warp be enabled? (Restart Required)")
+		public boolean enableDreamWarp = true;
+
+		@Comment("Should Magic Missile be enabled? (Restart Required)")
+		public boolean enableMagicMissile = true;
+
+		@Comment("Should Telekinetic Shock be enabled? (Restart Required)")
+		public boolean enableTelekineticShock = true;
+
+		@Comment("Should Heal be enabled? (Restart Required)")
+		public boolean enableHeal = true;
+
+		@Comment("Should Discombobulate be enabled? (Restart Required)")
+		public boolean enableDiscombobulate = true;
+
+		@Comment("Should Solar Strike be enabled? (Restart Required)")
+		public boolean enableSolarStrike = true;
+
+		@Comment("Should Arcane Barrier be enabled? (Restart Required)")
+		public boolean enableArcaneBarrier = true;
+
+		@Comment("The Mana costs for all the spells.")
+		@ConfigEntry.Gui.CollapsibleObject
+		public ManaCosts manaCosts = new ManaCosts();
+	}
 
 	public static class ManaCosts {
 		@Comment("The Mana cost for the Lunge spell.")

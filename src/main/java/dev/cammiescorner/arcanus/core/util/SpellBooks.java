@@ -1,7 +1,6 @@
 package dev.cammiescorner.arcanus.core.util;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.core.registry.ModSpells;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -37,31 +36,11 @@ public class SpellBooks {
 	public static ItemStack getSpellBook(Spell spell) {
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 
-		return switch(Arcanus.SPELL.getRawId(spell)) {
-			case 0 -> SpellBooks.getSpellBook(stack, ModSpells.LUNGE);
-			case 1 -> SpellBooks.getSpellBook(stack, ModSpells.DREAM_WARP);
-			case 2 -> SpellBooks.getSpellBook(stack, ModSpells.MAGIC_MISSILE);
-			case 3 -> SpellBooks.getSpellBook(stack, ModSpells.TELEKINESIS);
-			case 4 -> SpellBooks.getSpellBook(stack, ModSpells.HEAL);
-			case 5 -> SpellBooks.getSpellBook(stack, ModSpells.DISCOMBOBULATE);
-			case 6 -> SpellBooks.getSpellBook(stack, ModSpells.SOLAR_STRIKE);
-			case 7 -> SpellBooks.getSpellBook(stack, ModSpells.ARCANE_BARRIER);
-			default -> throw new IndexOutOfBoundsException("SOMETING WENT VEWY VEWY WWONG! THIWS SHOUWD NEVEW HAPPEN!");
-		};
+		return SpellBooks.getSpellBook(stack, spell);
 	}
 
 	public static ItemStack getRandomSpellBook(ItemStack stack) {
-		return switch(RAND.nextInt(8)) {
-			case 0 -> SpellBooks.getSpellBook(stack, ModSpells.LUNGE);
-			case 1 -> SpellBooks.getSpellBook(stack, ModSpells.DREAM_WARP);
-			case 2 -> SpellBooks.getSpellBook(stack, ModSpells.MAGIC_MISSILE);
-			case 3 -> SpellBooks.getSpellBook(stack, ModSpells.TELEKINESIS);
-			case 4 -> SpellBooks.getSpellBook(stack, ModSpells.HEAL);
-			case 5 -> SpellBooks.getSpellBook(stack, ModSpells.DISCOMBOBULATE);
-			case 6 -> SpellBooks.getSpellBook(stack, ModSpells.SOLAR_STRIKE);
-			case 7 -> SpellBooks.getSpellBook(stack, ModSpells.ARCANE_BARRIER);
-			default -> throw new IndexOutOfBoundsException("SOMETING WENT VEWY VEWY WWONG! THIWS SHOUWD NEVEW HAPPEN!");
-		};
+		return SpellBooks.getSpellBook(stack, Arcanus.SPELL.get(RAND.nextInt(Arcanus.SPELL.getEntries().size() - 1)));
 	}
 
 	public static ItemStack getRandomSpellBook() {

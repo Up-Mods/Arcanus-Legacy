@@ -17,18 +17,33 @@ public class ModSpells {
 	public static final LinkedHashMap<Spell, Identifier> SPELLS = new LinkedHashMap<>();
 
 	//-----Spells-----//
-	public static final Spell LUNGE = create("lunge", new LungeSpell(RIGHT, RIGHT, RIGHT, config.manaCosts.lungeCastingCost));
-	public static final Spell DREAM_WARP = create("dream_warp", new DreamWarpSpell(LEFT, RIGHT, LEFT, config.manaCosts.dreamWarpCastingCost));
-	public static final Spell MAGIC_MISSILE = create("magic_missile", new MagicMissileSpell(LEFT, LEFT, LEFT, config.manaCosts.magicMissileCastingCost));
-	public static final Spell TELEKINESIS = create("telekinetic_shock", new TelekinesisSpell(RIGHT, LEFT, RIGHT, config.manaCosts.telekinesisCastingCost));
-	public static final Spell HEAL = create("heal", new HealSpell(RIGHT, LEFT, LEFT, config.manaCosts.healCastingCost));
-	public static final Spell DISCOMBOBULATE = create("discombobulate", new DiscombobulateSpell(LEFT, RIGHT, RIGHT, config.manaCosts.discombobulateCastingCost));
-	public static final Spell SOLAR_STRIKE = create("solar_strike", new SolarStrikeSpell(LEFT, LEFT, RIGHT, config.manaCosts.solarStrikeCastingCost));
-	public static final Spell ARCANE_BARRIER = create("arcane_barrier", new ArcaneBarrierSpell(RIGHT, RIGHT, LEFT, config.manaCosts.arcaneBarrierCastingCost));
+	public static final Spell LUNGE = new LungeSpell(RIGHT, RIGHT, RIGHT, config.spells.manaCosts.lungeCastingCost);
+	public static final Spell DREAM_WARP = new DreamWarpSpell(RIGHT, LEFT, RIGHT, config.spells.manaCosts.dreamWarpCastingCost);
+	public static final Spell MAGIC_MISSILE = new MagicMissileSpell(LEFT, LEFT, LEFT, config.spells.manaCosts.magicMissileCastingCost);
+	public static final Spell TELEKINESIS = new TelekinesisSpell(LEFT, RIGHT, LEFT, config.spells.manaCosts.telekinesisCastingCost);
+	public static final Spell HEAL = new HealSpell(RIGHT, LEFT, LEFT, config.spells.manaCosts.healCastingCost);
+	public static final Spell DISCOMBOBULATE = new DiscombobulateSpell(LEFT, RIGHT, RIGHT, config.spells.manaCosts.discombobulateCastingCost);
+	public static final Spell SOLAR_STRIKE = new SolarStrikeSpell(LEFT, LEFT, RIGHT, config.spells.manaCosts.solarStrikeCastingCost);
+	public static final Spell ARCANE_BARRIER = new ArcaneBarrierSpell(RIGHT, RIGHT, LEFT, config.spells.manaCosts.arcaneBarrierCastingCost);
 
 	//-----Registry-----//
 	public static void register() {
-		SPELLS.keySet().forEach(item -> Registry.register(Arcanus.SPELL, SPELLS.get(item), item));
+		if(config.spells.enableLunge)
+			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "lunge"), LUNGE);
+		if(config.spells.enableDreamWarp)
+			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "dream_warp"), DREAM_WARP);
+		if(config.spells.enableMagicMissile)
+			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "magic_missile"), MAGIC_MISSILE);
+		if(config.spells.enableTelekineticShock)
+			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "telekinetic_shock"), TELEKINESIS);
+		if(config.spells.enableHeal)
+			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "heal"), HEAL);
+		if(config.spells.enableDiscombobulate)
+			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "discombobulate"), DISCOMBOBULATE);
+		if(config.spells.enableSolarStrike)
+			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "solar_strike"), SOLAR_STRIKE);
+		if(config.spells.enableArcaneBarrier)
+			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "arcane_barrier"), ARCANE_BARRIER);
 	}
 
 	private static <T extends Spell> T create(String name, T spell) {
