@@ -45,6 +45,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -58,11 +60,8 @@ import static dev.cammiescorner.arcanus.Arcanus.config;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements MagicUser {
-	@Shadow
-	public abstract void addExhaustion(float exhaustion);
-
-	@Shadow
-	public abstract void sendMessage(Text message, boolean actionBar);
+	@Shadow public abstract void addExhaustion(float exhaustion);
+	@Shadow public abstract void sendMessage(Text message, boolean actionBar);
 
 	@Shadow protected HungerManager hungerManager;
 	@Unique private final List<Spell> knownSpells = new ArrayList<>(8);
@@ -80,7 +79,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		info.getReturnValue().add(MANA_COST).add(MANA_REGEN).add(BURNOUT_REGEN).add(MANA_LOCK);
 	}
 
-	@Inject(method = "tick", at = @At("TAIL"), cancellable = true)
+	@Inject(method = "tick", at = @At("TAIL"))
 	public void tick(CallbackInfo info) {
 		if(!world.isClient()) {
 			if(getMana() > getMaxMana())
@@ -123,6 +122,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				}
 			}
 		}
+	}
+
+	@ModifyVariable(method = "damage", slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;dropShoulderEntities()V")), at = @At(value = "RETURN"))
+	public float damage(float amount, DamageSource source) {
+		return ArcanusHelper.trinketOnDamaged(source, amount, this);
 	}
 
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))

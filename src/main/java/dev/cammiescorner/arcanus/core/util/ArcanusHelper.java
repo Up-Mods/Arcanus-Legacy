@@ -1,9 +1,13 @@
 package dev.cammiescorner.arcanus.core.util;
 
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.common.items.trinkets.ArcanusTrinketItem;
 import dev.cammiescorner.arcanus.core.registry.ModItems;
+import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
@@ -39,6 +43,36 @@ public class ArcanusHelper {
 	public static int getManaLock(PlayerEntity player) {
 		@Nullable final EntityAttributeInstance manaLock = player.getAttributeInstance(MANA_LOCK);
 		return (int) (manaLock != null ? manaLock.getValue() : 0D);
+	}
+
+	public static float trinketOnDamaged(DamageSource source, float amount, LivingEntity target) {
+		var obj = new Object() {
+			float damage = amount;
+		};
+
+		if(source.getAttacker() instanceof LivingEntity attacker) {
+			TrinketsApi.getTrinketComponent(target).ifPresent(component -> component.getAllEquipped().forEach(pair -> {
+				if(pair.getRight().getItem() instanceof ArcanusTrinketItem trinket)
+					obj.damage = trinket.onDamaged(source, amount, attacker);
+			}));
+		}
+
+		return obj.damage;
+	}
+
+	public static float trinketOnAttack(DamageSource source, float amount, LivingEntity target) {
+		var obj = new Object() {
+			float damage = amount;
+		};
+
+		if(target != null && source.getAttacker() instanceof LivingEntity attacker) {
+			TrinketsApi.getTrinketComponent(attacker).ifPresent(component -> component.getAllEquipped().forEach(pair -> {
+				if(pair.getRight().getItem() instanceof ArcanusTrinketItem trinket)
+					obj.damage = trinket.onAttack(source, amount, target);
+			}));
+		}
+
+		return obj.damage;
 	}
 
 	public static HitResult raycast(Entity origin, double maxDistance, boolean hitsEntities) {
