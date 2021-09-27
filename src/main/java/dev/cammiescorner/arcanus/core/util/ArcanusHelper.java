@@ -53,7 +53,7 @@ public class ArcanusHelper {
 		if(source.getAttacker() instanceof LivingEntity attacker) {
 			TrinketsApi.getTrinketComponent(target).ifPresent(component -> component.getAllEquipped().forEach(pair -> {
 				if(pair.getRight().getItem() instanceof ArcanusTrinketItem trinket)
-					obj.damage = trinket.onDamaged(source, amount, attacker);
+					obj.damage = trinket.onDamaged(source, amount, target, attacker);
 			}));
 		}
 
@@ -65,10 +65,10 @@ public class ArcanusHelper {
 			float damage = amount;
 		};
 
-		if(target != null && source.getAttacker() instanceof LivingEntity attacker) {
+		if(source.getAttacker() instanceof LivingEntity attacker) {
 			TrinketsApi.getTrinketComponent(attacker).ifPresent(component -> component.getAllEquipped().forEach(pair -> {
 				if(pair.getRight().getItem() instanceof ArcanusTrinketItem trinket)
-					obj.damage = trinket.onAttack(source, amount, target);
+					obj.damage = trinket.onAttack(source, amount, target, attacker);
 			}));
 		}
 

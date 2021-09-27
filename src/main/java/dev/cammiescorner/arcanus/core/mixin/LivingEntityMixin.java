@@ -53,7 +53,7 @@ public abstract class LivingEntityMixin extends Entity implements CanBeDiscombob
 
 	@ModifyVariable(method = "damage", slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isDead()Z", ordinal = 1)), at = @At(value = "LOAD", ordinal = 0))
 	public float damage(float amount, DamageSource source) {
-		return ArcanusHelper.trinketOnAttack(source, amount, attacking);
+		return ArcanusHelper.trinketOnAttack(source, amount, (LivingEntity) (Object) this);
 	}
 
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))

@@ -46,7 +46,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -124,7 +123,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		}
 	}
 
-	@ModifyVariable(method = "damage", slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;dropShoulderEntities()V")), at = @At(value = "RETURN"))
+	@ModifyVariable(method = "damage", at = @At(value = "HEAD"))
 	public float damage(float amount, DamageSource source) {
 		return ArcanusHelper.trinketOnDamaged(source, amount, this);
 	}

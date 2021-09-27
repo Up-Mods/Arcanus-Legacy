@@ -11,11 +11,11 @@ public abstract class ArcanusTrinketItem extends TrinketItem {
 		super(new FabricItemSettings().group(Arcanus.ITEM_GROUP).maxCount(1));
 	}
 
-	public float onAttack(DamageSource source, float amount, LivingEntity target) {
+	public float onAttack(DamageSource source, float amount, LivingEntity target, LivingEntity attacker) {
 		return amount;
 	}
 
-	public float onDamaged(DamageSource source, float amount, LivingEntity attacker) {
+	public float onDamaged(DamageSource source, float amount, LivingEntity target, LivingEntity attacker) {
 		return amount;
 	}
 }
