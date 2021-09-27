@@ -1,6 +1,13 @@
 {
 	"replace": false,
 	"values": [
-		"arcanus:gloves_of_disengagement"
+		{
+			"id": "arcanus:gloves_of_disengagement",
+			"required": false
+		},
+		{
+			"id": "arcanus:gloves_of_the_hippocratic_oath",
+			"required": false
+		}
 	]
 }

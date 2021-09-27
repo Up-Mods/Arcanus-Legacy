@@ -1,7 +1,13 @@
 {
 	"replace": false,
 	"values": [
-		"arcanus:belt_of_the_rabbit",
-		"arcanus:belt_of_rejuvenation"
+		{
+			"id": "arcanus:belt_of_the_rabbit",
+			"required": false
+		},
+		{
+			"id": "arcanus:belt_of_rejuvenation",
+			"required": false
+		}
 	]
 }

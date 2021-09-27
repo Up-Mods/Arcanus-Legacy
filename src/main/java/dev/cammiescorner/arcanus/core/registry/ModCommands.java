@@ -11,8 +11,8 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.core.util.Spell;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
+import dev.cammiescorner.arcanus.core.util.Spell;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -28,10 +28,11 @@ import net.minecraft.util.Identifier;
 import java.util.concurrent.CompletableFuture;
 
 public class ModCommands {
-	public static void init(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {
-		if(dedicated)
-			ArgumentTypes.register("spells", SpellArgumentType.class, new ConstantArgumentSerializer<>(SpellArgumentType::new));
+	public static void register() {
+		ArgumentTypes.register("spells", SpellArgumentType.class, new ConstantArgumentSerializer<>(SpellArgumentType::new));
+	}
 
+	public static void init(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {
 		dispatcher.register(CommandManager.literal("spells")
 				.then(CommandManager.literal("list").requires(source -> source.hasPermissionLevel(0))
 						.executes(context -> SpellsCommand.listPlayerSpells(context, context.getSource().getPlayer()))
@@ -59,7 +60,7 @@ public class ModCommands {
 														.executes(SpellsCommand::removeSpellFromPlayer)))));
 	}
 
-	private static class SpellArgumentType implements ArgumentType<Spell> {
+	public static class SpellArgumentType implements ArgumentType<Spell> {
 		public static final DynamicCommandExceptionType INVALID_SPELL_EXCEPTION = new DynamicCommandExceptionType(object -> new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.not_found", object));
 
 		public static SpellArgumentType spell() {

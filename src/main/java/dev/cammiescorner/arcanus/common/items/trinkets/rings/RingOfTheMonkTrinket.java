@@ -27,10 +27,8 @@ public class RingOfTheMonkTrinket extends ArcanusTrinketItem {
 			if(doNormalDamage)
 				return amount - DAMAGE_AMOUNT;
 
-			if(target.canTakeDamage() && target.hurtTime == 0) {
-				user.setLastCastTime(attacker.world.getTime());
-				user.addMana(-1);
-			}
+			user.setLastCastTime(attacker.world.getTime());
+			user.addMana(-1);
 		}
 
 		return amount;
