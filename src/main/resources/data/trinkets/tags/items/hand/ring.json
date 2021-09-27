@@ -1,9 +1,9 @@
 {
 	"replace": false,
 	"values": [
-		"arcanus:ring_of_shielding",
-		"arcanus:ring_of_the_enderman",
-		"arcanus:ring_of_the_monk",
-		"arcanus:ring_of_the_west_wind"
+		{"id": "arcanus:ring_of_shielding", "required": false},
+		{"id": "arcanus:ring_of_the_enderman", "required": false},
+		{"id": "arcanus:ring_of_the_monk", "required": false},
+		{"id": "arcanus:ring_of_the_west_wind", "required": false}
 	]
 }
