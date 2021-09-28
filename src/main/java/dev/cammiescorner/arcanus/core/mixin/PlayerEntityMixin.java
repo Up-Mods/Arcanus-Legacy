@@ -55,7 +55,7 @@ import java.util.Optional;
 
 import static dev.cammiescorner.arcanus.Arcanus.DataTrackers.*;
 import static dev.cammiescorner.arcanus.Arcanus.EntityAttributes.*;
-import static dev.cammiescorner.arcanus.Arcanus.config;
+import static dev.cammiescorner.arcanus.Arcanus.*;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements MagicUser {
@@ -109,8 +109,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				spellTimer = 0;
 
 			if(world.getTime() >= lastCastTime + 20) {
-				int manaCooldown = (int) Math.round(config.baseManaCooldown * ArcanusHelper.getManaRegen((PlayerEntity) (Object) this));
-				int burnoutCooldown = (int) Math.round(config.baseBurnoutCooldown * ArcanusHelper.getBurnoutRegen((PlayerEntity) (Object) this));
+				int manaCooldown = (int) Math.round(getConfig().baseManaCooldown * ArcanusHelper.getManaRegen((PlayerEntity) (Object) this));
+				int burnoutCooldown = (int) Math.round(getConfig().baseBurnoutCooldown * ArcanusHelper.getBurnoutRegen((PlayerEntity) (Object) this));
 
 				if(manaCooldown != 0 && getMana() < getMaxMana() - getBurnout() && world.getTime() % manaCooldown == 0)
 					addMana(1);

@@ -32,9 +32,9 @@ public class ArcaneBarrierEntityRenderer extends EntityRenderer<ArcaneBarrierEnt
 		final float radius = 0.71F;
 		float ageDelta = entity.age + tickDelta;
 		float hitTimerDelta = entity.getHitTimer() + tickDelta;
-		final int red = Integer.parseInt(Arcanus.config.magicColour, 16) >> 16;
-		final int green = Integer.parseInt(Arcanus.config.magicColour, 16) >> 8;
-		final int blue = Integer.parseInt(Arcanus.config.magicColour, 16);
+		final int red = Integer.parseInt(Arcanus.getConfig().magicColour, 16) >> 16;
+		final int green = Integer.parseInt(Arcanus.getConfig().magicColour, 16) >> 8;
+		final int blue = Integer.parseInt(Arcanus.getConfig().magicColour, 16);
 		int alpha;
 
 		if(entity.getHitTimer() == 0)

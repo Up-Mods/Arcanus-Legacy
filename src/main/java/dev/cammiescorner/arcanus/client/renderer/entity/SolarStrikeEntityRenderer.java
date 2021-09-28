@@ -34,9 +34,9 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 
 		final int maxQuads = 16;
 		final float radius = 2.25F;
-		final int red = Integer.parseInt(Arcanus.config.magicColour, 16) >> 16;
-		final int green = Integer.parseInt(Arcanus.config.magicColour, 16) >> 8;
-		final int blue = Integer.parseInt(Arcanus.config.magicColour, 16);
+		final int red = Integer.parseInt(Arcanus.getConfig().magicColour, 16) >> 16;
+		final int green = Integer.parseInt(Arcanus.getConfig().magicColour, 16) >> 8;
+		final int blue = Integer.parseInt(Arcanus.getConfig().magicColour, 16);
 
 		matrices.push();
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90));

@@ -122,12 +122,12 @@ public class EventHandler {
 
 		//-----Loot Table Callback-----//
 		LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, id, supplier, setter) -> {
-			if(Arcanus.config.strongholdsHaveBooks && STRONGHOLD_LIBRARY_LOOT_TABLE.equals(id) && !FabricLoader.getInstance().isModLoaded("betterstrongholds")) {
+			if(Arcanus.getConfig().strongholdsHaveBooks && STRONGHOLD_LIBRARY_LOOT_TABLE.equals(id) && !FabricLoader.getInstance().isModLoaded("betterstrongholds")) {
 				FabricLootPoolBuilder poolBuilder = FabricLootPoolBuilder.builder().rolls(ConstantLootNumberProvider.create(4)).withCondition(RandomChanceLootCondition.builder(0.5F).build()).withEntry(createItemEntry(new ItemStack(Items.WRITTEN_BOOK)).build());
 				supplier.withPool(poolBuilder.build());
 			}
 
-			if(Arcanus.config.ruinedPortalsHaveBooks && RUINED_PORTAL_LOOT_TABLE.equals(id)) {
+			if(Arcanus.getConfig().ruinedPortalsHaveBooks && RUINED_PORTAL_LOOT_TABLE.equals(id)) {
 				FabricLootPoolBuilder poolBuilder = FabricLootPoolBuilder.builder().rolls(ConstantLootNumberProvider.create(1)).withCondition(RandomChanceLootCondition.builder(0.1F).build()).withEntry(createItemEntry(new ItemStack(Items.WRITTEN_BOOK)).build());
 				supplier.withPool(poolBuilder.build());
 			}
@@ -157,13 +157,13 @@ public class EventHandler {
 			if(element instanceof SinglePoolElement singleElement && singleElement.location.left().isPresent()) {
 				String currentElement = singleElement.location.left().get().toString();
 
-				if(Arcanus.config.structuresWithBookshelves.contains(currentElement) || Arcanus.config.structuresWithLecterns.contains(currentElement)) {
+				if(Arcanus.getConfig().structuresWithBookshelves.contains(currentElement) || Arcanus.getConfig().structuresWithLecterns.contains(currentElement)) {
 					StructureProcessorList originalProcessorList = singleElement.processors.get();
 					List<StructureProcessor> mutableProcessorList = new ArrayList<>(originalProcessorList.getList());
 
-					if(Arcanus.config.doLecternProcessor)
+					if(Arcanus.getConfig().doLecternProcessor)
 						mutableProcessorList.add(LecternStructureProcessor.INSTANCE);
-					if(Arcanus.config.doBookshelfProcessor)
+					if(Arcanus.getConfig().doBookshelfProcessor)
 						mutableProcessorList.add(BookshelfReplacerStructureProcessor.INSTANCE);
 
 					StructureProcessorList newProcessorList = new StructureProcessorList(mutableProcessorList);

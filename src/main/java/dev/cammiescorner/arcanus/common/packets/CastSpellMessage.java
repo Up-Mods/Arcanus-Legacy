@@ -20,7 +20,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
-import static dev.cammiescorner.arcanus.Arcanus.config;
+import static dev.cammiescorner.arcanus.Arcanus.*;
 
 public class CastSpellMessage {
 	public static final Identifier ID = new Identifier(Arcanus.MOD_ID, "cast_spell");
@@ -44,14 +44,14 @@ public class CastSpellMessage {
 			if(user.getKnownSpells().contains(spell)) {
 				int realManaCost = (int) (spell.getManaCost() * ArcanusHelper.getManaCost(player));
 
-				if(player.isCreative() || (config.haveBurnout && user.getMana() > 0) || (!config.haveBurnout && user.getMana() >= realManaCost)) {
+				if(player.isCreative() || (getConfig().haveBurnout && user.getMana() > 0) || (!getConfig().haveBurnout && user.getMana() >= realManaCost)) {
 					player.sendMessage(new TranslatableText(spell.getTranslationKey()).formatted(Formatting.GREEN), true);
 					spell.onCast(player.world, player);
 
 					if(!player.isCreative()) {
 						user.setLastCastTime(player.world.getTime());
 
-						if(user.getMana() < realManaCost && config.haveBurnout) {
+						if(user.getMana() < realManaCost && getConfig().haveBurnout) {
 							int burnoutAmount = realManaCost - user.getMana();
 							user.addBurnout(burnoutAmount);
 							player.damage(ModDamageSource.MAGIC_BURNOUT, burnoutAmount);

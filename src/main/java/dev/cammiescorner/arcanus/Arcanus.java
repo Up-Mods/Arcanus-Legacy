@@ -8,6 +8,7 @@ import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
 import dev.cammiescorner.arcanus.core.registry.*;
 import dev.cammiescorner.arcanus.core.util.*;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -41,7 +42,7 @@ public class Arcanus implements ModInitializer {
 	public static final Registry<Spell> SPELL = createRegistry("spell", Spell.class);
 
 	//-----Miscellaneous-----//
-	public static ArcanusConfig config;
+	public static ConfigHolder<ArcanusConfig> configHolder;
 	public static final String MOD_ID = "arcanus";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 	public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.create(new Identifier(MOD_ID, "general")).appendItems(list -> {
@@ -64,7 +65,7 @@ public class Arcanus implements ModInitializer {
 	public void onInitialize() {
 		DataTrackers.MANA.getId();
 		AutoConfig.register(ArcanusConfig.class, JanksonConfigSerializer::new);
-		config = AutoConfig.getConfigHolder(ArcanusConfig.class).getConfig();
+		configHolder = AutoConfig.getConfigHolder(ArcanusConfig.class);
 
 		ServerPlayNetworking.registerGlobalReceiver(CastSpellMessage.ID, CastSpellMessage::handle);
 		Registry.register(Registry.LOOT_FUNCTION_TYPE, new Identifier(Arcanus.MOD_ID, "arcanus_loot_function"), ARCANUS_LOOT_FUNCTION);
@@ -85,6 +86,10 @@ public class Arcanus implements ModInitializer {
 		EventHandler.commonEvents();
 
 		LOGGER.info("imagine people still looking for these :hahayes:");
+	}
+
+	public static ArcanusConfig getConfig() {
+		return configHolder.getConfig();
 	}
 
 	@SuppressWarnings("unchecked")
