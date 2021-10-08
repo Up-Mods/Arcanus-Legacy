@@ -3,18 +3,21 @@ package dev.cammiescorner.arcanus.common.items;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
-import net.minecraft.util.Util;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.*;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ManaFlaskItem extends Item {
 	public ManaFlaskItem() {
@@ -112,5 +115,11 @@ public class ManaFlaskItem extends Item {
 	@Override
 	public int getMaxUseTime(ItemStack stack) {
 		return PotionItem.field_30888;
+	}
+
+	@Override
+	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+		super.appendTooltip(stack, world, tooltip, context);
+		tooltip.add(new TranslatableText(stack.getTranslationKey()+".description").formatted(Formatting.DARK_AQUA));
 	}
 }
