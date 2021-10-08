@@ -65,7 +65,9 @@
 	"item.arcanus.adept_wand": "Adept Wand",
 	"item.arcanus.master_wand": "Master Wand",
 	"item.arcanus.mana_flask_empty": "Empty Mana Flask",
+	"item.arcanus.mana_flask_empty.description": "Use while sneaking to fill with Mana.",
 	"item.arcanus.mana_flask": "Mana Flask",
+	"item.arcanus.mana_flask.description": "Drink to regain the stored Mana.",
 
 	//-----Blocks-----//
 	"block.arcanus.fillable_bookshelf": "Bookshelf",
