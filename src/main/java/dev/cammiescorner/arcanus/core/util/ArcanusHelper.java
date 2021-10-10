@@ -4,6 +4,7 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.items.trinkets.ArcanusTrinketItem;
 import dev.cammiescorner.arcanus.core.registry.ModItems;
 import dev.emi.trinkets.api.TrinketsApi;
+import net.minecraft.block.entity.LecternBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
@@ -12,12 +13,17 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.screen.LecternScreenHandler;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -126,5 +132,14 @@ public class ArcanusHelper {
 		tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
 		tag.putInt("Exp", 6400);
 		list.add(stack);
+	}
+
+	@ApiStatus.Internal
+	public static void interactLecternBlock(World world, BlockPos pos, PlayerEntity player) {
+		if(!world.isClient() && world.getBlockEntity(pos) instanceof LecternBlockEntity lectern && player.currentScreenHandler instanceof LecternScreenHandler) {
+			NbtCompound nbt = lectern.getBook().getNbt();
+			if (nbt != null && nbt.contains("spell", NbtElement.STRING_TYPE))
+				((MagicUser) player).setKnownSpell(new Identifier(nbt.getString("spell")));
+		}
 	}
 }

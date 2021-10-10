@@ -1,23 +1,16 @@
 package dev.cammiescorner.arcanus.core.mixin;
 
-import com.google.common.collect.Multimap;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Slice;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,16 +19,21 @@ import static dev.cammiescorner.arcanus.Arcanus.EntityAttributes.*;
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
 	@Unique private final List<EntityAttribute> inverseAttributes = List.of(MANA_COST, MANA_REGEN, BURNOUT_REGEN, MANA_LOCK);
+	@Unique private boolean affectCurrentAttribute;
 
-	@Inject(method = "getTooltip", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 8), locals = LocalCapture.CAPTURE_FAILSOFT)
-	public void changePositiveFormatting(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> info, List<Text> list, int i, EquipmentSlot[] slots, int j, int k, EquipmentSlot slot, Multimap<EntityAttribute, EntityAttributeModifier> map, Iterator<EntityAttributeModifier> iterator, Map.Entry<EntityAttribute, EntityAttributeModifier> entry, EntityAttributeModifier modifier, double d, double g) {
-		if(inverseAttributes.contains(entry.getKey()))
-			((MutableText) list.get(list.size() - 1)).formatted(Formatting.RED);
+	@ModifyVariable(method = "getTooltip", slice = @Slice(from = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;")), at = @At(value = "STORE"), ordinal = 0)
+	private Map.Entry<EntityAttribute, EntityAttributeModifier> captureEntry(Map.Entry<EntityAttribute, EntityAttributeModifier> entry) {
+		affectCurrentAttribute = inverseAttributes.contains(entry.getKey());
+		return entry;
 	}
 
-	@Inject(method = "getTooltip", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 9), locals = LocalCapture.CAPTURE_FAILSOFT)
-	public void changeNegativeFormatting(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> info, List<Text> list, int i, EquipmentSlot[] slots, int j, int k, EquipmentSlot slot, Multimap<EntityAttribute, EntityAttributeModifier> map, Iterator<EntityAttributeModifier> iterator, Map.Entry<EntityAttribute, EntityAttributeModifier> entry, EntityAttributeModifier modifier, double d, double g) {
-		if(inverseAttributes.contains(entry.getKey()))
-			((MutableText) list.get(list.size() - 1)).formatted(Formatting.BLUE);
+	@ModifyArg(method = "getTooltip", slice = @Slice(from = @At(value = "CONSTANT", args = "doubleValue=0.0", ordinal = 0)), at = @At(value = "INVOKE", target = "Lnet/minecraft/text/TranslatableText;formatted(Lnet/minecraft/util/Formatting;)Lnet/minecraft/text/MutableText;", ordinal = 0))
+	private Formatting changePositiveFormatting(Formatting value) {
+		return affectCurrentAttribute ? Formatting.RED : value;
+	}
+
+	@ModifyArg(method = "getTooltip", slice = @Slice(from = @At(value = "CONSTANT", args = "doubleValue=0.0", ordinal = 1)), at = @At(value = "INVOKE", target = "Lnet/minecraft/text/TranslatableText;formatted(Lnet/minecraft/util/Formatting;)Lnet/minecraft/text/MutableText;", ordinal = 0))
+	private Formatting changeNegativeFormatting(Formatting value) {
+		return affectCurrentAttribute ? Formatting.BLUE : value;
 	}
 }

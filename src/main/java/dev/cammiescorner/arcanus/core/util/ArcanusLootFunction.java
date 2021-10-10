@@ -27,7 +27,7 @@ public class ArcanusLootFunction extends ConditionalLootFunction {
 
 	public static class Builder extends ConditionalLootFunction.Builder<ArcanusLootFunction.Builder> {
 		@Override
-		protected Builder getThisBuilder() {
+		protected ArcanusLootFunction.Builder getThisBuilder() {
 			return this;
 		}
 
