@@ -23,7 +23,6 @@ repositories {
     maven { url "https://maven.shedaniel.me" }
     maven { url "https://maven.terraformersmc.com" }
     maven { url "https://ladysnake.jfrog.io/artifactory/mods" }
-    maven { url "https://maven.onyxstudios.dev" }
     maven { url "https://jitpack.io" }
 }
 
@@ -35,7 +34,6 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "dev.emi:trinkets:${trinkets_version}"
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-    modImplementation "dev.cammiescorner:Air-Strafing-Attribute:${project.asa_version}"
 
     modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
