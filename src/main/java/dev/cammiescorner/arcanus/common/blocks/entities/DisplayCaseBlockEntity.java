@@ -68,7 +68,9 @@ public class DisplayCaseBlockEntity extends BlockEntity implements BlockEntityCl
 
 	public void notifyListeners() {
 		this.markDirty();
-		world.updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+
+		if(world != null)
+			world.updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL);
 	}
 
 	@Override
