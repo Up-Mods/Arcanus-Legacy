@@ -71,7 +71,7 @@ public class MagicMissileEntity extends PersistentProjectileEntity {
 		super.onEntityHit(entityHitResult);
 
 		if(entityHitResult.getEntity() instanceof LivingEntity target)
-			target.hurtTime = 0;
+			target.timeUntilRegen = 0;
 	}
 
 	@Override

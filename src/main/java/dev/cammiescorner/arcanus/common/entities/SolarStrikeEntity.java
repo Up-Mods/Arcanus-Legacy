@@ -4,6 +4,7 @@ import dev.cammiescorner.arcanus.core.registry.ModDamageSource;
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import dev.cammiescorner.arcanus.core.registry.ModSoundEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -16,7 +17,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SolarStrikeEntity extends PersistentProjectileEntity {
+	public List<Entity> hasHit = new ArrayList<>();
+
 	public SolarStrikeEntity(LivingEntity owner, World world) {
 		super(ModEntities.SOLAR_STRIKE, owner, world);
 	}
@@ -37,14 +43,18 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
 				float radius = (float) (box.maxX - box.minX) / 2;
 
 				world.getOtherEntities(null, box).forEach(entity -> {
-					Vec2f pos1 = new Vec2f((float) getX(), (float) getZ());
-					Vec2f pos2 = new Vec2f((float) entity.getX(), (float) entity.getZ());
+					if(!hasHit.contains(entity)) {
+						Vec2f pos1 = new Vec2f((float) getX(), (float) getZ());
+						Vec2f pos2 = new Vec2f((float) entity.getX(), (float) entity.getZ());
 
-					if(entity instanceof LivingEntity || entity instanceof ArcaneBarrierEntity) {
-						if(entity instanceof LivingEntity)
-							entity.setOnFireFor(4);
+						if(entity instanceof LivingEntity || entity instanceof ArcaneBarrierEntity) {
+							if(entity instanceof LivingEntity)
+								entity.setOnFireFor(4);
 
-						entity.damage(ModDamageSource.solarStrike(getOwner()), Math.max(10F, 50F * (1 - (MathHelper.sqrt(pos1.distanceSquared(pos2)) / radius))));
+							entity.damage(ModDamageSource.solarStrike(getOwner()), Math.max(10F, 50F * (1 - (MathHelper.sqrt(pos1.distanceSquared(pos2)) / radius))));
+							entity.timeUntilRegen = 0;
+							hasHit.add(entity);
+						}
 					}
 				});
 			}
