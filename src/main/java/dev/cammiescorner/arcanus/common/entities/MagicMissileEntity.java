@@ -5,6 +5,7 @@ import dev.cammiescorner.arcanus.core.registry.ModParticles;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
@@ -72,6 +73,12 @@ public class MagicMissileEntity extends PersistentProjectileEntity {
 
 		if(entityHitResult.getEntity() instanceof LivingEntity target)
 			target.timeUntilRegen = 0;
+	}
+
+	@Override
+	public void onPlayerCollision(PlayerEntity player) {
+		if(!world.isClient && (inGround || isNoClip()) && shake <= 0)
+			discard();
 	}
 
 	@Override
