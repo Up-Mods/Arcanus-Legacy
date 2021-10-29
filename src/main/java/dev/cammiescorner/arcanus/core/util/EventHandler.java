@@ -48,9 +48,7 @@ public class EventHandler {
 
 		//-----HUD Render Callback-----//
 		HudRenderCallback.EVENT.register((matrices, tickDelta) -> {
-			PlayerEntity player = (PlayerEntity) client.cameraEntity;
-
-			if(player != null && !player.isSpectator() && !player.isCreative()) {
+			if(client.cameraEntity instanceof PlayerEntity player && !player.isSpectator() && !player.isCreative()) {
 				MagicUser user = (MagicUser) player;
 				int mana = Math.min(user.getMana(), user.getMaxMana() - user.getBurnout());
 				int burnout = user.getBurnout();
