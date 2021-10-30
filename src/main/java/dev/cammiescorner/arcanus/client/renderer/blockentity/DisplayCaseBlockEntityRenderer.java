@@ -25,8 +25,7 @@ public class DisplayCaseBlockEntityRenderer implements BlockEntityRenderer<Displ
 		ItemStack stack = entity.getStack(0);
 
 		if(stack.getCount() > 0) {
-			World world = entity.getWorld();
-			Direction direction = world.getBlockState(entity.getPos()).get(DisplayCaseBlock.FACING);
+			Direction direction = entity.getCachedState().get(DisplayCaseBlock.FACING);
 			float rotation = direction == Direction.NORTH ? 0 : direction == Direction.EAST ? 270 : direction == Direction.SOUTH ? 180 : 90;
 
 					matrices.push();

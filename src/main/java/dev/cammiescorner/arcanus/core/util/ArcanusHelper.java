@@ -6,6 +6,7 @@ import dev.cammiescorner.arcanus.core.registry.ModItems;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.block.entity.LecternBlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.damage.DamageSource;
@@ -16,7 +17,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.screen.LecternScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -138,8 +142,29 @@ public class ArcanusHelper {
 	public static void interactLecternBlock(World world, BlockPos pos, PlayerEntity player) {
 		if(!world.isClient() && world.getBlockEntity(pos) instanceof LecternBlockEntity lectern && player.currentScreenHandler instanceof LecternScreenHandler) {
 			NbtCompound nbt = lectern.getBook().getNbt();
-			if (nbt != null && nbt.contains("spell", NbtElement.STRING_TYPE))
+
+			if(nbt != null && nbt.contains("spell", NbtElement.STRING_TYPE))
 				((MagicUser) player).setKnownSpell(new Identifier(nbt.getString("spell")));
+		}
+	}
+
+	public static void giveOrDrop(ServerPlayerEntity player, ItemStack stack) {
+		if(player.getInventory().insertStack(stack) && stack.isEmpty()) {
+			stack.setCount(1);
+			ItemEntity entity = player.dropItem(stack, false);
+
+			if(entity != null)
+				entity.setDespawnImmediately();
+
+			player.world.playSoundFromEntity(null, player, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+			player.playerScreenHandler.sendContentUpdates();
+		} else {
+			ItemEntity entity = player.dropItem(stack, false);
+
+			if(entity != null) {
+				entity.resetPickupDelay();
+				entity.setOwner(player.getUuid());
+			}
 		}
 	}
 }
