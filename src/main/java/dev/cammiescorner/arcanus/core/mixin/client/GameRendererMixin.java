@@ -19,7 +19,6 @@ import java.util.function.Consumer;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
-	@SuppressWarnings("UnresolvedMixinReference")
 	@Inject(method = "loadShaders", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 53), locals = LocalCapture.CAPTURE_FAILSOFT)
 	private void loadShaders(ResourceManager manager, CallbackInfo info, List<Program> list, List<Pair<Shader, Consumer<Shader>>> list2) throws IOException {
 		list2.add(Pair.of(new Shader(manager, "rendertype_arcanus_magic", VertexFormats.POSITION_COLOR), (shader) -> ArcanusClient.renderTypeMagicShader = shader));

@@ -27,10 +27,8 @@ public abstract class LivingEntityMixin extends Entity implements CanBeDiscombob
 		super(type, world);
 	}
 
-	@Unique
-	private static final TrackedData<Boolean> IS_DISCOMBOBULATED = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-	@Unique
-	private static final TrackedData<Integer> DISCOMBOBULATED_TIMER = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	@Unique private static final TrackedData<Boolean> IS_DISCOMBOBULATED = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	@Unique private static final TrackedData<Integer> DISCOMBOBULATED_TIMER = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 	@ModifyVariable(method = "travel", at = @At("HEAD"))
 	public Vec3d invertInput(Vec3d movementInput) {

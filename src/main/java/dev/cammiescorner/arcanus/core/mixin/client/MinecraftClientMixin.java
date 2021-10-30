@@ -28,16 +28,10 @@ import java.util.List;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin implements ClientUtils {
-	@Unique
-	private boolean unfinishedSpell = true;
-	@Unique
-	private int timer = 0;
-	@Unique
-	private final List<Pattern> pattern = new ArrayList<>(3);
-
-	@Shadow
-	@Nullable
-	public ClientPlayerEntity player;
+	@Unique private boolean unfinishedSpell = true;
+	@Unique private int timer = 0;
+	@Unique private final List<Pattern> pattern = new ArrayList<>(3);
+	@Shadow	@Nullable public ClientPlayerEntity player;
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void tick(CallbackInfo info) {

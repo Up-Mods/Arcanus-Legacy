@@ -49,53 +49,28 @@ public class ModCommands {
 										.executes(SpellsCommand::addSpellToSelf))
 										.then(CommandManager.argument("player", EntityArgumentType.player())
 												.then(CommandManager.argument("all", StringArgumentType.word())
-													.executes(SpellsCommand::addAllSpellsToPlayer))
-													.then(CommandManager.argument("spell", SpellArgumentType.spell())
-															.executes(SpellsCommand::addSpellToPlayer))))
+														.executes(SpellsCommand::addAllSpellsToPlayer))
+												.then(CommandManager.argument("spell", SpellArgumentType.spell())
+														.executes(SpellsCommand::addSpellToPlayer))))
 				.then(CommandManager.literal("remove").requires(source -> source.hasPermissionLevel(3))
 						.then(CommandManager.argument("all", StringArgumentType.word())
 								.executes(SpellsCommand::removeAllSpellsFromSelf))
 								.then(CommandManager.argument("spell", SpellArgumentType.spell())
-									.executes(SpellsCommand::removeSpellFromSelf))
-										.then(CommandManager.argument("player", EntityArgumentType.player())
-												.then(CommandManager.argument("all", StringArgumentType.word())
-													.executes(SpellsCommand::removeAllSpellsFromPlayer))
-													.then(CommandManager.argument("spell", SpellArgumentType.spell())
-														.executes(SpellsCommand::removeSpellFromPlayer))))
-				.then(CommandManager.literal("spellbook")
-						.requires(source -> source.hasPermissionLevel(2))
+										.executes(SpellsCommand::removeSpellFromSelf))
+						.then(CommandManager.argument("player", EntityArgumentType.player())
+								.then(CommandManager.argument("all", StringArgumentType.word())
+										.executes(SpellsCommand::removeAllSpellsFromPlayer))
+								.then(CommandManager.argument("spell", SpellArgumentType.spell())
+										.executes(SpellsCommand::removeSpellFromPlayer))))
+				.then(CommandManager.literal("spellbook").requires(source -> source.hasPermissionLevel(2))
 						.then(CommandManager.literal("all")
-								.executes(ctx -> {
-									ServerPlayerEntity player = ctx.getSource().getPlayer();
-									Arcanus.SPELL.forEach(spell -> SpellsCommand.giveSpellBook(player, spell));
-									return 1;
-								})
+								.executes(context -> SpellsCommand.giveSpellBook(context, context.getSource().getPlayer(), null))
 								.then(CommandManager.argument("player", EntityArgumentType.player())
-										.executes(ctx -> {
-											ServerPlayerEntity player = EntityArgumentType.getPlayer(ctx, "player");
-											Arcanus.SPELL.forEach(spell -> SpellsCommand.giveSpellBook(player, spell));
-											return 1;
-										})
-								)
-						)
+										.executes(context -> SpellsCommand.giveSpellBook(context, EntityArgumentType.getPlayer(context, "player"), null))))
 						.then(CommandManager.argument("spell", SpellArgumentType.spell())
-								.executes(ctx -> {
-									ServerPlayerEntity player = ctx.getSource().getPlayer();
-									Spell spell = SpellArgumentType.getSpell(ctx, "spell");
-									SpellsCommand.giveSpellBook(player, spell);
-									return 1;
-								})
+								.executes(context -> SpellsCommand.giveSpellBook(context, context.getSource().getPlayer(), SpellArgumentType.getSpell(context, "spell")))
 								.then(CommandManager.argument("player", EntityArgumentType.player())
-										.executes(ctx -> {
-											ServerPlayerEntity player = EntityArgumentType.getPlayer(ctx, "player");
-											Spell spell = SpellArgumentType.getSpell(ctx, "spell");
-											SpellsCommand.giveSpellBook(player, spell);
-											return 1;
-										})
-								)
-						)
-				)
-		);
+										.executes(context -> SpellsCommand.giveSpellBook(context, EntityArgumentType.getPlayer(context, "player"), SpellArgumentType.getSpell(context, "spell")))))));
 	}
 
 	public static class SpellArgumentType implements ArgumentType<Spell> {
@@ -240,6 +215,18 @@ public class ModCommands {
 			}
 			else
 				context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.does_not_have", player.getEntityName(), Arcanus.SPELL.getId(spell)));
+
+			return Command.SINGLE_SUCCESS;
+		}
+
+		public static int giveSpellBook(CommandContext<ServerCommandSource> context, ServerPlayerEntity player, Spell spell) {
+			if(spell == null) {
+				Arcanus.SPELL.forEach(spell1 -> SpellsCommand.giveSpellBook(player, spell1));
+
+				return Command.SINGLE_SUCCESS;
+			}
+
+			giveSpellBook(player, spell);
 
 			return Command.SINGLE_SUCCESS;
 		}
