@@ -11,15 +11,19 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
+import dev.cammiescorner.arcanus.core.util.SpellBooks;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
@@ -57,7 +61,41 @@ public class ModCommands {
 												.then(CommandManager.argument("all", StringArgumentType.word())
 													.executes(SpellsCommand::removeAllSpellsFromPlayer))
 													.then(CommandManager.argument("spell", SpellArgumentType.spell())
-														.executes(SpellsCommand::removeSpellFromPlayer)))));
+														.executes(SpellsCommand::removeSpellFromPlayer))))
+				.then(CommandManager.literal("spellbook")
+						.requires(source -> source.hasPermissionLevel(2))
+						.then(CommandManager.literal("all")
+								.executes(ctx -> {
+									ServerPlayerEntity player = ctx.getSource().getPlayer();
+									Arcanus.SPELL.forEach(spell -> SpellsCommand.giveSpellBook(player, spell));
+									return 1;
+								})
+								.then(CommandManager.argument("player", EntityArgumentType.player())
+										.executes(ctx -> {
+											ServerPlayerEntity player = EntityArgumentType.getPlayer(ctx, "player");
+											Arcanus.SPELL.forEach(spell -> SpellsCommand.giveSpellBook(player, spell));
+											return 1;
+										})
+								)
+						)
+						.then(CommandManager.argument("spell", SpellArgumentType.spell())
+								.executes(ctx -> {
+									ServerPlayerEntity player = ctx.getSource().getPlayer();
+									Spell spell = SpellArgumentType.getSpell(ctx, "spell");
+									SpellsCommand.giveSpellBook(player, spell);
+									return 1;
+								})
+								.then(CommandManager.argument("player", EntityArgumentType.player())
+										.executes(ctx -> {
+											ServerPlayerEntity player = EntityArgumentType.getPlayer(ctx, "player");
+											Spell spell = SpellArgumentType.getSpell(ctx, "spell");
+											SpellsCommand.giveSpellBook(player, spell);
+											return 1;
+										})
+								)
+						)
+				)
+		);
 	}
 
 	public static class SpellArgumentType implements ArgumentType<Spell> {
@@ -204,6 +242,11 @@ public class ModCommands {
 				context.getSource().sendError(new TranslatableText("commands." + Arcanus.MOD_ID + ".spells.does_not_have", player.getEntityName(), Arcanus.SPELL.getId(spell)));
 
 			return Command.SINGLE_SUCCESS;
+		}
+
+		public static void giveSpellBook(ServerPlayerEntity player, Spell spell) {
+			ItemStack book = SpellBooks.getSpellBook(spell);
+			ArcanusHelper.giveOrDrop(player, book);
 		}
 	}
 }
