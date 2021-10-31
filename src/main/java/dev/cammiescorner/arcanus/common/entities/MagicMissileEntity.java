@@ -83,6 +83,6 @@ public class MagicMissileEntity extends PersistentProjectileEntity {
 
 	@Override
 	protected ItemStack asItemStack() {
-		return null;
+		return ItemStack.EMPTY;
 	}
 }
