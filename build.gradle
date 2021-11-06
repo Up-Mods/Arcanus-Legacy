@@ -1,7 +1,7 @@
 import com.modrinth.minotaur.TaskModrinthUpload
 
 plugins {
-    id 'fabric-loom' version '0.9.+'
+    id 'fabric-loom' version '0.10.+'
     id 'maven-publish'
     id "com.modrinth.minotaur" version "1.1.0"
 }
@@ -32,7 +32,6 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "dev.emi:trinkets:${trinkets_version}"
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
     modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {

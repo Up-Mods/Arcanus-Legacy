@@ -45,7 +45,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -55,7 +54,7 @@ import java.util.Optional;
 
 import static dev.cammiescorner.arcanus.Arcanus.DataTrackers.*;
 import static dev.cammiescorner.arcanus.Arcanus.EntityAttributes.*;
-import static dev.cammiescorner.arcanus.Arcanus.*;
+import static dev.cammiescorner.arcanus.Arcanus.getConfig;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements MagicUser {
@@ -121,11 +120,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				}
 			}
 		}
-	}
-
-	@ModifyVariable(method = "damage", at = @At(value = "HEAD"))
-	public float damage(float amount, DamageSource source) {
-		return ArcanusHelper.trinketOnDamaged(source, amount, this);
 	}
 
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
@@ -308,7 +302,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		Vec3d rotation = serverPlayer.getRotationVec(1F);
 		Optional<Vec3d> optionalSpawnPoint;
 		float spawnAngle = serverPlayer.getSpawnAngle();
-		boolean hasSpawnPoint = serverPlayer.isSpawnPointSet();
+		boolean hasSpawnPoint = serverPlayer.isSpawnForced();
 
 		if(serverWorld != null && spawnPos != null)
 			optionalSpawnPoint = PlayerEntity.findRespawnPosition(serverWorld, spawnPos, spawnAngle, hasSpawnPoint, true);
@@ -332,7 +326,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique
 	public void castMagicMissile() {
 		MagicMissileEntity magicMissile = new MagicMissileEntity(this, world);
-		magicMissile.setProperties(this, getPitch(), getYaw(), getRoll(), 4.5F, 0F);
+		magicMissile.setVelocity(this, getPitch(), getYaw(), getRoll(), 4.5F, 0F);
 
 		world.spawnEntity(magicMissile);
 		world.playSound(null, getBlockPos(), ModSoundEvents.MAGIC_MISSILE, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);

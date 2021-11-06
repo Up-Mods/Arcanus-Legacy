@@ -1,7 +1,6 @@
 package dev.cammiescorner.arcanus.common.blocks.entities;
 
 import dev.cammiescorner.arcanus.core.registry.ModBlockEntities;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -13,7 +12,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
-public class DisplayCaseBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Inventory {
+public class DisplayCaseBlockEntity extends BlockEntity implements Inventory {
 	private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
 
 	public DisplayCaseBlockEntity(BlockPos pos, BlockState state) {
@@ -73,19 +72,6 @@ public class DisplayCaseBlockEntity extends BlockEntity implements BlockEntityCl
 			world.updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL);
 	}
 
-	@Override
-	public void fromClientTag(NbtCompound tag) {
-		this.inventory.clear();
-		Inventories.readNbt(tag, this.inventory);
-	}
-
-	@Override
-	public NbtCompound toClientTag(NbtCompound tag) {
-		Inventories.writeNbt(tag, this.inventory);
-		return tag;
-	}
-
-	@Override
 	public void readNbt(NbtCompound nbt) {
 		this.inventory.clear();
 		Inventories.readNbt(nbt, this.inventory);
@@ -93,8 +79,8 @@ public class DisplayCaseBlockEntity extends BlockEntity implements BlockEntityCl
 	}
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound nbt) {
+	public void writeNbt(NbtCompound nbt) {
 		Inventories.writeNbt(nbt, this.inventory);
-		return super.writeNbt(nbt);
+		super.writeNbt(nbt);
 	}
 }

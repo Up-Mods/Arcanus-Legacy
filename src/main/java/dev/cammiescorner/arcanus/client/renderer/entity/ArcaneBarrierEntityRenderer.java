@@ -46,7 +46,7 @@ public class ArcaneBarrierEntityRenderer extends EntityRenderer<ArcaneBarrierEnt
 
 		VertexConsumer vertexConsumer = provider.getBuffer(ArcanusClient.MAGIC);
 		MatrixStack.Entry entry = matrices.peek();
-		Matrix4f matrix4f = entry.getModel();
+		Matrix4f matrix4f = entry.getPositionMatrix();
 		float f = 0.5025F;
 
 		vertexConsumer.vertex(matrix4f, -f, length, -f).color(red, green, blue, alpha).next();
@@ -62,7 +62,7 @@ public class ArcaneBarrierEntityRenderer extends EntityRenderer<ArcaneBarrierEnt
 		matrices.push();
 		matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(45));
 		entry = matrices.peek();
-		matrix4f = entry.getModel();
+		matrix4f = entry.getPositionMatrix();
 		float vertX1 = 0F;
 		float vertY1 = radius;
 

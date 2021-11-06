@@ -101,9 +101,9 @@ public class FillableBookshelfBlockEntity extends BlockEntity implements NamedSc
 	}
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound nbt) {
+	public void writeNbt(NbtCompound nbt) {
 		Inventories.writeNbt(nbt, this.inventory);
-		return super.writeNbt(nbt);
+		super.writeNbt(nbt);
 	}
 
 	@Override

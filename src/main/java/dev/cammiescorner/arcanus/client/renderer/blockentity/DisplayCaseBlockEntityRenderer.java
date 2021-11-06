@@ -13,7 +13,6 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
-import net.minecraft.world.World;
 
 public class DisplayCaseBlockEntityRenderer implements BlockEntityRenderer<DisplayCaseBlockEntity> {
 	private final ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
@@ -28,7 +27,7 @@ public class DisplayCaseBlockEntityRenderer implements BlockEntityRenderer<Displ
 			Direction direction = entity.getCachedState().get(DisplayCaseBlock.FACING);
 			float rotation = direction == Direction.NORTH ? 0 : direction == Direction.EAST ? 270 : direction == Direction.SOUTH ? 180 : 90;
 
-					matrices.push();
+			matrices.push();
 
 			if(stack.getItem() instanceof BlockItem) {
 				matrices.translate(0.5D, 0.9D, 0.5D);
