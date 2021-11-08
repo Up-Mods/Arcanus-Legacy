@@ -6,6 +6,7 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Config(name = Arcanus.MOD_ID)
@@ -13,7 +14,8 @@ public class ArcanusConfig implements ConfigData {
 	@Comment("Should the Lectern Structure Processor run?")
 	public boolean doLecternProcessor = true;
 
-	@Comment("Should the Bookshelf Structure Processor run?")
+	@Comment("Should the Bookshelf Structure Processor run? (Only" +
+			"\n    recommended in Vanilla)")
 	public boolean doBookshelfProcessor = true;
 
 	@Comment("Should Stronghold Libraries have Spell Books spawn? (Does" +
@@ -43,21 +45,9 @@ public class ArcanusConfig implements ConfigData {
 
 	@Comment("A list of structure paths that have Bookshelves to be replaced" +
 			"\n    by Fillable Bookshelves from Arcanus.")
-	public List<String> structuresWithBookshelves = List.of(
-			"minecraft:village/desert/houses/desert_library_1",
-			"minecraft:village/plains/houses/plains_library_1",
-			"minecraft:village/plains/houses/plains_library_2",
-			"minecraft:village/savanna/houses/savanna_library_1",
-			"minecraft:village/snowy/houses/snowy_library_1",
-			"minecraft:village/taiga/houses/taiga_library_1",
-			"minecraft:village/taiga/houses/taiga_medium_house_3",
-			"minecraft:village/taiga/zombie/houses/taiga_library_1",
-			"minecraft:village/taiga/zombie/houses/taiga_medium_house_3",
-			"minecraft:woodland_mansion/1x1_b4",
-			"minecraft:woodland_mansion/1x2_c4",
-			"minecraft:woodland_mansion/1x2_d1",
-			"minecraft:woodland_mansion/2x2_b3",
-			"minecraft:woodland_mansion/2x2_b4",
+	public List<String> structuresWithBookshelves = Arrays.asList(
+			"awesomedungeon:abandoned_oak_palace",
+			"awesomedungeon:the_ztower",
 			"betterstrongholds:rooms/cmd_yung",
 			"betterstrongholds:rooms/grand_library",
 			"betterstrongholds:rooms/library_md",
@@ -115,6 +105,36 @@ public class ArcanusConfig implements ConfigData {
 			"dungeons_arise:thornborn_towers/thornborn_towers_room_2",
 			"dungeons_arise:thornborn_towers/thornborn_towers_room_3",
 			"dungeons_arise:undead_pirate_ship/undead_pirate_ship_part_0",
+			"endrem:end_castle/castle_bl",
+			"endrem:end_castle/castle_br",
+			"endrem:end_castle/castle_ml",
+			"endrem:end_castle/castle_mr",
+			"endrem:end_castle/castle_tl",
+			"endrem:end_castle/castle_tm",
+			"endrem:end_castle/castle_tr",
+			"endrem:end_gate/main/enchanting_room",
+			"endrem:end_gate/main/library",
+			"endrem:end_gate/puzzles/end_gate",
+			"graveyard:haunted_house_01",
+			"minecraft:village/desert/houses/desert_library_1",
+			"minecraft:village/plains/houses/plains_library_1",
+			"minecraft:village/plains/houses/plains_library_2",
+			"minecraft:village/savanna/houses/savanna_library_1",
+			"minecraft:village/snowy/houses/snowy_library_1",
+			"minecraft:village/taiga/houses/taiga_library_1",
+			"minecraft:village/taiga/houses/taiga_medium_house_3",
+			"minecraft:village/taiga/zombie/houses/taiga_library_1",
+			"minecraft:village/taiga/zombie/houses/taiga_medium_house_3",
+			"minecraft:woodland_mansion/1x1_b4",
+			"minecraft:woodland_mansion/1x2_c4",
+			"minecraft:woodland_mansion/1x2_d1",
+			"minecraft:woodland_mansion/2x2_b3",
+			"minecraft:woodland_mansion/2x2_b4",
+			"morevillagesmod:mushroom_house/mushroom1",
+			"morevillagesmod:mushroom_house/mushroom2",
+			"morevillagesmod:mushroom_house/mushroom3",
+			"morevillagesmod:mushroom_house/mushroom12",
+			"morevillagesmod:mushroom_house/mushroom13",
 			"mostructures:market/main",
 			"mostructures:pyramid/base",
 			"mostructures:ship/bottom_lower",
@@ -178,6 +198,7 @@ public class ArcanusConfig implements ConfigData {
 			"repurposed_structures:villages/swamp/houses/library_1",
 			"repurposed_structures:villages/warped/houses/library_1",
 			"repurposed_structures:villages/warped/houses/library_2",
+			"soaringstructures2:soarings9",
 			"stoneholm:abandoned_poi/library_01",
 			"stoneholm:abandoned_poi/library_02",
 			"stoneholm:poi/copper_shop",
@@ -195,7 +216,19 @@ public class ArcanusConfig implements ConfigData {
 
 	@Comment("A list of structure paths that have Lecterns to be filled" +
 			"\n    with Spell Books from Arcanus.")
-	public List<String> structuresWithLecterns = List.of(
+	public List<String> structuresWithLecterns = Arrays.asList(
+			"awesomedungeon:the_ztower",
+			"betterstrongholds:rooms/grand_library",
+			"betterstrongholds:rooms/library_md",
+			"betterstrongholds:rooms/treasure_room_lg",
+			"dungeons_arise:monastery/monastery_top_0",
+			"endrem:end_castle/castle_bl",
+			"endrem:end_castle/castle_br",
+			"endrem:end_castle/castle_ml",
+			"endrem:end_castle/castle_mr",
+			"endrem:end_castle/castle_tr",
+			"endrem:end_gate/main/library",
+			"endrem:end_gate/main/old_church",
 			"minecraft:village/desert/houses/desert_library_1",
 			"minecraft:village/plains/houses/plains_library_1",
 			"minecraft:village/plains/houses/plains_library_2",
@@ -203,10 +236,6 @@ public class ArcanusConfig implements ConfigData {
 			"minecraft:village/snowy/houses/snowy_library_1",
 			"minecraft:village/taiga/houses/taiga_library_1",
 			"minecraft:village/taiga/zombie/houses/taiga_library_1",
-			"betterstrongholds:rooms/grand_library",
-			"betterstrongholds:rooms/library_md",
-			"betterstrongholds:rooms/treasure_room_lg",
-			"dungeons_arise:monastery/monastery_top_0",
 			"mostructures:factory/base",
 			"mostructures:market/main",
 			"mostructures:ship/bottom_lower",
@@ -227,6 +256,7 @@ public class ArcanusConfig implements ConfigData {
 			"repurposed_structures:villages/swamp/houses/library_1",
 			"repurposed_structures:villages/warped/houses/library_1",
 			"repurposed_structures:villages/warped/houses/library_2",
+			"soaringstructures2:soarings9",
 			"stoneholm:abandoned_poi/library_01",
 			"stoneholm:abandoned_poi/library_02",
 			"stoneholm:poi/library_01",
