@@ -9,6 +9,7 @@ import dev.cammiescorner.arcanus.core.registry.*;
 import dev.cammiescorner.arcanus.core.util.*;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -64,7 +65,7 @@ public class Arcanus implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		DataTrackers.MANA.getId();
-		AutoConfig.register(ArcanusConfig.class, JanksonConfigSerializer::new);
+		AutoConfig.register(ArcanusConfig.class, GsonConfigSerializer::new);
 		configHolder = AutoConfig.getConfigHolder(ArcanusConfig.class);
 
 		ServerPlayNetworking.registerGlobalReceiver(CastSpellMessage.ID, CastSpellMessage::handle);
