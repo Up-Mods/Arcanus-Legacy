@@ -9,8 +9,12 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 
 public class DisplayCaseBlockEntity extends BlockEntity implements Inventory {
 	private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
@@ -65,13 +69,27 @@ public class DisplayCaseBlockEntity extends BlockEntity implements Inventory {
 		this.notifyListeners();
 	}
 
+	@Override
+	public NbtCompound toInitialChunkDataNbt() {
+		NbtCompound tag = super.toInitialChunkDataNbt();
+		writeNbt(tag);
+		return tag;
+	}
+
+	@Nullable
+	@Override
+	public Packet<ClientPlayPacketListener> toUpdatePacket() {
+		return BlockEntityUpdateS2CPacket.create(this);
+	}
+
 	public void notifyListeners() {
 		this.markDirty();
 
-		if(world != null)
+		if(world != null && !world.isClient())
 			world.updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL);
 	}
 
+	@Override
 	public void readNbt(NbtCompound nbt) {
 		this.inventory.clear();
 		Inventories.readNbt(nbt, this.inventory);

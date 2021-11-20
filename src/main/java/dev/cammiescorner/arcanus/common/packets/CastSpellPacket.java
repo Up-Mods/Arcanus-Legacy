@@ -22,7 +22,7 @@ import net.minecraft.util.Identifier;
 
 import static dev.cammiescorner.arcanus.Arcanus.*;
 
-public class CastSpellMessage {
+public class CastSpellPacket {
 	public static final Identifier ID = new Identifier(Arcanus.MOD_ID, "cast_spell");
 
 	public static void send(int spellId) {

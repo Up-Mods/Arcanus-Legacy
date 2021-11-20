@@ -2,7 +2,7 @@ package dev.cammiescorner.arcanus.core.mixin.client;
 
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.items.WandItem;
-import dev.cammiescorner.arcanus.common.packets.CastSpellMessage;
+import dev.cammiescorner.arcanus.common.packets.CastSpellPacket;
 import dev.cammiescorner.arcanus.core.util.ClientUtils;
 import dev.cammiescorner.arcanus.core.util.Pattern;
 import dev.cammiescorner.arcanus.core.util.Spell;
@@ -50,7 +50,7 @@ public class MinecraftClientMixin implements ClientUtils {
 				if(pattern.size() == 3) {
 					for(Spell spell : Arcanus.SPELL) {
 						if(pattern.equals(spell.getSpellPattern())) {
-							CastSpellMessage.send(Arcanus.SPELL.getRawId(spell));
+							CastSpellPacket.send(Arcanus.SPELL.getRawId(spell));
 							unfinishedSpell = false;
 							break;
 						}

@@ -1,6 +1,6 @@
 package dev.cammiescorner.arcanus;
 
-import dev.cammiescorner.arcanus.common.packets.CastSpellMessage;
+import dev.cammiescorner.arcanus.common.packets.CastSpellPacket;
 import dev.cammiescorner.arcanus.common.screens.BookshelfScreenHandler;
 import dev.cammiescorner.arcanus.common.structure.processor.BookshelfReplacerStructureProcessor;
 import dev.cammiescorner.arcanus.common.structure.processor.LecternStructureProcessor;
@@ -67,7 +67,7 @@ public class Arcanus implements ModInitializer {
 		AutoConfig.register(ArcanusConfig.class, JanksonConfigSerializer::new);
 		configHolder = AutoConfig.getConfigHolder(ArcanusConfig.class);
 
-		ServerPlayNetworking.registerGlobalReceiver(CastSpellMessage.ID, CastSpellMessage::handle);
+		ServerPlayNetworking.registerGlobalReceiver(CastSpellPacket.ID, CastSpellPacket::handle);
 		Registry.register(Registry.LOOT_FUNCTION_TYPE, new Identifier(Arcanus.MOD_ID, "arcanus_loot_function"), ARCANUS_LOOT_FUNCTION);
 		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "casting_multiplier"), EntityAttributes.MANA_COST);
 		Registry.register(Registry.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_regen"), EntityAttributes.MANA_REGEN);

@@ -10,7 +10,10 @@ import dev.cammiescorner.arcanus.client.renderer.entity.ArcaneBarrierEntityRende
 import dev.cammiescorner.arcanus.client.renderer.entity.MagicMissileEntityRenderer;
 import dev.cammiescorner.arcanus.client.renderer.entity.SolarStrikeEntityRenderer;
 import dev.cammiescorner.arcanus.client.screens.BookshelfScreen;
-import dev.cammiescorner.arcanus.core.registry.*;
+import dev.cammiescorner.arcanus.core.registry.ModBlockEntities;
+import dev.cammiescorner.arcanus.core.registry.ModBlocks;
+import dev.cammiescorner.arcanus.core.registry.ModEntities;
+import dev.cammiescorner.arcanus.core.registry.ModParticles;
 import dev.cammiescorner.arcanus.core.util.EventHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
