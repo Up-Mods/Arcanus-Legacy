@@ -9,7 +9,8 @@
 	],
 	"contact": {
 		"homepage": "https://www.curseforge.com/minecraft/mc-mods/arcanus",
-		"sources": "https://github.com/CammiePone/Arcanus"
+		"sources": "https://github.com/CammiePone/Arcanus",
+		"issues": "https://github.com/CammiePone/Arcanus/issues"
 	},
 	"license": "MIT",
 	"icon": "assets/arcanus/icon.png",
