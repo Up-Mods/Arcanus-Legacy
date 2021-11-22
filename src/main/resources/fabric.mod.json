@@ -11,7 +11,7 @@
 		"homepage": "https://www.curseforge.com/minecraft/mc-mods/arcanus",
 		"sources": "https://github.com/CammiePone/Arcanus"
 	},
-	"license": "MIT",
+	"license": "Custom License",
 	"icon": "assets/arcanus/icon.png",
 	"environment": "*",
 	"entrypoints": {
