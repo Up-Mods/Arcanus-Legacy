@@ -11,6 +11,7 @@ import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.core.util.CanBeDiscombobulated;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
+import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
@@ -38,6 +39,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
+import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Mixin;
@@ -313,7 +315,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			Vec3d spawnPoint = optionalSpawnPoint.get();
 			System.out.println(spawnPoint);
 			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
-			serverPlayer.teleport(serverWorld, spawnPoint.x, spawnPoint.y, spawnPoint.z, (float) rotation.x, (float) rotation.y);
+			TeleportTarget target = new TeleportTarget(
+					new Vec3d(spawnPoint.x, spawnPoint.y, spawnPoint.z),
+					new Vec3d(0, 0, 0),
+					(float) rotation.x,
+					(float) rotation.y
+			);
+			doTeleport(serverPlayer, serverWorld, target);
 			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
 		}
 		else {
@@ -321,6 +329,21 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		}
 
 		activeSpell = null;
+	}
+
+	@Unique
+	private void doTeleport(ServerPlayerEntity player, ServerWorld world, TeleportTarget target) {
+		if (player.world.getRegistryKey().equals(world.getRegistryKey())) {
+			player.networkHandler.requestTeleport(
+					target.position.getX(),
+					target.position.getY(),
+					target.position.getZ(),
+					target.yaw,
+					target.pitch
+			);
+		} else {
+			FabricDimensions.teleport(player, world, target);
+		}
 	}
 
 	@Unique
