@@ -40,7 +40,7 @@ public class SpellBooks {
 	}
 
 	public static ItemStack getRandomSpellBook(ItemStack stack) {
-		return SpellBooks.getSpellBook(stack, Arcanus.SPELL.get(RAND.nextInt(Arcanus.SPELL.getEntries().size() - 1)));
+		return SpellBooks.getSpellBook(stack, Arcanus.SPELL.get(RAND.nextInt(Arcanus.SPELL.getEntries().size())));
 	}
 
 	public static ItemStack getRandomSpellBook() {
