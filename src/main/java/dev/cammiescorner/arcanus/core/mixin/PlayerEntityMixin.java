@@ -10,10 +10,7 @@ import dev.cammiescorner.arcanus.core.registry.ModSpells;
 import dev.cammiescorner.arcanus.core.util.*;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.*;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.FallingBlockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.TntEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.HungerManager;
@@ -64,6 +61,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique private long lastCastTime = 0;
 	@Unique private int spellTimer = 0;
 	@Unique private static final int MAX_MANA = 20;
+	@Unique private final List<Entity> hasHit = new ArrayList<>();
 
 	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
 		super(entityType, world);
@@ -253,15 +251,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				setVelocity(velocity.add(rotation.x * speed + (rotation.x * 1.5D - velocity.x), rotation.y * speed + (rotation.y * 1.5D - velocity.y), rotation.z * speed + (rotation.z * 1.5D - velocity.z)));
 
 				world.getOtherEntities(null, getBoundingBox().expand(2)).forEach(entity -> {
-					if(entity != this && entity instanceof LivingEntity)
+					if(entity != this && entity instanceof LivingEntity && !hasHit.contains(entity)) {
 						entity.damage(DamageSource.player((PlayerEntity) (Object) this), 10);
+						hasHit.add(entity);
+					}
 				});
 
 				velocityModified = true;
 			}
 
-			if(isOnGround() || spellTimer <= 0)
+			if(isOnGround() || spellTimer <= 0) {
 				activeSpell = null;
+				hasHit.clear();
+			}
 		}
 		else {
 			if(spellTimer == 10) {
@@ -274,8 +276,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			if(spellTimer > 0) {
 				addVelocity((getRotationVector().x * 0.025F + (getRotationVector().x - getVelocity().x)) * adjustedPitch, 0F, (getRotationVector().z * 0.025F + (getRotationVector().z - getVelocity().z)) * adjustedPitch);
 				world.getOtherEntities(null, getBoundingBox().expand(2)).forEach(entity -> {
-					if(entity != this && entity instanceof LivingEntity)
+					if(entity != this && entity instanceof LivingEntity && !hasHit.contains(entity)) {
 						entity.damage(DamageSource.player((PlayerEntity) (Object) this), 10);
+						hasHit.add(entity);
+					}
 				});
 
 				velocityModified = true;
@@ -287,6 +291,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				spellTimer = 0;
 				world.createExplosion(this, getX(), getY() + 0.5, getZ(), 1, Explosion.DestructionType.NONE);
 				activeSpell = null;
+				hasHit.clear();
 			}
 		}
 	}
