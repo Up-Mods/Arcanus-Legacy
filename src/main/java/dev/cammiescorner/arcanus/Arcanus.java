@@ -1,6 +1,5 @@
 package dev.cammiescorner.arcanus;
 
-import com.google.common.collect.ImmutableList;
 import dev.cammiescorner.arcanus.common.packets.CastSpellPacket;
 import dev.cammiescorner.arcanus.common.screens.BookshelfScreenHandler;
 import dev.cammiescorner.arcanus.common.structure.processor.BookshelfReplacerStructureProcessor;
@@ -26,8 +25,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.function.LootFunctionType;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.structure.processor.StructureProcessorList;
-import net.minecraft.structure.processor.StructureProcessorLists;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
@@ -35,7 +32,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -59,10 +55,8 @@ public class Arcanus implements ModInitializer {
 	public static final LootFunctionType ARCANUS_LOOT_FUNCTION = new LootFunctionType(new ArcanusLootFunction.Serializer());
 
 	//-----Structure Processors-----//
-	public static final RegistryEntry<StructureProcessorList> LECTERN_PROCESSOR = StructureProcessorLists.register("arcanus_lectern_processor", ImmutableList.of(LecternStructureProcessor.INSTANCE));
-	public static final RegistryEntry<StructureProcessorList> BOOKSHELF_PROCESSOR = StructureProcessorLists.register("arcanus_bookshelf_processor", ImmutableList.of(BookshelfReplacerStructureProcessor.INSTANCE));
-	public static final StructureProcessorType<LecternStructureProcessor> LECTERN_PROCESSOR_TYPE = StructureProcessorType.register("set_lectern_book", LecternStructureProcessor.CODEC);
-	public static final StructureProcessorType<BookshelfReplacerStructureProcessor> BOOKSHELF_PROCESSOR_TYPE = StructureProcessorType.register("replace_bookshelf", BookshelfReplacerStructureProcessor.CODEC);
+	public static final StructureProcessorType<LecternStructureProcessor> LECTERN_PROCESSOR = StructureProcessorType.register("set_lectern_book", LecternStructureProcessor.CODEC);
+	public static final StructureProcessorType<BookshelfReplacerStructureProcessor> BOOKSHELF_PROCESSOR = StructureProcessorType.register("replace_bookshelf", BookshelfReplacerStructureProcessor.CODEC);
 
 	//-----Screen Handlers-----//
 	public static final ScreenHandlerType<BookshelfScreenHandler> BOOKSHELF_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(Arcanus.MOD_ID, "fillable_bookshelf"), BookshelfScreenHandler::new);

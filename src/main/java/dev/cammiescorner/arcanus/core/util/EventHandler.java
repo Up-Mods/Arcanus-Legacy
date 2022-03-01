@@ -3,6 +3,8 @@ package dev.cammiescorner.arcanus.core.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.items.WandItem;
+import dev.cammiescorner.arcanus.common.structure.processor.BookshelfReplacerStructureProcessor;
+import dev.cammiescorner.arcanus.common.structure.processor.LecternStructureProcessor;
 import dev.cammiescorner.arcanus.core.registry.ModCommands;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,8 +25,14 @@ import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.structure.pool.SinglePoolElement;
 import net.minecraft.structure.pool.StructurePool;
+import net.minecraft.structure.processor.StructureProcessor;
+import net.minecraft.structure.processor.StructureProcessorList;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventHandler {
 	private static final Identifier HUD_ELEMENTS = new Identifier(Arcanus.MOD_ID, "textures/gui/hud_elements.png");
@@ -148,10 +156,17 @@ public class EventHandler {
 				String currentElement = singleElement.location.left().get().toString();
 
 				if(Arcanus.getConfig().structuresWithBookshelves.contains(currentElement) || Arcanus.getConfig().structuresWithLecterns.contains(currentElement)) {
+					StructureProcessorList originalProcessorList = singleElement.processors.value();
+					List<StructureProcessor> mutableProcessorList = new ArrayList<>(originalProcessorList.getList());
+
 					if(Arcanus.getConfig().doLecternProcessor)
-						singleElement.processors = Arcanus.LECTERN_PROCESSOR;
+						mutableProcessorList.add(LecternStructureProcessor.INSTANCE);
 					if(Arcanus.getConfig().doBookshelfProcessor)
-						singleElement.processors = Arcanus.BOOKSHELF_PROCESSOR;
+						mutableProcessorList.add(BookshelfReplacerStructureProcessor.INSTANCE);
+
+					StructureProcessorList newProcessorList = new StructureProcessorList(mutableProcessorList);
+
+					singleElement.processors = RegistryEntry.of(newProcessorList);
 				}
 			}
 		}));

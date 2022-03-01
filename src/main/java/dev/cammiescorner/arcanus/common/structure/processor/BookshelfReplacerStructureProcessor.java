@@ -49,6 +49,6 @@ public class BookshelfReplacerStructureProcessor extends StructureProcessor {
 
 	@Override
 	protected StructureProcessorType<?> getType() {
-		return Arcanus.BOOKSHELF_PROCESSOR_TYPE;
+		return Arcanus.BOOKSHELF_PROCESSOR;
 	}
 }
