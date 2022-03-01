@@ -3,8 +3,6 @@ package dev.cammiescorner.arcanus.core.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.items.WandItem;
-import dev.cammiescorner.arcanus.common.structure.processor.BookshelfReplacerStructureProcessor;
-import dev.cammiescorner.arcanus.common.structure.processor.LecternStructureProcessor;
 import dev.cammiescorner.arcanus.core.registry.ModCommands;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,14 +23,8 @@ import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.structure.pool.SinglePoolElement;
 import net.minecraft.structure.pool.StructurePool;
-import net.minecraft.structure.processor.StructureProcessor;
-import net.minecraft.structure.processor.StructureProcessorList;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EventHandler {
 	private static final Identifier HUD_ELEMENTS = new Identifier(Arcanus.MOD_ID, "textures/gui/hud_elements.png");
@@ -116,7 +108,7 @@ public class EventHandler {
 
 	public static void commonEvents() {
 		//-----Server Starting Callback-----//
-		ServerLifecycleEvents.SERVER_STARTING.register(server -> EventHandler.addStructureProcessors(server.getRegistryManager().getMutable(Registry.STRUCTURE_POOL_KEY)));
+		ServerLifecycleEvents.SERVER_STARTING.register(server -> EventHandler.addStructureProcessors(server.getRegistryManager().get(Registry.STRUCTURE_POOL_KEY)));
 
 		//-----Loot Table Callback-----//
 		LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, id, supplier, setter) -> {
@@ -150,23 +142,16 @@ public class EventHandler {
 		return builder;
 	}
 
-	public static void addStructureProcessors(MutableRegistry<StructurePool> templatePoolRegistry) {
+	public static void addStructureProcessors(Registry<StructurePool> templatePoolRegistry) {
 		templatePoolRegistry.forEach(pool -> pool.elements.forEach(element -> {
 			if(element instanceof SinglePoolElement singleElement && singleElement.location.left().isPresent()) {
 				String currentElement = singleElement.location.left().get().toString();
 
 				if(Arcanus.getConfig().structuresWithBookshelves.contains(currentElement) || Arcanus.getConfig().structuresWithLecterns.contains(currentElement)) {
-					StructureProcessorList originalProcessorList = singleElement.processors.get();
-					List<StructureProcessor> mutableProcessorList = new ArrayList<>(originalProcessorList.getList());
-
 					if(Arcanus.getConfig().doLecternProcessor)
-						mutableProcessorList.add(LecternStructureProcessor.INSTANCE);
+						singleElement.processors = Arcanus.LECTERN_PROCESSOR;
 					if(Arcanus.getConfig().doBookshelfProcessor)
-						mutableProcessorList.add(BookshelfReplacerStructureProcessor.INSTANCE);
-
-					StructureProcessorList newProcessorList = new StructureProcessorList(mutableProcessorList);
-
-					singleElement.processors = () -> newProcessorList;
+						singleElement.processors = Arcanus.BOOKSHELF_PROCESSOR;
 				}
 			}
 		}));

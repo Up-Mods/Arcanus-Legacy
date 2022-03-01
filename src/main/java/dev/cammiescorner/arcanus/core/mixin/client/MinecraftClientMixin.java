@@ -87,7 +87,7 @@ public class MinecraftClientMixin implements ClientUtils {
 		}
 	}
 
-	@Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doAttack()V", ordinal = 0), cancellable = true)
+	@Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doAttack()Z", ordinal = 0), cancellable = true)
 	public void onLeftClick(CallbackInfo info) {
 		if(player != null && !player.isSpectator() && player.getMainHandStack().getItem() instanceof WandItem) {
 			timer = 20;

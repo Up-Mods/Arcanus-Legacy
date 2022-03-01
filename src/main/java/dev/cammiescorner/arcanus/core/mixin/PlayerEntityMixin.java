@@ -381,7 +381,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				}
 
 				if(block instanceof FallingBlock fallingBlock) {
-					FallingBlockEntity target = new FallingBlockEntity(world, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, state);
+					FallingBlockEntity target = FallingBlockEntity.spawnFromBlock(world, pos, state);
 					fallingBlock.configureFallingBlockEntity(target);
 					target.setVelocity(rotation.multiply(2.5F));
 					target.velocityModified = true;

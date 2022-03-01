@@ -8,9 +8,11 @@ accessible method net/minecraft/entity/projectile/PersistentProjectileEntity fal
 
 accessible field net/minecraft/structure/pool/StructurePool elements Ljava/util/List;
 
-accessible field net/minecraft/structure/pool/SinglePoolElement processors Ljava/util/function/Supplier;
-mutable field net/minecraft/structure/pool/SinglePoolElement processors Ljava/util/function/Supplier;
+accessible field net/minecraft/structure/pool/SinglePoolElement processors Lnet/minecraft/util/registry/RegistryEntry;
+mutable field net/minecraft/structure/pool/SinglePoolElement processors Lnet/minecraft/util/registry/RegistryEntry;
 accessible field net/minecraft/structure/pool/SinglePoolElement location Lcom/mojang/datafixers/util/Either;
+
+accessible method net/minecraft/structure/processor/StructureProcessorLists register (Ljava/lang/String;Lcom/google/common/collect/ImmutableList;)Lnet/minecraft/util/registry/RegistryEntry;
 
 accessible method net/minecraft/entity/damage/DamageSource setBypassesArmor ()Lnet/minecraft/entity/damage/DamageSource;
 accessible method net/minecraft/entity/damage/DamageSource setFallingBlock ()Lnet/minecraft/entity/damage/DamageSource;

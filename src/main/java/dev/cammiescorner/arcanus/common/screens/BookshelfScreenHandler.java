@@ -1,7 +1,6 @@
 package dev.cammiescorner.arcanus.common.screens;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -10,8 +9,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class BookshelfScreenHandler extends ScreenHandler {
 	private final Inventory inventory;
@@ -175,7 +175,7 @@ public class BookshelfScreenHandler extends ScreenHandler {
 	}
 
 	public static class BookSlot extends Slot {
-		private static final Tag<Item> BOOKS = TagRegistry.item(new Identifier("c", "books"));
+		private static final TagKey<Item> BOOKS = TagKey.of(Registry.ITEM_KEY, new Identifier("c", "books"));
 
 		public BookSlot(Inventory inventory, int index, int x, int y) {
 			super(inventory, index, x, y);
