@@ -38,7 +38,7 @@ public class AuraComponent implements AutoSyncedComponent, ServerTickingComponen
 		else
 			auraTimer = 0;
 
-		if(addAura(1, true) && auraRegen != null && auraTimer % (auraRegen.getValue() * 20) == 0)
+		if(addAura(1, true) && auraTimer > 0 && auraRegen != null && auraTimer % (auraRegen.getValue() * 20) == 0)
 			addAura(1, false);
 	}
 

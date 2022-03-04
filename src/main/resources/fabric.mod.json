@@ -11,6 +11,11 @@
 		"homepage": "https://www.curseforge.com/minecraft/mc-mods/arcanus",
 		"sources": "https://github.com/CammiePone/Arcanus"
 	},
+	"custom": {
+		"cardinal-components": [
+			"arcanus:aura"
+		]
+	},
 	"license": "Custom License",
 	"icon": "assets/arcanus/icon.png",
 	"environment": "*",
@@ -33,6 +38,16 @@
 		"fabric": "*",
 		"minecraft": "~1.18.2",
 		"cloth-config2": ">=6.0.39",
+		"cardinal-components-base": ">=4.1.4",
+		"cardinal-components-entity": ">=4.1.4",
+		"satin": ">=1.7.2",
 		"java": ">=17"
+	},
+	"breaks": {
+		"optifine": "*",
+		"optifabric": "*"
+	},
+	"conflicts": {
+		"iris": "*"
 	}
 }
