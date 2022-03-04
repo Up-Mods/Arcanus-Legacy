@@ -29,7 +29,7 @@ public class EventHandler {
 				AuraComponent auraComponent = ArcanusComponents.AURA_COMPONENT.get(player);
 				int aura = auraComponent.getAura();
 
-				if(player.getMainHandStack().getItem() instanceof SwordItem || aura < AuraComponent.MAX_AURA)
+				if(player.getMainHandStack().getItem() instanceof SwordItem || aura < auraComponent.getMaxAura())
 					auraTimer.value = Math.min(auraTimer.value + 1, 40);
 				else
 					auraTimer.value = Math.max(auraTimer.value - 1, 0);

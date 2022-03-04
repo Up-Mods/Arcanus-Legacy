@@ -13,7 +13,8 @@
 	},
 	"custom": {
 		"cardinal-components": [
-			"arcanus:aura"
+			"arcanus:aura",
+			"arcanus:spell"
 		]
 	},
 	"license": "Custom License",
