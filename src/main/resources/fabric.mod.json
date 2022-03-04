@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "arcanus",
+	"version": "${version}",
+	"name": "Arcanus",
+	"description": "Funni magic mod go BRRRRRR",
+	"authors": [
+		"Cammie"
+	],
+	"contact": {
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/arcanus",
+		"sources": "https://github.com/CammiePone/Arcanus"
+	},
+	"license": "Custom License",
+	"icon": "assets/arcanus/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"dev.cammiescorner.arcanus.Arcanus"
+		],
+		"client": [
+			"dev.cammiescorner.arcanus.client.ArcanusClient"
+		],
+		"cardinal-components": [
+			"dev.cammiescorner.arcanus.common.registry.ArcanusComponents"
+		]
+	},
+	"mixins": [
+		"arcanus.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.12.5",
+		"fabric": "*",
+		"minecraft": "~1.18.2",
+		"cloth-config2": ">=6.0.39",
+		"java": ">=17"
+	}
+}
