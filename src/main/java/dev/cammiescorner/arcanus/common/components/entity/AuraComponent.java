@@ -23,6 +23,8 @@ public class AuraComponent implements AutoSyncedComponent, ServerTickingComponen
 		aura = tag.getInt("Aura");
 		auraLock = tag.getInt("AuraLock");
 		auraTimer = tag.getInt("AuraTimer");
+
+		ArcanusComponents.SPELL_COMPONENT.sync(player);
 	}
 
 	@Override

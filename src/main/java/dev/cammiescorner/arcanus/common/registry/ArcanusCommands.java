@@ -20,6 +20,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.util.concurrent.CompletableFuture;
@@ -72,7 +73,7 @@ public class ArcanusCommands {
 			Spell spell = ArcanusCommands.SpellArgumentType.getSpell(context, "spell");
 
 			spellComponent.setSpellInSlot(spell, 0);
-			context.getSource().sendFeedback(new LiteralText("Set spell to: " + Arcanus.SPELL.getId(spell)), false);
+			context.getSource().sendFeedback(new LiteralText("Set spell to: ").append(new LiteralText(Arcanus.SPELL.getId(spell).toString()).formatted(Formatting.YELLOW)), false);
 
 			return Command.SINGLE_SUCCESS;
 		}
@@ -82,7 +83,7 @@ public class ArcanusCommands {
 			SpellComponent spellComponent = ArcanusComponents.SPELL_COMPONENT.get(player);
 			Spell spell = spellComponent.getSelectedSpell();
 
-			context.getSource().sendFeedback(new LiteralText("Spell is: " + Arcanus.SPELL.getId(spell)), false);
+			context.getSource().sendFeedback(new LiteralText("Current spell: ").append(new LiteralText(Arcanus.SPELL.getId(spell).toString()).formatted(Formatting.YELLOW)), false);
 
 			return Command.SINGLE_SUCCESS;
 		}

@@ -11,13 +11,13 @@ public class ArcanusSpells {
 	//-----Spell Map-----//
 	public static final LinkedHashMap<Spell, Identifier> SPELLS = new LinkedHashMap<>();
 
-	public static final Spell EMPTY = create("empty", new Spell(Spell.Type.NONE));
-	public static final Spell ENHANCER = create("enhancer", new Spell(Spell.Type.ENHANCER));
-	public static final Spell TRANSMUTER = create("transmuter", new Spell(Spell.Type.TRANSMUTER));
-	public static final Spell EMITTER = create("emitter", new Spell(Spell.Type.EMITTER));
-	public static final Spell CONJURER = create("conjurer", new Spell(Spell.Type.CONJURER));
-	public static final Spell MANIPULATOR = create("manipulator", new Spell(Spell.Type.MANIPULATOR));
-	public static final Spell SPECIALIST = create("specialist", new Spell(Spell.Type.SPECIALIST));
+	public static final Spell EMPTY = create("empty", new Spell(Spell.Type.NONE, 0));
+	public static final Spell ENHANCER = create("enhancer", new Spell(Spell.Type.ENHANCER, 0));
+	public static final Spell TRANSMUTER = create("transmuter", new Spell(Spell.Type.TRANSMUTER, 0));
+	public static final Spell EMITTER = create("emitter", new Spell(Spell.Type.EMITTER, 0));
+	public static final Spell CONJURER = create("conjurer", new Spell(Spell.Type.CONJURER, 0));
+	public static final Spell MANIPULATOR = create("manipulator", new Spell(Spell.Type.MANIPULATOR, 0));
+	public static final Spell SPECIALIST = create("specialist", new Spell(Spell.Type.SPECIALIST, 0));
 
 	//-----Registry-----//
 	public static void register() {

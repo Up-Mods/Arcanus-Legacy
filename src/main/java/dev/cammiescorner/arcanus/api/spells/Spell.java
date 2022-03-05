@@ -1,10 +1,17 @@
 package dev.cammiescorner.arcanus.api.spells;
 
-public class Spell {
-	private Type spellType = Type.NONE;
+import dev.cammiescorner.arcanus.common.components.entity.SpellComponent;
+import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.World;
 
-	public Spell(Type type) {
+public class Spell {
+	private Type spellType;
+	private int spellCooldown;
+
+	public Spell(Type type, int cooldown) {
 		spellType = type;
+		spellCooldown = cooldown;
 	}
 
 	public Type getSpellType() {
@@ -13,6 +20,30 @@ public class Spell {
 
 	public void setSpellType(Type type) {
 		spellType = type;
+	}
+
+	public int getSpellCooldown() {
+		return spellCooldown;
+	}
+
+	public void setSpellCooldown(int value) {
+		spellCooldown = value;
+	}
+
+	public boolean isActive(PlayerEntity player) {
+		SpellComponent spellComponent = ArcanusComponents.SPELL_COMPONENT.get(player);
+
+		return spellComponent.getActivatedSpell().equals(this);
+	}
+
+	/**
+	 * Super at the beginning of every override.
+	 * @param world it was me, DIO!
+	 * @param player some weirdo probably.
+	 */
+	public void cast(World world, PlayerEntity player) {
+		if(isActive(player))
+			return;
 	}
 
 	public enum Type {
