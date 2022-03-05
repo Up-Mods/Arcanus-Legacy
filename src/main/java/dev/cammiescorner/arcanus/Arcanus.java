@@ -1,6 +1,8 @@
 package dev.cammiescorner.arcanus;
 
 import dev.cammiescorner.arcanus.api.spells.Spell;
+import dev.cammiescorner.arcanus.common.EventHandler;
+import dev.cammiescorner.arcanus.common.registry.ArcanusCommands;
 import dev.cammiescorner.arcanus.common.registry.ArcanusSpells;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -18,10 +20,13 @@ public class Arcanus implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ArcanusSpells.register();
+		ArcanusCommands.register();
 
 		Registry.register(Registry.ATTRIBUTE, id("casting_multiplier"), EntityAttributes.AURA_COST);
 		Registry.register(Registry.ATTRIBUTE, id("aura_regen"), EntityAttributes.AURA_REGEN);
 		Registry.register(Registry.ATTRIBUTE, id("aura_lock"), EntityAttributes.AURA_LOCK);
+
+		EventHandler.commonEvents();
 	}
 
 	public static Identifier id(String name) {

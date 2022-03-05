@@ -3,10 +3,12 @@ package dev.cammiescorner.arcanus.common;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.components.entity.AuraComponent;
+import dev.cammiescorner.arcanus.common.registry.ArcanusCommands;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -59,5 +61,10 @@ public class EventHandler {
 				}
 			}
 		});
+	}
+
+	public static void commonEvents() {
+		//-----Command Callback-----//
+		CommandRegistrationCallback.EVENT.register(ArcanusCommands::init);
 	}
 }
