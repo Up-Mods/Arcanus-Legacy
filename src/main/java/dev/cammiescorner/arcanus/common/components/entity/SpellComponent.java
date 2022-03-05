@@ -44,8 +44,6 @@ public class SpellComponent implements AutoSyncedComponent, ServerTickingCompone
 
 		for(int i = 0; i < listTag.size(); i++)
 			spells.set(i, Arcanus.SPELL.get(new Identifier(listTag.getString(i))));
-
-		ArcanusComponents.SPELL_COMPONENT.sync(player);
 	}
 
 	@Override
