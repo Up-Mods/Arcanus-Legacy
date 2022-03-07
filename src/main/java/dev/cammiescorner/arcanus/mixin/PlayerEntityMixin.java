@@ -17,6 +17,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
 	@Inject(method = "createPlayerAttributes", at = @At("RETURN"))
 	private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> info) {
-		info.getReturnValue().add(Arcanus.EntityAttributes.AURA_COST).add(Arcanus.EntityAttributes.AURA_REGEN);
+		info.getReturnValue().add(Arcanus.EntityAttributes.AURA_COST).add(Arcanus.EntityAttributes.AURA_REGEN).add(Arcanus.EntityAttributes.AURA_LOCK);
 	}
 }
