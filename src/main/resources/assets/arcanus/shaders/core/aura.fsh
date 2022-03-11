@@ -12,6 +12,7 @@ in vec2 texCoord0;
 in vec2 texCoord1;
 in vec2 texCoord2;
 in vec4 normal;
+in vec3 position;
 
 out vec4 fragColor;
 
@@ -21,7 +22,5 @@ void main() {
         discard;
     }
 
-    float shift = texCoord0.y * 5.;
-    vec3 rainbow = vec3(sin(STime + shift) + 0.2, cos(STime + shift + 0.5) + 0.2, sin(STime + shift + 4.) + 0.2);
-    fragColor = min(color * vec4(rainbow, 1.) * 3., vec4(1.)) + color;
+    fragColor = vec4(1.0, 1.0, 1.0, length(position));
 }
