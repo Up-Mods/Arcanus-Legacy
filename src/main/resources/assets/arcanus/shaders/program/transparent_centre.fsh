@@ -22,16 +22,21 @@ void main(){
         for (float v = Radius; v >= 0; v -= 1.0) {
             float distance = sqrt(u * u + v * v) / (Radius);
 
-            float s0 = texture(DiffuseSampler, texCoord + vec2(-u * oneTexel.x, -v * oneTexel.y)).a;
-            float s1 = texture(DiffuseSampler, texCoord + vec2(u * oneTexel.x, v * oneTexel.y)).a;
-            float s2 = texture(DiffuseSampler, texCoord + vec2(-u * oneTexel.x, v * oneTexel.y)).a;
-            float s3 = texture(DiffuseSampler, texCoord + vec2(u * oneTexel.x, -v * oneTexel.y)).a;
+            if (distance < distanceToTranparency) {
+                float s0 = texture(DiffuseSampler, texCoord + vec2(-u * oneTexel.x, -v * oneTexel.y)).a;
+                float s1 = texture(DiffuseSampler, texCoord + vec2(u * oneTexel.x, v * oneTexel.y)).a;
+                float s2 = texture(DiffuseSampler, texCoord + vec2(-u * oneTexel.x, v * oneTexel.y)).a;
+                float s3 = texture(DiffuseSampler, texCoord + vec2(u * oneTexel.x, -v * oneTexel.y)).a;
 
-            if (s0 <= 0 || s1 <= 0 || s2 <= 0 || s3 <= 0) {
-                distanceToTranparency = distance;
+                if (s0 <= 0 || s1 <= 0 || s2 <= 0 || s3 <= 0) {
+                    distanceToTranparency = distance;
+                }
             }
         }
     }
 
+    distanceToTranparency = min(abs(distanceToTranparency), 0.9);
+
     fragColor = vec4(vec3(centre), centre.a * (1 - distanceToTranparency));
 }
+
