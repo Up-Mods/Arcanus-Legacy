@@ -38,11 +38,13 @@ public abstract class EntityRenderDispatcherMixin {
 
     @Unique
     private <E extends Entity> void renderAura(MatrixStack matrices, VertexConsumerProvider vertexConsumers, E entity, EntityRenderer<E> entityRenderer, float tickDelta, int light, float aura, float[] auraColour) {
-        float scale = 0.5F + aura;
+        float scale = 0.8F + aura*0.5f;
 
         matrices.push();
 
         matrices.scale(scale, scale, scale);
+
+        matrices.translate(0.0, -((entity.getHeight()*scale)/2f - entity.getHeight()/2f), 0f);
 
         AuraEffectManager.INSTANCE.setAuraColour(auraColour[0], auraColour[1], auraColour[2]);
         entityRenderer.render(entity, 0, tickDelta, matrices, layer -> vertexConsumers.getBuffer(AuraEffectManager.INSTANCE.getRenderLayer(layer)), light);
