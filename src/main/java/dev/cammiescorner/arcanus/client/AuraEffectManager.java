@@ -5,10 +5,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.mixin.client.FramebufferAccessor;
 import ladysnake.satin.api.event.EntitiesPreRenderCallback;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
+import ladysnake.satin.api.managed.ManagedCoreShader;
 import ladysnake.satin.api.managed.ManagedFramebuffer;
 import ladysnake.satin.api.managed.ManagedShaderEffect;
 import ladysnake.satin.api.managed.ShaderEffectManager;
 import ladysnake.satin.api.managed.uniform.Uniform1f;
+import ladysnake.satin.api.managed.uniform.Uniform4f;
 import ladysnake.satin.api.util.RenderLayerHelper;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
@@ -36,9 +38,13 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
     public static final AuraEffectManager INSTANCE = new AuraEffectManager();
 
     private final MinecraftClient client = MinecraftClient.getInstance();
-    private final ManagedShaderEffect auraShader = ShaderEffectManager.getInstance().manage(id("shaders/post/aura.json"), this::assignDepthTexture);
-    private final ManagedFramebuffer auraFramebuffer = auraShader.getTarget("auras");
-    private final Uniform1f timeUniform = auraShader.findUniform1f("STime");
+
+    private final ManagedCoreShader auraCoreShader = ShaderEffectManager.getInstance().manageCoreShader(id("aura_core"));
+    private final Uniform4f colourUniform = auraCoreShader.findUniform4f("ColorModulator");
+
+    private final ManagedShaderEffect auraPostShader = ShaderEffectManager.getInstance().manage(id("shaders/post/aura.json"), this::assignDepthTexture);
+    private final ManagedFramebuffer auraFramebuffer = auraPostShader.getTarget("auras");
+    private final Uniform1f timeUniform = auraPostShader.findUniform1f("STime");
 
     private int ticks;
     private boolean renderedAuras;
@@ -51,9 +57,9 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
     @Override
     public void beforeEntitiesRender(@NotNull Camera camera, @NotNull Frustum frustum, float tickDelta) {
         timeUniform.set((ticks + tickDelta) * 0.05f);
-        if (!this.auraShader.isInitialized()) {
+        if (!this.auraPostShader.isInitialized()) {
             try {
-                this.auraShader.initialize();
+                this.auraPostShader.initialize();
             } catch (IOException e) {
                 throw new UncheckedIOException("Failed to initialize aura shader", e);
             }
@@ -64,8 +70,12 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
     @Override
     public void renderShaderEffects(float tickDelta) {
         if (this.renderedAuras) {
-            auraShader.render(tickDelta);
+            auraPostShader.render(tickDelta);
         }
+    }
+
+    public void setAuraColour(float r, float g, float b) {
+        this.colourUniform.set(r, g, b, 1f);
     }
 
     public void beginAuraFramebufferWrite() {
@@ -101,7 +111,7 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
     }
 
     public RenderLayer getRenderLayer(RenderLayer base) {
-        return AuraRenderLayers.getAuraRenderLayer(base);
+        return AuraRenderLayers.getAuraRenderLayer(auraCoreShader.getRenderLayer(base));
     }
 
     /**

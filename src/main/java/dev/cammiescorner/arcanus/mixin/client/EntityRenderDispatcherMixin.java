@@ -32,19 +32,20 @@ public abstract class EntityRenderDispatcherMixin {
     }
 
     @Unique
-    private int getAuraColourFor(Entity entity) {
-        return ArcanusComponents.SPELL_COMPONENT.isProvidedBy(entity) ? ArcanusComponents.SPELL_COMPONENT.get(entity).getSelectedSpell().getSpellType().getDecimal() : 0;
+    private float[] getAuraColourFor(Entity entity) {
+        return ArcanusComponents.SPELL_COMPONENT.isProvidedBy(entity) ? ArcanusComponents.SPELL_COMPONENT.get(entity).getSelectedSpell().getSpellType().getRgb() : new float[] { 0, 0, 0 };
     }
 
     @Unique
-    private <E extends Entity> void renderAura(MatrixStack matrices, VertexConsumerProvider vertexConsumers, E entity, EntityRenderer<E> entityRenderer, float tickDelta, int light, float aura, int auraColour) {
+    private <E extends Entity> void renderAura(MatrixStack matrices, VertexConsumerProvider vertexConsumers, E entity, EntityRenderer<E> entityRenderer, float tickDelta, int light, float aura, float[] auraColour) {
         float scale = 0.5F + aura;
 
         matrices.push();
 
         matrices.scale(scale, scale, scale);
 
-        entityRenderer.render(entity, 0, tickDelta, matrices, layer -> vertexConsumers.getBuffer(AuraEffectManager.INSTANCE.getRenderLayer(layer)), 0xffffffff);
+        AuraEffectManager.INSTANCE.setAuraColour(auraColour[0], auraColour[1], auraColour[2]);
+        entityRenderer.render(entity, 0, tickDelta, matrices, layer -> vertexConsumers.getBuffer(AuraEffectManager.INSTANCE.getRenderLayer(layer)), light);
 
         matrices.pop();
     }
