@@ -12,5 +12,5 @@ void main(){
     vec4 tex = texture(DiffuseSampler, texCoord);
     vec4 playerTex = texture(AuraSampler, texCoord);
 
-    fragColor = tex + playerTex;
+    fragColor = mix(tex, playerTex, playerTex.a);
 }
