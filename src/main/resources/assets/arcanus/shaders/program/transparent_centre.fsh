@@ -6,6 +6,7 @@ in vec2 texCoord;
 in vec2 oneTexel;
 
 uniform float Radius;
+uniform float StepGranularity;
 
 out vec4 fragColor;
 
@@ -18,8 +19,9 @@ void main(){
         return;
     }
 
-    for (float u = Radius; u >= 0; u -= 1.0) {
-        for (float v = Radius; v >= 0; v -= 1.0) {
+    float step = max(1.0, ceil(Radius/StepGranularity));
+    for(float u = 0.0; u <= Radius; u += step) {
+        for(float v = 0.0; v <= Radius; v += step) {
             float distance = sqrt(u * u + v * v) / (Radius);
 
             if (distance < distanceToTranparency) {
