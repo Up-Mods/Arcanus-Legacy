@@ -2,7 +2,6 @@ package dev.cammiescorner.arcanus.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.cammiescorner.arcanus.mixin.client.FramebufferAccessor;
 import ladysnake.satin.api.event.EntitiesPreRenderCallback;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
 import ladysnake.satin.api.managed.ManagedCoreShader;
@@ -27,8 +26,9 @@ import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 
 /**
- * Manages the Aura rendering effect. Auras are rendered to a separate framebuffer with custom shaders and then
- * composited into the main framebuffer. This uses similar techniques to <a href="https://github.com/Ladysnake/Requiem/blob/ad68fa534c6b6d4c64be86162eb35e67140138c6/src/main/java/ladysnake/requiem/client/ShadowPlayerFx.java">Requiem's Shadow Player rendering.</a>
+ * Manages the Aura rendering effect. Auras are rendered to a separate framebuffer with a custom core shader and then
+ * composited into the main framebuffer with a post shader. This uses similar techniques to
+ * <a href="https://github.com/Ladysnake/Requiem/blob/ad68fa534c6b6d4c64be86162eb35e67140138c6/src/main/java/ladysnake/requiem/client/ShadowPlayerFx.java">Requiem's Shadow Player rendering.</a>
  */
 public final class AuraEffectManager implements ClientTickEvents.EndTick, EntitiesPreRenderCallback, ShaderEffectRenderCallback {
     public static final AuraEffectManager INSTANCE = new AuraEffectManager();
@@ -77,7 +77,7 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
             RenderSystem.depthMask(false);
             if (!this.auraBufferCleared) {
                 // clear framebuffer colour (but not depth)
-                float[] clearColor = ((FramebufferAccessor) auraFramebuffer).getClearColor();
+                float[] clearColor = auraFramebuffer.clearColor;
                 RenderSystem.clearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
                 RenderSystem.clear(GL_COLOR_BUFFER_BIT, MinecraftClient.IS_SYSTEM_MAC);
 

@@ -34,6 +34,7 @@
 	"mixins": [
 		"arcanus.mixins.json"
 	],
+	"accessWidener": "arcanus.accesswidener",
 	"depends": {
 		"fabricloader": ">=0.12.5",
 		"fabric": "*",

@@ -7,7 +7,6 @@
 		"PlayerEntityMixin"
 	],
 	"client": [
-		"client.FramebufferAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1
