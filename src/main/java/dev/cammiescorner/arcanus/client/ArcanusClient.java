@@ -17,7 +17,6 @@ public class ArcanusClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		EventHandler.clientEvents();
-		ClientTickEvents.END_CLIENT_TICK.register(AuraEffectManager.INSTANCE);
 		EntitiesPreRenderCallback.EVENT.register(AuraEffectManager.INSTANCE);
 		ShaderEffectRenderCallback.EVENT.register(AuraEffectManager.INSTANCE);
 		LivingEntityEarlyFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, context) -> {

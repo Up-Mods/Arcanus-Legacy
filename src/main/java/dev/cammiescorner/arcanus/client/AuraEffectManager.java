@@ -27,7 +27,7 @@ import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
  * composited into the main framebuffer with a post shader. This uses similar techniques to
  * <a href="https://github.com/Ladysnake/Requiem/blob/ad68fa534c6b6d4c64be86162eb35e67140138c6/src/main/java/ladysnake/requiem/client/ShadowPlayerFx.java">Requiem's Shadow Player rendering.</a>
  */
-public final class AuraEffectManager implements ClientTickEvents.EndTick, EntitiesPreRenderCallback, ShaderEffectRenderCallback {
+public final class AuraEffectManager implements EntitiesPreRenderCallback, ShaderEffectRenderCallback {
     public static final AuraEffectManager INSTANCE = new AuraEffectManager();
 
     private final MinecraftClient client = MinecraftClient.getInstance();
@@ -35,13 +35,7 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
     private final ManagedShaderEffect auraPostShader = ShaderEffectManager.getInstance().manage(id("shaders/post/aura.json"), this::assignDepthTexture);
     private final ManagedFramebuffer auraFramebuffer = auraPostShader.getTarget("auras");
 
-    private int ticks;
     private boolean auraBufferCleared;
-
-    @Override
-    public void onEndTick(MinecraftClient client) {
-        ticks++;
-    }
 
     @Override
     public void beforeEntitiesRender(@NotNull Camera camera, @NotNull Frustum frustum, float tickDelta) {
@@ -106,10 +100,11 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
     }
 
     /**
-     * Helper for creating copies of {@link RenderLayer RenderLayers} which render to the aura framebuffer.
+     * Helper for the creating and holding the aura render layer and target
      */
     private static final class AuraRenderLayers extends RenderLayer {
-        // have to extend RenderLayer to access RenderPhase.Target
+        // have to extend RenderLayer to access a few of these things
+
         private static final Target AURA_TARGET = new Target(
                 "arcanus:aura_target",
                 AuraEffectManager.INSTANCE::beginAuraFramebufferUse,
