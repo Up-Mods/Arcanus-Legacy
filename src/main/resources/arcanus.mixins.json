@@ -7,7 +7,6 @@
 		"PlayerEntityMixin"
 	],
 	"client": [
-		"client.EntityRenderDispatcherMixin",
 		"client.FramebufferAccessor"
 	],
 	"injectors": {
