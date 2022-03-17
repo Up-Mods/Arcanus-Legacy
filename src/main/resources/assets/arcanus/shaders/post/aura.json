@@ -1,7 +1,7 @@
 {
   "targets": [
     "swap",
-    "blurred_auras",
+    "processed_auras",
     "auras"
   ],
   "passes": [
@@ -23,18 +23,18 @@
     {
       "name": "arcanus:blobs_with_alpha",
       "intarget": "swap",
-      "outtarget": "blurred_auras"
+      "outtarget": "processed_auras"
     },
     {
       "name": "arcanus:transparent_centre",
-      "intarget": "blurred_auras",
+      "intarget": "processed_auras",
       "outtarget": "swap"
     },
     {
       "_comment": "//FIXME: blit doesn't work here for some reason",
       "name": "blur",
       "intarget": "swap",
-      "outtarget": "blurred_auras",
+      "outtarget": "processed_auras",
       "uniforms": [
         {
           "name": "Radius",
@@ -49,7 +49,7 @@
       "auxtargets": [
         {
           "name": "AuraSampler",
-          "id": "blurred_auras"
+          "id": "processed_auras"
         }
       ]
     },
