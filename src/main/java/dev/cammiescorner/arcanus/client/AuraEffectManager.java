@@ -13,10 +13,7 @@ import ladysnake.satin.api.util.RenderLayerHelper;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.*;
 import org.jetbrains.annotations.NotNull;
 
 import static dev.cammiescorner.arcanus.Arcanus.id;
@@ -26,7 +23,7 @@ import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 
 /**
- * Manages the Aura rendering effect. Auras are rendered to a separate framebuffer with a custom core shader and then
+ * Manages the Aura rendering effect. Auras are rendered to a separate framebuffer with a custom renderlayer and then
  * composited into the main framebuffer with a post shader. This uses similar techniques to
  * <a href="https://github.com/Ladysnake/Requiem/blob/ad68fa534c6b6d4c64be86162eb35e67140138c6/src/main/java/ladysnake/requiem/client/ShadowPlayerFx.java">Requiem's Shadow Player rendering.</a>
  */
@@ -34,9 +31,6 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
     public static final AuraEffectManager INSTANCE = new AuraEffectManager();
 
     private final MinecraftClient client = MinecraftClient.getInstance();
-
-    private final ManagedCoreShader auraCoreShader = ShaderEffectManager.getInstance().manageCoreShader(id("aura_core"));
-    private final Uniform4f colourUniform = auraCoreShader.findUniform4f("ColorModulator");
 
     private final ManagedShaderEffect auraPostShader = ShaderEffectManager.getInstance().manage(id("shaders/post/aura.json"), this::assignDepthTexture);
     private final ManagedFramebuffer auraFramebuffer = auraPostShader.getTarget("auras");
@@ -61,10 +55,6 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
         }
     }
 
-    public void setAuraColour(float r, float g, float b) {
-        this.colourUniform.set(r, g, b, 1f);
-    }
-
     /**
      * Binds aura framebuffer for use and clears it if necessary.
      */
@@ -73,8 +63,6 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
         if (auraFramebuffer != null) {
             auraFramebuffer.beginWrite(false);
 
-            // disable writing to depth texture
-            RenderSystem.depthMask(false);
             if (!this.auraBufferCleared) {
                 // clear framebuffer colour (but not depth)
                 float[] clearColor = auraFramebuffer.clearColor;
@@ -91,7 +79,6 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
      */
     private void endAuraFramebufferUse() {
         this.client.getFramebuffer().beginWrite(false);
-        RenderSystem.depthMask(true);
     }
 
     /**
@@ -110,13 +97,12 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
     }
 
     /**
-     * Copies a {@link RenderLayer} and makes the copy render to the Aura framebuffer with the Aura core shader.
+     * Gets the {@link RenderLayer} for rendering auras
      *
-     * @param original the original renderlayer
-     * @return the copied render layer
+     * @return the render layer
      */
-    public RenderLayer getRenderLayer(RenderLayer original) {
-        return AuraRenderLayers.getAuraRenderLayer(auraCoreShader.getRenderLayer(original));
+    public static RenderLayer getRenderLayer() {
+        return AuraRenderLayers.AURA_LAYER;
     }
 
     /**
@@ -130,21 +116,24 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
                 AuraEffectManager.INSTANCE::endAuraFramebufferUse
         );
 
+        private static final RenderLayer AURA_LAYER = RenderLayer.of(
+                "aura",
+                VertexFormats.POSITION_COLOR,
+                VertexFormat.DrawMode.QUADS,
+                256,
+                false,
+                true,
+                MultiPhaseParameters.builder()
+                        .shader(LIGHTNING_SHADER)
+                        .writeMaskState(COLOR_MASK)
+                        .transparency(ADDITIVE_TRANSPARENCY)
+                        .target(AURA_TARGET)
+                        .build(false)
+        );
+
         // no need to create instances of this
         private AuraRenderLayers(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
             super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
-        }
-
-        /**
-         * Copies a {@link RenderLayer} and makes the copy render to the Aura framebuffer.
-         *
-         * @param original  the original RenderLayer
-         * @return      the copied render layer
-         *
-         * @see ladysnake.satin.api.managed.ManagedCoreShader#getRenderLayer(RenderLayer)
-         */
-        private static RenderLayer getAuraRenderLayer(RenderLayer original) {
-            return RenderLayerHelper.copy(original, "arcanus:aura", builder -> builder.target(AURA_TARGET));
         }
     }
 }
