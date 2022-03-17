@@ -9,7 +9,6 @@ import ladysnake.satin.api.managed.ManagedCoreShader;
 import ladysnake.satin.api.managed.ManagedFramebuffer;
 import ladysnake.satin.api.managed.ManagedShaderEffect;
 import ladysnake.satin.api.managed.ShaderEffectManager;
-import ladysnake.satin.api.managed.uniform.Uniform1f;
 import ladysnake.satin.api.managed.uniform.Uniform4f;
 import ladysnake.satin.api.util.RenderLayerHelper;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -20,9 +19,6 @@ import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexFormat;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
-import java.io.UncheckedIOException;
 
 import static dev.cammiescorner.arcanus.Arcanus.id;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -44,10 +40,9 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
 
     private final ManagedShaderEffect auraPostShader = ShaderEffectManager.getInstance().manage(id("shaders/post/aura.json"), this::assignDepthTexture);
     private final ManagedFramebuffer auraFramebuffer = auraPostShader.getTarget("auras");
-    private final Uniform1f timeUniform = auraPostShader.findUniform1f("STime");
 
     private int ticks;
-    private boolean renderedAuras;
+    private boolean auraBufferCleared;
 
     @Override
     public void onEndTick(MinecraftClient client) {
@@ -56,20 +51,12 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
 
     @Override
     public void beforeEntitiesRender(@NotNull Camera camera, @NotNull Frustum frustum, float tickDelta) {
-        timeUniform.set((ticks + tickDelta) * 0.05f);
-        if (!this.auraPostShader.isInitialized()) {
-            try {
-                this.auraPostShader.initialize();
-            } catch (IOException e) {
-                throw new UncheckedIOException("Failed to initialize aura shader", e);
-            }
-        }
-        this.renderedAuras = false;
+        this.auraBufferCleared = false;
     }
 
     @Override
     public void renderShaderEffects(float tickDelta) {
-        if (this.renderedAuras) {
+        if (this.auraBufferCleared) {
             auraPostShader.render(tickDelta);
         }
     }
@@ -78,40 +65,58 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
         this.colourUniform.set(r, g, b, 1f);
     }
 
-    public void beginAuraFramebufferWrite() {
+    /**
+     * Binds aura framebuffer for use and clears it if necessary.
+     */
+    public void beginAuraFramebufferUse() {
         Framebuffer auraFramebuffer = this.auraFramebuffer.getFramebuffer();
         if (auraFramebuffer != null) {
             auraFramebuffer.beginWrite(false);
-            RenderSystem.depthMask(false);
-            if (!this.renderedAuras) {
-                // clearing color but not depth
-                float[] clearColor = ((FramebufferAccessor) auraFramebuffer).getClearColor();
 
+            // disable writing to depth texture
+            RenderSystem.depthMask(false);
+            if (!this.auraBufferCleared) {
+                // clear framebuffer colour (but not depth)
+                float[] clearColor = ((FramebufferAccessor) auraFramebuffer).getClearColor();
                 RenderSystem.clearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
                 RenderSystem.clear(GL_COLOR_BUFFER_BIT, MinecraftClient.IS_SYSTEM_MAC);
 
-                this.renderedAuras = true;
+                this.auraBufferCleared = true;
             }
         }
     }
 
-    private void endAuraFramebufferWrite() {
+    /**
+     * Unbinds aura framebuffer for use and undoes changes made in {@link #beginAuraFramebufferUse()}.
+     */
+    private void endAuraFramebufferUse() {
         this.client.getFramebuffer().beginWrite(false);
         RenderSystem.depthMask(true);
     }
 
+    /**
+     * Makes the aura framebuffer use the same depth texture as the main framebuffer. Run when the aura post shader
+     * is initialised.
+     *
+     * @param managedShaderEffect shader effect being initialised
+     */
     private void assignDepthTexture(ManagedShaderEffect managedShaderEffect) {
         client.getFramebuffer().beginWrite(false);
         int depthTexturePtr = client.getFramebuffer().getDepthAttachment();
         if (depthTexturePtr > -1) {
             auraFramebuffer.beginWrite(false);
-            // Use the same depth texture for our framebuffer as the main one
             GlStateManager._glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexturePtr, 0);
         }
     }
 
-    public RenderLayer getRenderLayer(RenderLayer base) {
-        return AuraRenderLayers.getAuraRenderLayer(auraCoreShader.getRenderLayer(base));
+    /**
+     * Copies a {@link RenderLayer} and makes the copy render to the Aura framebuffer with the Aura core shader.
+     *
+     * @param original the original renderlayer
+     * @return the copied render layer
+     */
+    public RenderLayer getRenderLayer(RenderLayer original) {
+        return AuraRenderLayers.getAuraRenderLayer(auraCoreShader.getRenderLayer(original));
     }
 
     /**
@@ -119,14 +124,13 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
      */
     private static final class AuraRenderLayers extends RenderLayer {
         // have to extend RenderLayer to access RenderPhase.Target
-
         private static final Target AURA_TARGET = new Target(
-                "requiem:aura_target",
-                AuraEffectManager.INSTANCE::beginAuraFramebufferWrite,
-                AuraEffectManager.INSTANCE::endAuraFramebufferWrite
+                "arcanus:aura_target",
+                AuraEffectManager.INSTANCE::beginAuraFramebufferUse,
+                AuraEffectManager.INSTANCE::endAuraFramebufferUse
         );
-        // no need to create instances of this
 
+        // no need to create instances of this
         private AuraRenderLayers(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
             super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
         }
@@ -139,7 +143,7 @@ public final class AuraEffectManager implements ClientTickEvents.EndTick, Entiti
          *
          * @see ladysnake.satin.api.managed.ManagedCoreShader#getRenderLayer(RenderLayer)
          */
-        public static RenderLayer getAuraRenderLayer(RenderLayer original) {
+        private static RenderLayer getAuraRenderLayer(RenderLayer original) {
             return RenderLayerHelper.copy(original, "arcanus:aura", builder -> builder.target(AURA_TARGET));
         }
     }
