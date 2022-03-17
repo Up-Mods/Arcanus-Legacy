@@ -25,7 +25,7 @@ public class AuraFeatureRenderer<T extends LivingEntity, M extends EntityModel<T
     }
 
     private void renderAura(MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, int light, float aura, float[] auraColour) {
-        float scale = 1f + aura * 0.2f;
+        float scale = 1f;
 
         matrices.push();
         matrices.scale(scale, scale, scale);
@@ -39,7 +39,7 @@ public class AuraFeatureRenderer<T extends LivingEntity, M extends EntityModel<T
                 auraColour[0],
                 auraColour[1],
                 auraColour[2],
-                1f
+                aura
         );
 
         matrices.pop();
