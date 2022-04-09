@@ -16,14 +16,17 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public class ClientPlayNetworkHandlerMixin {
 	@Shadow private ClientWorld world;
 
-	@Inject(method = "onEntitySpawn", at = @At("TAIL"))
-	private void onEntitySpawn(EntitySpawnS2CPacket packet, CallbackInfo callbackInfo) {
-		EntityType<?> type = packet.getEntityTypeId();
+	/**
+	 * Accesses the local EntityType variable to avoid conflict with Charm: https://github.com/svenhjol/Charm/issues/747.
+	 */
+	@Inject(method = "onEntitySpawn", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
+	private void onEntitySpawn(EntitySpawnS2CPacket packet, CallbackInfo callbackInfo, EntityType<?> type) {
 		double x = packet.getX();
 		double y = packet.getY();
 		double z = packet.getZ();
