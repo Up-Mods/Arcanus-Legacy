@@ -11,6 +11,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.api.spells.Spell;
+import dev.cammiescorner.arcanus.common.components.entity.AuraComponent;
 import dev.cammiescorner.arcanus.common.components.entity.SpellComponent;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.ArgumentTypes;
@@ -41,6 +42,7 @@ public class ArcanusCommands {
 						.executes(SpellsCommand::getSpell)
 				)
 		);
+		dispatcher.register(CommandManager.literal("drain_aura").executes(AuraCommand::drainAura));
 	}
 
 	public static class SpellArgumentType implements ArgumentType<Spell> {
@@ -85,6 +87,15 @@ public class ArcanusCommands {
 
 			context.getSource().sendFeedback(new LiteralText("Current spell: ").append(new LiteralText(Arcanus.SPELL.getId(spell).toString()).formatted(Formatting.YELLOW)), false);
 
+			return Command.SINGLE_SUCCESS;
+		}
+	}
+
+	private static class AuraCommand {
+		public static int drainAura(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+			PlayerEntity player = context.getSource().getPlayer();
+			AuraComponent spellComponent = ArcanusComponents.AURA_COMPONENT.get(player);
+			spellComponent.drainAura(5, false);
 			return Command.SINGLE_SUCCESS;
 		}
 	}

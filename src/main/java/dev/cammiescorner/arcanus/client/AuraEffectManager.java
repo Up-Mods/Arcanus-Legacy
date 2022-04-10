@@ -2,6 +2,7 @@ package dev.cammiescorner.arcanus.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
 import ladysnake.satin.api.event.EntitiesPreRenderCallback;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
 import ladysnake.satin.api.managed.ManagedFramebuffer;
@@ -10,6 +11,7 @@ import ladysnake.satin.api.managed.ShaderEffectManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.render.*;
+import net.minecraft.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 import static dev.cammiescorner.arcanus.Arcanus.id;
@@ -32,6 +34,14 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
     private final ManagedFramebuffer auraFramebuffer = auraPostShader.getTarget("auras");
 
     private boolean auraBufferCleared;
+
+    public static float getAuraFor(Entity entity) {
+        return ArcanusComponents.AURA_COMPONENT.isProvidedBy(entity) ? ArcanusComponents.AURA_COMPONENT.get(entity).getAura() / (float) ArcanusComponents.AURA_COMPONENT.get(entity).getMaxAura() : 0;
+    }
+
+    public static int[] getAuraColourFor(Entity entity) {
+        return ArcanusComponents.SPELL_COMPONENT.isProvidedBy(entity) ? ArcanusComponents.SPELL_COMPONENT.get(entity).getSelectedSpell().getSpellType().getRgbInt() : new int[]{0, 0, 0};
+    }
 
     @Override
     public void beforeEntitiesRender(@NotNull Camera camera, @NotNull Frustum frustum, float tickDelta) {

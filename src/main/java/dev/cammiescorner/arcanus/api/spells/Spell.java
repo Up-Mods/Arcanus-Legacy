@@ -67,5 +67,13 @@ public class Spell {
 				(colour & 255) / 255F
 			};
 		}
+
+		public int[] getRgbInt() {
+			return new int[] {
+					(colour >> 16 & 255),
+					(colour >> 8 & 255),
+					(colour & 255)
+			};
+		}
 	}
 }

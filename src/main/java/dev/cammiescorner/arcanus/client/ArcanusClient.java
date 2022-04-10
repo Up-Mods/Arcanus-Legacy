@@ -5,12 +5,8 @@ import dev.cammiescorner.arcanus.common.EventHandler;
 import ladysnake.satin.api.event.EntitiesPreRenderCallback;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
 
 public class ArcanusClient implements ClientModInitializer {
 
@@ -21,7 +17,7 @@ public class ArcanusClient implements ClientModInitializer {
 		ShaderEffectRenderCallback.EVENT.register(AuraEffectManager.INSTANCE);
 		LivingEntityEarlyFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, context) -> {
 			if (entityRenderer instanceof PlayerEntityRenderer playerRenderer) {
-				entityRenderer.addEarlyFeature(new AuraFeatureRenderer<>(playerRenderer));
+				entityRenderer.addEarlyFeature(new AuraFeatureRenderer<>(playerRenderer, new HeldItemFeatureRenderer<>(playerRenderer)));
 			}
 		});
 	}
