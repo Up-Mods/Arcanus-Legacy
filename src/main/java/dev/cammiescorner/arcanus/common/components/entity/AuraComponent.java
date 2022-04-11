@@ -20,15 +20,15 @@ public class AuraComponent implements AutoSyncedComponent, ServerTickingComponen
 
 	@Override
 	public void readFromNbt(NbtCompound tag) {
-		aura = tag.getInt("Aura");
-		auraLock = tag.getInt("AuraLock");
+		int a = tag.getInt("Aura");
+		aura = a & 31;
+		auraLock = a >> 5 & 31;
 		auraTimer = tag.getInt("AuraTimer");
 	}
 
 	@Override
 	public void writeToNbt(NbtCompound tag) {
-		tag.putInt("Aura", aura);
-		tag.putInt("AuraLock", auraLock);
+		tag.putInt("Aura", (auraLock << 5) + (aura & 31));
 		tag.putInt("AuraTimer", auraTimer);
 	}
 
