@@ -14,7 +14,8 @@
 	"custom": {
 		"cardinal-components": [
 			"arcanus:aura",
-			"arcanus:spell"
+			"arcanus:spell",
+			"arcanus:cult"
 		]
 	},
 	"license": "Custom License",
