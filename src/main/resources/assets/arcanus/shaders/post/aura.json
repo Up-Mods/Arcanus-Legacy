@@ -1,0 +1,62 @@
+{
+  "targets": [
+    "swap",
+    "processed_auras",
+    "auras"
+  ],
+  "passes": [
+    {
+      "name": "arcanus:wobble",
+      "intarget": "auras",
+      "outtarget": "swap",
+      "uniforms": [
+        {
+          "name": "Frequency",
+          "values": [ 50, 50 ]
+        },
+        {
+          "name": "WobbleAmount",
+          "values": [ 0.001 , 0.001 ]
+        }
+      ]
+    },
+    {
+      "name": "arcanus:blobs_with_alpha",
+      "intarget": "swap",
+      "outtarget": "processed_auras"
+    },
+    {
+      "name": "arcanus:transparent_centre",
+      "intarget": "processed_auras",
+      "outtarget": "swap"
+    },
+    {
+      "_comment": "//FIXME: blit doesn't work here for some reason",
+      "name": "blur",
+      "intarget": "swap",
+      "outtarget": "processed_auras",
+      "uniforms": [
+        {
+          "name": "Radius",
+          "values": [ 0.0 ]
+        }
+      ]
+    },
+    {
+      "name": "arcanus:aura",
+      "intarget": "minecraft:main",
+      "outtarget": "swap",
+      "auxtargets": [
+        {
+          "name": "AuraSampler",
+          "id": "processed_auras"
+        }
+      ]
+    },
+    {
+      "name": "blit",
+      "intarget": "swap",
+      "outtarget": "minecraft:main"
+    }
+  ]
+}
