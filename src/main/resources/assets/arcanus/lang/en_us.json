@@ -1,5 +1,14 @@
 {
 	"category.arcanus.keys": "Arcanus",
 	"key.arcanus.openSpellInv": "Open Spell Inventory",
-	"key.arcanus.swapCastingMode": "Enter Casting Mode"
+	"key.arcanus.swapCastingMode": "Enter Casting Mode",
+
+	"attribute.name.generic.arcanus.aura_cost": "Aura Cost",
+	"attribute.name.generic.arcanus.aura_regen": "Aura Regen",
+	"attribute.name.generic.arcanus.aura_lock": "Aura Lock",
+	"attribute.name.generic.arcanus.enhancement_affinity": "Enhancement Affinity",
+	"attribute.name.generic.arcanus.transmutation_affinity": "Transmutation Affinity",
+	"attribute.name.generic.arcanus.emission_affinity": "Emission Affinity",
+	"attribute.name.generic.arcanus.conjuration_affinity": "Conjuration Affinity",
+	"attribute.name.generic.arcanus.manipulation_affinity": "Manipulation Affinity"
 }

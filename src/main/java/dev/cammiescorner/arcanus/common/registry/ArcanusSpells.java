@@ -1,7 +1,9 @@
 package dev.cammiescorner.arcanus.common.registry;
 
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.api.spells.AuraType;
 import dev.cammiescorner.arcanus.api.spells.Spell;
+import dev.cammiescorner.arcanus.api.spells.SpellComplexity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -11,13 +13,13 @@ public class ArcanusSpells {
 	//-----Spell Map-----//
 	public static final LinkedHashMap<Spell, Identifier> SPELLS = new LinkedHashMap<>();
 
-	public static final Spell EMPTY = create("empty", new Spell(Spell.Type.NONE, Spell.Complexity.UNIQUE, 0));
-	public static final Spell ENHANCER = create("enhancer", new Spell(Spell.Type.ENHANCER, Spell.Complexity.SIMPLE, 10));
-	public static final Spell TRANSMUTER = create("transmuter", new Spell(Spell.Type.TRANSMUTER, Spell.Complexity.SIMPLE, 10));
-	public static final Spell EMITTER = create("emitter", new Spell(Spell.Type.EMITTER, Spell.Complexity.SIMPLE, 10));
-	public static final Spell CONJURER = create("conjurer", new Spell(Spell.Type.CONJURER, Spell.Complexity.SIMPLE, 10));
-	public static final Spell MANIPULATOR = create("manipulator", new Spell(Spell.Type.MANIPULATOR, Spell.Complexity.SIMPLE, 10));
-	public static final Spell SPECIALIST = create("specialist", new Spell(Spell.Type.SPECIALIST, Spell.Complexity.SIMPLE, 10));
+	public static final Spell EMPTY = create("empty", new Spell(AuraType.NONE, SpellComplexity.UNIQUE, 0));
+	public static final Spell ENHANCER = create("enhancer", new Spell(AuraType.ENHANCER, SpellComplexity.SIMPLE, 10));
+	public static final Spell TRANSMUTER = create("transmuter", new Spell(AuraType.TRANSMUTER, SpellComplexity.SIMPLE, 10));
+	public static final Spell EMITTER = create("emitter", new Spell(AuraType.EMITTER, SpellComplexity.SIMPLE, 10));
+	public static final Spell CONJURER = create("conjurer", new Spell(AuraType.CONJURER, SpellComplexity.SIMPLE, 10));
+	public static final Spell MANIPULATOR = create("manipulator", new Spell(AuraType.MANIPULATOR, SpellComplexity.SIMPLE, 10));
+	public static final Spell SPECIALIST = create("specialist", new Spell(AuraType.SPECIALIST, SpellComplexity.SIMPLE, 10));
 
 	//-----Registry-----//
 	public static void register() {

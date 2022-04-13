@@ -1,21 +1,21 @@
 package dev.cammiescorner.arcanus.common.components.entity;
 
-import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.api.entity.ArcanusAttributes;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.MathHelper;
 
 public class AuraComponent implements AutoSyncedComponent, ServerTickingComponent {
 	private static final int MAX_AURA = 20;
-	private final PlayerEntity player;
+	private final LivingEntity entity;
 	private int aura, auraLock, auraTimer;
 
-	public AuraComponent(PlayerEntity player) {
-		this.player = player;
+	public AuraComponent(LivingEntity entity) {
+		this.entity = entity;
 	}
 
 	@Override
@@ -34,8 +34,8 @@ public class AuraComponent implements AutoSyncedComponent, ServerTickingComponen
 
 	@Override
 	public void serverTick() {
-		EntityAttributeInstance auraRegen = player.getAttributeInstance(Arcanus.EntityAttributes.AURA_REGEN);
-		EntityAttributeInstance auraLock = player.getAttributeInstance(Arcanus.EntityAttributes.AURA_LOCK);
+		EntityAttributeInstance auraRegen = entity.getAttributeInstance(ArcanusAttributes.AURA_REGEN);
+		EntityAttributeInstance auraLock = entity.getAttributeInstance(ArcanusAttributes.AURA_LOCK);
 		this.auraLock = auraLock != null ? (int) auraLock.getValue() : 0;
 
 		if(aura < MAX_AURA)
@@ -53,7 +53,7 @@ public class AuraComponent implements AutoSyncedComponent, ServerTickingComponen
 
 	public void setAura(int amount) {
 		aura = MathHelper.clamp(amount, 0, getMaxAura());
-		ArcanusComponents.AURA_COMPONENT.sync(player);
+		ArcanusComponents.AURA_COMPONENT.sync(entity);
 	}
 
 	public boolean addAura(int amount, boolean simulate) {

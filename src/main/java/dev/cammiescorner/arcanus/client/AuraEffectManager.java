@@ -2,6 +2,7 @@ package dev.cammiescorner.arcanus.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.cammiescorner.arcanus.api.ArcanusHelper;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
 import ladysnake.satin.api.event.EntitiesPreRenderCallback;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
@@ -33,8 +34,8 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 	private boolean auraBufferCleared;
 
 	public static float getAuraFor(Entity entity) {
-		return ArcanusComponents.AURA_COMPONENT.isProvidedBy(entity) && ArcanusComponents.CASTING_COMPONENT.isProvidedBy(entity) && ArcanusComponents.CASTING_COMPONENT.get(entity).isCasting() ?
-				ArcanusComponents.AURA_COMPONENT.get(entity).getAura() / (float) ArcanusComponents.AURA_COMPONENT.get(entity).getMaxAura() : 0;
+		return ArcanusComponents.AURA_COMPONENT.isProvidedBy(entity) && ArcanusComponents.AURA_FADE_COMPONENT.isProvidedBy(entity) && ArcanusHelper.getAuraFade(entity) > 0 ?
+				(ArcanusComponents.AURA_COMPONENT.get(entity).getAura() / (float) ArcanusComponents.AURA_COMPONENT.get(entity).getMaxAura()) * ArcanusHelper.getAuraFade(entity) : 0;
 	}
 
 	public static int[] getAuraColourFor(Entity entity) {

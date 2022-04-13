@@ -1,41 +1,44 @@
 package dev.cammiescorner.arcanus.common.components.entity;
 
+import dev.cammiescorner.arcanus.api.ArcanusHelper;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 
-public class SpellCooldownComponent implements AutoSyncedComponent, ServerTickingComponent {
+public class AuraFadeComponent implements AutoSyncedComponent, ServerTickingComponent {
 	private final LivingEntity entity;
-	private int spellCooldown = 0;
+	private int timer;
 
-	public SpellCooldownComponent(LivingEntity entity) {
+	public AuraFadeComponent(LivingEntity entity) {
 		this.entity = entity;
 	}
 
 	@Override
 	public void serverTick() {
-		if(getSpellCooldown() > 0)
-			setSpellCooldown(getSpellCooldown() - 1);
+		if(ArcanusHelper.isCasting(entity))
+			setTimer(Math.min(10, ++timer));
+		else
+			setTimer(Math.max(0, --timer));
 	}
 
 	@Override
 	public void readFromNbt(NbtCompound tag) {
-		spellCooldown = tag.getInt("SpellCooldown");
+		timer = tag.getInt("AuraFadeTimer");
 	}
 
 	@Override
 	public void writeToNbt(NbtCompound tag) {
-		tag.putInt("SpellCooldown", spellCooldown);
+		tag.putInt("AuraFadeTimer", timer);
 	}
 
-	public int getSpellCooldown() {
-		return spellCooldown;
+	public int getTimer() {
+		return timer;
 	}
 
-	public void setSpellCooldown(int value) {
-		spellCooldown = value;
-		ArcanusComponents.SPELL_COOLDOWN_COMPONENT.sync(entity);
+	private void setTimer(int timer) {
+		this.timer = timer;
+		ArcanusComponents.AURA_FADE_COMPONENT.sync(entity);
 	}
 }

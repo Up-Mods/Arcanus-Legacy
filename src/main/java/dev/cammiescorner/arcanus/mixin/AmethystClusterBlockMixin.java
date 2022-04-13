@@ -7,6 +7,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -27,6 +29,8 @@ public abstract class AmethystClusterBlockMixin extends AmethystBlock {
 			
 			if(!player.isCreative())
 				stack.decrement(1);
+
+			world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.BLOCKS, 1F, 1F);
 
 			if(this == Blocks.SMALL_AMETHYST_BUD) {
 				if(!world.isClient() && world.getRandom().nextFloat() < growthChance)

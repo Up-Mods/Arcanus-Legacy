@@ -5,6 +5,7 @@ import dev.cammiescorner.arcanus.api.ArcanusHelper;
 import dev.cammiescorner.arcanus.api.spells.Spell;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
@@ -12,12 +13,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class CurrentSpellComponent implements AutoSyncedComponent {
-	private final PlayerEntity player;
+	private final LivingEntity entity;
 	private Spell activatedSpell;
 	private int selectedSpell = 0;
 
-	public CurrentSpellComponent(PlayerEntity player) {
-		this.player = player;
+	public CurrentSpellComponent(LivingEntity entity) {
+		this.entity = entity;
 	}
 
 	@Override
@@ -33,28 +34,28 @@ public class CurrentSpellComponent implements AutoSyncedComponent {
 	}
 
 	public Spell getSelectedSpell() {
-		return ArcanusComponents.SPELL_INVENTORY_COMPONENT.get(player).getAllSpells().get(selectedSpell);
+		return ArcanusComponents.SPELL_INVENTORY_COMPONENT.get(entity).getAllSpells().get(selectedSpell);
 	}
 
 	public void setSelectedSpell(int value) {
 		selectedSpell = value;
-		ArcanusComponents.CURRENT_SPELL_COMPONENT.sync(player);
+		ArcanusComponents.CURRENT_SPELL_COMPONENT.sync(entity);
 	}
 
 	public Spell getCastSpell() {
 		return activatedSpell;
 	}
 
-	public void castSpell(Spell spell, World world, PlayerEntity player, Vec3d pos) {
+	public void castSpell(Spell spell, World world, LivingEntity entity, Vec3d pos) {
 		activatedSpell = spell;
-		spell.cast(world, player, pos);
-		ArcanusHelper.setSpellCooldown(player, spell.getSpellCooldown());
+		spell.cast(world, entity, pos);
+		ArcanusHelper.setSpellCooldown(entity, spell.getSpellCooldown());
 
-		if(!player.isCreative())
+		if(entity instanceof PlayerEntity player && !player.isCreative())
 			ArcanusHelper.drainAura(player, ArcanusHelper.actualAuraCost(player, spell), false);
 	}
 
 	public void castCurrentSpell() {
-		castSpell(getSelectedSpell(), player.world, player, player.getPos());
+		castSpell(getSelectedSpell(), entity.world, entity, entity.getPos());
 	}
 }

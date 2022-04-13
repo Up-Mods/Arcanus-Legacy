@@ -1,6 +1,6 @@
 package dev.cammiescorner.arcanus.mixin;
 
-import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.api.entity.ArcanusAttributes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -17,6 +17,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
 	@Inject(method = "createPlayerAttributes", at = @At("RETURN"))
 	private static void arcanus$createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> info) {
-		info.getReturnValue().add(Arcanus.EntityAttributes.AURA_COST).add(Arcanus.EntityAttributes.AURA_REGEN).add(Arcanus.EntityAttributes.AURA_LOCK);
+		info.getReturnValue().add(ArcanusAttributes.AURA_COST).add(ArcanusAttributes.AURA_REGEN)
+				.add(ArcanusAttributes.AURA_LOCK).add(ArcanusAttributes.ENHANCEMENT_AFFINITY)
+				.add(ArcanusAttributes.TRANSMUTATION_AFFINITY).add(ArcanusAttributes.EMISSION_AFFINITY)
+				.add(ArcanusAttributes.CONJURATION_AFFINITY).add(ArcanusAttributes.MANIPULATION_AFFINITY);
 	}
 }
