@@ -4,7 +4,6 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.api.cults.Cults;
 import dev.cammiescorner.arcanus.api.spells.Spell;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
-import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.collection.DefaultedList;
@@ -123,14 +122,5 @@ public class ArcanusHelper {
 
 	public static boolean reduceReputation(PlayerEntity player, int amount, boolean simulate) {
 		return ArcanusComponents.CULT_COMPONENT.get(player).reduceReputation(amount, simulate);
-	}
-
-	/**
-	 * DO NOT TOUCH THIS
-	 */
-	public static boolean wasQPressed = false;
-
-	public static boolean keyUnpressed(KeyBinding key) {
-		return !key.isPressed() && wasQPressed;
 	}
 }

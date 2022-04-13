@@ -20,7 +20,7 @@ public class MinecraftClientMixin {
 	@Inject(method = "handleInputEvents", at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/client/MinecraftClient;doItemUse()V"
 	))
-	public void castSpells(CallbackInfo info) {
+	public void arcanus$castSpells(CallbackInfo info) {
 		if(player != null && ArcanusHelper.canCastSpell(player, ArcanusHelper.getSelectedSpell(player))) {
 			CastSpellPacket.send();
 			player.swingHand(Hand.MAIN_HAND);
@@ -30,14 +30,7 @@ public class MinecraftClientMixin {
 	@WrapWithCondition(method = "handleInputEvents", at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/client/MinecraftClient;doItemUse()V"
 	))
-	public boolean noRightClick(MinecraftClient instance) {
-		return !ArcanusHelper.isCasting(player);
-	}
-
-	@WrapWithCondition(method = "handleInputEvents", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/MinecraftClient;doItemPick()V"
-	))
-	public boolean noMiddleClick(MinecraftClient instance) {
+	public boolean arcanus$noRightClick(MinecraftClient instance) {
 		return !ArcanusHelper.isCasting(player);
 	}
 }

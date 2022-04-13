@@ -29,7 +29,7 @@ public abstract class HeldItemRendererMixin {
 			target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderFirstPersonItem(Lnet/minecraft/client/network/AbstractClientPlayerEntity;FFLnet/minecraft/util/Hand;FLnet/minecraft/item/ItemStack;FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
 			ordinal = 0
 	), locals = LocalCapture.CAPTURE_FAILHARD)
-	void alsoRenderAuraForMainHandItem(float tickDelta, MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, ClientPlayerEntity player, int light, CallbackInfo ci, float f, Hand hand, float g, /* HeldItemRenderer$HandRenderType */ @Coerce Object handRenderType, float h, float i, float j, float k) {
+	private void arcanus$renderAuraForMainHandItem(float tickDelta, MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, ClientPlayerEntity player, int light, CallbackInfo ci, float f, Hand hand, float g, /* HeldItemRenderer$HandRenderType */ @Coerce Object handRenderType, float h, float i, float j, float k) {
 		float aura = AuraEffectManager.getAuraFor(player);
 
 		if(aura > 0) {
@@ -44,7 +44,7 @@ public abstract class HeldItemRendererMixin {
 			target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderFirstPersonItem(Lnet/minecraft/client/network/AbstractClientPlayerEntity;FFLnet/minecraft/util/Hand;FLnet/minecraft/item/ItemStack;FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
 			ordinal = 1
 			), locals = LocalCapture.CAPTURE_FAILHARD)
-	void alsoRenderAuraForOffHandItem(float tickDelta, MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, ClientPlayerEntity player, int light, CallbackInfo ci, float f, Hand hand, float g, /* HeldItemRenderer$HandRenderType */ @Coerce Object handRenderType, float h, float i, float j, float k) {
+	private void arcanus$renderAuraForOffHandItem(float tickDelta, MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, ClientPlayerEntity player, int light, CallbackInfo ci, float f, Hand hand, float g, /* HeldItemRenderer$HandRenderType */ @Coerce Object handRenderType, float h, float i, float j, float k) {
 		float aura = AuraEffectManager.getAuraFor(player);
 
 		if(aura > 0) {
