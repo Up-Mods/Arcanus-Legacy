@@ -1,16 +1,19 @@
 package dev.cammiescorner.arcanus.api.spells;
 
-import dev.cammiescorner.arcanus.common.components.entity.SpellComponent;
+import dev.cammiescorner.arcanus.common.components.entity.CurrentSpellComponent;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class Spell {
-	private Type spellType;
-	private int spellCooldown;
+	private final Type spellType;
+	private final Complexity spellComplexity;
+	private final int spellCooldown;
 
-	public Spell(Type type, int cooldown) {
+	public Spell(Type type, Complexity complexity, int cooldown) {
 		spellType = type;
+		spellComplexity = complexity;
 		spellCooldown = cooldown;
 	}
 
@@ -18,37 +21,46 @@ public class Spell {
 		return spellType;
 	}
 
-	public void setSpellType(Type type) {
-		spellType = type;
+	public Complexity getSpellComplexity() {
+		return spellComplexity;
+	}
+
+	public int getAuraCost() {
+		return spellComplexity.getAuraCost();
 	}
 
 	public int getSpellCooldown() {
 		return spellCooldown;
 	}
 
-	public void setSpellCooldown(int value) {
-		spellCooldown = value;
-	}
-
 	public boolean isActive(PlayerEntity player) {
-		SpellComponent spellComponent = ArcanusComponents.SPELL_COMPONENT.get(player);
+		CurrentSpellComponent spellComponent = ArcanusComponents.CURRENT_SPELL_COMPONENT.get(player);
 
-		return spellComponent.getActivatedSpell().equals(this);
+		return spellComponent.getCastSpell().equals(this);
 	}
 
-	/**
-	 * Super at the beginning of every override.
-	 * @param world it was me, DIO!
-	 * @param player some weirdo probably.
-	 */
-	public void cast(World world, PlayerEntity player) {
-		if(isActive(player))
-			return;
+	public void cast(World world, PlayerEntity player, Vec3d pos) {
+
+	}
+
+	public enum Complexity {
+		SIMPLE(1), INTRICATE(2), COMPLEX(3), UNIQUE(0);
+
+		private final int auraCost;
+
+		Complexity(int auraCost) {
+			this.auraCost = auraCost;
+		}
+
+		public int getAuraCost() {
+			return auraCost;
+		}
 	}
 
 	public enum Type {
-		ENHANCER(0x008100), TRANSMUTER(0xbb00c5), EMITTER(0xe7bd00), CONJURER(0xda0018),
-		MANIPULATOR(0xc1c1c1), SPECIALIST(0x0070b9), NONE(0xFFFFFF);
+		ENHANCER(0x008100), TRANSMUTER(0xbb00c5), EMITTER(0xffd100),
+		CONJURER(0xda0018), MANIPULATOR(0xe08600), SPECIALIST(0x0070b9),
+		NONE(0xffffff);
 
 		private final int colour;
 

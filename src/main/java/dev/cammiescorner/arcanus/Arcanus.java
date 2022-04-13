@@ -2,10 +2,13 @@ package dev.cammiescorner.arcanus;
 
 import dev.cammiescorner.arcanus.api.spells.Spell;
 import dev.cammiescorner.arcanus.common.EventHandler;
+import dev.cammiescorner.arcanus.common.packets.c2s.CastSpellPacket;
+import dev.cammiescorner.arcanus.common.packets.c2s.SetCastingPacket;
 import dev.cammiescorner.arcanus.common.registry.ArcanusCommands;
 import dev.cammiescorner.arcanus.common.registry.ArcanusSpells;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.util.Identifier;
@@ -14,7 +17,6 @@ import net.minecraft.util.registry.Registry;
 
 public class Arcanus implements ModInitializer {
 	public static final DefaultedRegistry<Spell> SPELL = FabricRegistryBuilder.createDefaulted(Spell.class, id("spell"), id("empty")).buildAndRegister();
-
 	public static final String MOD_ID = "arcanus";
 
 	@Override
@@ -25,6 +27,9 @@ public class Arcanus implements ModInitializer {
 		Registry.register(Registry.ATTRIBUTE, id("casting_multiplier"), EntityAttributes.AURA_COST);
 		Registry.register(Registry.ATTRIBUTE, id("aura_regen"), EntityAttributes.AURA_REGEN);
 		Registry.register(Registry.ATTRIBUTE, id("aura_lock"), EntityAttributes.AURA_LOCK);
+
+		ServerPlayNetworking.registerGlobalReceiver(CastSpellPacket.ID, CastSpellPacket::handler);
+		ServerPlayNetworking.registerGlobalReceiver(SetCastingPacket.ID, SetCastingPacket::handler);
 
 		EventHandler.commonEvents();
 	}

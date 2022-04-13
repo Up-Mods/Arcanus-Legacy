@@ -12,7 +12,8 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.api.spells.Spell;
 import dev.cammiescorner.arcanus.common.components.entity.AuraComponent;
-import dev.cammiescorner.arcanus.common.components.entity.SpellComponent;
+import dev.cammiescorner.arcanus.common.components.entity.CurrentSpellComponent;
+import dev.cammiescorner.arcanus.common.components.entity.SpellInventoryComponent;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
@@ -71,7 +72,7 @@ public class ArcanusCommands {
 	private static class SpellsCommand {
 		public static int setSpell(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = context.getSource().getPlayer();
-			SpellComponent spellComponent = ArcanusComponents.SPELL_COMPONENT.get(player);
+			SpellInventoryComponent spellComponent = ArcanusComponents.SPELL_INVENTORY_COMPONENT.get(player);
 			Spell spell = ArcanusCommands.SpellArgumentType.getSpell(context, "spell");
 
 			spellComponent.setSpellInSlot(spell, 0);
@@ -82,7 +83,7 @@ public class ArcanusCommands {
 
 		public static int getSpell(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = context.getSource().getPlayer();
-			SpellComponent spellComponent = ArcanusComponents.SPELL_COMPONENT.get(player);
+			CurrentSpellComponent spellComponent = ArcanusComponents.CURRENT_SPELL_COMPONENT.get(player);
 			Spell spell = spellComponent.getSelectedSpell();
 
 			context.getSource().sendFeedback(new LiteralText("Current spell: ").append(new LiteralText(Arcanus.SPELL.getId(spell).toString()).formatted(Formatting.YELLOW)), false);

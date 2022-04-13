@@ -26,115 +26,97 @@ import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
  * <a href="https://github.com/Ladysnake/Requiem/blob/ad68fa534c6b6d4c64be86162eb35e67140138c6/src/main/java/ladysnake/requiem/client/ShadowPlayerFx.java">Requiem's Shadow Player rendering.</a>
  */
 public final class AuraEffectManager implements EntitiesPreRenderCallback, ShaderEffectRenderCallback {
-    public static final AuraEffectManager INSTANCE = new AuraEffectManager();
+	public static final AuraEffectManager INSTANCE = new AuraEffectManager();
+	private final MinecraftClient client = MinecraftClient.getInstance();
+	private final ManagedShaderEffect auraPostShader = ShaderEffectManager.getInstance().manage(id("shaders/post/aura.json"), this::assignDepthTexture);
+	private final ManagedFramebuffer auraFramebuffer = auraPostShader.getTarget("auras");
+	private boolean auraBufferCleared;
 
-    private final MinecraftClient client = MinecraftClient.getInstance();
+	public static float getAuraFor(Entity entity) {
+		return ArcanusComponents.AURA_COMPONENT.isProvidedBy(entity) && ArcanusComponents.CASTING_COMPONENT.isProvidedBy(entity) && ArcanusComponents.CASTING_COMPONENT.get(entity).isCasting() ?
+				ArcanusComponents.AURA_COMPONENT.get(entity).getAura() / (float) ArcanusComponents.AURA_COMPONENT.get(entity).getMaxAura() : 0;
+	}
 
-    private final ManagedShaderEffect auraPostShader = ShaderEffectManager.getInstance().manage(id("shaders/post/aura.json"), this::assignDepthTexture);
-    private final ManagedFramebuffer auraFramebuffer = auraPostShader.getTarget("auras");
+	public static int[] getAuraColourFor(Entity entity) {
+		return ArcanusComponents.CURRENT_SPELL_COMPONENT.isProvidedBy(entity) ? ArcanusComponents.CURRENT_SPELL_COMPONENT.get(entity).getSelectedSpell().getSpellType().getRgbInt() : new int[]{0, 0, 0};
+	}
 
-    private boolean auraBufferCleared;
+	@Override
+	public void beforeEntitiesRender(@NotNull Camera camera, @NotNull Frustum frustum, float tickDelta) {
+		this.auraBufferCleared = false;
+	}
 
-    public static float getAuraFor(Entity entity) {
-        return ArcanusComponents.AURA_COMPONENT.isProvidedBy(entity) ? ArcanusComponents.AURA_COMPONENT.get(entity).getAura() / (float) ArcanusComponents.AURA_COMPONENT.get(entity).getMaxAura() : 0;
-    }
+	@Override
+	public void renderShaderEffects(float tickDelta) {
+		if(this.auraBufferCleared) {
+			auraPostShader.render(tickDelta);
+		}
+	}
 
-    public static int[] getAuraColourFor(Entity entity) {
-        return ArcanusComponents.SPELL_COMPONENT.isProvidedBy(entity) ? ArcanusComponents.SPELL_COMPONENT.get(entity).getSelectedSpell().getSpellType().getRgbInt() : new int[]{0, 0, 0};
-    }
+	/**
+	 * Binds aura framebuffer for use and clears it if necessary.
+	 */
+	public void beginAuraFramebufferUse() {
+		Framebuffer auraFramebuffer = this.auraFramebuffer.getFramebuffer();
 
-    @Override
-    public void beforeEntitiesRender(@NotNull Camera camera, @NotNull Frustum frustum, float tickDelta) {
-        this.auraBufferCleared = false;
-    }
+		if(auraFramebuffer != null) {
+			auraFramebuffer.beginWrite(false);
 
-    @Override
-    public void renderShaderEffects(float tickDelta) {
-        if (this.auraBufferCleared) {
-            auraPostShader.render(tickDelta);
-        }
-    }
+			if(!this.auraBufferCleared) {
+				// clear framebuffer colour (but not depth)
+				float[] clearColor = auraFramebuffer.clearColor;
+				RenderSystem.clearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+				RenderSystem.clear(GL_COLOR_BUFFER_BIT, MinecraftClient.IS_SYSTEM_MAC);
 
-    /**
-     * Binds aura framebuffer for use and clears it if necessary.
-     */
-    public void beginAuraFramebufferUse() {
-        Framebuffer auraFramebuffer = this.auraFramebuffer.getFramebuffer();
-        if (auraFramebuffer != null) {
-            auraFramebuffer.beginWrite(false);
+				this.auraBufferCleared = true;
+			}
+		}
+	}
 
-            if (!this.auraBufferCleared) {
-                // clear framebuffer colour (but not depth)
-                float[] clearColor = auraFramebuffer.clearColor;
-                RenderSystem.clearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
-                RenderSystem.clear(GL_COLOR_BUFFER_BIT, MinecraftClient.IS_SYSTEM_MAC);
+	/**
+	 * Unbinds aura framebuffer for use and undoes changes made in {@link #beginAuraFramebufferUse()}.
+	 */
+	private void endAuraFramebufferUse() {
+		this.client.getFramebuffer().beginWrite(false);
+	}
 
-                this.auraBufferCleared = true;
-            }
-        }
-    }
+	/**
+	 * Makes the aura framebuffer use the same depth texture as the main framebuffer. Run when the aura post shader
+	 * is initialised.
+	 *
+	 * @param managedShaderEffect shader effect being initialised
+	 */
+	private void assignDepthTexture(ManagedShaderEffect managedShaderEffect) {
+		client.getFramebuffer().beginWrite(false);
+		int depthTexturePtr = client.getFramebuffer().getDepthAttachment();
+		if(depthTexturePtr > -1) {
+			auraFramebuffer.beginWrite(false);
+			GlStateManager._glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexturePtr, 0);
+		}
+	}
 
-    /**
-     * Unbinds aura framebuffer for use and undoes changes made in {@link #beginAuraFramebufferUse()}.
-     */
-    private void endAuraFramebufferUse() {
-        this.client.getFramebuffer().beginWrite(false);
-    }
+	/**
+	 * Gets the {@link RenderLayer} for rendering auras
+	 *
+	 * @return the render layer
+	 */
+	public static RenderLayer getRenderLayer() {
+		return AuraRenderLayers.AURA_LAYER;
+	}
 
-    /**
-     * Makes the aura framebuffer use the same depth texture as the main framebuffer. Run when the aura post shader
-     * is initialised.
-     *
-     * @param managedShaderEffect shader effect being initialised
-     */
-    private void assignDepthTexture(ManagedShaderEffect managedShaderEffect) {
-        client.getFramebuffer().beginWrite(false);
-        int depthTexturePtr = client.getFramebuffer().getDepthAttachment();
-        if (depthTexturePtr > -1) {
-            auraFramebuffer.beginWrite(false);
-            GlStateManager._glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexturePtr, 0);
-        }
-    }
+	/**
+	 * Helper for the creating and holding the aura render layer and target
+	 */
+	private static final class AuraRenderLayers extends RenderLayer {
+		// have to extend RenderLayer to access a few of these things
 
-    /**
-     * Gets the {@link RenderLayer} for rendering auras
-     *
-     * @return the render layer
-     */
-    public static RenderLayer getRenderLayer() {
-        return AuraRenderLayers.AURA_LAYER;
-    }
+		private static final Target AURA_TARGET = new Target("arcanus:aura_target", AuraEffectManager.INSTANCE::beginAuraFramebufferUse, AuraEffectManager.INSTANCE::endAuraFramebufferUse);
 
-    /**
-     * Helper for the creating and holding the aura render layer and target
-     */
-    private static final class AuraRenderLayers extends RenderLayer {
-        // have to extend RenderLayer to access a few of these things
+		private static final RenderLayer AURA_LAYER = RenderLayer.of("aura", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, MultiPhaseParameters.builder().shader(LIGHTNING_SHADER).writeMaskState(COLOR_MASK).transparency(TRANSLUCENT_TRANSPARENCY).target(AURA_TARGET).build(false));
 
-        private static final Target AURA_TARGET = new Target(
-                "arcanus:aura_target",
-                AuraEffectManager.INSTANCE::beginAuraFramebufferUse,
-                AuraEffectManager.INSTANCE::endAuraFramebufferUse
-        );
-
-        private static final RenderLayer AURA_LAYER = RenderLayer.of(
-                "aura",
-                VertexFormats.POSITION_COLOR,
-                VertexFormat.DrawMode.QUADS,
-                256,
-                false,
-                true,
-                MultiPhaseParameters.builder()
-                        .shader(LIGHTNING_SHADER)
-                        .writeMaskState(COLOR_MASK)
-                        .transparency(TRANSLUCENT_TRANSPARENCY)
-                        .target(AURA_TARGET)
-                        .build(false)
-        );
-
-        // no need to create instances of this
-        private AuraRenderLayers(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
-            super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
-        }
-    }
+		// no need to create instances of this
+		private AuraRenderLayers(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
+			super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
+		}
+	}
 }

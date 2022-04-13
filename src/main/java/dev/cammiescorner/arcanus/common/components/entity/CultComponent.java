@@ -19,6 +19,7 @@ public class CultComponent implements AutoSyncedComponent {
 	@Override
 	public void readFromNbt(NbtCompound tag) {
 		int a = tag.getInt("CultReputation");
+
 		cult = Cults.values()[a & 7];
 		reputation = a >> 3 & 15;
 	}

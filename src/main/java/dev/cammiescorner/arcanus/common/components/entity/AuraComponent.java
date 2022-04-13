@@ -35,6 +35,8 @@ public class AuraComponent implements AutoSyncedComponent, ServerTickingComponen
 	@Override
 	public void serverTick() {
 		EntityAttributeInstance auraRegen = player.getAttributeInstance(Arcanus.EntityAttributes.AURA_REGEN);
+		EntityAttributeInstance auraLock = player.getAttributeInstance(Arcanus.EntityAttributes.AURA_LOCK);
+		this.auraLock = auraLock != null ? (int) auraLock.getValue() : 0;
 
 		if(aura < MAX_AURA)
 			auraTimer++;
@@ -76,27 +78,7 @@ public class AuraComponent implements AutoSyncedComponent, ServerTickingComponen
 		return false;
 	}
 
-	public int getAuraLock() {
-		return auraLock;
-	}
-
-	public void setAuraLock(int amount) {
-		auraLock = MathHelper.clamp(amount, 0, MAX_AURA);
-		setAura(getAura());
-	}
-
-	public boolean addAuraLock(int amount, boolean simulate) {
-		if(getMaxAura() > 0) {
-			if(!simulate)
-				setAuraLock(getAuraLock() + amount);
-
-			return true;
-		}
-
-		return false;
-	}
-
 	public int getMaxAura() {
-		return MAX_AURA - getAuraLock();
+		return MAX_AURA - auraLock;
 	}
 }

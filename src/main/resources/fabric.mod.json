@@ -5,7 +5,7 @@
 	"name": "Arcanus",
 	"description": "Funni magic mod go BRRRRRR",
 	"authors": [
-		"Cammie"
+		"Cammie", "Will BL"
 	],
 	"contact": {
 		"homepage": "https://www.curseforge.com/minecraft/mc-mods/arcanus",
@@ -14,8 +14,11 @@
 	"custom": {
 		"cardinal-components": [
 			"arcanus:aura",
-			"arcanus:spell",
-			"arcanus:cult"
+			"arcanus:casting",
+			"arcanus:cult",
+			"arcanus:current_spell",
+			"arcanus:spell_inventory",
+			"arcanus:spell_cooldown"
 		]
 	},
 	"license": "Custom License",
@@ -27,6 +30,9 @@
 		],
 		"client": [
 			"dev.cammiescorner.arcanus.client.ArcanusClient"
+		],
+		"preLaunch": [
+			"dev.cammiescorner.arcanus.common.ArcanusPreLaunch"
 		],
 		"cardinal-components": [
 			"dev.cammiescorner.arcanus.common.registry.ArcanusComponents"
