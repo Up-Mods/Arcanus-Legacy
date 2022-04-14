@@ -12,5 +12,7 @@
 	"attribute.name.generic.arcanus.transmutation_affinity": "Transmutation Affinity",
 	"attribute.name.generic.arcanus.emission_affinity": "Emission Affinity",
 	"attribute.name.generic.arcanus.conjuration_affinity": "Conjuration Affinity",
-	"attribute.name.generic.arcanus.manipulation_affinity": "Manipulation Affinity"
+	"attribute.name.generic.arcanus.manipulation_affinity": "Manipulation Affinity",
+
+	"subtitles.arcanus.block.amethyst_block.grow": "Amethyst Crystal grows"
 }

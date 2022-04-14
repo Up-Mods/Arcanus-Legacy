@@ -24,6 +24,8 @@ public class CastSpellPacket {
 		server.execute(() -> {
 			if(ArcanusHelper.canCastSpell(player, ArcanusHelper.getSelectedSpell(player)))
 				ArcanusHelper.castSelectedSpell(player);
+
+			System.out.println("Beep");
 		});
 	}
 }

@@ -7,6 +7,7 @@ import dev.cammiescorner.arcanus.common.packets.c2s.CastSpellPacket;
 import dev.cammiescorner.arcanus.common.packets.c2s.SetCastingPacket;
 import dev.cammiescorner.arcanus.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanus.common.registry.ArcanusCommands;
+import dev.cammiescorner.arcanus.common.registry.ArcanusSounds;
 import dev.cammiescorner.arcanus.common.registry.ArcanusSpells;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
@@ -23,6 +24,7 @@ public class Arcanus implements ModInitializer {
 	public void onInitialize() {
 		ArcanusBlocks.register();
 		ArcanusSpells.register();
+		ArcanusSounds.register();
 		ArcanusCommands.register();
 
 		Registry.register(Registry.ATTRIBUTE, id("casting_multiplier"), ArcanusAttributes.AURA_COST);
