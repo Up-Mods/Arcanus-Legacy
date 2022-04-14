@@ -8,9 +8,20 @@ import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 
+/**
+ * The aura feature renderer. Renders aura on an entity, possibly also using other feature renderers.
+ * @param <T> the entity type
+ * @param <M> the entity model type
+ */
 public class AuraFeatureRenderer<T extends LivingEntity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
     private final FeatureRenderer<T, M>[] otherFeatureRenderers;
 
+    /**
+     * Creates a new aura feature renderer.
+     *
+     * @param context               the feature renderer context
+     * @param otherFeatureRenderers any other feature renderers to use
+     */
     @SafeVarargs
     public AuraFeatureRenderer(FeatureRendererContext<T, M> context, FeatureRenderer<T, M>... otherFeatureRenderers) {
         super(context);

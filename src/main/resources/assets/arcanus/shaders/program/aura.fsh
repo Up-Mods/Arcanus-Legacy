@@ -8,6 +8,7 @@ in vec2 oneTexel;
 
 out vec4 fragColor;
 
+//TODO: this is probably the key to the sky issue
 void main(){
     vec4 tex = texture(DiffuseSampler, texCoord);
     vec4 playerTex = texture(AuraSampler, texCoord);

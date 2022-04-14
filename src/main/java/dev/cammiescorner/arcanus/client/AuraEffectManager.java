@@ -37,11 +37,25 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 	private final ManagedFramebuffer auraFramebuffer = auraPostShader.getTarget("auras");
 	private boolean auraBufferCleared;
 
+	/**
+	 * Gets the aura level of an entity as a float in the range [0..1]
+	 *
+	 * @param entity the entity
+	 *
+	 * @return the aura level
+	 */
 	public static float getAuraFor(Entity entity) {
 		return ArcanusComponents.AURA_COMPONENT.isProvidedBy(entity) && ArcanusComponents.AURA_FADE_COMPONENT.isProvidedBy(entity) && ArcanusHelper.getAuraFade(entity) > 0 ?
 				(ArcanusComponents.AURA_COMPONENT.get(entity).getAura() / (float) ArcanusComponents.AURA_COMPONENT.get(entity).getMaxAura()) * ArcanusHelper.getAuraFade(entity) : 0;
 	}
 
+	/**
+	 * Gets the aura colour of an entity as a three-length int array in the range [0.255]
+	 *
+	 * @param entity the entity
+	 *
+	 * @return the aura colour
+	 */
 	public static int[] getAuraColourFor(Entity entity) {
 		return ArcanusComponents.CURRENT_SPELL_COMPONENT.isProvidedBy(entity) ? ArcanusComponents.CURRENT_SPELL_COMPONENT.get(entity).getSelectedSpell().getSpellType().getRgbInt() : new int[]{0, 0, 0};
 	}
@@ -138,11 +152,8 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 		// have to extend RenderLayer to access a few of these things
 
 		private static final Target AURA_TARGET = new Target("arcanus:aura_target", AuraEffectManager.INSTANCE::beginAuraFramebufferUse, AuraEffectManager.INSTANCE::endAuraFramebufferUse);
-
-		private static final Identifier WHITE_TEXTURE = new Identifier("misc/white.png");
-
 		private static final Function<Identifier, RenderLayer> AURA_LAYER = Util.memoize(id -> RenderLayer.of("aura", VertexFormats.POSITION_COLOR_TEXTURE, VertexFormat.DrawMode.QUADS, 256, false, true, MultiPhaseParameters.builder().shader(OUTLINE_SHADER).writeMaskState(COLOR_MASK).transparency(TRANSLUCENT_TRANSPARENCY).target(AURA_TARGET).texture(new Texture(id, false, false)).build(false)));
-
+		private static final Identifier WHITE_TEXTURE = new Identifier("misc/white.png");
 		private static final RenderLayer DEFAULT_AURA_LAYER = AURA_LAYER.apply(WHITE_TEXTURE);
 
 		// no need to create instances of this
