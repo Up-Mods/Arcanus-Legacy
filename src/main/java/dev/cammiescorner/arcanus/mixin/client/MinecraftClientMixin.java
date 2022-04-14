@@ -26,20 +26,17 @@ public class MinecraftClientMixin {
 			target = "Lnet/minecraft/client/MinecraftClient;doItemUse()V"
 	))
 	public void arcanus$castSpells(CallbackInfo info) {
-		if(player != null) {
-			boolean bl = true;
-
+		if(player != null && ArcanusHelper.canCastSpell(player, ArcanusHelper.getSelectedSpell(player))) {
 			if(crosshairTarget instanceof BlockHitResult hitResult) {
 				BlockState state = player.world.getBlockState(hitResult.getBlockPos());
 				ActionResult result = state.onUse(player.world, player, player.preferredHand, hitResult);
 
-				bl = !result.isAccepted();
+				if(result.isAccepted())
+					return;
 			}
 
-			if(bl && ArcanusHelper.canCastSpell(player, ArcanusHelper.getSelectedSpell(player))) {
-				CastSpellPacket.send();
-				player.swingHand(Hand.MAIN_HAND);
-			}
+			CastSpellPacket.send();
+			player.swingHand(Hand.MAIN_HAND);
 		}
 	}
 
