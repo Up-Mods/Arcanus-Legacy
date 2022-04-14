@@ -1,0 +1,8 @@
+{
+	"parent": "minecraft:block/slab",
+	"textures": {
+		"top": "arcanus:block/amethyst_altar_top",
+		"bottom": "arcanus:block/amethyst_altar_bottom",
+		"side": "arcanus:block/amethyst_altar_side"
+	}
+}

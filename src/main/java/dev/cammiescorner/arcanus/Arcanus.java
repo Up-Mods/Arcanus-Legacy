@@ -5,6 +5,7 @@ import dev.cammiescorner.arcanus.api.spells.Spell;
 import dev.cammiescorner.arcanus.common.EventHandler;
 import dev.cammiescorner.arcanus.common.packets.c2s.CastSpellPacket;
 import dev.cammiescorner.arcanus.common.packets.c2s.SetCastingPacket;
+import dev.cammiescorner.arcanus.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanus.common.registry.ArcanusCommands;
 import dev.cammiescorner.arcanus.common.registry.ArcanusSpells;
 import net.fabricmc.api.ModInitializer;
@@ -20,6 +21,7 @@ public class Arcanus implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		ArcanusBlocks.register();
 		ArcanusSpells.register();
 		ArcanusCommands.register();
 
