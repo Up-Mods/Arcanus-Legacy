@@ -6,6 +6,7 @@ import dev.cammiescorner.arcanus.api.ArcanusHelper;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
 import ladysnake.satin.api.event.EntitiesPreRenderCallback;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
+import ladysnake.satin.api.managed.ManagedCoreShader;
 import ladysnake.satin.api.managed.ManagedFramebuffer;
 import ladysnake.satin.api.managed.ManagedShaderEffect;
 import ladysnake.satin.api.managed.ShaderEffectManager;
@@ -33,6 +34,7 @@ import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 public final class AuraEffectManager implements EntitiesPreRenderCallback, ShaderEffectRenderCallback {
 	public static final AuraEffectManager INSTANCE = new AuraEffectManager();
 	private final MinecraftClient client = MinecraftClient.getInstance();
+	private final ManagedCoreShader auraCoreShader = ShaderEffectManager.getInstance().manageCoreShader(id("rendertype_aura"));
 	private final ManagedShaderEffect auraPostShader = ShaderEffectManager.getInstance().manage(id("shaders/post/aura.json"), this::assignDepthTexture);
 	private final ManagedFramebuffer auraFramebuffer = auraPostShader.getTarget("auras");
 	private boolean auraBufferCleared;
@@ -152,7 +154,7 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 		// have to extend RenderLayer to access a few of these things
 
 		private static final Target AURA_TARGET = new Target("arcanus:aura_target", AuraEffectManager.INSTANCE::beginAuraFramebufferUse, AuraEffectManager.INSTANCE::endAuraFramebufferUse);
-		private static final Function<Identifier, RenderLayer> AURA_LAYER = Util.memoize(id -> RenderLayer.of("aura", VertexFormats.POSITION_COLOR_TEXTURE, VertexFormat.DrawMode.QUADS, 256, false, true, MultiPhaseParameters.builder().shader(OUTLINE_SHADER).writeMaskState(COLOR_MASK).transparency(TRANSLUCENT_TRANSPARENCY).target(AURA_TARGET).texture(new Texture(id, false, false)).build(false)));
+		private static final Function<Identifier, RenderLayer> AURA_LAYER = Util.memoize(id -> RenderLayer.of("aura", VertexFormats.POSITION_COLOR_TEXTURE, VertexFormat.DrawMode.QUADS, 256, false, true, MultiPhaseParameters.builder().shader(new Shader(AuraEffectManager.INSTANCE.auraCoreShader::getProgram)).writeMaskState(COLOR_MASK).transparency(TRANSLUCENT_TRANSPARENCY).target(AURA_TARGET).texture(new Texture(id, false, false)).build(false)));
 		private static final Identifier WHITE_TEXTURE = new Identifier("misc/white.png");
 		private static final RenderLayer DEFAULT_AURA_LAYER = AURA_LAYER.apply(WHITE_TEXTURE);
 
