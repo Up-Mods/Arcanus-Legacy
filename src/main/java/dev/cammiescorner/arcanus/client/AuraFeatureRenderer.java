@@ -53,7 +53,7 @@ public class AuraFeatureRenderer<T extends LivingEntity, M extends EntityModel<T
 
         this.getContextModel().render(
                 matrices,
-                auraConsumerProvider.getBuffer(),
+                auraConsumerProvider.getBuffer(this.getTexture(entity)),
                 light,
                 OverlayTexture.DEFAULT_UV,
                 1f,

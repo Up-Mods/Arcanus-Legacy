@@ -4,22 +4,35 @@ import net.minecraft.client.render.FixedColorVertexConsumer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.util.Identifier;
 
 public final class AuraVertexConsumerProvider implements VertexConsumerProvider {
-    private final AuraVertexConsumer consumer;
+    private final VertexConsumerProvider provider;
+    private final int r;
+    private final int g;
+    private final int b;
+    private final int a;
 
     public AuraVertexConsumerProvider(VertexConsumerProvider provider, int r, int g, int b, int a) {
-        this.consumer = new AuraVertexConsumer(provider.getBuffer(AuraEffectManager.getRenderLayer()), r, g, b, a);
+        this.provider = provider;
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
     }
 
     public VertexConsumer getBuffer() {
-        return this.consumer;
+        return new AuraVertexConsumer(provider.getBuffer(AuraEffectManager.getRenderLayer()), r, g, b, a);
+    }
+
+    public VertexConsumer getBuffer(Identifier texture) {
+        return new AuraVertexConsumer(provider.getBuffer(AuraEffectManager.getRenderLayer(texture)), r, g, b, a);
     }
 
     @Override
     public VertexConsumer getBuffer(RenderLayer layer) {
         if (layer.getAffectedOutline().isPresent()) {
-            return this.consumer;
+            return new AuraVertexConsumer(provider.getBuffer(AuraEffectManager.getRenderLayer(layer)), r, g, b, a);
         } else {
             return new DummyVertexConsumer();
         }

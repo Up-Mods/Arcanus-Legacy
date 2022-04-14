@@ -13,7 +13,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.render.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Function;
 
 import static dev.cammiescorner.arcanus.Arcanus.id;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -97,27 +101,68 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 	}
 
 	/**
-	 * Gets the {@link RenderLayer} for rendering auras
+	 * Gets the {@link RenderLayer} for rendering auras with a given texture
+	 *
+	 * @param texture the identifier of the texture to use
+	 *
+	 * @return the render layer
+	 */
+	public static RenderLayer getRenderLayer(Identifier texture) {
+		return texture == null ? getRenderLayer() : AuraRenderLayers.AURA_LAYER.apply(texture);
+	}
+
+	/**
+	 * Gets the {@link RenderLayer} for rendering auras with the same texture as a given render layer
+	 *
+	 * @param base the render layer to take the texture from
+	 *
+	 * @return the render layer
+	 */
+	public static RenderLayer getRenderLayer(@NotNull RenderLayer base) {
+		return AuraRenderLayers.getRenderLayerWithTextureFrom(base);
+	}
+
+	/**
+	 * Gets the {@link RenderLayer} for rendering auras with a default texture
 	 *
 	 * @return the render layer
 	 */
 	public static RenderLayer getRenderLayer() {
-		return AuraRenderLayers.AURA_LAYER;
+		return AuraRenderLayers.DEFAULT_AURA_LAYER;
 	}
 
 	/**
-	 * Helper for the creating and holding the aura render layer and target
+	 * Helper for the creating and holding the aura render layers and target
 	 */
 	private static final class AuraRenderLayers extends RenderLayer {
 		// have to extend RenderLayer to access a few of these things
 
 		private static final Target AURA_TARGET = new Target("arcanus:aura_target", AuraEffectManager.INSTANCE::beginAuraFramebufferUse, AuraEffectManager.INSTANCE::endAuraFramebufferUse);
 
-		private static final RenderLayer AURA_LAYER = RenderLayer.of("aura", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, MultiPhaseParameters.builder().shader(LIGHTNING_SHADER).writeMaskState(COLOR_MASK).transparency(TRANSLUCENT_TRANSPARENCY).target(AURA_TARGET).build(false));
+		private static final Identifier WHITE_TEXTURE = new Identifier("misc/white.png");
+
+		private static final Function<Identifier, RenderLayer> AURA_LAYER = Util.memoize(id -> RenderLayer.of("aura", VertexFormats.POSITION_COLOR_TEXTURE, VertexFormat.DrawMode.QUADS, 256, false, true, MultiPhaseParameters.builder().shader(OUTLINE_SHADER).writeMaskState(COLOR_MASK).transparency(TRANSLUCENT_TRANSPARENCY).target(AURA_TARGET).texture(new Texture(id, false, false)).build(false)));
+
+		private static final RenderLayer DEFAULT_AURA_LAYER = AURA_LAYER.apply(WHITE_TEXTURE);
 
 		// no need to create instances of this
 		private AuraRenderLayers(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
 			super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
+		}
+
+		/**
+		 * Extracts the texture from a render layer and creates an aura render layer with it.
+		 *
+		 * @param base the render layer to take the texture from
+		 *
+		 * @return the aura render layer
+		 */
+		private static RenderLayer getRenderLayerWithTextureFrom(RenderLayer base) {
+			if (base instanceof RenderLayer.MultiPhase multiPhase) {
+				return AURA_LAYER.apply(multiPhase.getPhases().texture.getId().orElse(WHITE_TEXTURE));
+			} else {
+				return DEFAULT_AURA_LAYER;
+			}
 		}
 	}
 }
