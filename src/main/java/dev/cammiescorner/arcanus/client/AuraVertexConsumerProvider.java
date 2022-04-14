@@ -4,27 +4,70 @@ import net.minecraft.client.render.FixedColorVertexConsumer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.util.Identifier;
 
+/**
+ * A {@link VertexConsumerProvider} which provides vertex consumers which render auras. It only renders for render layers
+ * which affect the outline of an entity.
+ *
+ * @see net.minecraft.client.render.OutlineVertexConsumerProvider
+ */
 public final class AuraVertexConsumerProvider implements VertexConsumerProvider {
-    private final AuraVertexConsumer consumer;
+    private final VertexConsumerProvider provider;
+    private final int r;
+    private final int g;
+    private final int b;
+    private final int a;
 
+    /**
+     * Create a new AuraVertexConsumerProvider with a given base VertexConsumerProvider and aura colour.
+     *
+     * @param provider  the base VertexConsumerProvider
+     * @param r         the aura's red component
+     * @param g         the aura's green component
+     * @param b         the aura's blue component
+     * @param a         the aura's alpha component
+     */
     public AuraVertexConsumerProvider(VertexConsumerProvider provider, int r, int g, int b, int a) {
-        this.consumer = new AuraVertexConsumer(provider.getBuffer(AuraEffectManager.getRenderLayer()), r, g, b, a);
+        this.provider = provider;
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
     }
 
+    /**
+     * Gets a vertex consumer which renders an aura with the default texture.
+     *
+     * @return the vertex consumer
+     */
     public VertexConsumer getBuffer() {
-        return this.consumer;
+        return new AuraVertexConsumer(provider.getBuffer(AuraEffectManager.getRenderLayer()), r, g, b, a);
+    }
+
+    /**
+     * Gets a vertex consumer which renders an aura with a given texture.
+     *
+     * @param texture the texture
+     *
+     * @return the vertex consumer
+     */
+    public VertexConsumer getBuffer(Identifier texture) {
+        return new AuraVertexConsumer(provider.getBuffer(AuraEffectManager.getRenderLayer(texture)), r, g, b, a);
     }
 
     @Override
     public VertexConsumer getBuffer(RenderLayer layer) {
         if (layer.getAffectedOutline().isPresent()) {
-            return this.consumer;
+            return new AuraVertexConsumer(provider.getBuffer(AuraEffectManager.getRenderLayer(layer)), r, g, b, a);
         } else {
             return new DummyVertexConsumer();
         }
     }
 
+    /**
+     * A dummy vertex consumer which does nothing. Used for render layers which do not affect the outline of an entity.
+     */
     private final static class DummyVertexConsumer implements VertexConsumer {
         @Override
         public VertexConsumer vertex(double x, double y, double z) {
@@ -69,6 +112,9 @@ public final class AuraVertexConsumerProvider implements VertexConsumerProvider 
         }
     }
 
+    /**
+     * The aura vertex consumer.
+     */
     private final static class AuraVertexConsumer extends FixedColorVertexConsumer {
         private final VertexConsumer delegate;
         private double x;
