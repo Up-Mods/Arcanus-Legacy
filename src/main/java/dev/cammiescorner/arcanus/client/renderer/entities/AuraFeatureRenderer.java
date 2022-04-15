@@ -1,5 +1,7 @@
-package dev.cammiescorner.arcanus.client;
+package dev.cammiescorner.arcanus.client.renderer.entities;
 
+import dev.cammiescorner.arcanus.client.AuraEffectManager;
+import dev.cammiescorner.arcanus.client.AuraVertexConsumerProvider;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
