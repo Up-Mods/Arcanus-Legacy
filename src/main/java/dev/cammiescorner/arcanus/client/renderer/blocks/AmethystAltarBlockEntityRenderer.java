@@ -44,7 +44,7 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 
 				matrices.push();
 				matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(15));
-				matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(36 * i));
+				matrices.multiply(Vec3f.NEGATIVE_Y.getRadialQuaternion((float) angle));
 				itemRenderer.renderItem(stack, ModelTransformation.Mode.GROUND, light, overlay, matrices, new AuraVertexConsumerProvider(vertexConsumers, 255, 255, 255, 255), (int) entity.getPos().asLong());
 				itemRenderer.renderItem(stack, ModelTransformation.Mode.GROUND, light, overlay, matrices, vertexConsumers, (int) entity.getPos().asLong());
 				matrices.pop();

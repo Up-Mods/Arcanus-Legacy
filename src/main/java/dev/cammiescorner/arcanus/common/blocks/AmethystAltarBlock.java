@@ -6,11 +6,14 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
@@ -51,13 +54,33 @@ public class AmethystAltarBlock extends Block implements Waterloggable, BlockEnt
 				return ActionResult.success(world.isClient);
 			}
 			else if(player.isSneaking() && !altar.getStack(0).isEmpty()) {
-				for(int i = 0; i < altar.size(); i++) {
+				for(int i = altar.size() - 1; i >= 0; i--) {
 					ItemStack altarStack = altar.getStack(i);
 
-					if(!altarStack.isEmpty())
+					if(altarStack.isEmpty())
 						continue;
 
-					player.getInventory().setStack(player.getInventory().getEmptySlot(), altarStack);
+					boolean canInsert = player.getInventory().insertStack(altarStack);
+					ItemEntity itemEntity;
+
+					if(!canInsert || !altarStack.isEmpty()) {
+						itemEntity = player.dropItem(altarStack, false);
+
+						if(itemEntity == null)
+							continue;
+
+						itemEntity.resetPickupDelay();
+						itemEntity.setOwner(player.getUuid());
+						continue;
+					}
+
+					itemEntity = player.dropItem(altarStack, false);
+
+					if(itemEntity != null)
+						itemEntity.setDespawnImmediately();
+
+					player.world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1F) * 2F);
+
 					altar.removeStack(i);
 					break;
 				}
