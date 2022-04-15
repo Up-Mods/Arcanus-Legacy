@@ -1,7 +1,6 @@
 {
   "targets": [
     "swap",
-    "processed_auras",
     "auras"
   ],
   "passes": [
@@ -23,40 +22,24 @@
     {
       "name": "arcanus:blobs_with_alpha",
       "intarget": "swap",
-      "outtarget": "processed_auras"
+      "outtarget": "auras"
     },
     {
       "name": "arcanus:transparent_centre",
-      "intarget": "processed_auras",
+      "intarget": "auras",
       "outtarget": "swap"
     },
     {
       "_comment": "//FIXME: blit doesn't work here for some reason",
       "name": "blur",
       "intarget": "swap",
-      "outtarget": "processed_auras",
+      "outtarget": "auras",
       "uniforms": [
         {
           "name": "Radius",
           "values": [ 0.0 ]
         }
       ]
-    },
-    {
-      "name": "arcanus:aura",
-      "intarget": "minecraft:main",
-      "outtarget": "swap",
-      "auxtargets": [
-        {
-          "name": "AuraSampler",
-          "id": "processed_auras"
-        }
-      ]
-    },
-    {
-      "name": "blit",
-      "intarget": "swap",
-      "outtarget": "minecraft:main"
     }
   ]
 }
