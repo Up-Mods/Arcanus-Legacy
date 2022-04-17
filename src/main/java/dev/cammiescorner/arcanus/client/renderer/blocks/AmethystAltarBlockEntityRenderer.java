@@ -26,18 +26,19 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 		int filledSlots = entity.filledSlots();
 
 		if(world != null && filledSlots > 0) {
-			double radius = 1.25 + Math.sin(world.getTime() * 0.1) * 0.3;
+			double time = world.getTime() + tickDelta;
+			double radius = 1.25 + Math.sin(time * 0.1) * 0.3;
 			double angleBetween = 360 / (double) filledSlots;
 
 			matrices.push();
 			matrices.translate(0.5, 1, 0.5);
-			matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(world.getTime() * 2F));
+			matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float) (time * 2F)));
 
 			for(int i = 0; i < filledSlots; ++i) {
+				ItemStack stack = entity.getStack(i);
 				double angle = Math.toRadians(angleBetween * i);
 				double rotX = Math.cos(angle) * radius;
 				double rotZ = Math.sin(angle) * radius;
-				ItemStack stack = entity.getStack(i);
 
 				matrices.push();
 				matrices.translate(rotX, 0, rotZ);
