@@ -19,7 +19,8 @@
 			"arcanus:current_spell",
 			"arcanus:spell_inventory",
 			"arcanus:spell_cooldown",
-			"arcanus:aura_fade"
+			"arcanus:aura_fade",
+			"arcanus:altar_structure"
 		]
 	},
 	"license": "Custom License",

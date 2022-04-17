@@ -91,7 +91,10 @@ public class AmethystAltarBlock extends Block implements Waterloggable, BlockEnt
 				}
 			}
 			else {
-				// TODO altar activation n whatnot
+				if(altar.isCompleted())
+					altar.setActive(!altar.isActive());
+				else
+					altar.checkMultiblock();
 
 				return ActionResult.success(world.isClient);
 			}

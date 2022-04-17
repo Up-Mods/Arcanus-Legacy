@@ -4,12 +4,19 @@ import dev.cammiescorner.arcanus.api.cults.Cults;
 import dev.cammiescorner.arcanus.api.entity.ArcanusAttributes;
 import dev.cammiescorner.arcanus.api.spells.AuraType;
 import dev.cammiescorner.arcanus.api.spells.Spell;
+import dev.cammiescorner.arcanus.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
+import net.minecraft.block.AmethystClusterBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -169,5 +176,23 @@ public class ArcanusHelper {
 		}
 
 		return map;
+	}
+
+	public static boolean isValidAltarBlock(BlockState state) {
+		Block block = state.getBlock();
+
+		return block == Blocks.DEEPSLATE_TILES || block == Blocks.DEEPSLATE_TILE_SLAB ||
+				block == Blocks.DEEPSLATE_TILE_STAIRS || block == Blocks.CRYING_OBSIDIAN ||
+				block == Blocks.CHISELED_QUARTZ_BLOCK || block == Blocks.CHAIN ||
+				(block == Blocks.AMETHYST_CLUSTER && state.get(AmethystClusterBlock.FACING) == Direction.DOWN) ||
+				block == ArcanusBlocks.AMETHYST_ALTAR;
+	}
+
+	public static HashMap<BlockPos, BlockState> getStructureMap(World world) {
+		return ArcanusComponents.ALTAR_STRUCTURE_COMPONENT.get(world).getStructureMap();
+	}
+
+	public static void constructStructureMap(World world) {
+		ArcanusComponents.ALTAR_STRUCTURE_COMPONENT.get(world).constructStructureMap();
 	}
 }
