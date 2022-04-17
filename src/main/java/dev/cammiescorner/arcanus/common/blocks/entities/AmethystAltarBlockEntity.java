@@ -36,6 +36,16 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 		return inventory.size();
 	}
 
+	public int filledSlots() {
+		int i = 0;
+
+		while(i < size() && !getStack(i).isEmpty()) {
+			++i;
+		}
+
+		return i;
+	}
+
 	@Override
 	public boolean isEmpty() {
 		return inventory.isEmpty();
