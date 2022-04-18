@@ -116,19 +116,15 @@ public class AmethystAltarBlock extends Block implements Waterloggable, BlockEnt
 
 	@Override
 	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-		super.onStateReplaced(state, world, pos, newState, moved);
-
-		if(!world.isClient() && state.getBlock() != newState.getBlock()) {
-			if(world.getBlockEntity(pos) instanceof AmethystAltarBlockEntity altar) {
+		if(state.getBlock() != newState.getBlock()) {
+			if(world.getBlockEntity(pos) instanceof AmethystAltarBlockEntity altar)
 				ItemScatterer.spawn(world, pos, altar);
-				world.updateComparators(pos, this);
-			}
 
 			Set<PurpleWaterComponent> set = new HashSet<>();
 
 			for(Map.Entry<BlockPos, BlockState> entry : ArcanusHelper.getStructureMap(world).entrySet()) {
 				if(entry.getValue().getFluidState().isIn(FluidTags.WATER)) {
-					BlockPos waterPos = entry.getKey().add(pos).add(-5, 0, -5);
+					BlockPos waterPos = entry.getKey().add(pos).add(ArcanusHelper.getAltarOffset(world));
 					Chunk waterChunk = world.getChunk(waterPos);
 					PurpleWaterComponent component = ArcanusComponents.PURPLE_WATER_COMPONENT.get(waterChunk);
 					set.add(component);
@@ -140,6 +136,8 @@ public class AmethystAltarBlock extends Block implements Waterloggable, BlockEnt
 				ArcanusComponents.PURPLE_WATER_COMPONENT.sync(component.getChunk());
 			}
 		}
+
+		super.onStateReplaced(state, world, pos, newState, moved);
 	}
 
 	@Override

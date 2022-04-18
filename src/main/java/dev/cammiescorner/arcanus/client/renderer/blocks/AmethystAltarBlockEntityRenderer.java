@@ -59,7 +59,7 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 
 					matrices.push();
 
-					if(!altar.isCompleted() && !world.getBlockState(pos.add(altar.getPos()).add(-5, 0, -5)).equals(state)) {
+					if(!altar.isCompleted() && !world.getBlockState(pos.add(altar.getPos()).add(ArcanusHelper.getAltarOffset(world))).equals(state)) {
 						matrices.translate(pos.getX() - offset, pos.getY() + 0.001, pos.getZ() - offset);
 						matrices.scale(scale, scale, scale);
 

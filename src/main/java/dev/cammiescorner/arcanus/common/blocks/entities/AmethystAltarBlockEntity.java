@@ -33,9 +33,9 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
-	private static final List<BlockPos> AMETHYST_POSES = List.of(
-			new BlockPos(0, 1, -3), new BlockPos(2, 1, -2), new BlockPos(3, 1, 0), new BlockPos(2, 1, 2),
-			new BlockPos(0, 1, 3), new BlockPos(-2, 1, 2), new BlockPos(-3, 1, 0), new BlockPos(-2, 1, -2)
+	private static final List<BlockPos> AMETHYST_POS_LIST = List.of(
+			new BlockPos(0, 1, -3), new BlockPos(3, 1, -3), new BlockPos(3, 1, 0), new BlockPos(3, 1, 3),
+			new BlockPos(0, 1, 3), new BlockPos(-3, 1, 3), new BlockPos(-3, 1, 0), new BlockPos(-3, 1, -3)
 	);
 	private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(10, ItemStack.EMPTY);
 	private boolean crafting, completed;
@@ -55,15 +55,18 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 			List<ItemEntity> list = world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), box, itemEntity -> altar.filledSlots() < altar.size());
 
 			for(ItemEntity itemEntity : list) {
-				altar.setStack(altar.filledSlots(), itemEntity.getStack());
-				itemEntity.discard();
+				ItemStack stack = itemEntity.getStack();
+				altar.setStack(altar.filledSlots(), stack.split(1));
+
+				if(stack.getCount() <= 0)
+					itemEntity.discard();
 			}
 
 			if(altar.isCrafting()) {
 				altar.craftingTime++;
 
 				if(altar.power < 10) {
-					BlockPos amethystPos = AMETHYST_POSES.get(altar.amethystIndex).add(altar.getPos());
+					BlockPos amethystPos = AMETHYST_POS_LIST.get(altar.amethystIndex).add(altar.getPos());
 					BlockState amethystState = world.getBlockState(amethystPos);
 
 					while(!(amethystState.getBlock() instanceof AmethystClusterBlock)) {
@@ -97,7 +100,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 						BlockPos upperCrystal = altar.getPos().add(0, 4, 0);
 						Vec3d velocity = new Vec3d(upperCrystal.getX() - amethystPos.getX(), upperCrystal.getY() - amethystPos.getY(), upperCrystal.getZ() - amethystPos.getZ());
 						BlockDustParticle particle = new BlockDustParticle(client.world, amethystPos.getX() + 0.5, amethystPos.getY() + 0.75, amethystPos.getZ() + 0.5, velocity.getX(), velocity.getY(), velocity.getZ(), amethystState, amethystPos);
-						particle.move(4);
+						particle.move(5);
 						client.particleManager.addParticle(particle);
 					}
 				}
@@ -192,6 +195,9 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 		Inventories.readNbt(nbt, inventory);
 		completed = nbt.getBoolean("Completed");
 		crafting = nbt.getBoolean("Active");
+		power = nbt.getInt("Power");
+		craftingTime = nbt.getInt("CraftingTime");
+		amethystIndex = nbt.getInt("AmethystIndex");
 		super.readNbt(nbt);
 	}
 
@@ -200,6 +206,9 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 		Inventories.writeNbt(nbt, inventory);
 		nbt.putBoolean("Completed", completed);
 		nbt.putBoolean("Active", crafting);
+		nbt.putInt("Power", power);
+		nbt.putInt("CraftingTime", craftingTime);
+		nbt.putInt("AmethystIndex", amethystIndex);
 		super.writeNbt(nbt);
 	}
 
@@ -228,7 +237,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 
 			for(Map.Entry<BlockPos, BlockState> entry : ArcanusHelper.getStructureMap(world).entrySet()) {
 				if(entry.getValue().getFluidState().isIn(FluidTags.WATER)) {
-					BlockPos.Mutable waterPos = entry.getKey().mutableCopy().move(pos).move(-5, 0, -5);
+					BlockPos.Mutable waterPos = entry.getKey().mutableCopy().move(pos).move(ArcanusHelper.getAltarOffset(world));
 					Chunk waterChunk = world.getChunk(waterPos);
 					PurpleWaterComponent component = ArcanusComponents.PURPLE_WATER_COMPONENT.get(waterChunk);
 					set.add(component);
@@ -251,21 +260,18 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 
 	public void checkMultiblock() {
 		if(world != null && !world.isClient()) {
-			HashMap<BlockPos, BlockState> map = new HashMap<>();
+			HashMap<BlockPos, BlockState> structure = new HashMap<>();
+			HashMap<BlockPos, BlockState> template = ArcanusHelper.getStructureMap(world);
 
-			for(int y = 0; y < 6; y++) {
-				for(int x = 0; x < 11; x++) {
-					for(int z = 0; z < 11; z++) {
-						BlockPos.Mutable pos = getPos().mutableCopy().move(-5, 0, -5).move(x, y, z);
-						BlockState state = world.getBlockState(pos);
+			for(Map.Entry<BlockPos, BlockState> entry : template.entrySet()) {
+				BlockPos.Mutable pos = getPos().mutableCopy().move(ArcanusHelper.getAltarOffset(world)).move(entry.getKey());
+				BlockState state = world.getBlockState(pos);
 
-						if(ArcanusHelper.isValidAltarBlock(state))
-							map.put(new BlockPos(x, y, z), state);
-					}
-				}
+				if(ArcanusHelper.isValidAltarBlock(state))
+					structure.put(entry.getKey(), state);
 			}
 
-			setCompleted(map.equals(ArcanusHelper.getStructureMap(world)));
+			setCompleted(structure.equals(template));
 		}
 	}
 

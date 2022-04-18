@@ -16,7 +16,7 @@ public class ArcanusBlockEntities {
 	private static final Map<BlockEntityType<?>, Identifier> BLOCK_ENTITY_TYPES = new LinkedHashMap<>();
 
 	//-----Block Entity Types-----//
-	public static final BlockEntityType<AmethystAltarBlockEntity> AMETHYST_ALTAR = create("fillable_bookshelf", FabricBlockEntityTypeBuilder.create(AmethystAltarBlockEntity::new, ArcanusBlocks.AMETHYST_ALTAR).build());
+	public static final BlockEntityType<AmethystAltarBlockEntity> AMETHYST_ALTAR = create("amethyst_altar", FabricBlockEntityTypeBuilder.create(AmethystAltarBlockEntity::new, ArcanusBlocks.AMETHYST_ALTAR).build());
 
 	//-----Registry-----//
 	public static void register() {

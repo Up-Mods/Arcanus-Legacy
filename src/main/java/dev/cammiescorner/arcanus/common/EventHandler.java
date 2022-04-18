@@ -14,6 +14,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
@@ -60,6 +61,7 @@ public class EventHandler {
 		CommandRegistrationCallback.EVENT.register(ArcanusCommands::init);
 
 		ServerWorldEvents.LOAD.register((server, world) -> ArcanusHelper.constructStructureMap(world));
+		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, manager, success) -> server.getWorlds().forEach(ArcanusHelper::constructStructureMap));
 
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			World world = handler.player.world;
