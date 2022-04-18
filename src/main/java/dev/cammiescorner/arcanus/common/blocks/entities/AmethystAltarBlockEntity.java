@@ -4,9 +4,14 @@ import dev.cammiescorner.arcanus.api.ArcanusHelper;
 import dev.cammiescorner.arcanus.common.components.chunk.PurpleWaterComponent;
 import dev.cammiescorner.arcanus.common.registry.ArcanusBlockEntities;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
+import net.minecraft.block.AmethystClusterBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.particle.BlockDustParticle;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
@@ -16,8 +21,11 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.tag.FluidTags;
+import net.minecraft.util.TypeFilter;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -31,6 +39,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 	);
 	private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(10, ItemStack.EMPTY);
 	private boolean crafting, completed;
+	private int power, craftingTime, amethystIndex;
 
 	public AmethystAltarBlockEntity(BlockPos pos, BlockState state) {
 		super(ArcanusBlockEntities.AMETHYST_ALTAR, pos, state);
@@ -38,9 +47,66 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 	}
 
 	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState state, T blockEntity) {
-		if(blockEntity instanceof AmethystAltarBlockEntity altar) {
-			if(world.getTime() % 20 == 0 && altar.isCompleted())
+		if(blockEntity instanceof AmethystAltarBlockEntity altar && altar.isCompleted()) {
+			if(world.getTime() % 20 == 0)
 				altar.checkMultiblock();
+
+			Box box = state.getCollisionShape(world, pos).getBoundingBox().stretch(2, 0.4, 2).stretch(-3, 0, -3).offset(altar.getPos());
+			List<ItemEntity> list = world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), box, itemEntity -> altar.filledSlots() < altar.size());
+
+			for(ItemEntity itemEntity : list) {
+				altar.setStack(altar.filledSlots(), itemEntity.getStack());
+				itemEntity.discard();
+			}
+
+			if(altar.isCrafting()) {
+				altar.craftingTime++;
+
+				if(altar.power < 10) {
+					BlockPos amethystPos = AMETHYST_POSES.get(altar.amethystIndex).add(altar.getPos());
+					BlockState amethystState = world.getBlockState(amethystPos);
+
+					while(!(amethystState.getBlock() instanceof AmethystClusterBlock)) {
+						altar.amethystIndex++;
+
+						if(altar.amethystIndex >= 8)
+							altar.amethystIndex = 0;
+					}
+
+					if(altar.craftingTime % 40 == 0) {
+						world.breakBlock(amethystPos, false);
+
+						if(amethystState.getBlock() == Blocks.AMETHYST_CLUSTER)
+							world.setBlockState(amethystPos, Blocks.LARGE_AMETHYST_BUD.getDefaultState());
+						else if(amethystState.getBlock() == Blocks.LARGE_AMETHYST_BUD)
+							world.setBlockState(amethystPos, Blocks.MEDIUM_AMETHYST_BUD.getDefaultState());
+						else if(amethystState.getBlock() == Blocks.MEDIUM_AMETHYST_BUD)
+							world.setBlockState(amethystPos, Blocks.SMALL_AMETHYST_BUD.getDefaultState());
+						else
+							world.setBlockState(amethystPos, Blocks.AIR.getDefaultState());
+
+						altar.power++;
+						altar.amethystIndex++;
+
+						if(altar.amethystIndex >= 8)
+							altar.amethystIndex = 0;
+					}
+
+					if(world.isClient()) {
+						MinecraftClient client = MinecraftClient.getInstance();
+						BlockPos upperCrystal = altar.getPos().add(0, 4, 0);
+						Vec3d velocity = new Vec3d(upperCrystal.getX() - amethystPos.getX(), upperCrystal.getY() - amethystPos.getY(), upperCrystal.getZ() - amethystPos.getZ());
+						BlockDustParticle particle = new BlockDustParticle(client.world, amethystPos.getX() + 0.5, amethystPos.getY() + 0.75, amethystPos.getZ() + 0.5, velocity.getX(), velocity.getY(), velocity.getZ(), amethystState, amethystPos);
+						particle.move(4);
+						client.particleManager.addParticle(particle);
+					}
+				}
+			}
+			else {
+				altar.craftingTime = 0;
+				altar.amethystIndex = 0;
+				altar.power = 0;
+			}
 		}
 	}
 
@@ -201,5 +267,13 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 
 			setCompleted(map.equals(ArcanusHelper.getStructureMap(world)));
 		}
+	}
+
+	public int getPower() {
+		return power;
+	}
+
+	public int getCraftingTime() {
+		return craftingTime;
 	}
 }

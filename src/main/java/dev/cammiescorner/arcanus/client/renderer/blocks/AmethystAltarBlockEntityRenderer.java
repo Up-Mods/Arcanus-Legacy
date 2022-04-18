@@ -18,6 +18,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
@@ -52,6 +53,10 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 				for(Map.Entry<BlockPos, BlockState> entry : structureMap.entrySet()) {
 					BlockPos pos = entry.getKey();
 					BlockState state = entry.getValue();
+
+					if(state.getProperties().contains(Properties.WATERLOGGED))
+						state = state.with(Properties.WATERLOGGED, false);
+
 					matrices.push();
 
 					if(!altar.isCompleted() && !world.getBlockState(pos.add(altar.getPos()).add(-5, 0, -5)).equals(state)) {
@@ -59,7 +64,7 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 						matrices.scale(scale, scale, scale);
 
 						VertexConsumer vertices = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
-						BakedModel model = TranslucentBakedModel.wrap(blockRenderer.getModel(state), () -> 0.6F);
+						BakedModel model = TranslucentBakedModel.wrap(blockRenderer.getModel(state), () -> 0.5F);
 						long seed = state.getRenderingSeed(altar.getPos());
 
 						blockRenderer.getModelRenderer().render(world, model, state, altar.getPos(), matrices, vertices, false, random, seed, overlay);
@@ -82,6 +87,11 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 				matrices.translate(0.5, 1, 0.5);
 				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float) (time * 2F)));
 
+				if(altar.isCrafting() && altar.getPower() >= 10) {
+					int timer = altar.getCraftingTime() - (altar.getPower() * 40);
+					matrices.translate(0, Math.min(2.4, 0.01 * (timer + tickDelta)), 0);
+				}
+
 				for(int i = 0; i < filledSlots; ++i) {
 					ItemStack stack = altar.getStack(i);
 					double angle = Math.toRadians(angleBetween * i);
@@ -92,6 +102,7 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 					matrices.translate(rotX, 0, rotZ);
 					matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(90));
 					matrices.multiply(Vec3f.NEGATIVE_Y.getRadialQuaternion((float) angle));
+
 					itemRenderer.renderItem(stack, ModelTransformation.Mode.GROUND, light, overlay, matrices, new AuraVertexConsumerProvider(vertexConsumers, 255, 255, 255, 255), (int) altar.getPos().asLong());
 					itemRenderer.renderItem(stack, ModelTransformation.Mode.GROUND, light, overlay, matrices, vertexConsumers, (int) altar.getPos().asLong());
 					matrices.pop();
