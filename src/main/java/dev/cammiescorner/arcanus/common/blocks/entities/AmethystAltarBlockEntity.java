@@ -73,7 +73,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 							altar.amethystIndex = 0;
 					}
 
-					if(altar.craftingTime % 40 == 0) {
+					if(altar.craftingTime % 30 == 0) {
 						world.breakBlock(amethystPos, false);
 
 						if(amethystState.getBlock() == Blocks.AMETHYST_CLUSTER)
