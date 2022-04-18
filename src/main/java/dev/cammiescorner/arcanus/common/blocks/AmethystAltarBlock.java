@@ -47,60 +47,62 @@ public class AmethystAltarBlock extends Block implements Waterloggable, BlockEnt
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		if(world.getBlockEntity(pos) instanceof AmethystAltarBlockEntity altar && altar.canPlayerUse(player)) {
 			if(!ArcanusHelper.isCasting(player)) {
-				ItemStack stack = player.getStackInHand(hand);
+				if(altar.isCompleted()) {
+					ItemStack stack = player.getStackInHand(hand);
 
-				if(!player.isSneaking() && !stack.isEmpty() && altar.getStack(altar.size() - 1).isEmpty()) {
-					for(int i = 0; i < altar.size(); i++) {
-						if(!altar.getStack(i).isEmpty())
-							continue;
-
-						altar.setStack(i, stack.split(1));
-						break;
-					}
-
-					if(!player.isCreative())
-						stack.decrement(1);
-
-					return ActionResult.success(world.isClient);
-				}
-				else if(player.isSneaking() && !altar.getStack(0).isEmpty()) {
-					for(int i = altar.size() - 1; i >= 0; i--) {
-						ItemStack altarStack = altar.getStack(i);
-
-						if(altarStack.isEmpty())
-							continue;
-
-						boolean canInsert = player.getInventory().insertStack(altarStack);
-						ItemEntity itemEntity;
-
-						if(!canInsert || !altarStack.isEmpty()) {
-							itemEntity = player.dropItem(altarStack, false);
-
-							if(itemEntity == null)
+					if(!player.isSneaking() && !stack.isEmpty() && altar.getStack(altar.size() - 1).isEmpty()) {
+						for(int i = 0; i < altar.size(); i++) {
+							if(!altar.getStack(i).isEmpty())
 								continue;
 
-							itemEntity.resetPickupDelay();
-							itemEntity.setOwner(player.getUuid());
-							continue;
+							altar.setStack(i, stack.split(1));
+							break;
 						}
 
-						itemEntity = player.dropItem(altarStack, false);
+						if(!player.isCreative())
+							stack.decrement(1);
 
-						if(itemEntity != null)
-							itemEntity.setDespawnImmediately();
-
-						player.world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1F) * 2F);
-						altar.removeStack(i);
-
-						break;
+						return ActionResult.success(world.isClient);
 					}
+					else if(player.isSneaking() && !altar.getStack(0).isEmpty()) {
+						for(int i = altar.size() - 1; i >= 0; i--) {
+							ItemStack altarStack = altar.getStack(i);
 
-					return ActionResult.success(world.isClient);
+							if(altarStack.isEmpty())
+								continue;
+
+							boolean canInsert = player.getInventory().insertStack(altarStack);
+							ItemEntity itemEntity;
+
+							if(!canInsert || !altarStack.isEmpty()) {
+								itemEntity = player.dropItem(altarStack, false);
+
+								if(itemEntity == null)
+									continue;
+
+								itemEntity.resetPickupDelay();
+								itemEntity.setOwner(player.getUuid());
+								continue;
+							}
+
+							itemEntity = player.dropItem(altarStack, false);
+
+							if(itemEntity != null)
+								itemEntity.setDespawnImmediately();
+
+							player.world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1F) * 2F);
+							altar.removeStack(i);
+
+							break;
+						}
+
+						return ActionResult.success(world.isClient);
+					}
 				}
 			}
 			else {
 				if(altar.isCompleted())
-					altar.setActive(!altar.isActive());
+					altar.setCrafting(!altar.isCrafting());
 				else
 					altar.checkMultiblock();
 

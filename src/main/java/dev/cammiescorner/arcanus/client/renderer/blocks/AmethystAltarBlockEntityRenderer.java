@@ -1,25 +1,26 @@
 package dev.cammiescorner.arcanus.client.renderer.blocks;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.api.ArcanusHelper;
 import dev.cammiescorner.arcanus.client.AuraVertexConsumerProvider;
+import dev.cammiescorner.arcanus.client.models.TranslucentBakedModel;
 import dev.cammiescorner.arcanus.common.blocks.entities.AmethystAltarBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL14;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,17 +54,17 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 					BlockState state = entry.getValue();
 					matrices.push();
 
-					if(!altar.isCompleted()) {
+					if(!altar.isCompleted() && !world.getBlockState(pos.add(altar.getPos()).add(-5, 0, -5)).equals(state)) {
 						matrices.translate(pos.getX() - offset, pos.getY() + 0.001, pos.getZ() - offset);
 						matrices.scale(scale, scale, scale);
-						RenderSystem.enableBlend();
-						RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA,
-								GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-						RenderSystem.recordRenderCall(() -> GL14.glBlendColor(1F, 1F, 1F, 0.5F));
-						blockRenderer.renderBlockAsEntity(state, matrices, vertexConsumers, light, overlay);
-						RenderSystem.disableBlend();
+
+						VertexConsumer vertices = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
+						BakedModel model = TranslucentBakedModel.wrap(blockRenderer.getModel(state), () -> 0.6F);
+						long seed = state.getRenderingSeed(altar.getPos());
+
+						blockRenderer.getModelRenderer().render(world, model, state, altar.getPos(), matrices, vertices, false, random, seed, overlay);
 					}
-					else if(state.getBlock() == Blocks.AMETHYST_CLUSTER) {
+					else if(altar.isCompleted() && state.getBlock() == Blocks.AMETHYST_CLUSTER) {
 						matrices.translate(pos.getX() - 5, pos.getY(), pos.getZ() - 5);
 						VertexConsumerProvider vertices = new AuraVertexConsumerProvider(vertexConsumers, 255, 255, 255, 255);
 						blockRenderer.renderBlockAsEntity(state, matrices, vertices, light, overlay);

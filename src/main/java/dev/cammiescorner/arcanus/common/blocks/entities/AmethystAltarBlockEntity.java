@@ -30,7 +30,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 			new BlockPos(0, 1, 3), new BlockPos(-2, 1, 2), new BlockPos(-3, 1, 0), new BlockPos(-2, 1, -2)
 	);
 	private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(10, ItemStack.EMPTY);
-	private boolean active, completed;
+	private boolean crafting, completed;
 
 	public AmethystAltarBlockEntity(BlockPos pos, BlockState state) {
 		super(ArcanusBlockEntities.AMETHYST_ALTAR, pos, state);
@@ -38,7 +38,10 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 	}
 
 	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState state, T blockEntity) {
-
+		if(blockEntity instanceof AmethystAltarBlockEntity altar) {
+			if(world.getTime() % 20 == 0 && altar.isCompleted())
+				altar.checkMultiblock();
+		}
 	}
 
 	@Override
@@ -122,7 +125,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 		inventory.clear();
 		Inventories.readNbt(nbt, inventory);
 		completed = nbt.getBoolean("Completed");
-		active = nbt.getBoolean("Active");
+		crafting = nbt.getBoolean("Active");
 		super.readNbt(nbt);
 	}
 
@@ -130,7 +133,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 	public void writeNbt(NbtCompound nbt) {
 		Inventories.writeNbt(nbt, inventory);
 		nbt.putBoolean("Completed", completed);
-		nbt.putBoolean("Active", active);
+		nbt.putBoolean("Active", crafting);
 		super.writeNbt(nbt);
 	}
 
@@ -138,12 +141,12 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 		return inventory;
 	}
 
-	public boolean isActive() {
-		return active;
+	public boolean isCrafting() {
+		return crafting;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setCrafting(boolean crafting) {
+		this.crafting = crafting;
 		notifyListeners();
 	}
 
@@ -159,13 +162,13 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 
 			for(Map.Entry<BlockPos, BlockState> entry : ArcanusHelper.getStructureMap(world).entrySet()) {
 				if(entry.getValue().getFluidState().isIn(FluidTags.WATER)) {
-					BlockPos waterPos = entry.getKey().add(pos).add(-5, 0, -5);
+					BlockPos.Mutable waterPos = entry.getKey().mutableCopy().move(pos).move(-5, 0, -5);
 					Chunk waterChunk = world.getChunk(waterPos);
 					PurpleWaterComponent component = ArcanusComponents.PURPLE_WATER_COMPONENT.get(waterChunk);
 					set.add(component);
 
 					if(completed)
-						component.addAltar(waterPos, getPos());
+						component.addAltar(waterPos.toImmutable(), getPos());
 				}
 			}
 
@@ -187,7 +190,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 			for(int y = 0; y < 6; y++) {
 				for(int x = 0; x < 11; x++) {
 					for(int z = 0; z < 11; z++) {
-						BlockPos pos = getPos().add(-5, 0, -5).add(x, y, z);
+						BlockPos.Mutable pos = getPos().mutableCopy().move(-5, 0, -5).move(x, y, z);
 						BlockState state = world.getBlockState(pos);
 
 						if(ArcanusHelper.isValidAltarBlock(state))
