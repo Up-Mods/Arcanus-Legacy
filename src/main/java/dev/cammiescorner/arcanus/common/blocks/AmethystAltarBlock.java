@@ -2,6 +2,8 @@ package dev.cammiescorner.arcanus.common.blocks;
 
 import dev.cammiescorner.arcanus.api.ArcanusHelper;
 import dev.cammiescorner.arcanus.common.blocks.entities.AmethystAltarBlockEntity;
+import dev.cammiescorner.arcanus.common.components.chunk.PurpleWaterComponent;
+import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -17,6 +19,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -26,7 +29,12 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class AmethystAltarBlock extends Block implements Waterloggable, BlockEntityProvider {
 	private static final VoxelShape SHAPE = createCuboidShape(0, 0, 0, 16, 8, 16);
@@ -101,6 +109,29 @@ public class AmethystAltarBlock extends Block implements Waterloggable, BlockEnt
 		}
 
 		return super.onUse(state, world, pos, player, hand, hit);
+	}
+
+	@Override
+	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+		super.onStateReplaced(state, world, pos, newState, moved);
+
+		if(!world.isClient() && state.getBlock() != newState.getBlock()) {
+			Set<PurpleWaterComponent> set = new HashSet<>();
+
+			for(Map.Entry<BlockPos, BlockState> entry : ArcanusHelper.getStructureMap(world).entrySet()) {
+				if(entry.getValue().getFluidState().isIn(FluidTags.WATER)) {
+					BlockPos waterPos = entry.getKey().add(pos).add(-5, 0, -5);
+					Chunk waterChunk = world.getChunk(waterPos);
+					PurpleWaterComponent component = ArcanusComponents.PURPLE_WATER_COMPONENT.get(waterChunk);
+					set.add(component);
+				}
+			}
+
+			for(PurpleWaterComponent component : set) {
+				component.removeAltar(pos);
+				ArcanusComponents.PURPLE_WATER_COMPONENT.sync(component.getChunk());
+			}
+		}
 	}
 
 	@Override

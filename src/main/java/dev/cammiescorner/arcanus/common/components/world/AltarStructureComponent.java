@@ -32,14 +32,13 @@ public class AltarStructureComponent implements AutoSyncedComponent {
 		NbtList nbtList = tag.getList("StructureMap", NbtElement.COMPOUND_TYPE);
 
 		structureMap.clear();
-		nbtList.forEach(element -> {
-			if(element instanceof NbtCompound map) {
-				structureMap.put(
-						NbtHelper.toBlockPos(map.getCompound("BlockPos")),
-						NbtHelper.toBlockState(map.getCompound("BlockState"))
-				);
-			}
-		});
+		for(int i = 0; i < nbtList.size(); i++) {
+			NbtCompound map = nbtList.getCompound(i);
+			structureMap.put(
+					NbtHelper.toBlockPos(map.getCompound("BlockPos")),
+					NbtHelper.toBlockState(map.getCompound("BlockState"))
+			);
+		}
 	}
 
 	@Override
@@ -70,7 +69,7 @@ public class AltarStructureComponent implements AutoSyncedComponent {
 				StructurePlacementData placementData = new StructurePlacementData();
 
 				List<Structure.StructureBlockInfo> randInfoList = placementData.getRandomBlockInfos(structure.blockInfoLists, pos).getAll();
-				List<Structure.StructureBlockInfo> infoList = Structure.process(world, pos, pos, placementData, randInfoList);
+				List<Structure.StructureBlockInfo> infoList = Structure.process(serverWorld, pos, pos, placementData, randInfoList);
 
 				for(Structure.StructureBlockInfo info : infoList)
 					if(ArcanusHelper.isValidAltarBlock(info.state))

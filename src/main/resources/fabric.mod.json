@@ -20,7 +20,8 @@
 			"arcanus:spell_inventory",
 			"arcanus:spell_cooldown",
 			"arcanus:aura_fade",
-			"arcanus:altar_structure"
+			"arcanus:altar_structure",
+			"arcanus:purple_water"
 		]
 	},
 	"license": "Custom License",

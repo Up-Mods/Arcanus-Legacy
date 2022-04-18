@@ -1,7 +1,9 @@
 package dev.cammiescorner.arcanus.common.blocks.entities;
 
 import dev.cammiescorner.arcanus.api.ArcanusHelper;
+import dev.cammiescorner.arcanus.common.components.chunk.PurpleWaterComponent;
 import dev.cammiescorner.arcanus.common.registry.ArcanusBlockEntities;
+import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -13,19 +15,26 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
+import java.util.*;
 
 public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
+	private static final List<BlockPos> AMETHYST_POSES = List.of(
+			new BlockPos(0, 1, -3), new BlockPos(2, 1, -2), new BlockPos(3, 1, 0), new BlockPos(2, 1, 2),
+			new BlockPos(0, 1, 3), new BlockPos(-2, 1, 2), new BlockPos(-3, 1, 0), new BlockPos(-2, 1, -2)
+	);
 	private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(10, ItemStack.EMPTY);
 	private boolean active, completed;
 
 	public AmethystAltarBlockEntity(BlockPos pos, BlockState state) {
 		super(ArcanusBlockEntities.AMETHYST_ALTAR, pos, state);
+
 	}
 
 	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState state, T blockEntity) {
@@ -144,6 +153,30 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 
 	public void setCompleted(boolean completed) {
 		this.completed = completed;
+
+		if(world != null) {
+			Set<PurpleWaterComponent> set = new HashSet<>();
+
+			for(Map.Entry<BlockPos, BlockState> entry : ArcanusHelper.getStructureMap(world).entrySet()) {
+				if(entry.getValue().getFluidState().isIn(FluidTags.WATER)) {
+					BlockPos waterPos = entry.getKey().add(pos).add(-5, 0, -5);
+					Chunk waterChunk = world.getChunk(waterPos);
+					PurpleWaterComponent component = ArcanusComponents.PURPLE_WATER_COMPONENT.get(waterChunk);
+					set.add(component);
+
+					if(completed)
+						component.addAltar(waterPos, getPos());
+				}
+			}
+
+			for(PurpleWaterComponent component : set) {
+				if(!completed)
+					component.removeAltar(getPos());
+
+				ArcanusComponents.PURPLE_WATER_COMPONENT.sync(world.getChunk(getPos()));
+			}
+		}
+
 		notifyListeners();
 	}
 

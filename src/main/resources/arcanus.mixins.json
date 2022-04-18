@@ -8,6 +8,7 @@
 		"PlayerEntityMixin"
 	],
 	"client": [
+		"client.FluidRendererMixin",
 		"client.HeldItemRendererMixin",
 		"client.InGameHudMixin",
 		"client.KeyboardMixin",
