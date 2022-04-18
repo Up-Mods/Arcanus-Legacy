@@ -22,6 +22,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -118,6 +119,11 @@ public class AmethystAltarBlock extends Block implements Waterloggable, BlockEnt
 		super.onStateReplaced(state, world, pos, newState, moved);
 
 		if(!world.isClient() && state.getBlock() != newState.getBlock()) {
+			if(world.getBlockEntity(pos) instanceof AmethystAltarBlockEntity altar) {
+				ItemScatterer.spawn(world, pos, altar);
+				world.updateComparators(pos, this);
+			}
+
 			Set<PurpleWaterComponent> set = new HashSet<>();
 
 			for(Map.Entry<BlockPos, BlockState> entry : ArcanusHelper.getStructureMap(world).entrySet()) {
