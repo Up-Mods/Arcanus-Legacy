@@ -1,6 +1,7 @@
 package dev.cammiescorner.arcanus;
 
 import dev.cammiescorner.arcanus.api.entity.ArcanusAttributes;
+import dev.cammiescorner.arcanus.api.recipes.AltarAction;
 import dev.cammiescorner.arcanus.api.spells.Spell;
 import dev.cammiescorner.arcanus.common.EventHandler;
 import dev.cammiescorner.arcanus.common.packets.c2s.CastSpellPacket;
@@ -12,18 +13,24 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.DefaultedRegistry;
 import net.minecraft.util.registry.Registry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Arcanus implements ModInitializer {
 	public static final DefaultedRegistry<Spell> SPELL = FabricRegistryBuilder.createDefaulted(Spell.class, id("spell"), id("empty")).buildAndRegister();
+	public static final Registry<AltarAction> ALTAR_ACTIONS = FabricRegistryBuilder.createDefaulted(AltarAction.class, id("altar_actions"), id("empty")).buildAndRegister();
 	public static final String MOD_ID = "arcanus";
+	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
 	@Override
 	public void onInitialize() {
 		ArcanusBlocks.register();
 		ArcanusBlockEntities.register();
 		ArcanusSpells.register();
+		ArcanusAltarActions.register();
 		ArcanusSounds.register();
 		ArcanusCommands.register();
+		ArcanusRecipes.loadMeBitch();
 
 		Registry.register(Registry.ATTRIBUTE, id("casting_multiplier"), ArcanusAttributes.AURA_COST);
 		Registry.register(Registry.ATTRIBUTE, id("aura_regen"), ArcanusAttributes.AURA_REGEN);

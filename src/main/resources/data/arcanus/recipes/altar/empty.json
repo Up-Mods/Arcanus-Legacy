@@ -1,0 +1,22 @@
+{
+	"type": "arcanus:amethyst_altar",
+	"ingredients": [
+		{
+			"item": "minecraft:redstone"
+		},
+		{
+			"item": "minecraft:redstone"
+		},
+		{
+			"item": "minecraft:redstone"
+		},
+		{
+			"item": "minecraft:redstone"
+		},
+		{
+			"item": "minecraft:redstone"
+		}
+	],
+	"power": 12,
+	"result": "arcanus:empty"
+}

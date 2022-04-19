@@ -36,21 +36,21 @@ public abstract class InGameHudMixin extends DrawableHelper {
 			drawTexture(matrices, i - 121, scaledHeight - 23, 24, 22, 29, 24);
 
 			RenderSystem.setShaderTexture(0, EventHandler.HUD_ELEMENTS);
-			drawTexture(matrices, i - 122, scaledHeight - 23, 0, 0, 24, 24);
+			drawTexture(matrices, i - 118, scaledHeight - 19, 0, 0, 16, 16);
 			RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
 
 			if(isCasting)
-				drawTexture(matrices, i - 121, scaledHeight - 23, 0, 22, 24, 22);
+				drawTexture(matrices, i - 122, scaledHeight - 23, 0, 22, 24, 22);
 		}
 		else {
 			drawTexture(matrices, i + 98, scaledHeight - 23, 24, 22, 29, 24);
 
 			RenderSystem.setShaderTexture(0, EventHandler.HUD_ELEMENTS);
-			drawTexture(matrices, i + 97, scaledHeight - 23, 0, 0, 24, 24);
+			drawTexture(matrices, i + 101, scaledHeight - 19, 0, 0, 16, 16);
 			RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
 
 			if(isCasting)
-				drawTexture(matrices, i + 98, scaledHeight - 23, 0, 22, 24, 22);
+				drawTexture(matrices, i + 97, scaledHeight - 23, 0, 22, 24, 22);
 		}
 	}
 }

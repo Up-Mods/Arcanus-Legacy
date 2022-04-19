@@ -10,7 +10,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.MathHelper;
 
 public class AuraComponent implements AutoSyncedComponent, ServerTickingComponent {
-	private static final int MAX_AURA = 20;
+	public static final int MAX_AURA = 20;
 	private final LivingEntity entity;
 	private int aura, auraLock, auraTimer;
 

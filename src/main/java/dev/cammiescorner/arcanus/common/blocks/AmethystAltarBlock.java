@@ -56,12 +56,19 @@ public class AmethystAltarBlock extends Block implements Waterloggable, BlockEnt
 							if(!altar.getStack(i).isEmpty())
 								continue;
 
-							altar.setStack(i, stack.split(1));
+							ItemStack invStack;
+
+							if(player.isCreative()) {
+								invStack = stack.copy();
+								invStack.setCount(1);
+							}
+							else {
+								invStack = stack.split(1);
+							}
+
+							altar.setStack(i, invStack);
 							break;
 						}
-
-						if(!player.isCreative())
-							stack.decrement(1);
 
 						return ActionResult.success(world.isClient);
 					}
@@ -103,7 +110,7 @@ public class AmethystAltarBlock extends Block implements Waterloggable, BlockEnt
 			}
 			else {
 				if(altar.isCompleted())
-					altar.setCrafting(!altar.isCrafting());
+					altar.tryCrafting();
 				else
 					altar.checkMultiblock();
 

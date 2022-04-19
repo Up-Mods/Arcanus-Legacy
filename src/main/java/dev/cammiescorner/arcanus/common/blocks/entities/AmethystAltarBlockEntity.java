@@ -1,10 +1,13 @@
 package dev.cammiescorner.arcanus.common.blocks.entities;
 
+import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.api.ArcanusHelper;
 import dev.cammiescorner.arcanus.client.particles.ArcanusBlockParticle;
 import dev.cammiescorner.arcanus.common.components.chunk.PurpleWaterComponent;
+import dev.cammiescorner.arcanus.common.recipes.AmethystAltarRecipe;
 import dev.cammiescorner.arcanus.common.registry.ArcanusBlockEntities;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanus.common.registry.ArcanusRecipes;
 import net.minecraft.block.AmethystClusterBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -12,15 +15,20 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.FluidTags;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -40,14 +48,24 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 	private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(10, ItemStack.EMPTY);
 	private boolean crafting, completed;
 	private int power, craftingTime, amethystIndex;
+	private AmethystAltarRecipe recipe;
+	private Identifier recipeId;
 
 	public AmethystAltarBlockEntity(BlockPos pos, BlockState state) {
 		super(ArcanusBlockEntities.AMETHYST_ALTAR, pos, state);
-
 	}
 
 	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState state, T blockEntity) {
 		if(blockEntity instanceof AmethystAltarBlockEntity altar && altar.isCompleted()) {
+			if(altar.recipeId != null) {
+				altar.recipe = (AmethystAltarRecipe) world.getRecipeManager().get(altar.recipeId).orElseGet(() -> {
+					Arcanus.LOGGER.error("Invalid Recipe ID: {}", altar.recipeId);
+					return null;
+				});
+
+				altar.recipeId = null;
+			}
+
 			if(world.getTime() % 20 == 0)
 				altar.checkMultiblock();
 
@@ -65,7 +83,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 			if(altar.isCrafting()) {
 				altar.craftingTime++;
 
-				if(altar.power < 10) {
+				if(altar.power < altar.recipe.getPower()) {
 					if(altar.amethystIndex >= 8)
 						altar.amethystIndex = 0;
 
@@ -77,7 +95,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 						return;
 					}
 
-					if(altar.craftingTime % 30 == 0) {
+					if(altar.craftingTime % altar.eatAmethystSpeed() == 0) {
 						world.breakBlock(amethystPos, false);
 
 						if(amethystState.getBlock() == Blocks.AMETHYST_CLUSTER)
@@ -102,11 +120,16 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 						client.particleManager.addParticle(particle);
 					}
 				}
-			}
-			else {
-				altar.craftingTime = 0;
-				altar.amethystIndex = 0;
-				altar.power = 0;
+				else if(altar.getCraftingTime() - (altar.getPower() * altar.eatAmethystSpeed()) >= 120) {
+					if(world instanceof ServerWorld serverWorld) {
+						ServerPlayerEntity player = serverWorld.getClosestEntity(ServerPlayerEntity.class, TargetPredicate.createNonAttackable(), null, altar.getPos().getX() + 0.5, altar.getPos().getY() + 0.5, altar.getPos().getZ() + 0.5, box.expand(0, 2, 0));
+
+						if(player != null || !altar.recipe.getResult().requiresPlayer()) {
+							altar.recipe.craft(serverWorld, player, altar);
+							altar.setCrafting(false);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -181,10 +204,17 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 	}
 
 	public void notifyListeners() {
-		markDirty();
+		if(world != null && !world.isClient()) {
+			if(isCrafting() && !recipe.matches(this, world)) {
+				craftingTime = 0;
+				power = 0;
+				crafting = false;
+				recipe = null;
+			}
 
-		if(world != null && !world.isClient())
+			markDirty();
 			world.updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+		}
 	}
 
 	@Override
@@ -196,6 +226,15 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 		power = nbt.getInt("Power");
 		craftingTime = nbt.getInt("CraftingTime");
 		amethystIndex = nbt.getInt("AmethystIndex");
+
+		if(nbt.contains("RecipeId", NbtElement.STRING_TYPE)) {
+			recipeId = new Identifier(nbt.getString("RecipeId"));
+		}
+		else {
+			recipe = null;
+			recipeId = null;
+		}
+
 		super.readNbt(nbt);
 	}
 
@@ -207,11 +246,13 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 		nbt.putInt("Power", power);
 		nbt.putInt("CraftingTime", craftingTime);
 		nbt.putInt("AmethystIndex", amethystIndex);
-		super.writeNbt(nbt);
-	}
 
-	public DefaultedList<ItemStack> getInventory() {
-		return inventory;
+		if(recipe != null)
+			nbt.putString("RecipeId", recipe.getId().toString());
+		else
+			nbt.remove("RecipeId");
+
+		super.writeNbt(nbt);
 	}
 
 	public boolean isCrafting() {
@@ -220,7 +261,27 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 
 	public void setCrafting(boolean crafting) {
 		this.crafting = crafting;
+
+		if(!crafting) {
+			craftingTime = 0;
+			power = 0;
+			recipe = null;
+		}
+
 		notifyListeners();
+	}
+
+	public void tryCrafting() {
+		if(isCrafting()) {
+			setCrafting(false);
+			return;
+		}
+
+		if(world != null)
+			world.getRecipeManager().getFirstMatch(ArcanusRecipes.ALTAR_TYPE, this, world).ifPresent(altarRecipe -> {
+				recipe = altarRecipe;
+				setCrafting(true);
+			});
 	}
 
 	public boolean isCompleted() {
@@ -277,7 +338,15 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 		return power;
 	}
 
+	public int getRequiredPower() {
+		return recipe != null ? recipe.getPower() : 0;
+	}
+
+	public int eatAmethystSpeed() {
+		return recipe != null ? Math.min(20, 320 / recipe.getPower()) : 30;
+	}
+
 	public int getCraftingTime() {
-		return craftingTime;
+		return recipe != null ? Math.min(craftingTime, 120 + (recipe.getPower() * eatAmethystSpeed())) : 0;
 	}
 }

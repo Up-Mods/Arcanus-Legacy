@@ -1,0 +1,25 @@
+{
+	"type": "arcanus:amethyst_altar",
+	"ingredients": [
+		{
+			"item": "minecraft:glowstone_dust"
+		},
+		{
+			"item": "minecraft:glowstone_dust"
+		},
+		{
+			"item": "minecraft:amethyst_shard"
+		},
+		{
+			"item": "minecraft:amethyst_shard"
+		},
+		{
+			"item": "minecraft:amethyst_shard"
+		},
+		{
+			"item": "minecraft:amethyst_shard"
+		}
+	],
+	"power": 20,
+	"result": "arcanus:restore_aura"
+}
