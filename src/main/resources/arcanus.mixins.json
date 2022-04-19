@@ -8,7 +8,7 @@
 		"PlayerEntityMixin"
 	],
 	"client": [
-		"client.FluidRendererMixin",
+		"client.BiomeColorsMixin",
 		"client.HeldItemRendererMixin",
 		"client.InGameHudMixin",
 		"client.KeyboardMixin",
