@@ -4,11 +4,9 @@ import dev.cammiescorner.arcanus.api.cults.Cults;
 import dev.cammiescorner.arcanus.api.entity.ArcanusAttributes;
 import dev.cammiescorner.arcanus.api.spells.AuraType;
 import dev.cammiescorner.arcanus.api.spells.Spell;
-import dev.cammiescorner.arcanus.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
-import net.minecraft.block.Block;
+import dev.cammiescorner.arcanus.common.registry.ArcanusTags;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
@@ -177,14 +175,7 @@ public class ArcanusHelper {
 	}
 
 	public static boolean isValidAltarBlock(BlockState state) {
-		Block block = state.getBlock();
-
-		return block == Blocks.DEEPSLATE_TILES || block == Blocks.DEEPSLATE_TILE_STAIRS ||
-				block == Blocks.CRYING_OBSIDIAN || block == Blocks.CHISELED_QUARTZ_BLOCK ||
-				block == Blocks.SMOOTH_QUARTZ || block == Blocks.SMOOTH_QUARTZ_STAIRS ||
-				block == Blocks.SMOOTH_QUARTZ_SLAB || block == Blocks.CHAIN ||
-				block == Blocks.AMETHYST_CLUSTER || block == Blocks.AMETHYST_BLOCK ||
-				block == ArcanusBlocks.AMETHYST_ALTAR;
+		return state.isIn(ArcanusTags.ALTAR_PALETTE);
 	}
 
 	public static HashMap<BlockPos, BlockState> getStructureMap(World world) {

@@ -1,5 +1,6 @@
 package dev.cammiescorner.arcanus.client.renderer.blocks;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.api.ArcanusHelper;
 import dev.cammiescorner.arcanus.client.AuraVertexConsumerProvider;
 import dev.cammiescorner.arcanus.client.models.TranslucentBakedModel;
@@ -45,31 +46,52 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 		if(world != null) {
 			double time = world.getTime() + tickDelta;
 			HashMap<BlockPos, BlockState> structureMap = ArcanusHelper.getStructureMap(world);
+			BlockPos altarOffset = ArcanusHelper.getAltarOffset(world);
 
 			if(structureMap != null && !structureMap.isEmpty()) {
 				float scale = (float) (0.8125F + (Math.sin(time * 0.075) * 0.0625F));
-				float offset = 5 - ((1 - scale) * 0.5F);
+				float offsetX = Math.abs(altarOffset.getX()) - ((1 - scale) * 0.5F);
+				float offsetZ = Math.abs(altarOffset.getZ()) - ((1 - scale) * 0.5F);
 
 				for(Map.Entry<BlockPos, BlockState> entry : structureMap.entrySet()) {
 					BlockPos pos = entry.getKey();
+					BlockPos adjustedPos = altar.getPos().add(pos).add(altarOffset);
 					BlockState state = entry.getValue();
+					BlockState realState = world.getBlockState(adjustedPos);
 
 					if(state.getProperties().contains(Properties.WATERLOGGED))
 						state = state.with(Properties.WATERLOGGED, false);
+					if(realState.getProperties().contains(Properties.WATERLOGGED))
+						realState = realState.with(Properties.WATERLOGGED, false);
 
 					matrices.push();
 
-					if(!altar.isCompleted() && !world.getBlockState(pos.add(altar.getPos()).add(ArcanusHelper.getAltarOffset(world))).equals(state)) {
-						matrices.translate(pos.getX() - offset, pos.getY() + 0.001, pos.getZ() - offset);
-						matrices.scale(scale, scale, scale);
+					if(!altar.isCompleted() && !realState.equals(state)) {
+						VertexConsumer vertices;
+						BakedModel model;
 
-						VertexConsumer vertices = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
-						BakedModel model = TranslucentBakedModel.wrap(blockRenderer.getModel(state), () -> 0.5F);
+						if(world.isAir(adjustedPos)) {
+							matrices.translate(pos.getX() - offsetX, pos.getY(), pos.getZ() - offsetZ);
+							matrices.scale(scale, scale, scale);
+							vertices = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
+							model = TranslucentBakedModel.wrap(blockRenderer.getModel(state), () -> 0.5F);
+						}
+						else {
+							matrices.translate(pos.getX() + altarOffset.getX(), pos.getY(), pos.getZ() + altarOffset.getZ());
+							matrices.translate(-0.0005, -0.0005, -0.0005);
+							matrices.scale(1.001F, 1.001F, 1.001F);
+
+							vertices = vertexConsumers.getBuffer(RenderLayer.getLightning());
+							RenderSystem.setShaderColor(1F, 0F, 0F, 1F);
+							model = blockRenderer.getModel(Blocks.STONE.getDefaultState());
+						}
+
 						long seed = state.getRenderingSeed(altar.getPos());
 
 						blockRenderer.getModelRenderer().render(world, model, state, altar.getPos(), matrices, vertices, false, random, seed, overlay);
 					}
-					else if(altar.isCompleted() && state.getBlock() == Blocks.AMETHYST_CLUSTER) {
+
+					if(altar.isCrafting() && state.getBlock() == Blocks.AMETHYST_CLUSTER) {
 						matrices.translate(pos.getX() - 5, pos.getY(), pos.getZ() - 5);
 						VertexConsumerProvider vertices = new AuraVertexConsumerProvider(vertexConsumers, 255, 255, 255, 255);
 						blockRenderer.renderBlockAsEntity(state, matrices, vertices, light, overlay);

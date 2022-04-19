@@ -1,6 +1,7 @@
 package dev.cammiescorner.arcanus.common.blocks.entities;
 
 import dev.cammiescorner.arcanus.api.ArcanusHelper;
+import dev.cammiescorner.arcanus.client.particles.ArcanusBlockParticle;
 import dev.cammiescorner.arcanus.common.components.chunk.PurpleWaterComponent;
 import dev.cammiescorner.arcanus.common.registry.ArcanusBlockEntities;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
@@ -10,7 +11,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.particle.BlockDustParticle;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
@@ -66,14 +66,15 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 				altar.craftingTime++;
 
 				if(altar.power < 10) {
+					if(altar.amethystIndex >= 8)
+						altar.amethystIndex = 0;
+
 					BlockPos amethystPos = AMETHYST_POS_LIST.get(altar.amethystIndex).add(altar.getPos());
 					BlockState amethystState = world.getBlockState(amethystPos);
 
-					while(!(amethystState.getBlock() instanceof AmethystClusterBlock)) {
+					if(!(amethystState.getBlock() instanceof AmethystClusterBlock)) {
 						altar.amethystIndex++;
-
-						if(altar.amethystIndex >= 8)
-							altar.amethystIndex = 0;
+						return;
 					}
 
 					if(altar.craftingTime % 30 == 0) {
@@ -90,17 +91,14 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 
 						altar.power++;
 						altar.amethystIndex++;
-
-						if(altar.amethystIndex >= 8)
-							altar.amethystIndex = 0;
 					}
 
 					if(world.isClient()) {
 						MinecraftClient client = MinecraftClient.getInstance();
-						BlockPos upperCrystal = altar.getPos().add(0, 4, 0);
-						Vec3d velocity = new Vec3d(upperCrystal.getX() - amethystPos.getX(), upperCrystal.getY() - amethystPos.getY(), upperCrystal.getZ() - amethystPos.getZ());
-						BlockDustParticle particle = new BlockDustParticle(client.world, amethystPos.getX() + 0.5, amethystPos.getY() + 0.75, amethystPos.getZ() + 0.5, velocity.getX(), velocity.getY(), velocity.getZ(), amethystState, amethystPos);
-						particle.move(5);
+						BlockPos upperCrystal = altar.getPos().add(0, 2, 0);
+						Vec3d direction = new Vec3d(upperCrystal.getX() - amethystPos.getX(), upperCrystal.getY() - amethystPos.getY(), upperCrystal.getZ() - amethystPos.getZ());
+						ArcanusBlockParticle particle = new ArcanusBlockParticle(client.world, amethystPos.getX() + 0.5, amethystPos.getY() + 0.75, amethystPos.getZ() + 0.5, direction.getX(), direction.getY(), direction.getZ(), amethystState, amethystPos);
+						particle.move(2.5F);
 						client.particleManager.addParticle(particle);
 					}
 				}
