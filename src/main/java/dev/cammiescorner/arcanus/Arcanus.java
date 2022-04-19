@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus;
 
 import dev.cammiescorner.arcanus.api.entity.ArcanusAttributes;
-import dev.cammiescorner.arcanus.api.recipes.AltarAction;
+import dev.cammiescorner.arcanus.api.actions.AltarAction;
 import dev.cammiescorner.arcanus.api.spells.Spell;
 import dev.cammiescorner.arcanus.common.EventHandler;
 import dev.cammiescorner.arcanus.common.packets.c2s.CastSpellPacket;

@@ -4,10 +4,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.api.recipes.AltarAction;
+import dev.cammiescorner.arcanus.api.actions.AltarAction;
+import dev.cammiescorner.arcanus.api.actions.ItemAltarAction;
+import dev.cammiescorner.arcanus.api.actions.SummonAltarAction;
 import dev.cammiescorner.arcanus.common.blocks.entities.AmethystAltarBlockEntity;
 import dev.cammiescorner.arcanus.common.registry.ArcanusRecipes;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.*;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -15,6 +19,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -110,8 +115,19 @@ public class AmethystAltarRecipe implements Recipe<AmethystAltarBlockEntity> {
 			String group = JsonHelper.getString(json, "group", "");
 			DefaultedList<Ingredient> ingredients = ShapelessRecipe.Serializer.getIngredients(JsonHelper.getArray(json, "ingredients"));
 			int power = JsonHelper.getInt(json, "power");
-			String result = JsonHelper.getString(json, "result");
+			JsonObject resultObj = JsonHelper.getObject(json, "result");
+			String result = JsonHelper.getString(resultObj, "type");
 			AltarAction action = Arcanus.ALTAR_ACTIONS.getOrEmpty(new Identifier(result)).orElseThrow(() -> new JsonSyntaxException("Expected result to be an altar action, was unknown string '" + result + "'"));
+
+			if(action instanceof ItemAltarAction itemAction) {
+				Item item = JsonHelper.getItem(resultObj, "item", Items.AIR);
+				int count = JsonHelper.getInt(resultObj, "count", 1);
+				itemAction.setStack(new ItemStack(item, count));
+			}
+			if(action instanceof SummonAltarAction summonAction) {
+				String entityType = JsonHelper.getString(resultObj, "entity", "");
+				summonAction.setEntityType(Registry.ENTITY_TYPE.get(new Identifier(entityType)));
+			}
 
 			if(ingredients.isEmpty())
 				throw new JsonParseException("No ingredients for altar recipe");
@@ -133,6 +149,11 @@ public class AmethystAltarRecipe implements Recipe<AmethystAltarBlockEntity> {
 			int power = buf.readVarInt();
 			AltarAction action = Arcanus.ALTAR_ACTIONS.get(buf.readVarInt());
 
+			if(action instanceof ItemAltarAction item)
+				item.setStack(buf.readItemStack());
+			if(action instanceof SummonAltarAction summon)
+				summon.setEntityType(Registry.ENTITY_TYPE.get(new Identifier(buf.readString())));
+
 			return new AmethystAltarRecipe(id, group, ingredients, power, action);
 		}
 
@@ -146,6 +167,11 @@ public class AmethystAltarRecipe implements Recipe<AmethystAltarBlockEntity> {
 
 			buf.writeVarInt(recipe.getPower());
 			buf.writeVarInt(Arcanus.ALTAR_ACTIONS.getRawId(recipe.getResult()));
+
+			if(recipe.getResult() instanceof ItemAltarAction action)
+				buf.writeItemStack(action.getStack());
+			if(recipe.getResult() instanceof SummonAltarAction action)
+				buf.writeString(Registry.ENTITY_TYPE.getId(action.getEntity().getType()).toString());
 		}
 	}
 }

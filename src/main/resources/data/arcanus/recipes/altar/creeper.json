@@ -1,0 +1,13 @@
+{
+	"type": "arcanus:amethyst_altar",
+	"ingredients": [
+		{
+			"item": "minecraft:gunpowder"
+		}
+	],
+	"power": 1,
+	"result": {
+		"type": "arcanus:summon_entity",
+		"entity": "minecraft:creeper"
+	}
+}

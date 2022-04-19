@@ -1,4 +1,4 @@
-package dev.cammiescorner.arcanus.api.recipes;
+package dev.cammiescorner.arcanus.api.actions;
 
 import dev.cammiescorner.arcanus.common.blocks.entities.AmethystAltarBlockEntity;
 import net.minecraft.server.network.ServerPlayerEntity;

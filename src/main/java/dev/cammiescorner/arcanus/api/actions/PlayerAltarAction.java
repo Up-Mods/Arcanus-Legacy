@@ -1,6 +1,4 @@
-package dev.cammiescorner.arcanus.common.actions;
-
-import dev.cammiescorner.arcanus.api.recipes.AltarAction;
+package dev.cammiescorner.arcanus.api.actions;
 
 public interface PlayerAltarAction extends AltarAction {
 	@Override

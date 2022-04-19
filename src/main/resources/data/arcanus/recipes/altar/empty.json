@@ -18,5 +18,7 @@
 		}
 	],
 	"power": 12,
-	"result": "arcanus:empty"
+	"result": {
+		"type": "arcanus:empty"
+	}
 }
