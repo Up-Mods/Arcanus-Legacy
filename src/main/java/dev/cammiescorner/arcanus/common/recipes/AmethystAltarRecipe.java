@@ -109,7 +109,7 @@ public class AmethystAltarRecipe implements Recipe<AmethystAltarBlockEntity> {
 		return power;
 	}
 
-	public static class Serialiser implements RecipeSerializer<AmethystAltarRecipe> {
+	public static class Serializer implements RecipeSerializer<AmethystAltarRecipe> {
 		@Override
 		public AmethystAltarRecipe read(Identifier id, JsonObject json) {
 			String group = JsonHelper.getString(json, "group", "");

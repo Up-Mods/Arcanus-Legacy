@@ -1,10 +1,10 @@
 package dev.cammiescorner.arcanus.api.actions;
 
 import dev.cammiescorner.arcanus.common.blocks.entities.AmethystAltarBlockEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ItemScatterer;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemAltarAction implements AltarAction {
@@ -12,8 +12,11 @@ public class ItemAltarAction implements AltarAction {
 
 	@Override
 	public void run(ServerWorld world, @Nullable ServerPlayerEntity player, AmethystAltarBlockEntity altar) {
-		if(stack != null && !stack.isEmpty())
-			ItemScatterer.spawn(world, altar.getPos().getX() + 0.5, altar.getPos().getY() + 0.5, altar.getPos().getZ() + 0.5, stack);
+		if(stack != null && !stack.isEmpty()) {
+			ItemEntity entity = new ItemEntity(world, altar.getPos().getX() + 0.5, altar.getPos().getY() + 1.5, altar.getPos().getZ() + 0.5, stack);
+			entity.setNoGravity(true);
+			world.spawnEntity(entity);
+		}
 	}
 
 	public ItemStack getStack() {

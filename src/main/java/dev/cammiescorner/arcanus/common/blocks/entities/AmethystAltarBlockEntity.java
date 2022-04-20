@@ -122,7 +122,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 				}
 				else if(altar.getCraftingTime() - (altar.getPower() * altar.eatAmethystSpeed()) >= 120) {
 					if(world instanceof ServerWorld serverWorld) {
-						ServerPlayerEntity player = serverWorld.getClosestEntity(ServerPlayerEntity.class, TargetPredicate.createNonAttackable(), null, altar.getPos().getX() + 0.5, altar.getPos().getY() + 0.5, altar.getPos().getZ() + 0.5, box.expand(0, 2, 0));
+						ServerPlayerEntity player = serverWorld.getClosestEntity(ServerPlayerEntity.class, TargetPredicate.createNonAttackable(), null, altar.getPos().getX() + 0.5, altar.getPos().getY() + 0.5, altar.getPos().getZ() + 0.5, box);
 
 						if(player != null || !altar.recipe.getResult().requiresPlayer()) {
 							altar.recipe.craft(serverWorld, player, altar);
@@ -343,7 +343,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 	}
 
 	public int eatAmethystSpeed() {
-		return recipe != null ? Math.min(20, 320 / recipe.getPower()) : 30;
+		return recipe != null ? Math.min(10, 160 / recipe.getPower()) : 30;
 	}
 
 	public int getCraftingTime() {
