@@ -51,7 +51,7 @@ public class EventHandler {
 			if(client.player != null) {
 				PlayerEntity player = client.player;
 
-				if(ArcanusHelper.isCasting(player) && ArcanusKeyBinds.spellInvKey.matchesKey(key.getCode(), key.getCode()))
+				if(ArcanusHelper.isCasting(player) && ArcanusKeyBinds.spellInvKey.matchesKey(key.getKeyCode(), key.getKeyCode()))
 					client.mouse.lockCursor();
 			}
 		});

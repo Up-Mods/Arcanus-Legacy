@@ -7,7 +7,6 @@ import dev.cammiescorner.arcanus.common.EventHandler;
 import dev.cammiescorner.arcanus.common.packets.c2s.CastSpellPacket;
 import dev.cammiescorner.arcanus.common.packets.c2s.SetCastingPacket;
 import dev.cammiescorner.arcanus.common.registry.*;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.util.Identifier;
@@ -15,6 +14,8 @@ import net.minecraft.util.registry.DefaultedRegistry;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 
 public class Arcanus implements ModInitializer {
 	public static final DefaultedRegistry<Spell> SPELL = FabricRegistryBuilder.createDefaulted(Spell.class, id("spell"), id("empty")).buildAndRegister();
@@ -23,7 +24,7 @@ public class Arcanus implements ModInitializer {
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
 	@Override
-	public void onInitialize() {
+	public void onInitialize(ModContainer mod) {
 		ArcanusBlocks.register();
 		ArcanusBlockEntities.register();
 		ArcanusSpells.register();

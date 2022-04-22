@@ -73,7 +73,7 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 			auraPostShader.render(tickDelta);
 			client.getFramebuffer().beginWrite(true);
 			RenderSystem.enableBlend();
-			RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
+			RenderSystem.blendFunc(GlStateManager.class_4535.SRC_ALPHA, GlStateManager.class_4534.ONE_MINUS_SRC_ALPHA);
 			auraFramebuffer.draw();
 			RenderSystem.disableBlend();
 		}

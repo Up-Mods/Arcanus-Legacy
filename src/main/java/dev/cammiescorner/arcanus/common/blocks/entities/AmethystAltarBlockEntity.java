@@ -200,7 +200,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 	@Nullable
 	@Override
 	public Packet<ClientPlayPacketListener> toUpdatePacket() {
-		return BlockEntityUpdateS2CPacket.create(this);
+		return BlockEntityUpdateS2CPacket.of(this);
 	}
 
 	public void notifyListeners() {

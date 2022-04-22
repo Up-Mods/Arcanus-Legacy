@@ -1,0 +1,77 @@
+{
+	"schema_version": 1,
+	"quilt_loader": {
+		"group": "dev.cammiescorner",
+		"id": "arcanus",
+		"version": "${version}",
+		"metadata": {
+			"name": "Arcanus 2",
+			"description": "Funni magic mod go BRRRRRR",
+			"contributors": {
+				"Cammie": "Owner",
+				"Will BL": "Author"
+			},
+			"license": {
+				"name": "Custom License",
+				"id": "Custom-2.0",
+				"url": "https://github.com/CammiePone/Arcanus/blob/1.19-dev/LICENSE",
+				"description": "This license permits small portions of the code to be used without prior permission, but not large parts."
+			},
+			"icon": "assets/arcanus/icon.png"
+		},
+		"intermediate_mappings": "net.fabricmc:intermediary",
+		"entrypoints": {
+			"init": "dev.cammiescorner.arcanus.Arcanus",
+			"client_init": "dev.cammiescorner.arcanus.client.ArcanusClient",
+			"pre_launch": "dev.cammiescorner.arcanus.common.ArcanusPreLaunch",
+			"cardinal-components": "dev.cammiescorner.arcanus.common.registry.ArcanusComponents"
+		},
+		"depends": [
+			{
+				"id": "quilt_loader",
+				"versions": ">=0.16.0-"
+			},
+			{
+				"id": "quilted_fabric_api",
+				"versions": ">=1.0.0-"
+			},
+			{
+				"id": "minecraft",
+				"versions": ">=1.18.2"
+			},
+			{
+				"id": "cloth-config2",
+				"versions": ">=6.0.39"
+			},
+			{
+				"id": "cardinal-components-base",
+				"versions": ">=4.1.4"
+			},
+			{
+				"id": "cardinal-components-entity",
+				"versions": ">=4.1.4"
+			},
+			{
+				"id": "satin",
+				"versions": ">=1.7.2"
+			},
+			{
+				"id": "java",
+				"versions": ">=17"
+			}
+		]
+	},
+	"access_widener": "arcanus.accesswidener",
+	"mixin": "arcanus.mixins.json",
+	"cardinal-components": [
+		"arcanus:aura",
+		"arcanus:casting",
+		"arcanus:cult",
+		"arcanus:current_spell",
+		"arcanus:spell_inventory",
+		"arcanus:spell_cooldown",
+		"arcanus:aura_fade",
+		"arcanus:altar_structure",
+		"arcanus:purple_water"
+	]
+}
