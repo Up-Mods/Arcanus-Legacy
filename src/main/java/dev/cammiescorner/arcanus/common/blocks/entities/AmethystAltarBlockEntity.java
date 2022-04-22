@@ -95,7 +95,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 						return;
 					}
 
-					if(altar.craftingTime % altar.eatAmethystSpeed() == 0) {
+					if(!world.isClient() && altar.craftingTime % altar.eatAmethystSpeed() == 0) {
 						world.breakBlock(amethystPos, false);
 
 						if(amethystState.getBlock() == Blocks.AMETHYST_CLUSTER)
@@ -113,14 +113,22 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 
 					if(world.isClient()) {
 						MinecraftClient client = MinecraftClient.getInstance();
-						BlockPos upperCrystal = altar.getPos().add(0, 2, 0);
+						BlockPos upperCrystal = altar.getPos();
+
+						for(int i = 0; i < 5; i++) {
+							if(world.isAir(upperCrystal.add(0, i, 0)))
+								continue;
+
+							upperCrystal = upperCrystal.add(0, i, 0);
+						}
+
 						Vec3d direction = new Vec3d(upperCrystal.getX() - amethystPos.getX(), upperCrystal.getY() - amethystPos.getY(), upperCrystal.getZ() - amethystPos.getZ());
 						ArcanusBlockParticle particle = new ArcanusBlockParticle(client.world, amethystPos.getX() + 0.5, amethystPos.getY() + 0.75, amethystPos.getZ() + 0.5, direction.getX(), direction.getY(), direction.getZ(), amethystState, amethystPos);
 						particle.move(2.5F);
 						client.particleManager.addParticle(particle);
 					}
 				}
-				else if(altar.getCraftingTime() - (altar.getPower() * altar.eatAmethystSpeed()) >= 120) {
+				else if(altar.getCraftingTime() - (altar.getPower() * altar.eatAmethystSpeed()) >= 100) {
 					if(world instanceof ServerWorld serverWorld) {
 						ServerPlayerEntity player = serverWorld.getClosestEntity(ServerPlayerEntity.class, TargetPredicate.createNonAttackable(), null, altar.getPos().getX() + 0.5, altar.getPos().getY() + 0.5, altar.getPos().getZ() + 0.5, box);
 
@@ -347,6 +355,6 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 	}
 
 	public int getCraftingTime() {
-		return recipe != null ? Math.min(craftingTime, 120 + (recipe.getPower() * eatAmethystSpeed())) : 0;
+		return recipe != null ? Math.min(craftingTime, 100 + (recipe.getPower() * eatAmethystSpeed())) : 0;
 	}
 }

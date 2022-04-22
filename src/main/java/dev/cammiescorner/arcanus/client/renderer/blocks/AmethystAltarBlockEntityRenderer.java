@@ -31,6 +31,7 @@ import java.util.Random;
 public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<AmethystAltarBlockEntity> {
 	private final ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
 	private final BlockRenderManager blockRenderer = MinecraftClient.getInstance().getBlockRenderManager();
+	private int timer = 0;
 
 	public AmethystAltarBlockEntityRenderer(BlockEntityRendererFactory.Context cxt) {
 
@@ -91,12 +92,6 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 						blockRenderer.getModelRenderer().render(world, model, state, altar.getPos(), matrices, vertices, false, random, seed, overlay);
 					}
 
-					if(altar.isCrafting() && state.getBlock() == Blocks.AMETHYST_CLUSTER) {
-						matrices.translate(pos.getX() - 5, pos.getY(), pos.getZ() - 5);
-						VertexConsumerProvider vertices = new AuraVertexConsumerProvider(vertexConsumers, 255, 255, 255, 255);
-						blockRenderer.renderBlockAsEntity(state, matrices, vertices, light, overlay);
-					}
-
 					matrices.pop();
 				}
 			}
@@ -110,8 +105,11 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float) (time * 2F)));
 
 				if(altar.isCrafting() && altar.getPower() >= altar.getRequiredPower()) {
-					int timer = altar.getCraftingTime() - (altar.getPower() * altar.eatAmethystSpeed());
-					matrices.translate(0, 0.02 * (timer + tickDelta), 0);
+					timer++;
+					matrices.translate(0, 0.01 * Math.min(100, timer + tickDelta), 0);
+				}
+				else {
+					timer = 0;
 				}
 
 				for(int i = 0; i < filledSlots; ++i) {
