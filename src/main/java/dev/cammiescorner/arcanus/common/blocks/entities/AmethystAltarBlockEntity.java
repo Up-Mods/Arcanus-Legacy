@@ -128,7 +128,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 						client.particleManager.addParticle(particle);
 					}
 				}
-				else if(altar.getCraftingTime() - (altar.getPower() * altar.eatAmethystSpeed()) >= 100) {
+				else if(altar.getCraftingTime() >= 60 + (altar.recipe.getPower() * altar.eatAmethystSpeed())) {
 					if(world instanceof ServerWorld serverWorld) {
 						ServerPlayerEntity player = serverWorld.getClosestEntity(ServerPlayerEntity.class, TargetPredicate.createNonAttackable(), null, altar.getPos().getX() + 0.5, altar.getPos().getY() + 0.5, altar.getPos().getZ() + 0.5, box);
 
@@ -355,6 +355,6 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 	}
 
 	public int getCraftingTime() {
-		return recipe != null ? Math.min(craftingTime, 100 + (recipe.getPower() * eatAmethystSpeed())) : 0;
+		return recipe != null ? Math.min(craftingTime, 120 + (recipe.getPower() * eatAmethystSpeed())) : 0;
 	}
 }

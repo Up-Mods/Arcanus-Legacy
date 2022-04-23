@@ -105,8 +105,11 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float) (time * 2F)));
 
 				if(altar.isCrafting() && altar.getPower() >= altar.getRequiredPower()) {
-					timer++;
+					timer = Math.min(120, ++timer);
 					matrices.translate(0, 0.01 * Math.min(100, timer + tickDelta), 0);
+
+					if(timer >= 60)
+						radius -= ((timer - 60) * 0.025);
 				}
 				else {
 					timer = 0;
