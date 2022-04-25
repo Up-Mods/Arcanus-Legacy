@@ -119,14 +119,16 @@ public class AmethystAltarRecipe implements Recipe<AmethystAltarBlockEntity> {
 			String result = JsonHelper.getString(resultObj, "type");
 			AltarAction action = Arcanus.ALTAR_ACTIONS.getOrEmpty(new Identifier(result)).orElseThrow(() -> new JsonSyntaxException("Expected result to be an altar action, was unknown string '" + result + "'"));
 
-			if(action instanceof ItemAltarAction itemAction) {
+			if(action instanceof ItemAltarAction) {
+				action = new ItemAltarAction();
 				Item item = JsonHelper.getItem(resultObj, "item", Items.AIR);
 				int count = JsonHelper.getInt(resultObj, "count", 1);
-				itemAction.setStack(new ItemStack(item, count));
+				((ItemAltarAction) action).setStack(new ItemStack(item, count));
 			}
-			if(action instanceof SummonAltarAction summonAction) {
+			if(action instanceof SummonAltarAction) {
+				action = new SummonAltarAction();
 				String entityType = JsonHelper.getString(resultObj, "entity", "");
-				summonAction.setEntityType(Registry.ENTITY_TYPE.get(new Identifier(entityType)));
+				((SummonAltarAction) action).setEntityType(Registry.ENTITY_TYPE.get(new Identifier(entityType)));
 			}
 
 			if(ingredients.isEmpty())
@@ -142,17 +144,18 @@ public class AmethystAltarRecipe implements Recipe<AmethystAltarBlockEntity> {
 			String group = buf.readString();
 			int i = buf.readVarInt();
 			DefaultedList<Ingredient> ingredients = DefaultedList.ofSize(i, Ingredient.EMPTY);
-
-			for(int j = 0; j < ingredients.size(); ++j)
-				ingredients.set(j, Ingredient.fromPacket(buf));
-
+			ingredients.replaceAll(ignored -> Ingredient.fromPacket(buf));
 			int power = buf.readVarInt();
 			AltarAction action = Arcanus.ALTAR_ACTIONS.get(buf.readVarInt());
 
-			if(action instanceof ItemAltarAction item)
-				item.setStack(buf.readItemStack());
-			if(action instanceof SummonAltarAction summon)
-				summon.setEntityType(Registry.ENTITY_TYPE.get(new Identifier(buf.readString())));
+			if(action instanceof ItemAltarAction) {
+				action = new ItemAltarAction();
+				((ItemAltarAction) action).setStack(buf.readItemStack());
+			}
+			if(action instanceof SummonAltarAction) {
+				action = new SummonAltarAction();
+				((SummonAltarAction) action).setEntityType(Registry.ENTITY_TYPE.get(new Identifier(buf.readString())));
+			}
 
 			return new AmethystAltarRecipe(id, group, ingredients, power, action);
 		}

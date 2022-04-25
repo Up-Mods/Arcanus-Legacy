@@ -31,7 +31,6 @@ import java.util.Random;
 public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<AmethystAltarBlockEntity> {
 	private final ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
 	private final BlockRenderManager blockRenderer = MinecraftClient.getInstance().getBlockRenderManager();
-	private int timer = 0;
 
 	public AmethystAltarBlockEntityRenderer(BlockEntityRendererFactory.Context cxt) {
 
@@ -97,7 +96,7 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 			}
 
 			if(filledSlots > 0) {
-				double radius = 1.25 + Math.sin(time * 0.1) * 0.25;
+				double radius = 1.25;
 				double angleBetween = 360 / (double) filledSlots;
 
 				matrices.push();
@@ -105,14 +104,11 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float) (time * 2F)));
 
 				if(altar.isCrafting() && altar.getPower() >= altar.getRequiredPower()) {
-					timer = Math.min(120, ++timer);
-					matrices.translate(0, 0.01 * Math.min(100, timer + tickDelta), 0);
+					float timer = altar.getCraftingTime() + tickDelta;
+					matrices.translate(0, 0.01 * Math.min(100, timer), 0);
 
-					if(timer >= 60)
-						radius -= ((timer - 60) * 0.025);
-				}
-				else {
-					timer = 0;
+					if(altar.getCraftingTime() >= 100)
+						radius -= (Math.min(20, timer - 100) * 0.06);
 				}
 
 				for(int i = 0; i < filledSlots; ++i) {

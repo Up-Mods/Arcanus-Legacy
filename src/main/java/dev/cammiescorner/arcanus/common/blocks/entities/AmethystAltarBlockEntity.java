@@ -2,7 +2,6 @@ package dev.cammiescorner.arcanus.common.blocks.entities;
 
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.api.ArcanusHelper;
-import dev.cammiescorner.arcanus.client.particles.ArcanusBlockParticle;
 import dev.cammiescorner.arcanus.common.components.chunk.PurpleWaterComponent;
 import dev.cammiescorner.arcanus.common.recipes.AmethystAltarRecipe;
 import dev.cammiescorner.arcanus.common.registry.ArcanusBlockEntities;
@@ -13,7 +12,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,7 +31,6 @@ import net.minecraft.util.TypeFilter;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -41,7 +38,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
-	private static final List<BlockPos> AMETHYST_POS_LIST = List.of(
+	public static final List<BlockPos> AMETHYST_POS_LIST = List.of(
 			new BlockPos(0, 1, -3), new BlockPos(3, 1, -3), new BlockPos(3, 1, 0), new BlockPos(3, 1, 3),
 			new BlockPos(0, 1, 3), new BlockPos(-3, 1, 3), new BlockPos(-3, 1, 0), new BlockPos(-3, 1, -3)
 	);
@@ -81,13 +78,8 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 			}
 
 			if(altar.isCrafting()) {
-				altar.craftingTime++;
-
 				if(altar.power < altar.recipe.getPower()) {
-					if(altar.amethystIndex >= 8)
-						altar.amethystIndex = 0;
-
-					BlockPos amethystPos = AMETHYST_POS_LIST.get(altar.amethystIndex).add(altar.getPos());
+					BlockPos amethystPos = AMETHYST_POS_LIST.get(altar.getAmethystIndex()).add(altar.getPos());
 					BlockState amethystState = world.getBlockState(amethystPos);
 
 					if(!(amethystState.getBlock() instanceof AmethystClusterBlock)) {
@@ -95,46 +87,35 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 						return;
 					}
 
-					if(!world.isClient() && altar.craftingTime % altar.eatAmethystSpeed() == 0) {
-						world.breakBlock(amethystPos, false);
+					if(world.getTime() % altar.eatAmethystSpeed() == 0) {
+						if(!world.isClient()) {
+							world.breakBlock(amethystPos, false);
 
-						if(amethystState.getBlock() == Blocks.AMETHYST_CLUSTER)
-							world.setBlockState(amethystPos, Blocks.LARGE_AMETHYST_BUD.getDefaultState());
-						else if(amethystState.getBlock() == Blocks.LARGE_AMETHYST_BUD)
-							world.setBlockState(amethystPos, Blocks.MEDIUM_AMETHYST_BUD.getDefaultState());
-						else if(amethystState.getBlock() == Blocks.MEDIUM_AMETHYST_BUD)
-							world.setBlockState(amethystPos, Blocks.SMALL_AMETHYST_BUD.getDefaultState());
-						else
-							world.setBlockState(amethystPos, Blocks.AIR.getDefaultState());
+							if(amethystState.getBlock() == Blocks.AMETHYST_CLUSTER)
+								world.setBlockState(amethystPos, Blocks.LARGE_AMETHYST_BUD.getDefaultState());
+							else if(amethystState.getBlock() == Blocks.LARGE_AMETHYST_BUD)
+								world.setBlockState(amethystPos, Blocks.MEDIUM_AMETHYST_BUD.getDefaultState());
+							else if(amethystState.getBlock() == Blocks.MEDIUM_AMETHYST_BUD)
+								world.setBlockState(amethystPos, Blocks.SMALL_AMETHYST_BUD.getDefaultState());
+							else
+								world.setBlockState(amethystPos, Blocks.AIR.getDefaultState());
+						}
 
 						altar.power++;
 						altar.amethystIndex++;
 					}
-
-					if(world.isClient()) {
-						MinecraftClient client = MinecraftClient.getInstance();
-						BlockPos upperCrystal = altar.getPos();
-
-						for(int i = 0; i < 5; i++) {
-							if(world.isAir(upperCrystal.add(0, i, 0)))
-								continue;
-
-							upperCrystal = upperCrystal.add(0, i, 0);
-						}
-
-						Vec3d direction = new Vec3d(upperCrystal.getX() - amethystPos.getX(), upperCrystal.getY() - amethystPos.getY(), upperCrystal.getZ() - amethystPos.getZ());
-						ArcanusBlockParticle particle = new ArcanusBlockParticle(client.world, amethystPos.getX() + 0.5, amethystPos.getY() + 0.75, amethystPos.getZ() + 0.5, direction.getX(), direction.getY(), direction.getZ(), amethystState, amethystPos);
-						particle.move(2.5F);
-						client.particleManager.addParticle(particle);
-					}
 				}
-				else if(altar.getCraftingTime() >= 60 + (altar.recipe.getPower() * altar.eatAmethystSpeed())) {
-					if(world instanceof ServerWorld serverWorld) {
-						ServerPlayerEntity player = serverWorld.getClosestEntity(ServerPlayerEntity.class, TargetPredicate.createNonAttackable(), null, altar.getPos().getX() + 0.5, altar.getPos().getY() + 0.5, altar.getPos().getZ() + 0.5, box);
+				else {
+					altar.craftingTime++;
 
-						if(player != null || !altar.recipe.getResult().requiresPlayer()) {
-							altar.recipe.craft(serverWorld, player, altar);
-							altar.setCrafting(false);
+					if(altar.getCraftingTime() >= 120) {
+						if(world instanceof ServerWorld serverWorld) {
+							ServerPlayerEntity player = serverWorld.getClosestEntity(ServerPlayerEntity.class, TargetPredicate.createNonAttackable(), null, altar.getPos().getX() + 0.5, altar.getPos().getY() + 0.5, altar.getPos().getZ() + 0.5, box);
+
+							if(player != null || !altar.recipe.getResult().requiresPlayer()) {
+								altar.recipe.craft(serverWorld, player, altar);
+								altar.setCrafting(false);
+							}
 						}
 					}
 				}
@@ -346,6 +327,13 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 		return power;
 	}
 
+	public int getAmethystIndex() {
+		if(amethystIndex > 7)
+			amethystIndex = 0;
+
+		return amethystIndex;
+	}
+
 	public int getRequiredPower() {
 		return recipe != null ? recipe.getPower() : 0;
 	}
@@ -355,6 +343,6 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 	}
 
 	public int getCraftingTime() {
-		return recipe != null ? Math.min(craftingTime, 120 + (recipe.getPower() * eatAmethystSpeed())) : 0;
+		return Math.min(craftingTime, 120);
 	}
 }

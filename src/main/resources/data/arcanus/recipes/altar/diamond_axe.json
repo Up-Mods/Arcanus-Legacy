@@ -1,0 +1,13 @@
+{
+	"type": "arcanus:amethyst_altar",
+	"ingredients": [
+		{
+			"item": "minecraft:diamond"
+		}
+	],
+	"power": 1,
+	"result": {
+		"type": "arcanus:craft_item",
+		"item": "minecraft:diamond_axe"
+	}
+}
