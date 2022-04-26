@@ -31,6 +31,7 @@ import net.minecraft.util.TypeFilter;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -91,14 +92,18 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 						if(!world.isClient()) {
 							world.breakBlock(amethystPos, false);
 
-							if(amethystState.getBlock() == Blocks.AMETHYST_CLUSTER)
-								world.setBlockState(amethystPos, Blocks.LARGE_AMETHYST_BUD.getDefaultState());
-							else if(amethystState.getBlock() == Blocks.LARGE_AMETHYST_BUD)
-								world.setBlockState(amethystPos, Blocks.MEDIUM_AMETHYST_BUD.getDefaultState());
-							else if(amethystState.getBlock() == Blocks.MEDIUM_AMETHYST_BUD)
-								world.setBlockState(amethystPos, Blocks.SMALL_AMETHYST_BUD.getDefaultState());
-							else
-								world.setBlockState(amethystPos, Blocks.AIR.getDefaultState());
+							switch(Registry.BLOCK.getId(amethystState.getBlock()).toString()) {
+								case "minecraft:amethyst_cluster" ->
+										world.setBlockState(amethystPos, Blocks.LARGE_AMETHYST_BUD.getDefaultState());
+								case "minecraft:large_amethyst_bud" ->
+										world.setBlockState(amethystPos, Blocks.MEDIUM_AMETHYST_BUD.getDefaultState());
+								case "minecraft:medium_amethyst_bud" ->
+										world.setBlockState(amethystPos, Blocks.SMALL_AMETHYST_BUD.getDefaultState());
+								case "minecraft:small_amethyst_bud" ->
+										world.setBlockState(amethystPos, Blocks.AIR.getDefaultState());
+								default -> {
+								}
+							}
 						}
 
 						altar.power++;

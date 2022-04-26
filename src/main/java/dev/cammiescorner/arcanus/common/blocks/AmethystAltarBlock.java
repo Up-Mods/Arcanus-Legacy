@@ -4,7 +4,6 @@ import dev.cammiescorner.arcanus.api.ArcanusHelper;
 import dev.cammiescorner.arcanus.common.blocks.entities.AmethystAltarBlockEntity;
 import dev.cammiescorner.arcanus.common.components.chunk.PurpleWaterComponent;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -32,6 +31,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class AmethystAltarBlock extends Block implements Waterloggable, BlockEnt
 	private static final VoxelShape SHAPE = createCuboidShape(0, 0, 0, 16, 8, 16);
 
 	public AmethystAltarBlock() {
-		super(FabricBlockSettings.copyOf(Blocks.AMETHYST_BLOCK).requiresTool().nonOpaque());
+		super(QuiltBlockSettings.copyOf(Blocks.AMETHYST_BLOCK).requiresTool().nonOpaque());
 	}
 
 	@Override
