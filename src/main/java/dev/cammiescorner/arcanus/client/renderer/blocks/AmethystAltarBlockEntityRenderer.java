@@ -108,7 +108,7 @@ public class AmethystAltarBlockEntityRenderer implements BlockEntityRenderer<Ame
 					matrices.translate(0, 0.01 * Math.min(100, timer), 0);
 
 					if(altar.getCraftingTime() >= 100)
-						radius -= (Math.min(20, timer - 100) * 0.06);
+						radius -= (Math.min(20, timer - 100) * 0.0625);
 				}
 
 				for(int i = 0; i < filledSlots; ++i) {

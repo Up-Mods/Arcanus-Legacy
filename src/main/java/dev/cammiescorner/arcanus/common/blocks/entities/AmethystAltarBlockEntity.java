@@ -112,7 +112,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 						if(world instanceof ServerWorld serverWorld) {
 							ServerPlayerEntity player = serverWorld.getClosestEntity(ServerPlayerEntity.class, TargetPredicate.createNonAttackable(), null, altar.getPos().getX() + 0.5, altar.getPos().getY() + 0.5, altar.getPos().getZ() + 0.5, box);
 
-							if(player != null || !altar.recipe.getResult().requiresPlayer()) {
+							if(player != null || !altar.recipe.getResult().getType().requiresPlayer()) {
 								altar.recipe.craft(serverWorld, player, altar);
 								altar.setCrafting(false);
 							}
@@ -299,7 +299,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 				if(!completed)
 					component.removeAltar(getPos());
 
-				ArcanusComponents.PURPLE_WATER_COMPONENT.sync(world.getChunk(getPos()));
+				ArcanusComponents.PURPLE_WATER_COMPONENT.sync(component.getChunk());
 			}
 		}
 

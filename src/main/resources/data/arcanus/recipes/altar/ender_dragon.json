@@ -1,0 +1,22 @@
+{
+    "type": "arcanus:amethyst_altar",
+    "ingredients": [
+        {
+            "item": "minecraft:ender_eye"
+        },
+        {
+            "item": "minecraft:ender_eye"
+        },
+        {
+            "item": "minecraft:ender_eye"
+        },
+        {
+            "item": "minecraft:purpur_block"
+        }
+    ],
+    "power": 32,
+    "result": {
+        "type": "arcanus:summon_entity",
+        "entity": "minecraft:ender_dragon"
+    }
+}

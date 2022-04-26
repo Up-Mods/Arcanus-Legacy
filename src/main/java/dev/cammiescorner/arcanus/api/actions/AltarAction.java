@@ -1,16 +1,18 @@
 package dev.cammiescorner.arcanus.api.actions;
 
-import dev.cammiescorner.arcanus.common.blocks.entities.AmethystAltarBlockEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import org.jetbrains.annotations.Nullable;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.network.PacketByteBuf;
 
-public interface AltarAction {
-	AltarAction EMPTY = (world, player, altar) -> {};
+public abstract class AltarAction {
+	public abstract ConfiguredAltarAction create(JsonObject json) throws JsonParseException;
 
-	void run(ServerWorld world, @Nullable ServerPlayerEntity player, AmethystAltarBlockEntity altar);
+	@Environment(EnvType.CLIENT)
+	public abstract ConfiguredAltarAction create(PacketByteBuf buf);
 
-	default boolean requiresPlayer() {
+	public boolean requiresPlayer() {
 		return false;
 	}
 }

@@ -5,13 +5,10 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.api.actions.AltarAction;
-import dev.cammiescorner.arcanus.api.actions.ItemAltarAction;
-import dev.cammiescorner.arcanus.api.actions.SummonAltarAction;
+import dev.cammiescorner.arcanus.api.actions.ConfiguredAltarAction;
 import dev.cammiescorner.arcanus.common.blocks.entities.AmethystAltarBlockEntity;
 import dev.cammiescorner.arcanus.common.registry.ArcanusRecipes;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.*;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -19,7 +16,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,9 +24,9 @@ public class AmethystAltarRecipe implements Recipe<AmethystAltarBlockEntity> {
 	private final String group;
 	private final DefaultedList<Ingredient> input;
 	private final int power;
-	private final AltarAction result;
+	private final ConfiguredAltarAction result;
 
-	public AmethystAltarRecipe(Identifier id, String group, DefaultedList<Ingredient> input, int power, AltarAction result) {
+	public AmethystAltarRecipe(Identifier id, String group, DefaultedList<Ingredient> input, int power, ConfiguredAltarAction result) {
 		this.id = id;
 		this.group = group;
 		this.input = input;
@@ -81,7 +77,7 @@ public class AmethystAltarRecipe implements Recipe<AmethystAltarBlockEntity> {
 		return ItemStack.EMPTY;
 	}
 
-	public AltarAction getResult() {
+	public ConfiguredAltarAction getResult() {
 		return result;
 	}
 
@@ -119,24 +115,12 @@ public class AmethystAltarRecipe implements Recipe<AmethystAltarBlockEntity> {
 			String result = JsonHelper.getString(resultObj, "type");
 			AltarAction action = Arcanus.ALTAR_ACTIONS.getOrEmpty(new Identifier(result)).orElseThrow(() -> new JsonSyntaxException("Expected result to be an altar action, was unknown string '" + result + "'"));
 
-			if(action instanceof ItemAltarAction) {
-				action = new ItemAltarAction();
-				Item item = JsonHelper.getItem(resultObj, "item", Items.AIR);
-				int count = JsonHelper.getInt(resultObj, "count", 1);
-				((ItemAltarAction) action).setStack(new ItemStack(item, count));
-			}
-			if(action instanceof SummonAltarAction) {
-				action = new SummonAltarAction();
-				String entityType = JsonHelper.getString(resultObj, "entity", "");
-				((SummonAltarAction) action).setEntityType(Registry.ENTITY_TYPE.get(new Identifier(entityType)));
-			}
-
 			if(ingredients.isEmpty())
 				throw new JsonParseException("No ingredients for altar recipe");
 			if(ingredients.size() > 10)
 				throw new JsonParseException("Too many ingredients for altar recipe");
 
-			return new AmethystAltarRecipe(id, group, ingredients, power, action);
+			return new AmethystAltarRecipe(id, group, ingredients, power, action.create(resultObj));
 		}
 
 		@Override
@@ -148,16 +132,7 @@ public class AmethystAltarRecipe implements Recipe<AmethystAltarBlockEntity> {
 			int power = buf.readVarInt();
 			AltarAction action = Arcanus.ALTAR_ACTIONS.get(buf.readVarInt());
 
-			if(action instanceof ItemAltarAction) {
-				action = new ItemAltarAction();
-				((ItemAltarAction) action).setStack(buf.readItemStack());
-			}
-			if(action instanceof SummonAltarAction) {
-				action = new SummonAltarAction();
-				((SummonAltarAction) action).setEntityType(Registry.ENTITY_TYPE.get(new Identifier(buf.readString())));
-			}
-
-			return new AmethystAltarRecipe(id, group, ingredients, power, action);
+			return new AmethystAltarRecipe(id, group, ingredients, power, action.create(buf));
 		}
 
 		@Override
@@ -169,12 +144,8 @@ public class AmethystAltarRecipe implements Recipe<AmethystAltarBlockEntity> {
 				ingredient.write(buf);
 
 			buf.writeVarInt(recipe.getPower());
-			buf.writeVarInt(Arcanus.ALTAR_ACTIONS.getRawId(recipe.getResult()));
-
-			if(recipe.getResult() instanceof ItemAltarAction action)
-				buf.writeItemStack(action.getStack());
-			if(recipe.getResult() instanceof SummonAltarAction action)
-				buf.writeString(Registry.ENTITY_TYPE.getId(action.getEntity().getType()).toString());
+			buf.writeVarInt(Arcanus.ALTAR_ACTIONS.getRawId(recipe.getResult().getType()));
+			recipe.getResult().write(buf);
 		}
 	}
 }

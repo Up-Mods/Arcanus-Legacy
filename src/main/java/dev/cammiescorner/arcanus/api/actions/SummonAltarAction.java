@@ -1,32 +1,37 @@
 package dev.cammiescorner.arcanus.api.actions;
 
-import dev.cammiescorner.arcanus.common.blocks.entities.AmethystAltarBlockEntity;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
+import net.minecraft.util.registry.Registry;
 
-public class SummonAltarAction implements AltarAction {
-	private Entity entity;
-	private EntityType<?> type;
-
+public class SummonAltarAction extends AltarAction {
 	@Override
-	public void run(ServerWorld world, @Nullable ServerPlayerEntity player, AmethystAltarBlockEntity altar) {
-		if(entity == null)
-			entity = type.create(world);
+	public ConfiguredAltarAction create(JsonObject json) throws JsonParseException {
+		String string = JsonHelper.getString(json, "entity");
+		EntityType<?> type = Registry.ENTITY_TYPE.getOrEmpty(new Identifier(string)).orElseThrow(() -> new JsonSyntaxException("Invalid Entity Type " + string + "!"));
 
-		if(entity != null) {
+		return ConfiguredAltarAction.of((world, player, altar) -> {
+			Entity entity = type.create(world);
 			entity.setPos(altar.getPos().getX() + 0.5, altar.getPos().getY() + 0.5, altar.getPos().getZ() + 0.5);
 			world.spawnEntity(entity);
-		}
+		}, buf -> buf.writeVarInt(Registry.ENTITY_TYPE.getRawId(type)), this);
 	}
 
-	public Entity getEntity() {
-		return entity;
-	}
+	@Override
+	public ConfiguredAltarAction create(PacketByteBuf buf) {
+		int entityId = buf.readVarInt();
+		EntityType<?> type = Registry.ENTITY_TYPE.get(entityId);
 
-	public void setEntityType(EntityType<?> type) {
-		this.type = type;
+		return ConfiguredAltarAction.ofClient((world, player, altar) -> {
+			Entity entity = type.create(world);
+			entity.setPos(altar.getPos().getX() + 0.5, altar.getPos().getY() + 0.5, altar.getPos().getZ() + 0.5);
+			world.spawnEntity(entity);
+		}, this);
 	}
 }
