@@ -1,0 +1,13 @@
+{
+    "type": "arcanus:amethyst_altar",
+    "ingredients": [
+        {
+            "item": "minecraft:amethyst_shard"
+        }
+    ],
+    "power": 32,
+    "result": {
+        "type": "arcanus:set_aura_affinity",
+        "affinity": "enhancer"
+    }
+}

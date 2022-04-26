@@ -16,6 +16,7 @@ public class ArcanusAltarActions {
 	public static final ItemAltarAction CRAFT_ITEM = create("craft_item", new ItemAltarAction());
 	public static final SummonAltarAction SUMMON_ENTITY = create("summon_entity", new SummonAltarAction());
 	public static final RestoreAuraAltarAction RESTORE_AURA = create("restore_aura", new RestoreAuraAltarAction());
+	public static final SetAffinityAltarAction SET_AFFINITY = create("set_aura_affinity", new SetAffinityAltarAction());
 
 	//-----Registry-----//
 	public static void register() {

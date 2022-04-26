@@ -23,9 +23,9 @@ public class ArcanusComponents implements EntityComponentInitializer, WorldCompo
 	public static final ComponentKey<SpellInventoryComponent> SPELL_INVENTORY_COMPONENT = ComponentRegistry.getOrCreate(Arcanus.id("spell_inventory"), SpellInventoryComponent.class);
 	public static final ComponentKey<SpellCooldownComponent> SPELL_COOLDOWN_COMPONENT = ComponentRegistry.getOrCreate(Arcanus.id("spell_cooldown"), SpellCooldownComponent.class);
 	public static final ComponentKey<AuraFadeComponent> AURA_FADE_COMPONENT = ComponentRegistry.getOrCreate(Arcanus.id("aura_fade"), AuraFadeComponent.class);
+	public static final ComponentKey<AuraAffinityComponent> AURA_AFFINITY_COMPONENT = ComponentRegistry.getOrCreate(Arcanus.id("aura_affinity"), AuraAffinityComponent.class);
 
 	public static final ComponentKey<AltarStructureComponent> ALTAR_STRUCTURE_COMPONENT = ComponentRegistry.getOrCreate(Arcanus.id("altar_structure"), AltarStructureComponent.class);
-
 	public static final ComponentKey<PurpleWaterComponent> PURPLE_WATER_COMPONENT = ComponentRegistry.getOrCreate(Arcanus.id("purple_water"), PurpleWaterComponent.class);
 
 	@Override
@@ -37,6 +37,7 @@ public class ArcanusComponents implements EntityComponentInitializer, WorldCompo
 		registry.beginRegistration(PlayerEntity.class, SPELL_INVENTORY_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(SpellInventoryComponent::new);
 		registry.beginRegistration(PlayerEntity.class, SPELL_COOLDOWN_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(SpellCooldownComponent::new);
 		registry.beginRegistration(PlayerEntity.class, AURA_FADE_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(AuraFadeComponent::new);
+		registry.beginRegistration(PlayerEntity.class, AURA_AFFINITY_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(AuraAffinityComponent::new);
 	}
 
 	@Override

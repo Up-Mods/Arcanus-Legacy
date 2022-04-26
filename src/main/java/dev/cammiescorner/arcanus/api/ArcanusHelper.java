@@ -137,41 +137,49 @@ public class ArcanusHelper {
 		return ArcanusComponents.AURA_FADE_COMPONENT.get(entity).getTimer() * 0.1F;
 	}
 
-	public static double getAffinityForType(PlayerEntity player, AuraType type) {
+	public static double getAffinityMultiplier(LivingEntity entity, AuraType type) {
 		return switch(type) {
 			case ENHANCER -> {
-				EntityAttributeInstance attribute = player.getAttributeInstance(ArcanusAttributes.ENHANCEMENT_AFFINITY);
+				EntityAttributeInstance attribute = entity.getAttributeInstance(ArcanusAttributes.ENHANCEMENT_AFFINITY);
 				yield attribute != null ? attribute.getValue() : ArcanusAttributes.ENHANCEMENT_AFFINITY.getDefaultValue();
 			}
 			case TRANSMUTER -> {
-				EntityAttributeInstance attribute = player.getAttributeInstance(ArcanusAttributes.TRANSMUTATION_AFFINITY);
+				EntityAttributeInstance attribute = entity.getAttributeInstance(ArcanusAttributes.TRANSMUTATION_AFFINITY);
 				yield attribute != null ? attribute.getValue() : ArcanusAttributes.TRANSMUTATION_AFFINITY.getDefaultValue();
 			}
 			case EMITTER -> {
-				EntityAttributeInstance attribute = player.getAttributeInstance(ArcanusAttributes.EMISSION_AFFINITY);
+				EntityAttributeInstance attribute = entity.getAttributeInstance(ArcanusAttributes.EMISSION_AFFINITY);
 				yield attribute != null ? attribute.getValue() : ArcanusAttributes.EMISSION_AFFINITY.getDefaultValue();
 			}
 			case CONJURER -> {
-				EntityAttributeInstance attribute = player.getAttributeInstance(ArcanusAttributes.CONJURATION_AFFINITY);
+				EntityAttributeInstance attribute = entity.getAttributeInstance(ArcanusAttributes.CONJURATION_AFFINITY);
 				yield attribute != null ? attribute.getValue() : ArcanusAttributes.CONJURATION_AFFINITY.getDefaultValue();
 			}
 			case MANIPULATOR -> {
-				EntityAttributeInstance attribute = player.getAttributeInstance(ArcanusAttributes.MANIPULATION_AFFINITY);
+				EntityAttributeInstance attribute = entity.getAttributeInstance(ArcanusAttributes.MANIPULATION_AFFINITY);
 				yield attribute != null ? attribute.getValue() : ArcanusAttributes.MANIPULATION_AFFINITY.getDefaultValue();
 			}
 			default -> 1D;
 		};
 	}
 
-	public static Map<AuraType, Double> getAffinities(PlayerEntity player) {
+	public static Map<AuraType, Double> getAffinityMultipliers(LivingEntity entity) {
 		HashMap<AuraType, Double> map = new HashMap<>();
 
 		for(int i = 0; i < 7; i++) {
 			AuraType type = AuraType.values()[i];
-			map.put(type, getAffinityForType(player, type));
+			map.put(type, getAffinityMultiplier(entity, type));
 		}
 
 		return map;
+	}
+
+	public static AuraType setAffinity(LivingEntity entity) {
+		return ArcanusComponents.AURA_AFFINITY_COMPONENT.get(entity).getAffinity();
+	}
+
+	public static void setAffinity(LivingEntity entity, AuraType affinity) {
+		ArcanusComponents.AURA_AFFINITY_COMPONENT.get(entity).setAffinity(affinity);
 	}
 
 	public static boolean isValidAltarBlock(BlockState state) {

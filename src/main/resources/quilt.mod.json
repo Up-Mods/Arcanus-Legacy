@@ -71,6 +71,7 @@
 		"arcanus:spell_inventory",
 		"arcanus:spell_cooldown",
 		"arcanus:aura_fade",
+		"arcanus:aura_affinity",
 		"arcanus:altar_structure",
 		"arcanus:purple_water"
 	]
