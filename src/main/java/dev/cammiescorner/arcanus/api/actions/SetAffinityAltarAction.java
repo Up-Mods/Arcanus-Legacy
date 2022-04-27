@@ -12,7 +12,7 @@ import java.util.Locale;
 public class SetAffinityAltarAction extends AltarAction {
 	@Override
 	public ConfiguredAltarAction create(JsonObject json) throws JsonParseException {
-		String affinityId = JsonHelper.getString(json, "affinity", "none").toUpperCase(Locale.getDefault());
+		String affinityId = JsonHelper.getString(json, "affinity", "none").toUpperCase(Locale.ROOT);
 		AuraType affinity = AuraType.valueOf(affinityId);
 
 		return ConfiguredAltarAction.of((world, player, altar) -> ArcanusHelper.setAffinity(player, affinity), buf -> buf.writeString(affinityId), this);
@@ -20,7 +20,7 @@ public class SetAffinityAltarAction extends AltarAction {
 
 	@Override
 	public ConfiguredAltarAction create(PacketByteBuf buf) {
-		String affinityId = buf.readString().toUpperCase(Locale.getDefault());
+		String affinityId = buf.readString().toUpperCase(Locale.ROOT);
 		AuraType affinity = AuraType.valueOf(affinityId);
 
 		return ConfiguredAltarAction.ofClient((world, player, altar) -> ArcanusHelper.setAffinity(player, affinity), this);
