@@ -5,7 +5,6 @@ import dev.cammiescorner.arcanus.common.blocks.AmethystAltarBlock;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -25,7 +24,7 @@ public class ArcanusBlocks {
 	}
 
 	private static BlockItem getItem(Block block) {
-		return new BlockItem(block, new Item.Settings().group(ItemGroup.DECORATIONS));
+		return new BlockItem(block, new Item.Settings().group(Arcanus.ITEM_GROUP));
 	}
 
 	private static <T extends Block> T create(String name, T block) {
