@@ -1,6 +1,7 @@
 package dev.cammiescorner.arcanus.mixin.client;
 
 import dev.cammiescorner.arcanus.api.ArcanusHelper;
+import dev.cammiescorner.arcanus.api.spells.Spell;
 import dev.cammiescorner.arcanus.common.packets.c2s.CastSpellPacket;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -26,11 +27,18 @@ public class MinecraftClientMixin {
 			ordinal = 1
 	), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
 	public void arcanus$castSpell(CallbackInfo info, Hand[] var1, int var2, int var3, Hand hand, ItemStack itemStack) {
-		if(player != null && ArcanusHelper.canCastSpell(player, ArcanusHelper.getSelectedSpell(player))) {
-			CastSpellPacket.send();
-			player.swingHand(Hand.MAIN_HAND);
-			gameRenderer.firstPersonRenderer.resetEquipProgress(hand);
-			info.cancel();
+		if(player != null) {
+			Spell spell = ArcanusHelper.getSelectedSpell(player);
+
+			if(ArcanusHelper.canCastSpell(player, spell)) {
+				CastSpellPacket.send();
+
+				if(spell.isInstant())
+					player.swingHand(Hand.MAIN_HAND);
+
+				gameRenderer.firstPersonRenderer.resetEquipProgress(hand);
+				info.cancel();
+			}
 		}
 	}
 }

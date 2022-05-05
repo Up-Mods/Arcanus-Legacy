@@ -23,9 +23,7 @@ public class CastSpellPacket {
 	public static void handler(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
 		server.execute(() -> {
 			if(ArcanusHelper.canCastSpell(player, ArcanusHelper.getSelectedSpell(player)))
-				ArcanusHelper.castSelectedSpell(player);
-
-			System.out.println("Beep");
+				ArcanusHelper.castCurrentSpell(player);
 		});
 	}
 }

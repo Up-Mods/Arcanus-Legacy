@@ -76,15 +76,15 @@ public class ArcanusHelper {
 		ArcanusComponents.CURRENT_SPELL_COMPONENT.get(entity).setSelectedSpell(value);
 	}
 
-	public static Spell getCastSpell(Entity entity) {
-		return ArcanusComponents.CURRENT_SPELL_COMPONENT.get(entity).getCastSpell();
+	public static Spell getActiveSpell(Entity entity) {
+		return ArcanusComponents.CURRENT_SPELL_COMPONENT.get(entity).getActiveSpell();
 	}
 
 	public static void castSpell(Spell spell, World world, LivingEntity entity, Vec3d pos) {
 		ArcanusComponents.CURRENT_SPELL_COMPONENT.get(entity).castSpell(spell, world, entity, pos);
 	}
 
-	public static void castSelectedSpell(Entity entity) {
+	public static void castCurrentSpell(Entity entity) {
 		ArcanusComponents.CURRENT_SPELL_COMPONENT.get(entity).castCurrentSpell();
 	}
 

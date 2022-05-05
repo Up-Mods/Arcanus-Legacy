@@ -6,15 +6,24 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class Spell {
+public abstract class Spell {
+	public static final Spell EMPTY = new Spell(AuraType.NONE, SpellComplexity.UNIQUE, 0, true) {
+		@Override
+		public void cast(World world, LivingEntity entity, Vec3d pos) {
+
+		}
+	};
+
 	private final AuraType spellType;
 	private final SpellComplexity spellComplexity;
 	private final int spellCooldown;
+	private final boolean isInstant;
 
-	public Spell(AuraType type, SpellComplexity complexity, int cooldown) {
+	public Spell(AuraType type, SpellComplexity complexity, int cooldown, boolean instant) {
 		spellType = type;
 		spellComplexity = complexity;
 		spellCooldown = cooldown;
+		isInstant = instant;
 	}
 
 	public AuraType getSpellType() {
@@ -33,14 +42,15 @@ public class Spell {
 		return spellCooldown;
 	}
 
+	public boolean isInstant() {
+		return isInstant;
+	}
+
 	public boolean isActive(LivingEntity entity) {
 		CurrentSpellComponent spellComponent = ArcanusComponents.CURRENT_SPELL_COMPONENT.get(entity);
 
-		return spellComponent.getCastSpell().equals(this);
+		return spellComponent.getActiveSpell().equals(this);
 	}
 
-	public void cast(World world, LivingEntity entity, Vec3d pos) {
-
-	}
-
+	public abstract void cast(World world, LivingEntity entity, Vec3d pos);
 }
