@@ -11,7 +11,7 @@ repositories {
 	maven { url "https://maven.shedaniel.me" }
 	maven { url "https://maven.terraformersmc.com" }
 	maven { url "https://ladysnake.jfrog.io/artifactory/mods" }
-	maven { url "https://maven.willbl.dev/" }
+	maven { url "https://maven.willbl.dev/releases" }
 	maven { url "https://jitpack.io" }
 	maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 }
