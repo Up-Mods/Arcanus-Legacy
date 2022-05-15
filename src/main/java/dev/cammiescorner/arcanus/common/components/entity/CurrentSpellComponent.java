@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus.common.components.entity;
 
-import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.api.ArcanusHelper;
+import dev.cammiescorner.arcanus.api.events.common.UniqueSpellCallback;
 import dev.cammiescorner.arcanus.api.spells.Spell;
 import dev.cammiescorner.arcanus.api.spells.SpellComplexity;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
@@ -9,13 +9,11 @@ import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class CurrentSpellComponent implements AutoSyncedComponent {
 	private final LivingEntity entity;
-	private Spell activeSpell;
 	private int selectedSpell = 0;
 
 	public CurrentSpellComponent(LivingEntity entity) {
@@ -25,13 +23,11 @@ public class CurrentSpellComponent implements AutoSyncedComponent {
 	@Override
 	public void readFromNbt(NbtCompound tag) {
 		selectedSpell = tag.getInt("SelectedSpell");
-		activeSpell = Arcanus.SPELL.get(new Identifier(tag.getString("ActiveSpell")));
 	}
 
 	@Override
 	public void writeToNbt(NbtCompound tag) {
 		tag.putInt("SelectedSpell", selectedSpell);
-		tag.putString("ActivatedSpell", Arcanus.SPELL.getId(activeSpell).toString());
 	}
 
 	public Spell getSelectedSpell() {
@@ -43,28 +39,18 @@ public class CurrentSpellComponent implements AutoSyncedComponent {
 		ArcanusComponents.CURRENT_SPELL_COMPONENT.sync(entity);
 	}
 
-	public Spell getActiveSpell() {
-		return activeSpell;
-	}
-
-	public void setActiveSpell(Spell activeSpell) {
-		this.activeSpell = activeSpell;
-		ArcanusComponents.CURRENT_SPELL_COMPONENT.sync(entity);
-	}
-
 	public void castSpell(Spell spell, World world, LivingEntity entity, Vec3d pos) {
-//		TODO move this elsewhere so that it actually works properly
-//		setActiveSpell(spell);
-
+		UniqueSpellCallback.EVENT.invoker().run(spell, world, entity, pos);
 		spell.cast(world, entity, pos);
-		ArcanusHelper.setSpellCooldown(entity, spell.getSpellCooldown());
 
 		if(entity instanceof PlayerEntity player && !player.isCreative()) {
 			int cost = ArcanusHelper.actualAuraCost(player, spell);
 
 			if(spell.getSpellComplexity() != SpellComplexity.UNIQUE) {
-				if(spell.isInstant())
+				if(spell.isInstant()) {
 					ArcanusHelper.drainAura(player, cost, false);
+					ArcanusHelper.setSpellCooldown(entity, spell.getSpellCooldown());
+				}
 				else if(world.getTime() % 20 == 0)
 					ArcanusHelper.drainAura(player, cost, false);
 			}
