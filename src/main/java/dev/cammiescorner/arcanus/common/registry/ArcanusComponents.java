@@ -29,7 +29,7 @@ public class ArcanusComponents implements EntityComponentInitializer, WorldCompo
 	public static final ComponentKey<UniqueSpellComponent> TEMPORAL_DISRUPTION_COMPONENT = createComponent("temporal_disruption", UniqueSpellComponent.class);
 	public static final ComponentKey<UniqueSpellComponent> PLANESWALKER_COMPONENT = createComponent("planeswalker", UniqueSpellComponent.class);
 	public static final ComponentKey<UniqueSpellComponent> RESTRAINT_LEVEL_ZERO_COMPONENT = createComponent("restraint_level_zero", UniqueSpellComponent.class);
-	public static final ComponentKey<UniqueSpellComponent> AURA_PRODIGY_COMPONENT = createComponent("aura_prodigy_component", UniqueSpellComponent.class);
+	public static final ComponentKey<UniqueSpellComponent> AURA_PRODIGY_COMPONENT = createComponent("aura_prodigy", UniqueSpellComponent.class);
 
 	public static final ComponentKey<AltarStructureComponent> ALTAR_STRUCTURE_COMPONENT = createComponent("altar_structure", AltarStructureComponent.class);
 	public static final ComponentKey<PurpleWaterComponent> PURPLE_WATER_COMPONENT = createComponent("purple_water", PurpleWaterComponent.class);
