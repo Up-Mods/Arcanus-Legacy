@@ -2,6 +2,8 @@ package dev.cammiescorner.arcanus.common.packets.c2s;
 
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.api.ArcanusHelper;
+import dev.cammiescorner.arcanus.api.spells.Spell;
+import dev.cammiescorner.arcanus.api.spells.SpellComplexity;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
@@ -22,8 +24,13 @@ public class CastSpellPacket {
 
 	public static void handler(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
 		server.execute(() -> {
-			if(ArcanusHelper.canCastSpell(player, ArcanusHelper.getSelectedSpell(player)))
+			Spell spell = ArcanusHelper.getSelectedSpell(player);
+			if(ArcanusHelper.canCastSpell(player, spell)) {
+				if(spell.getSpellComplexity() == SpellComplexity.UNIQUE)
+					ArcanusHelper.setUniqueSpellActive(player, spell, !ArcanusHelper.isUniqueSpellActive(player, spell));
+
 				ArcanusHelper.castCurrentSpell(player);
+			}
 		});
 	}
 }

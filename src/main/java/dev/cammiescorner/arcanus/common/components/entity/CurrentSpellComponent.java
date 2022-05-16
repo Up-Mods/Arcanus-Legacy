@@ -54,7 +54,7 @@ public class CurrentSpellComponent implements AutoSyncedComponent {
 				else if(world.getTime() % 20 == 0)
 					ArcanusHelper.drainAura(player, cost, false);
 			}
-			else if(spell.isActive(entity) && world.getTime() % 20 == 0) {
+			else if(ArcanusHelper.isUniqueSpellActive(entity, spell) && world.getTime() % 20 == 0) {
 				ArcanusHelper.drainAura(player, 1, false);
 			}
 		}

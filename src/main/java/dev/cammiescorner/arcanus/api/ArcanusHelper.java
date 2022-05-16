@@ -4,10 +4,8 @@ import dev.cammiescorner.arcanus.api.cults.Cults;
 import dev.cammiescorner.arcanus.api.entity.ArcanusAttributes;
 import dev.cammiescorner.arcanus.api.spells.AuraType;
 import dev.cammiescorner.arcanus.api.spells.Spell;
-import dev.cammiescorner.arcanus.common.components.entity.UniqueSpellComponent;
 import dev.cammiescorner.arcanus.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanus.common.registry.ArcanusTags;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -107,12 +105,12 @@ public class ArcanusHelper {
 		return spell.getAuraCost();
 	}
 
-	public static boolean isUniqueSpellActive(Entity entity, ComponentKey<UniqueSpellComponent> componentKey) {
-		return componentKey.get(entity).isActive();
+	public static boolean isUniqueSpellActive(Entity entity, Spell spell) {
+		return ArcanusComponents.UNIQUE_SPELLS_COMPONENT.get(entity).isActive(spell);
 	}
 
-	public static void setUniqueSpellActive(Entity entity, ComponentKey<UniqueSpellComponent> componentKey, boolean active) {
-		componentKey.get(entity).setActive(active);
+	public static void setUniqueSpellActive(Entity entity, Spell spell, boolean active) {
+		ArcanusComponents.UNIQUE_SPELLS_COMPONENT.get(entity).setActive(spell, active);
 	}
 
 	public static Cults getCult(Entity entity) {

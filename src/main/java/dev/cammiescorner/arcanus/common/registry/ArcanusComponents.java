@@ -25,11 +25,7 @@ public class ArcanusComponents implements EntityComponentInitializer, WorldCompo
 	public static final ComponentKey<SpellCooldownComponent> SPELL_COOLDOWN_COMPONENT = createComponent("spell_cooldown", SpellCooldownComponent.class);
 	public static final ComponentKey<AuraFadeComponent> AURA_FADE_COMPONENT = createComponent("aura_fade", AuraFadeComponent.class);
 	public static final ComponentKey<AuraAffinityComponent> AURA_AFFINITY_COMPONENT = createComponent("aura_affinity", AuraAffinityComponent.class);
-
-	public static final ComponentKey<UniqueSpellComponent> TEMPORAL_DISRUPTION_COMPONENT = createComponent("temporal_disruption", UniqueSpellComponent.class);
-	public static final ComponentKey<UniqueSpellComponent> PLANESWALKER_COMPONENT = createComponent("planeswalker", UniqueSpellComponent.class);
-	public static final ComponentKey<UniqueSpellComponent> RESTRAINT_LEVEL_ZERO_COMPONENT = createComponent("restraint_level_zero", UniqueSpellComponent.class);
-	public static final ComponentKey<UniqueSpellComponent> AURA_PRODIGY_COMPONENT = createComponent("aura_prodigy", UniqueSpellComponent.class);
+	public static final ComponentKey<UniqueSpellsComponent> UNIQUE_SPELLS_COMPONENT = createComponent("unique_spells", UniqueSpellsComponent.class);
 
 	public static final ComponentKey<AltarStructureComponent> ALTAR_STRUCTURE_COMPONENT = createComponent("altar_structure", AltarStructureComponent.class);
 	public static final ComponentKey<PurpleWaterComponent> PURPLE_WATER_COMPONENT = createComponent("purple_water", PurpleWaterComponent.class);
@@ -44,7 +40,7 @@ public class ArcanusComponents implements EntityComponentInitializer, WorldCompo
 		registry.beginRegistration(PlayerEntity.class, SPELL_COOLDOWN_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(SpellCooldownComponent::new);
 		registry.beginRegistration(PlayerEntity.class, AURA_FADE_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(AuraFadeComponent::new);
 		registry.beginRegistration(PlayerEntity.class, AURA_AFFINITY_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(AuraAffinityComponent::new);
-		registry.beginRegistration(PlayerEntity.class, TEMPORAL_DISRUPTION_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(player -> new UniqueSpellComponent(player, ArcanusSpells.TEMPORAL_DISRUPTION));
+		registry.beginRegistration(PlayerEntity.class, UNIQUE_SPELLS_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(UniqueSpellsComponent::new);
 	}
 
 	@Override
