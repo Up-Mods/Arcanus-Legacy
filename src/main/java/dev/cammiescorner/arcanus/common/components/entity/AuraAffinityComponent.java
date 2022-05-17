@@ -60,61 +60,59 @@ public class AuraAffinityComponent implements AutoSyncedComponent {
 
 		switch(affinity) {
 			case ENHANCER -> {
-				enhancerMod = 0.5;
-				transmuterMod = 0.3D;
-				emitterMod = 0.3D;
-				conjurerMod = -0.1D;
-				manipulatorMod = -0.1D;
+				enhancerMod = 1D;
+				transmuterMod = 0.8D;
+				emitterMod = 0.8D;
+				conjurerMod = 0.4D;
+				manipulatorMod = 0.4D;
 			}
 			case TRANSMUTER -> {
-				enhancerMod = 0.3D;
-				transmuterMod = 0.5D;
-				emitterMod = -0.1D;
-				conjurerMod = 0.3D;
+				enhancerMod = 0.8D;
+				transmuterMod = 1D;
+				emitterMod = 0.4D;
+				conjurerMod = 0.8D;
 				manipulatorMod = 0.1D;
 			}
 			case EMITTER -> {
-				enhancerMod = 0.3D;
-				transmuterMod = -0.1D;
-				emitterMod = 0.5D;
-				conjurerMod = -0.1D;
-				manipulatorMod = 0.3D;
+				enhancerMod = 0.8D;
+				transmuterMod = 0.4D;
+				emitterMod = 1D;
+				conjurerMod = 0.4D;
+				manipulatorMod = 0.8D;
 			}
 			case CONJURER -> {
-				enhancerMod = -0.1D;
-				transmuterMod = 0.3D;
-				emitterMod = -0.1D;
-				conjurerMod = 0.5D;
-				manipulatorMod = 0.3D;
+				enhancerMod = 0.4D;
+				transmuterMod = 0.8D;
+				emitterMod = 0.4D;
+				conjurerMod = 1D;
+				manipulatorMod = 0.8D;
 			}
 			case MANIPULATOR -> {
-				enhancerMod = -0.1D;
-				transmuterMod = -0.1D;
-				emitterMod = 0.3D;
-				conjurerMod = 0.3D;
-				manipulatorMod = 0.5D;
+				enhancerMod = 0.4D;
+				transmuterMod = 0.4D;
+				emitterMod = 0.8D;
+				conjurerMod = 0.8D;
+				manipulatorMod = 1D;
 			}
 			default -> {
-				enhancerMod = 0D;
-				transmuterMod = 0D;
-				emitterMod = 0D;
-				conjurerMod = 0D;
-				manipulatorMod = 0D;
+				enhancerMod = 0.5D;
+				transmuterMod = 0.5D;
+				emitterMod = 0.5D;
+				conjurerMod = 0.5D;
+				manipulatorMod = 0.5D;
 			}
 		}
 
-		if(!(affinity.equals(AuraType.NONE) || affinity.equals(AuraType.SPECIALIST))) {
-			if(enhancement != null)
-				enhancement.addPersistentModifier(new EntityAttributeModifier(ENHANCEMENT_AFFINITY_UUID, "Enhancement Affinity", enhancerMod, EntityAttributeModifier.Operation.ADDITION));
-			if(transmutation != null)
-				transmutation.addPersistentModifier(new EntityAttributeModifier(TRANSMUTATION_AFFINITY_UUID, "Transmutation Affinity", transmuterMod, EntityAttributeModifier.Operation.ADDITION));
-			if(emission != null)
-				emission.addPersistentModifier(new EntityAttributeModifier(EMISSION_AFFINITY_UUID, "Emission Affinity", emitterMod, EntityAttributeModifier.Operation.ADDITION));
-			if(conjuration != null)
-				conjuration.addPersistentModifier(new EntityAttributeModifier(CONJURATION_AFFINITY_UUID, "Conjuration Affinity", conjurerMod, EntityAttributeModifier.Operation.ADDITION));
-			if(manipulation != null)
-				manipulation.addPersistentModifier(new EntityAttributeModifier(MANIPULATION_AFFINITY_UUID, "Manipulation Affinity", manipulatorMod, EntityAttributeModifier.Operation.ADDITION));
-		}
+		if(enhancement != null)
+			enhancement.addPersistentModifier(new EntityAttributeModifier(ENHANCEMENT_AFFINITY_UUID, "Enhancement Affinity", -1 + enhancerMod, EntityAttributeModifier.Operation.ADDITION));
+		if(transmutation != null)
+			transmutation.addPersistentModifier(new EntityAttributeModifier(TRANSMUTATION_AFFINITY_UUID, "Transmutation Affinity", -1 + transmuterMod, EntityAttributeModifier.Operation.ADDITION));
+		if(emission != null)
+			emission.addPersistentModifier(new EntityAttributeModifier(EMISSION_AFFINITY_UUID, "Emission Affinity", -1 + emitterMod, EntityAttributeModifier.Operation.ADDITION));
+		if(conjuration != null)
+			conjuration.addPersistentModifier(new EntityAttributeModifier(CONJURATION_AFFINITY_UUID, "Conjuration Affinity", -1 + conjurerMod, EntityAttributeModifier.Operation.ADDITION));
+		if(manipulation != null)
+			manipulation.addPersistentModifier(new EntityAttributeModifier(MANIPULATION_AFFINITY_UUID, "Manipulation Affinity", -1 + manipulatorMod, EntityAttributeModifier.Operation.ADDITION));
 
 		ArcanusComponents.AURA_AFFINITY_COMPONENT.sync(entity);
 	}
