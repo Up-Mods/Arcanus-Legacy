@@ -1,0 +1,16 @@
+{
+    "replace": false,
+    "values": [
+        "minecraft:deepslate_tiles",
+        "minecraft:deepslate_tile_stairs",
+        "minecraft:smooth_quartz",
+        "minecraft:smooth_quartz_stairs",
+        "minecraft:smooth_quartz_slab",
+        "minecraft:chiseled_quartz_block",
+        "minecraft:amethyst_block",
+        "minecraft:amethyst_cluster",
+        "minecraft:crying_obsidian",
+        "minecraft:chain",
+        "arcanus:amethyst_altar"
+    ]
+}

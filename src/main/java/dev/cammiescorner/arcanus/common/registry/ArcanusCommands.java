@@ -32,7 +32,7 @@ public class ArcanusCommands {
 		ArgumentTypes.register("spell", SpellArgumentType.class, new ConstantArgumentSerializer<>(SpellArgumentType::new));
 	}
 
-	public static void init(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {
+	public static void init(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated, boolean bl) {
 		dispatcher.register(CommandManager.literal("spell")
 				.then(CommandManager.literal("set")
 						.then(CommandManager.argument("spell", SpellArgumentType.spell())

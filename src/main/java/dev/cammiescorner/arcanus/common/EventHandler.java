@@ -11,16 +11,16 @@ import dev.cammiescorner.arcanus.common.registry.ArcanusKeyBinds;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
+import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
+import org.quiltmc.qsl.lifecycle.api.event.ServerWorldLoadEvents;
+import org.quiltmc.qsl.networking.api.ServerPlayConnectionEvents;
+import org.quiltmc.qsl.resource.loader.api.ResourceLoaderEvents;
 
 public class EventHandler {
 	public static final Identifier HUD_ELEMENTS = Arcanus.id("textures/gui/hud_elements.png");
@@ -39,7 +39,7 @@ public class EventHandler {
 			}
 		});
 
-		ClientTickEvents.START_CLIENT_TICK.register(client -> {
+		ClientTickEvents.START.register(client -> {
 			if(client.player != null) {
 				SetCastingPacket.send(ArcanusKeyBinds.castingMode.isPressed());
 			}
@@ -60,8 +60,11 @@ public class EventHandler {
 	public static void commonEvents() {
 		CommandRegistrationCallback.EVENT.register(ArcanusCommands::init);
 
-		ServerWorldEvents.LOAD.register((server, world) -> ArcanusHelper.constructStructureMap(world));
-		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, manager, success) -> server.getWorlds().forEach(ArcanusHelper::constructStructureMap));
+		ServerWorldLoadEvents.LOAD.register((server, world) -> ArcanusHelper.constructStructureMap(world));
+		ResourceLoaderEvents.END_DATA_PACK_RELOAD.register((server, manager, success) -> {
+			if(server != null)
+				server.getWorlds().forEach(ArcanusHelper::constructStructureMap);
+		});
 
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			World world = handler.player.world;

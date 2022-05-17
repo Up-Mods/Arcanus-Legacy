@@ -23,11 +23,11 @@ public class AltarStructureComponent implements AutoSyncedComponent {
 	private final HashMap<BlockPos, BlockState> structureMap = new HashMap<>();
 	private final World world;
 	private int offsetX, offsetZ;
-	
+
 	public AltarStructureComponent(World world) {
 		this.world = world;
 	}
-	
+
 	@Override
 	public void readFromNbt(NbtCompound tag) {
 		NbtList nbtList = tag.getList("StructureMap", NbtElement.COMPOUND_TYPE);
