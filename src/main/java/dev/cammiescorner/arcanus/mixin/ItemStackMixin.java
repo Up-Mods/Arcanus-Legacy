@@ -37,7 +37,7 @@ public class ItemStackMixin {
 		if(attribute == ArcanusAttributes.AURA_REGEN) {
 			list.remove(list.size() - 1);
 			list.add(new TranslatableText(
-					"attribute.modifier.take." + modifier.getOperation().getId(),
+					"attribute.modifier.plus." + modifier.getOperation().getId(),
 					MODIFIER_FORMAT.format(e),
 					new TranslatableText((attribute).getTranslationKey())
 			).formatted(Formatting.RED));
@@ -54,7 +54,7 @@ public class ItemStackMixin {
 		if(attribute == ArcanusAttributes.AURA_REGEN) {
 			list.remove(list.size() - 1);
 			list.add(new TranslatableText(
-					"attribute.modifier.plus." + modifier.getOperation().getId(),
+					"attribute.modifier.take." + modifier.getOperation().getId(),
 					MODIFIER_FORMAT.format(e),
 					new TranslatableText((attribute).getTranslationKey())
 			).formatted(Formatting.BLUE));

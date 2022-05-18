@@ -1,6 +1,14 @@
 {
     "parent": "minecraft:item/generated",
     "textures": {
-        "layer0": "arcanus:item/mage_hood"
-    }
+        "layer0": "arcanus:item/mage_hood_open"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "arcanus:closed": 1
+            },
+            "model": "arcanus:item/mage_hood_closed"
+        }
+    ]
 }

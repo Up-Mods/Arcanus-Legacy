@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "arcanus:item/enhancer_mage_hood_closed"
+    }
+}

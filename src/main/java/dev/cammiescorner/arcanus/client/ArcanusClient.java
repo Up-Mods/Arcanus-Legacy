@@ -15,8 +15,10 @@ import ladysnake.satin.api.event.ShaderEffectRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
@@ -48,6 +50,15 @@ public class ArcanusClient implements ClientModInitializer {
 		LivingEntityEarlyFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, context) -> {
 			if(entityRenderer instanceof PlayerEntityRenderer playerRenderer)
 				entityRenderer.addEarlyFeature(new AuraFeatureRenderer<>(playerRenderer, new HeldItemFeatureRenderer<>(playerRenderer)));
+		});
+
+		ModelPredicateProviderRegistry.register(ArcanusItems.MAGE_HOOD, Arcanus.id("closed"), (stack, world, entity, i) -> {
+			NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
+
+			if(tag == null)
+				return 0F;
+
+			return tag.getBoolean("Closed") ? 1F : 0F;
 		});
 	}
 }
