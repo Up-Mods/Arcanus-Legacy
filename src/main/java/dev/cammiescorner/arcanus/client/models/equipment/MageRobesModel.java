@@ -58,9 +58,9 @@ public class MageRobesModel<T extends LivingEntity> extends BipedEntityModel<T> 
 		ModelPartData leftCover = garb.addChild("leftCover", ModelPartBuilder.create(), ModelTransform.pivot(0F, 0F, 0F));
 		ModelPartData cube_r5 = leftCover.addChild("cube_r5", ModelPartBuilder.create().uv(48, 64).cuboid(0F, -1F, -2F, 1F, 8F, 4F, new Dilation(0.29F)), ModelTransform.of(3F, 0F, 0F, 0F, 0F, -0.2618F));
 		ModelPartData rightSleeve = rightArm.addChild("rightSleeve", ModelPartBuilder.create(), ModelTransform.pivot(0F, 0F, 0F));
-		ModelPartData cube_r6 = rightSleeve.addChild("cube_r6", ModelPartBuilder.create().uv(0, 106).cuboid(-3F, -2F, -2F, 4F, 10F, 4F, new Dilation(0.29F)), ModelTransform.of(0F, 0F, 0F, 0F, 0F, 0.0524F));
+		ModelPartData cube_r6 = rightSleeve.addChild("cube_r6", ModelPartBuilder.create().uv(0, 106).cuboid(-3F, -2F, -2F, 4F, 10F, 4F, new Dilation(0.29F)), ModelTransform.of(0F, 0F, 0F, 0F, 0F, 0F));
 		ModelPartData leftSleeve = leftArm.addChild("leftSleeve", ModelPartBuilder.create(), ModelTransform.pivot(2F, 0F, 0F));
-		ModelPartData cube_r7 = leftSleeve.addChild("cube_r7", ModelPartBuilder.create().uv(32, 64).cuboid(-1F, -2F, -2F, 4F, 10F, 4F, new Dilation(0.29F)), ModelTransform.of(-2F, 0F, 0F, 0F, 0F, -0.0524F));
+		ModelPartData cube_r7 = leftSleeve.addChild("cube_r7", ModelPartBuilder.create().uv(32, 64).cuboid(-1F, -2F, -2F, 4F, 10F, 4F, new Dilation(0.29F)), ModelTransform.of(-2F, 0F, 0F, 0F, 0F, 0F));
 		ModelPartData rightShoe = rightLeg.addChild("rightShoe", ModelPartBuilder.create().uv(34, 110).cuboid(-2F, 7F, -2F, 4F, 5F, 4F, new Dilation(0.2F)), ModelTransform.pivot(0F, 0F, 0F));
 		ModelPartData leftShoe = leftLeg.addChild("leftShoe", ModelPartBuilder.create().uv(46, 90).cuboid(-2F, 7F, -2F, 4F, 5F, 4F, new Dilation(0.199F)), ModelTransform.pivot(0.2F, 0F, 0F));
 
