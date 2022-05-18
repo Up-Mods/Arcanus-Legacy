@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "arcanus:item/inert_passable_fae_stone"
+    }
+}

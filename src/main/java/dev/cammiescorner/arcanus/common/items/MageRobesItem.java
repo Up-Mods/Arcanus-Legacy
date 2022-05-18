@@ -6,13 +6,22 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.api.entity.ArcanusAttributes;
 import dev.cammiescorner.arcanus.api.spells.AuraType;
 import dev.cammiescorner.arcanus.common.registry.ArcanusMaterials;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
+import java.util.List;
 import java.util.UUID;
 
 public class MageRobesItem extends ArmorItem {
@@ -42,16 +51,25 @@ public class MageRobesItem extends ArmorItem {
 				builder.put(ArcanusAttributes.CONJURATION_AFFINITY, new EntityAttributeModifier(uuid, "Conjurer modifier", 0.1, EntityAttributeModifier.Operation.MULTIPLY_BASE));
 			case MANIPULATOR ->
 				builder.put(ArcanusAttributes.MANIPULATION_AFFINITY, new EntityAttributeModifier(uuid, "Manipulator modifier", 0.1, EntityAttributeModifier.Operation.MULTIPLY_BASE));
-			default -> {
-				builder.put(ArcanusAttributes.ENHANCEMENT_AFFINITY, new EntityAttributeModifier(uuid, "Enhancer modifier", 0.04, EntityAttributeModifier.Operation.MULTIPLY_BASE));
-				builder.put(ArcanusAttributes.TRANSMUTATION_AFFINITY, new EntityAttributeModifier(uuid, "Transmuter modifier", 0.04, EntityAttributeModifier.Operation.MULTIPLY_BASE));
-				builder.put(ArcanusAttributes.EMISSION_AFFINITY, new EntityAttributeModifier(uuid, "Emitter modifier", 0.04, EntityAttributeModifier.Operation.MULTIPLY_BASE));
-				builder.put(ArcanusAttributes.CONJURATION_AFFINITY, new EntityAttributeModifier(uuid, "Conjurer modifier", 0.04, EntityAttributeModifier.Operation.MULTIPLY_BASE));
-				builder.put(ArcanusAttributes.MANIPULATION_AFFINITY, new EntityAttributeModifier(uuid, "Manipulator modifier", 0.04, EntityAttributeModifier.Operation.MULTIPLY_BASE));
-			}
+			default ->
+				builder.put(ArcanusAttributes.AURA_REGEN, new EntityAttributeModifier(uuid, "Normal modifier", -0.1, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
 		}
 
 		attributeModifiers = builder.build();
+	}
+
+	@Override
+	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+		super.appendTooltip(stack, world, tooltip, context);
+
+		if(getSlotType() == EquipmentSlot.HEAD) {
+			NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
+
+			if(tag != null && tag.getBoolean("Closed"))
+				tooltip.add(new TranslatableText(Arcanus.MOD_ID + ".mage_robes.closed").formatted(Formatting.GRAY));
+			else
+				tooltip.add(new TranslatableText(Arcanus.MOD_ID + ".mage_robes.open").formatted(Formatting.GRAY));
+		}
 	}
 
 	@Override

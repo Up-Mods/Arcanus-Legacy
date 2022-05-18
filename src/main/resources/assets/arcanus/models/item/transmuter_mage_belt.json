@@ -1,6 +1,6 @@
 {
     "parent": "minecraft:item/generated",
     "textures": {
-        "layer0": "arcanus:item/mage_robes"
+        "layer0": "arcanus:item/transmuter_mage_belt"
     }
 }

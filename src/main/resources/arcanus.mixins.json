@@ -5,7 +5,8 @@
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"AbstractBlockMixin",
-		"PlayerEntityMixin"
+		"PlayerEntityMixin",
+		"ScreenHandlerMixin"
 	],
 	"client": [
 		"client.BiomeColorsMixin",

@@ -1,4 +1,31 @@
 {
+    "item.arcanus.rough_fae_stone": "Inert Rough Fae Stone",
+    "item.arcanus.passable_fae_stone": "Inert Passable Fae Stone",
+    "item.arcanus.mage_hood": "Mage Hood",
+    "item.arcanus.mage_robe": "Mage Robe",
+    "item.arcanus.mage_belt": "Mage Belt",
+    "item.arcanus.mage_boots": "Mage Boots",
+    "item.arcanus.enhancer_mage_hood": "Enhancer Mage Hood",
+    "item.arcanus.enhancer_mage_robe": "Enhancer Mage Robe",
+    "item.arcanus.enhancer_mage_belt": "Enhancer Mage Belt",
+    "item.arcanus.enhancer_mage_boots": "Enhancer Mage Boots",
+    "item.arcanus.transmuter_mage_hood": "Transmuter Mage Hood",
+    "item.arcanus.transmuter_mage_robe": "Transmuter Mage Robe",
+    "item.arcanus.transmuter_mage_belt": "Transmuter Mage Belt",
+    "item.arcanus.transmuter_mage_boots": "Transmuter Mage Boots",
+    "item.arcanus.emitter_mage_hood": "Emitter Mage Hood",
+    "item.arcanus.emitter_mage_robe": "Emitter Mage Robe",
+    "item.arcanus.emitter_mage_belt": "Emitter Mage Belt",
+    "item.arcanus.emitter_mage_boots": "Emitter Mage Boots",
+    "item.arcanus.conjurer_mage_hood": "Conjurer Mage Hood",
+    "item.arcanus.conjurer_mage_robe": "Conjurer Mage Robe",
+    "item.arcanus.conjurer_mage_belt": "Conjurer Mage Belt",
+    "item.arcanus.conjurer_mage_boots": "Conjurer Mage Boots",
+    "item.arcanus.manipulator_mage_hood": "Manipulator Mage Hood",
+    "item.arcanus.manipulator_mage_robe": "Manipulator Mage Robe",
+    "item.arcanus.manipulator_mage_belt": "Manipulator Mage Belt",
+    "item.arcanus.manipulator_mage_boots": "Manipulator Mage Boots",
+
 	"block.arcanus.amethyst_altar": "Amethyst Altar",
 
 	"category.arcanus.keys": "Arcanus",
@@ -13,6 +40,9 @@
 	"attribute.name.generic.arcanus.emission_affinity": "Emission Affinity",
 	"attribute.name.generic.arcanus.conjuration_affinity": "Conjuration Affinity",
 	"attribute.name.generic.arcanus.manipulation_affinity": "Manipulation Affinity",
+
+    "arcanus.mage_robes.open": "Open",
+    "arcanus.mage_robes.closed": "Closed",
 
 	"subtitles.arcanus.block.amethyst_block.grow": "Amethyst Crystal grows"
 }
