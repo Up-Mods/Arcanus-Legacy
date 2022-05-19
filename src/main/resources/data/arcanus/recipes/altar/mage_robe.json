@@ -1,0 +1,28 @@
+{
+	"type": "arcanus:amethyst_altar",
+	"ingredients": [
+		{
+			"item": "minecraft:leather_chestplate"
+		},
+        {
+            "item": "minecraft:string"
+        },
+        {
+            "item": "minecraft:string"
+        },
+        {
+            "item": "minecraft:string"
+        },
+        {
+            "item": "minecraft:amethyst_shard"
+        },
+        {
+            "item": "minecraft:amethyst_shard"
+        }
+	],
+	"power": 8,
+	"result": {
+		"type": "arcanus:craft_item",
+		"item": "arcanus:mage_robe"
+	}
+}

@@ -60,5 +60,50 @@ public class ArcanusClient implements ClientModInitializer {
 
 			return tag.getBoolean("Closed") ? 1F : 0F;
 		});
+
+		ModelPredicateProviderRegistry.register(ArcanusItems.ENHANCER_MAGE_HOOD, Arcanus.id("closed"), (stack, world, entity, i) -> {
+			NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
+
+			if(tag == null)
+				return 0F;
+
+			return tag.getBoolean("Closed") ? 1F : 0F;
+		});
+
+		ModelPredicateProviderRegistry.register(ArcanusItems.TRANSMUTER_MAGE_HOOD, Arcanus.id("closed"), (stack, world, entity, i) -> {
+			NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
+
+			if(tag == null)
+				return 0F;
+
+			return tag.getBoolean("Closed") ? 1F : 0F;
+		});
+
+		ModelPredicateProviderRegistry.register(ArcanusItems.EMITTER_MAGE_HOOD, Arcanus.id("closed"), (stack, world, entity, i) -> {
+			NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
+
+			if(tag == null)
+				return 0F;
+
+			return tag.getBoolean("Closed") ? 1F : 0F;
+		});
+
+		ModelPredicateProviderRegistry.register(ArcanusItems.CONJURER_MAGE_HOOD, Arcanus.id("closed"), (stack, world, entity, i) -> {
+			NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
+
+			if(tag == null)
+				return 0F;
+
+			return tag.getBoolean("Closed") ? 1F : 0F;
+		});
+
+		ModelPredicateProviderRegistry.register(ArcanusItems.MANIPULATOR_MAGE_HOOD, Arcanus.id("closed"), (stack, world, entity, i) -> {
+			NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
+
+			if(tag == null)
+				return 0F;
+
+			return tag.getBoolean("Closed") ? 1F : 0F;
+		});
 	}
 }
