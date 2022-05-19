@@ -4,6 +4,7 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.client.models.equipment.MageRobesModel;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
@@ -41,5 +42,8 @@ public class MageRobesRenderer implements ArmorRenderer {
 		armorModel.leftShoe.visible = slot == EquipmentSlot.FEET;
 		armorModel.rightShoe.visible = slot == EquipmentSlot.FEET;
 		ArmorRenderer.renderPart(matrices, vertices, light, stack, armorModel, texture);
+
+		ModelPart cape = armorModel.cloak.getChild("cube_r2");
+		// TODO animate cape on the cloak
 	}
 }
