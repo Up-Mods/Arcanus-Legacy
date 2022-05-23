@@ -2,29 +2,17 @@ package dev.cammiescorner.arcanus.common.items;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.api.entity.ArcanusAttributes;
 import dev.cammiescorner.arcanus.api.spells.AuraType;
 import dev.cammiescorner.arcanus.common.registry.ArcanusMaterials;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
-import java.util.List;
 import java.util.UUID;
 
-public class MageRobesItem extends ArmorItem {
+public class MageRobesItem extends RobesItem {
 	private static final UUID[] MODIFIERS = new UUID[]{
 			UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"),
 			UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"),
@@ -34,7 +22,7 @@ public class MageRobesItem extends ArmorItem {
 	private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
 
 	public MageRobesItem(EquipmentSlot slot, AuraType type) {
-		super(ArcanusMaterials.Armour.MAGE_ROBES, slot, new QuiltItemSettings().group(Arcanus.ITEM_GROUP));
+		super(ArcanusMaterials.Armour.MAGE_ROBES, slot);
 		ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
 		UUID uuid = MODIFIERS[slot.getEntitySlotId()];
 
@@ -56,20 +44,6 @@ public class MageRobesItem extends ArmorItem {
 		}
 
 		attributeModifiers = builder.build();
-	}
-
-	@Override
-	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-		super.appendTooltip(stack, world, tooltip, context);
-
-		if(getSlotType() == EquipmentSlot.HEAD) {
-			NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
-
-			if(tag != null && tag.getBoolean("Closed"))
-				tooltip.add(new TranslatableText(Arcanus.MOD_ID + ".mage_robes.closed").formatted(Formatting.GRAY));
-			else
-				tooltip.add(new TranslatableText(Arcanus.MOD_ID + ".mage_robes.open").formatted(Formatting.GRAY));
-		}
 	}
 
 	@Override

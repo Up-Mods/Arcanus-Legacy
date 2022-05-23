@@ -1,0 +1,14 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "arcanus:item/time_cultist_hood_open"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "arcanus:closed": 1
+            },
+            "model": "arcanus:item/time_cultist_hood_closed"
+        }
+    ]
+}

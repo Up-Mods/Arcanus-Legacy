@@ -1,10 +1,9 @@
 package dev.cammiescorner.arcanus.client.renderer.equipment;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.client.models.equipment.MageRobesModel;
+import dev.cammiescorner.arcanus.client.models.equipment.TimeCultRobesModel;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
@@ -14,19 +13,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
-public class MageRobesRenderer implements ArmorRenderer {
+public class TimeCultRobesRenderer implements ArmorRenderer {
+	private static final Identifier TEXTURE = Arcanus.id("textures/entity/armor/time_cultist_robes.png");
 	private final MinecraftClient client = MinecraftClient.getInstance();
-	private final Identifier texture;
-	private MageRobesModel<LivingEntity> model;
-
-	public MageRobesRenderer(Identifier texture) {
-		this.texture = texture;
-	}
+	private TimeCultRobesModel<LivingEntity> model;
 
 	@Override
 	public void render(MatrixStack matrices, VertexConsumerProvider vertices, ItemStack stack, LivingEntity entity, EquipmentSlot slot, int light, BipedEntityModel<LivingEntity> entityModel) {
 		if(model == null)
-			model = new MageRobesModel<>(client.getEntityModelLoader().getModelPart(MageRobesModel.MODEL_LAYER));
+			model = new TimeCultRobesModel<>(client.getEntityModelLoader().getModelPart(TimeCultRobesModel.MODEL_LAYER));
 
 		NbtCompound nbt = stack.getSubNbt(Arcanus.MOD_ID);
 		boolean isClosed = nbt != null && nbt.getBoolean("Closed");
@@ -38,12 +33,10 @@ public class MageRobesRenderer implements ArmorRenderer {
 		model.garb.visible = slot == EquipmentSlot.CHEST;
 		model.leftSleeve.visible = slot == EquipmentSlot.CHEST;
 		model.rightSleeve.visible = slot == EquipmentSlot.CHEST;
-		model.belt.visible = slot == EquipmentSlot.LEGS;
+		model.leftLegSleeve.visible = slot == EquipmentSlot.LEGS;
+		model.rightLegSleeve.visible = slot == EquipmentSlot.LEGS;
 		model.leftShoe.visible = slot == EquipmentSlot.FEET;
 		model.rightShoe.visible = slot == EquipmentSlot.FEET;
-		ArmorRenderer.renderPart(matrices, vertices, light, stack, model, texture);
-
-		ModelPart cape = model.cloak.getChild("cube_r2");
-		// TODO animate cape on the cloak
+		ArmorRenderer.renderPart(matrices, vertices, light, stack, model, TEXTURE);
 	}
 }

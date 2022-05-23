@@ -4,6 +4,7 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.api.spells.AuraType;
 import dev.cammiescorner.arcanus.common.items.FaeStoneItem;
 import dev.cammiescorner.arcanus.common.items.MageRobesItem;
+import dev.cammiescorner.arcanus.common.items.TimeCultistRobesItem;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
@@ -42,6 +43,11 @@ public class ArcanusItems {
 	public static final Item MANIPULATOR_MAGE_ROBE = create("manipulator_mage_robe", new MageRobesItem(EquipmentSlot.CHEST, AuraType.MANIPULATOR));
 	public static final Item MANIPULATOR_MAGE_BELT = create("manipulator_mage_belt", new MageRobesItem(EquipmentSlot.LEGS, AuraType.MANIPULATOR));
 	public static final Item MANIPULATOR_MAGE_BOOTS = create("manipulator_mage_boots", new MageRobesItem(EquipmentSlot.FEET, AuraType.MANIPULATOR));
+
+	public static final Item TIME_CULTIST_HOOD = create("time_cultist_hood", new TimeCultistRobesItem(EquipmentSlot.HEAD));
+	public static final Item TIME_CULTIST_ROBE = create("time_cultist_robe", new TimeCultistRobesItem(EquipmentSlot.CHEST));
+	public static final Item TIME_CULTIST_LEGGINGS = create("time_cultist_leggings", new TimeCultistRobesItem(EquipmentSlot.LEGS));
+	public static final Item TIME_CULTIST_BOOTS = create("time_cultist_boots", new TimeCultistRobesItem(EquipmentSlot.FEET));
 
 	//-----Registry-----//
 	public static void register() {

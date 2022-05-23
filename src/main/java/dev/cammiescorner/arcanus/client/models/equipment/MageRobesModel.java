@@ -19,8 +19,8 @@ public class MageRobesModel<T extends LivingEntity> extends BipedEntityModel<T> 
 	public final ModelPart rightSleeve;
 	public final ModelPart belt;
 	public final ModelPart garb;
-	public final ModelPart rightShoe;
 	public final ModelPart leftShoe;
+	public final ModelPart rightShoe;
 
 	public MageRobesModel(ModelPart root) {
 		super(root, RenderLayer::getArmorCutoutNoCull);
@@ -31,8 +31,8 @@ public class MageRobesModel<T extends LivingEntity> extends BipedEntityModel<T> 
 		rightSleeve = rightArm.getChild("rightSleeve");
 		garb = body.getChild("garb");
 		belt = body.getChild("belt");
-		rightShoe = rightLeg.getChild("rightShoe");
 		leftShoe = leftLeg.getChild("leftShoe");
+		rightShoe = rightLeg.getChild("rightShoe");
 	}
 
 	public static TexturedModelData getTexturedModelData() {
