@@ -8,7 +8,6 @@ import dev.cammiescorner.arcanus.client.renderer.blocks.AmethystAltarBlockEntity
 import dev.cammiescorner.arcanus.client.renderer.entities.AuraFeatureRenderer;
 import dev.cammiescorner.arcanus.client.renderer.equipment.MageRobesRenderer;
 import dev.cammiescorner.arcanus.client.renderer.equipment.TimeCultRobesRenderer;
-import dev.cammiescorner.arcanus.common.EventHandler;
 import dev.cammiescorner.arcanus.common.registry.ArcanusBlockEntities;
 import dev.cammiescorner.arcanus.common.registry.ArcanusItems;
 import dev.cammiescorner.arcanus.common.registry.ArcanusKeyBinds;
@@ -42,7 +41,7 @@ public class ArcanusClient implements ClientModInitializer {
 	public void onInitializeClient(ModContainer mod) {
 		BlockEntityRendererRegistry.register(ArcanusBlockEntities.AMETHYST_ALTAR, AmethystAltarBlockEntityRenderer::new);
 		ArcanusKeyBinds.register();
-		EventHandler.clientEvents();
+		ClientEvents.events();
 
 		EntitiesPreRenderCallback.EVENT.register(AuraEffectManager.INSTANCE);
 		ShaderEffectRenderCallback.EVENT.register(AuraEffectManager.INSTANCE);

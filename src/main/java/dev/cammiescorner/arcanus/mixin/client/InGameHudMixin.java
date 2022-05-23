@@ -2,7 +2,7 @@ package dev.cammiescorner.arcanus.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.api.ArcanusHelper;
-import dev.cammiescorner.arcanus.common.EventHandler;
+import dev.cammiescorner.arcanus.client.ClientEvents;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
@@ -35,7 +35,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
 		if(arm == Arm.LEFT) {
 			drawTexture(matrices, i - 121, scaledHeight - 23, 24, 22, 29, 24);
 
-			RenderSystem.setShaderTexture(0, EventHandler.HUD_ELEMENTS);
+			RenderSystem.setShaderTexture(0, ClientEvents.HUD_ELEMENTS);
 			drawTexture(matrices, i - 118, scaledHeight - 19, 0, 0, 16, 16);
 			RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
 
@@ -45,7 +45,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
 		else {
 			drawTexture(matrices, i + 98, scaledHeight - 23, 24, 22, 29, 24);
 
-			RenderSystem.setShaderTexture(0, EventHandler.HUD_ELEMENTS);
+			RenderSystem.setShaderTexture(0, ClientEvents.HUD_ELEMENTS);
 			drawTexture(matrices, i + 101, scaledHeight - 19, 0, 0, 16, 16);
 			RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
 

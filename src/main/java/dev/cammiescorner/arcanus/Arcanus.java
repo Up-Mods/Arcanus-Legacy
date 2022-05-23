@@ -3,12 +3,11 @@ package dev.cammiescorner.arcanus;
 import dev.cammiescorner.arcanus.api.actions.AltarAction;
 import dev.cammiescorner.arcanus.api.entity.ArcanusAttributes;
 import dev.cammiescorner.arcanus.api.spells.Spell;
-import dev.cammiescorner.arcanus.common.EventHandler;
+import dev.cammiescorner.arcanus.common.CommonEvents;
 import dev.cammiescorner.arcanus.common.packets.c2s.CastSpellPacket;
 import dev.cammiescorner.arcanus.common.packets.c2s.SetCastingPacket;
 import dev.cammiescorner.arcanus.common.registry.*;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -19,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 public class Arcanus implements ModInitializer {
 	public static final String MOD_ID = "arcanus";
@@ -50,7 +50,7 @@ public class Arcanus implements ModInitializer {
 		ServerPlayNetworking.registerGlobalReceiver(CastSpellPacket.ID, CastSpellPacket::handler);
 		ServerPlayNetworking.registerGlobalReceiver(SetCastingPacket.ID, SetCastingPacket::handler);
 
-		EventHandler.commonEvents();
+		CommonEvents.events();
 	}
 
 	public static Identifier id(String name) {
