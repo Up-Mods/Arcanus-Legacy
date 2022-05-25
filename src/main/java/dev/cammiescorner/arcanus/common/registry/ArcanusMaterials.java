@@ -12,7 +12,8 @@ import java.util.function.Supplier;
 
 public class ArcanusMaterials {
 	public enum Armour implements ArmorMaterial {
-		MAGE_ROBES("mage_robes", 25, new int[]{1, 4, 5, 2}, 32, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0F, 0F, () -> Ingredient.ofItems(Items.LEATHER));
+		MAGE_ROBES("mage_robes", 25, new int[]{1, 4, 5, 2}, 32, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0F, 0F, () -> Ingredient.ofItems(Items.LEATHER)),
+		LEADER_ROBES("leader_robes", 25, new int[]{3, 6, 8, 3}, 32, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0F, 0F, () -> Ingredient.ofItems(Items.LEATHER));
 
 		private static final int[] BASE_DURABILITY = new int[]{13, 15, 16, 11};
 		private final String name;

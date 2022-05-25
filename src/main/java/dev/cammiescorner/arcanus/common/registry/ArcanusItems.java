@@ -44,10 +44,14 @@ public class ArcanusItems {
 	public static final Item MANIPULATOR_MAGE_BELT = create("manipulator_mage_belt", new MageRobesItem(EquipmentSlot.LEGS, AuraType.MANIPULATOR));
 	public static final Item MANIPULATOR_MAGE_BOOTS = create("manipulator_mage_boots", new MageRobesItem(EquipmentSlot.FEET, AuraType.MANIPULATOR));
 
-	public static final Item TIME_CULTIST_HOOD = create("time_cultist_hood", new TimeCultistRobesItem(EquipmentSlot.HEAD));
-	public static final Item TIME_CULTIST_ROBE = create("time_cultist_robe", new TimeCultistRobesItem(EquipmentSlot.CHEST));
-	public static final Item TIME_CULTIST_LEGGINGS = create("time_cultist_leggings", new TimeCultistRobesItem(EquipmentSlot.LEGS));
-	public static final Item TIME_CULTIST_BOOTS = create("time_cultist_boots", new TimeCultistRobesItem(EquipmentSlot.FEET));
+	public static final Item TIME_CULTIST_HOOD = create("time_cultist_hood", new TimeCultistRobesItem(EquipmentSlot.HEAD, false));
+	public static final Item TIME_CULTIST_ROBE = create("time_cultist_robe", new TimeCultistRobesItem(EquipmentSlot.CHEST, false));
+	public static final Item TIME_CULTIST_LEGGINGS = create("time_cultist_leggings", new TimeCultistRobesItem(EquipmentSlot.LEGS, false));
+	public static final Item TIME_CULTIST_BOOTS = create("time_cultist_boots", new TimeCultistRobesItem(EquipmentSlot.FEET, false));
+	public static final Item TIME_CULTIST_LEADER_HOOD = create("time_cultist_leader_skull", new TimeCultistRobesItem(EquipmentSlot.HEAD, true));
+	public static final Item TIME_CULTIST_LEADER_ROBE = create("time_cultist_leader_cloak", new TimeCultistRobesItem(EquipmentSlot.CHEST, true));
+	public static final Item TIME_CULTIST_LEADER_LEGGINGS = create("time_cultist_leader_leggings", new TimeCultistRobesItem(EquipmentSlot.LEGS, true));
+	public static final Item TIME_CULTIST_LEADER_BOOTS = create("time_cultist_leader_boots", new TimeCultistRobesItem(EquipmentSlot.FEET, true));
 
 	//-----Registry-----//
 	public static void register() {

@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "arcanus:item/time_cultist_leader_skull"
+    }
+}

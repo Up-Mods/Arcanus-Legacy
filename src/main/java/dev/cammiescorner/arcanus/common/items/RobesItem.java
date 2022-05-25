@@ -25,7 +25,7 @@ public abstract class RobesItem extends ArmorItem {
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
 		super.appendTooltip(stack, world, tooltip, context);
 
-		if(getSlotType() == EquipmentSlot.HEAD) {
+		if(Arcanus.HOOD_ITEMS.contains(this)) {
 			NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
 
 			if(tag != null && tag.getBoolean("Closed"))

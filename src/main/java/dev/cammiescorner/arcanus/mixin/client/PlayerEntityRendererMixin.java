@@ -22,7 +22,9 @@ public class PlayerEntityRendererMixin {
 		NbtCompound nbt = stack.getSubNbt(Arcanus.MOD_ID);
 		boolean isClosed = nbt != null && nbt.getBoolean("Closed");
 
-		if(stack.getItem() instanceof RobesItem && isClosed)
+		if(Arcanus.HOOD_ITEMS.contains(stack.getItem()) && isClosed)
+			return false;
+		if(stack.getItem() instanceof RobesItem robes && !Arcanus.HOOD_ITEMS.contains(robes))
 			return false;
 
 		return original;
