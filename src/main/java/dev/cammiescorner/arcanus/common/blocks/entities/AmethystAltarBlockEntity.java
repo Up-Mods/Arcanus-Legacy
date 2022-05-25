@@ -54,7 +54,7 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 	}
 
 	public static <T extends BlockEntity> void tick(World world, BlockPos pos, BlockState state, T blockEntity) {
-		if(blockEntity instanceof AmethystAltarBlockEntity altar && altar.isCompleted()) {
+		if(!world.isClient() && blockEntity instanceof AmethystAltarBlockEntity altar && altar.isCompleted()) {
 			if(altar.recipeId != null) {
 				altar.recipe = (AmethystAltarRecipe) world.getRecipeManager().get(altar.recipeId).orElseGet(() -> {
 					Arcanus.LOGGER.error("Invalid Recipe ID: {}", altar.recipeId);
@@ -71,15 +71,20 @@ public class AmethystAltarBlockEntity extends BlockEntity implements Inventory {
 			List<ItemEntity> list = world.getEntitiesByType(TypeFilter.instanceOf(ItemEntity.class), box, itemEntity -> altar.filledSlots() < altar.size());
 
 			for(ItemEntity itemEntity : list) {
+				int filledSlots = altar.filledSlots();
+
+				if(filledSlots >= altar.size())
+					break;
+
 				ItemStack stack = itemEntity.getStack();
-				altar.setStack(altar.filledSlots(), stack.split(1));
+				altar.setStack(filledSlots, stack.split(1));
 
 				if(stack.getCount() <= 0)
 					itemEntity.discard();
 			}
 
 			if(altar.isCrafting()) {
-				if(altar.power < altar.recipe.getPower()) {
+				if(altar.power < altar.getRequiredPower()) {
 					BlockPos amethystPos = AMETHYST_POS_LIST.get(altar.getAmethystIndex()).add(altar.getPos());
 					BlockState amethystState = world.getBlockState(amethystPos);
 

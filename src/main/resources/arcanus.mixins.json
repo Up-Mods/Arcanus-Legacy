@@ -15,7 +15,8 @@
 		"client.InGameHudMixin",
 		"client.KeyboardMixin",
 		"client.LivingEntityRendererMixin",
-		"client.MinecraftClientMixin"
+		"client.MinecraftClientMixin",
+        "client.PlayerEntityRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

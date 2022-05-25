@@ -59,9 +59,9 @@ public class TimeCultRobesModel<T extends LivingEntity> extends BipedEntityModel
 		ModelPartData leftCover = garb.addChild("leftCover", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 		ModelPartData cube_r7 = leftCover.addChild("cube_r7", ModelPartBuilder.create().uv(16, 115).cuboid(0.2F, -1.0F, -2.0F, 1.0F, 8.0F, 4.0F, new Dilation(0.349F)), ModelTransform.of(3.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.2618F));
 		ModelPartData rightSleeve = rightArm.addChild("rightSleeve", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-		ModelPartData cube_r8 = rightSleeve.addChild("cube_r8", ModelPartBuilder.create().uv(32, 64).cuboid(-3.0F, -2.0F, -2.0F, 4.0F, 10.0F, 4.0F, new Dilation(0.29F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0524F));
+		ModelPartData cube_r8 = rightSleeve.addChild("cube_r8", ModelPartBuilder.create().uv(32, 64).cuboid(-3.0F, -2.0F, -2.0F, 4.0F, 10.0F, 4.0F, new Dilation(0.29F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F));
 		ModelPartData leftSleeve = leftArm.addChild("leftSleeve", ModelPartBuilder.create(), ModelTransform.pivot(2.0F, 0.0F, 0.0F));
-		ModelPartData cube_r9 = leftSleeve.addChild("cube_r9", ModelPartBuilder.create().uv(0, 95).cuboid(-1.0F, -2.0F, -2.0F, 4.0F, 10.0F, 4.0F, new Dilation(0.29F)), ModelTransform.of(-2.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.0524F));
+		ModelPartData cube_r9 = leftSleeve.addChild("cube_r9", ModelPartBuilder.create().uv(0, 95).cuboid(-1.0F, -2.0F, -2.0F, 4.0F, 10.0F, 4.0F, new Dilation(0.29F)), ModelTransform.of(-2.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F));
 		ModelPartData rightShoe = rightLeg.addChild("rightShoe", ModelPartBuilder.create().uv(48, 64).cuboid(-2.0F, 7.0F, -2.0F, 4.0F, 5.0F, 4.0F, new Dilation(0.4F)), ModelTransform.pivot(-0.2F, 0.0F, 0.0F));
 		ModelPartData rightLegSleeve = rightLeg.addChild("rightLegSleeve", ModelPartBuilder.create().uv(37, 94).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 7.0F, 4.0F, new Dilation(0.299F)), ModelTransform.pivot(-0.1F, 0.0F, 0.0F));
 		ModelPartData leftShoe = leftLeg.addChild("leftShoe", ModelPartBuilder.create().uv(0, 111).cuboid(-2.0F, 7.0F, -2.0F, 4.0F, 5.0F, 4.0F, new Dilation(0.399F)), ModelTransform.pivot(0.2F, 0.0F, 0.0F));

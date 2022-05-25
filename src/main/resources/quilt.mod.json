@@ -54,6 +54,14 @@
 				"versions": ">=4.1.4"
 			},
 			{
+				"id": "cardinal-components-world",
+				"versions": ">=4.1.4"
+			},
+			{
+				"id": "cardinal-components-chunk",
+				"versions": ">=4.1.4"
+			},
+			{
 				"id": "satin",
 				"versions": ">=1.7.2"
 			},
