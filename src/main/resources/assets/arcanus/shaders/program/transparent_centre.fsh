@@ -7,6 +7,7 @@ in vec2 oneTexel;
 
 uniform float Radius;
 uniform float StepGranularity;
+uniform vec3 CameraPos;
 
 out vec4 fragColor;
 
