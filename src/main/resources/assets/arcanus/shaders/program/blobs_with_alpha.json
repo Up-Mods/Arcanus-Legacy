@@ -8,14 +8,15 @@
     "fragment": "arcanus:blobs_with_alpha",
     "attributes": [ "Position" ],
     "samplers": [
-        { "name": "DiffuseSampler" }
+        { "name": "DiffuseSampler" },
+        { "name": "DepthSampler" }
     ],
     "uniforms": [
         { "name": "ProjMat",            "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
         { "name": "InSize",             "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
         { "name": "BaseSize",           "type": "float",     "count": 2,  "values": [ 1920.0, 1080.0 ] },
         { "name": "Radius",             "type": "float",     "count": 1,  "values": [ 20.0 ] },
-        { "name": "CameraPos",             "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
+        { "name": "PerspectiveMat",       "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
         { "name": "StepGranularity",    "type": "float",     "count": 1,  "values": [ 6.0 ] }
     ]
 }

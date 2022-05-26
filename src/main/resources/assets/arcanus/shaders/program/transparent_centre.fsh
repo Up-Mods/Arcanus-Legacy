@@ -7,9 +7,14 @@ in vec2 oneTexel;
 
 uniform float Radius;
 uniform float StepGranularity;
-uniform vec3 CameraPos;
+uniform mat4 PerspectiveMat;
 
 out vec4 fragColor;
+
+float calcDistance(in float windowZ) {
+    float ndcZ = (2.0 * windowZ - gl_DepthRange.near - gl_DepthRange.far) / (gl_DepthRange.far - gl_DepthRange.near);
+    return PerspectiveMat[3][2] / ((PerspectiveMat[2][3] * ndcZ) - PerspectiveMat[2][2]);
+}
 
 void main(){
     vec4 centre = texture(DiffuseSampler, texCoord);

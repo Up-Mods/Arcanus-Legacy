@@ -22,9 +22,6 @@ import java.util.function.Function;
 
 import static dev.cammiescorner.arcanus.Arcanus.id;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
-import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 
 /**
  * Manages the Aura rendering effect. Auras are rendered to a separate framebuffer with a custom renderlayer and then
@@ -35,7 +32,7 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 	public static final AuraEffectManager INSTANCE = new AuraEffectManager();
 	private final MinecraftClient client = MinecraftClient.getInstance();
 	private final ManagedCoreShader auraCoreShader = ShaderEffectManager.getInstance().manageCoreShader(id("rendertype_aura"));
-	private final ManagedShaderEffect auraPostShader = ShaderEffectManager.getInstance().manage(id("shaders/post/aura.json"), this::assignDepthTexture);
+	private final ManagedShaderEffect auraPostShader = ShaderEffectManager.getInstance().manage(id("shaders/post/aura.json"));
 	private final ManagedFramebuffer auraFramebuffer = auraPostShader.getTarget("auras");
 	private boolean auraBufferCleared;
 
@@ -48,7 +45,7 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 	 */
 	public static float getAuraFor(Entity entity) {
 		return ArcanusComponents.AURA_COMPONENT.isProvidedBy(entity) && ArcanusComponents.AURA_FADE_COMPONENT.isProvidedBy(entity) && ArcanusHelper.getAuraFade(entity) > 0 ?
-				(ArcanusComponents.AURA_COMPONENT.get(entity).getAura() / (float) ArcanusComponents.AURA_COMPONENT.get(entity).getMaxAura()) * ArcanusHelper.getAuraFade(entity) : 0;
+				(ArcanusComponents.AURA_COMPONENT.get(entity).getAura() / (float) ArcanusComponents.AURA_COMPONENT.get(entity).getMaxAura()) * ArcanusHelper.getAuraFade(entity) : 1f;
 	}
 
 	/**
@@ -59,7 +56,7 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 	 * @return the aura colour
 	 */
 	public static int[] getAuraColourFor(Entity entity) {
-		return ArcanusComponents.CURRENT_SPELL_COMPONENT.isProvidedBy(entity) ? ArcanusComponents.CURRENT_SPELL_COMPONENT.get(entity).getSelectedSpell().getSpellType().getRgbInt() : new int[]{0, 0, 0};
+		return ArcanusComponents.CURRENT_SPELL_COMPONENT.isProvidedBy(entity) ? ArcanusComponents.CURRENT_SPELL_COMPONENT.get(entity).getSelectedSpell().getSpellType().getRgbInt() : new int[]{255, 0, 0};
 	}
 
 	@Override
@@ -70,6 +67,7 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 	@Override
 	public void renderShaderEffects(float tickDelta) {
 		if(this.auraBufferCleared) {
+			auraPostShader.setUniformValue("PerspectiveMat", RenderSystem.getProjectionMatrix());
 			auraPostShader.render(tickDelta);
 			client.getFramebuffer().beginWrite(true);
 			RenderSystem.enableBlend();
@@ -89,11 +87,14 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 			auraFramebuffer.beginWrite(false);
 
 			if(!this.auraBufferCleared) {
-				// clear framebuffer colour (but not depth)
+				// clear framebuffer colour and copy depth from
 				float[] clearColor = auraFramebuffer.clearColor;
 				RenderSystem.clearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
 				RenderSystem.clear(GL_COLOR_BUFFER_BIT, MinecraftClient.IS_SYSTEM_MAC);
 
+				this.auraFramebuffer.copyDepthFrom(MinecraftClient.getInstance().getFramebuffer());
+
+				auraFramebuffer.beginWrite(false);
 				this.auraBufferCleared = true;
 			}
 		}
@@ -104,21 +105,6 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 	 */
 	private void endAuraFramebufferUse() {
 		this.client.getFramebuffer().beginWrite(false);
-	}
-
-	/**
-	 * Makes the aura framebuffer use the same depth texture as the main framebuffer. Run when the aura post shader
-	 * is initialised.
-	 *
-	 * @param managedShaderEffect shader effect being initialised
-	 */
-	private void assignDepthTexture(ManagedShaderEffect managedShaderEffect) {
-		client.getFramebuffer().beginWrite(false);
-		int depthTexturePtr = client.getFramebuffer().getDepthAttachment();
-		if(depthTexturePtr > -1) {
-			auraFramebuffer.beginWrite(false);
-			GlStateManager._glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexturePtr, 0);
-		}
 	}
 
 	/**
@@ -159,7 +145,7 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 		// have to extend RenderLayer to access a few of these things
 
 		private static final Target AURA_TARGET = new Target("arcanus:aura_target", AuraEffectManager.INSTANCE::beginAuraFramebufferUse, AuraEffectManager.INSTANCE::endAuraFramebufferUse);
-		private static final Function<Identifier, RenderLayer> AURA_LAYER = Util.memoize(id -> RenderLayer.of("aura", VertexFormats.POSITION_COLOR_TEXTURE, VertexFormat.DrawMode.QUADS, 256, false, true, MultiPhaseParameters.builder().shader(new Shader(AuraEffectManager.INSTANCE.auraCoreShader::getProgram)).writeMaskState(COLOR_MASK).transparency(TRANSLUCENT_TRANSPARENCY).target(AURA_TARGET).texture(new Texture(id, false, false)).build(false)));
+		private static final Function<Identifier, RenderLayer> AURA_LAYER = Util.memoize(id -> RenderLayer.of("aura", VertexFormats.POSITION_COLOR_TEXTURE, VertexFormat.DrawMode.QUADS, 256, false, true, MultiPhaseParameters.builder().shader(new Shader(AuraEffectManager.INSTANCE.auraCoreShader::getProgram)).writeMaskState(ALL_MASK).transparency(TRANSLUCENT_TRANSPARENCY).target(AURA_TARGET).texture(new Texture(id, false, false)).build(false)));
 		private static final Identifier WHITE_TEXTURE = new Identifier("misc/white.png");
 		private static final RenderLayer DEFAULT_AURA_LAYER = AURA_LAYER.apply(WHITE_TEXTURE);
 
