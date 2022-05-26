@@ -45,7 +45,7 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 	 */
 	public static float getAuraFor(Entity entity) {
 		return ArcanusComponents.AURA_COMPONENT.isProvidedBy(entity) && ArcanusComponents.AURA_FADE_COMPONENT.isProvidedBy(entity) && ArcanusHelper.getAuraFade(entity) > 0 ?
-				(ArcanusComponents.AURA_COMPONENT.get(entity).getAura() / (float) ArcanusComponents.AURA_COMPONENT.get(entity).getMaxAura()) * ArcanusHelper.getAuraFade(entity) : 1f;
+				(ArcanusComponents.AURA_COMPONENT.get(entity).getAura() / (float) ArcanusComponents.AURA_COMPONENT.get(entity).getMaxAura()) * ArcanusHelper.getAuraFade(entity) : 0;
 	}
 
 	/**
@@ -56,7 +56,7 @@ public final class AuraEffectManager implements EntitiesPreRenderCallback, Shade
 	 * @return the aura colour
 	 */
 	public static int[] getAuraColourFor(Entity entity) {
-		return ArcanusComponents.CURRENT_SPELL_COMPONENT.isProvidedBy(entity) ? ArcanusComponents.CURRENT_SPELL_COMPONENT.get(entity).getSelectedSpell().getSpellType().getRgbInt() : new int[]{255, 0, 0};
+		return ArcanusComponents.CURRENT_SPELL_COMPONENT.isProvidedBy(entity) ? ArcanusComponents.CURRENT_SPELL_COMPONENT.get(entity).getSelectedSpell().getSpellType().getRgbInt() : new int[]{0, 0, 0};
 	}
 
 	@Override
