@@ -26,8 +26,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.loot.function.LootFunctionType;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.structure.processor.StructureProcessorType;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -88,6 +88,10 @@ public class Arcanus implements ModInitializer {
 		LOGGER.info("imagine people still looking for these :hahayes:");
 	}
 
+	public static Identifier id(String name) {
+		return new Identifier(MOD_ID, name);
+	}
+
 	public static ArcanusConfig getConfig() {
 		return configHolder.getConfig();
 	}
@@ -99,7 +103,7 @@ public class Arcanus implements ModInitializer {
 	}
 
 	public static MutableText getSpellInputs(List<Pattern> pattern, int index) {
-		return index >= pattern.size() || pattern.get(index) == null ? new LiteralText("?").formatted(Formatting.GRAY, Formatting.UNDERLINE) : new LiteralText(pattern.get(index).getSymbol()).formatted(Formatting.GREEN);
+		return index >= pattern.size() || pattern.get(index) == null ? Text.literal("?").formatted(Formatting.GRAY, Formatting.UNDERLINE) : Text.literal(pattern.get(index).getSymbol()).formatted(Formatting.GREEN);
 	}
 
 	public static class DataTrackers {

@@ -8,7 +8,6 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import java.util.Random;
 
@@ -25,8 +24,8 @@ public class SpellBooks {
 		tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
 		tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
 		tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-		listTag.add(textToNbt(new TranslatableText("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
-				.append(new TranslatableText("book." + Arcanus.MOD_ID + ".casting_pattern"))
+		listTag.add(textToNbt(Text.translatable("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
+				.append(Text.translatable("book." + Arcanus.MOD_ID + ".casting_pattern"))
 				.append("          " + spellToPattern(spell))));
 		tag.put("pages", listTag);
 

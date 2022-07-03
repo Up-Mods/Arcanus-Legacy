@@ -26,7 +26,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -319,7 +318,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
 		}
 		else {
-			sendMessage(new TranslatableText("block.minecraft.spawn.not_valid"), false);
+			sendMessage(Text.translatable("block.minecraft.spawn.not_valid"), false);
 		}
 
 		activeSpell = null;
@@ -429,7 +428,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			}
 		}
 		else {
-			sendMessage(new TranslatableText("spell." + Arcanus.MOD_ID + ".no_target"), false);
+			sendMessage(Text.translatable("spell." + Arcanus.MOD_ID + ".no_target"), false);
 		}
 
 		activeSpell = null;
@@ -447,7 +446,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			world.spawnEntity(solarStrike);
 		}
 		else {
-			sendMessage(new TranslatableText("spell." + Arcanus.MOD_ID + ".no_target"), false);
+			sendMessage(Text.translatable("spell." + Arcanus.MOD_ID + ".no_target"), false);
 		}
 
 		activeSpell = null;
@@ -466,7 +465,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			world.spawnEntity(arcaneWall);
 		}
 		else {
-			sendMessage(new TranslatableText("spell." + Arcanus.MOD_ID + ".no_target"), false);
+			sendMessage(Text.translatable("spell." + Arcanus.MOD_ID + ".no_target"), false);
 		}
 
 		activeSpell = null;

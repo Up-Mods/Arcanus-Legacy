@@ -7,15 +7,15 @@ import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -29,7 +29,7 @@ public class CastSpellPacket {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		buf.writeVarInt(spellId);
 
-		ClientSidePacketRegistryImpl.INSTANCE.sendToServer(ID, buf);
+		ClientPlayNetworking.send(ID, buf);
 	}
 
 	public static void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler network, PacketByteBuf buf, PacketSender sender) {
@@ -45,7 +45,7 @@ public class CastSpellPacket {
 				int realManaCost = (int) (spell.getManaCost() * ArcanusHelper.getManaCost(player));
 
 				if(player.isCreative() || (getConfig().haveBurnout && user.getMana() > 0) || (!getConfig().haveBurnout && user.getMana() >= realManaCost)) {
-					player.sendMessage(new TranslatableText(spell.getTranslationKey()).formatted(Formatting.GREEN), true);
+					player.sendMessage(Text.translatable(spell.getTranslationKey()).formatted(Formatting.GREEN), true);
 					spell.onCast(player.world, player);
 
 					if(!player.isCreative()) {
@@ -55,7 +55,7 @@ public class CastSpellPacket {
 							int burnoutAmount = realManaCost - user.getMana();
 							user.addBurnout(burnoutAmount);
 							player.damage(ModDamageSource.MAGIC_BURNOUT, burnoutAmount);
-							player.sendMessage(new TranslatableText("error." + Arcanus.MOD_ID + ".burnout").formatted(Formatting.RED), false);
+							player.sendMessage(Text.translatable("error." + Arcanus.MOD_ID + ".burnout").formatted(Formatting.RED), false);
 						}
 
 						user.addMana(-realManaCost);
@@ -75,11 +75,11 @@ public class CastSpellPacket {
 					}
 				}
 				else {
-					player.sendMessage(new TranslatableText("error." + Arcanus.MOD_ID + ".not_enough_mana").formatted(Formatting.RED), false);
+					player.sendMessage(Text.translatable("error." + Arcanus.MOD_ID + ".not_enough_mana").formatted(Formatting.RED), false);
 				}
 			}
 			else {
-				player.sendMessage(new TranslatableText("error." + Arcanus.MOD_ID + ".unknown_spell").formatted(Formatting.RED), true);
+				player.sendMessage(Text.translatable("error." + Arcanus.MOD_ID + ".unknown_spell").formatted(Formatting.RED), true);
 			}
 		});
 	}

@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.WrittenBookItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -36,17 +35,19 @@ public abstract class WrittenBookItemMixin extends Item {
 			((MagicUser) user).setKnownSpell(new Identifier(stack.getOrCreateNbt().getString("spell")));
 	}
 
-	@Inject(method = "getName", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/LiteralText;<init>(Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
+	@Inject(method = "getName", at = @At(value = "INVOKE",
+			target = "Lnet/minecraft/text/Text;literal(Ljava/lang/String;)Lnet/minecraft/text/MutableText;"
+	), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
 	public void getName(ItemStack stack, CallbackInfoReturnable<Text> info, NbtCompound nbtCompound, String string) {
 		if(stack.hasNbt() && stack.getNbt().contains("spell")) {
-			info.setReturnValue(new TranslatableText(string));
+			info.setReturnValue(Text.translatable(string));
 		}
 	}
 
 	@Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context, CallbackInfo info, NbtCompound nbtCompound, String string) {
 		if(stack.hasNbt() && stack.getNbt().contains("spell")) {
-			tooltip.add(new TranslatableText("book.byAuthor").append(new TranslatableText(string)).formatted(Formatting.GRAY));
+			tooltip.add(Text.translatable("book.byAuthor").append(Text.translatable(string)).formatted(Formatting.GRAY));
 			info.cancel();
 		}
 	}

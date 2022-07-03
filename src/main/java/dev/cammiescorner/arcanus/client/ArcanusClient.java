@@ -18,8 +18,8 @@ import dev.cammiescorner.arcanus.core.util.EventHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.client.render.*;
@@ -55,9 +55,9 @@ public class ArcanusClient implements ClientModInitializer {
 	}
 
 	public void entityRendererRegistry() {
-		EntityRendererRegistry.INSTANCE.register(ModEntities.SOLAR_STRIKE, SolarStrikeEntityRenderer::new);
-		EntityRendererRegistry.INSTANCE.register(ModEntities.ARCANE_BARRIER, ArcaneBarrierEntityRenderer::new);
-		EntityRendererRegistry.INSTANCE.register(ModEntities.MAGIC_MISSILE, MagicMissileEntityRenderer::new);
+		EntityRendererRegistry.register(ModEntities.SOLAR_STRIKE, SolarStrikeEntityRenderer::new);
+		EntityRendererRegistry.register(ModEntities.ARCANE_BARRIER, ArcaneBarrierEntityRenderer::new);
+		EntityRendererRegistry.register(ModEntities.MAGIC_MISSILE, MagicMissileEntityRenderer::new);
 	}
 
 	public void particleFactoryRegistry() {
@@ -83,6 +83,6 @@ public class ArcanusClient implements ClientModInitializer {
 	}
 
 	public void blockEntityRendererRegistry() {
-		BlockEntityRendererRegistry.INSTANCE.register(ModBlockEntities.DISPLAY_CASE, DisplayCaseBlockEntityRenderer::new);
+		BlockEntityRendererRegistry.register(ModBlockEntities.DISPLAY_CASE, DisplayCaseBlockEntityRenderer::new);
 	}
 }

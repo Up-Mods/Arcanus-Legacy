@@ -6,8 +6,8 @@ import dev.cammiescorner.arcanus.core.util.SpellBooks;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LecternBlock;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.processor.StructureProcessor;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.util.math.BlockPos;
@@ -20,13 +20,13 @@ public class LecternStructureProcessor extends StructureProcessor {
 
 	@Nullable
 	@Override
-	public Structure.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, Structure.StructureBlockInfo structureInfoLocal, Structure.StructureBlockInfo structureInfoWorld, StructurePlacementData data) {
+	public StructureTemplate.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo structureInfoLocal, StructureTemplate.StructureBlockInfo structureInfoWorld, StructurePlacementData data) {
 		if(!structureInfoWorld.state.isOf(Blocks.LECTERN))
 			return structureInfoWorld;
 
 		structureInfoWorld.nbt.put("Book", SpellBooks.getRandomSpellBook().writeNbt(new NbtCompound()));
 
-		return new Structure.StructureBlockInfo(structureInfoWorld.pos, structureInfoWorld.state.with(LecternBlock.HAS_BOOK, true), structureInfoWorld.nbt);
+		return new StructureTemplate.StructureBlockInfo(structureInfoWorld.pos, structureInfoWorld.state.with(LecternBlock.HAS_BOOK, true), structureInfoWorld.nbt);
 	}
 
 	@Override

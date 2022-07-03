@@ -10,9 +10,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +42,7 @@ public class MinecraftClientMixin implements ClientUtils {
 
 		if(player.getMainHandStack().getItem() instanceof WandItem) {
 			if(timer > 0) {
-				MutableText hyphen = new LiteralText("-").formatted(Formatting.GRAY);
+				MutableText hyphen = Text.literal("-").formatted(Formatting.GRAY);
 
 				player.sendMessage(Arcanus.getSpellInputs(pattern, 0).append(hyphen).append(Arcanus.getSpellInputs(pattern, 1)).append(hyphen).append(Arcanus.getSpellInputs(pattern, 2)), true);
 
@@ -56,7 +55,7 @@ public class MinecraftClientMixin implements ClientUtils {
 						}
 						else {
 							if(Arcanus.SPELL.getRawId(spell) + 1 == Arcanus.SPELL.getIds().size()) {
-								player.sendMessage(new TranslatableText("error." + Arcanus.MOD_ID + ".missing_spell").formatted(Formatting.RED), true);
+								player.sendMessage(Text.translatable("error." + Arcanus.MOD_ID + ".missing_spell").formatted(Formatting.RED), true);
 								unfinishedSpell = false;
 							}
 						}
@@ -66,7 +65,7 @@ public class MinecraftClientMixin implements ClientUtils {
 				}
 			}
 			else if(pattern.size() < 3 && unfinishedSpell)
-				player.sendMessage(new LiteralText(""), true);
+				player.sendMessage(Text.literal(""), true);
 		}
 		else
 			timer = 0;
