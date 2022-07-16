@@ -22,8 +22,10 @@
 				"player": [
 					{
 						"condition": "minecraft:entity_properties",
+						"entity": "this",
 						"predicate": {
-							"player": {
+							"type_specific": {
+								"type": "player",
 								"advancements": {
 									"arcanus:wand": true,
 									"arcanus:spell_books/lunge": true,
@@ -36,8 +38,7 @@
 									"arcanus:spell_books/arcane_barrier": true
 								}
 							}
-						},
-						"entity": "this"
+						}
 					}
 				]
 			}

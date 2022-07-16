@@ -108,7 +108,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				if(manaCooldown != 0 && getMana() < getMaxMana() - getBurnout() && world.getTime() % manaCooldown == 0)
 					addMana(1);
 
-				if(burnoutCooldown != 0 && getBurnout() > 0 && hungerManager.getFoodLevel() > 0 && world.getTime() % burnoutCooldown == 0) {
+				if(burnoutCooldown != 0 && getBurnout() > 0 && world.getTime() % burnoutCooldown == 0) {
 					addBurnout(-1);
 					addExhaustion(5F);
 				}

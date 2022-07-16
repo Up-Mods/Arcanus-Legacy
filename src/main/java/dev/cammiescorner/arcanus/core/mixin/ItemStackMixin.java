@@ -27,12 +27,12 @@ public class ItemStackMixin {
 		return entry;
 	}
 
-	@ModifyArg(method = "getTooltip", slice = @Slice(from = @At(value = "CONSTANT", args = "doubleValue=0.0", ordinal = 0)), at = @At(value = "INVOKE", target = "Lnet/minecraft/text/TranslatableText;formatted(Lnet/minecraft/util/Formatting;)Lnet/minecraft/text/MutableText;", ordinal = 0))
+	@ModifyArg(method = "getTooltip", slice = @Slice(from = @At(value = "CONSTANT", args = "doubleValue=0.0", ordinal = 0)), at = @At(value = "INVOKE", target = "Lnet/minecraft/text/MutableText;formatted(Lnet/minecraft/util/Formatting;)Lnet/minecraft/text/MutableText;", ordinal = 0))
 	private Formatting changePositiveFormatting(Formatting value) {
 		return affectCurrentAttribute ? Formatting.RED : value;
 	}
 
-	@ModifyArg(method = "getTooltip", slice = @Slice(from = @At(value = "CONSTANT", args = "doubleValue=0.0", ordinal = 1)), at = @At(value = "INVOKE", target = "Lnet/minecraft/text/TranslatableText;formatted(Lnet/minecraft/util/Formatting;)Lnet/minecraft/text/MutableText;", ordinal = 0))
+	@ModifyArg(method = "getTooltip", slice = @Slice(from = @At(value = "CONSTANT", args = "doubleValue=0.0", ordinal = 1)), at = @At(value = "INVOKE", target = "Lnet/minecraft/text/MutableText;formatted(Lnet/minecraft/util/Formatting;)Lnet/minecraft/text/MutableText;", ordinal = 0))
 	private Formatting changeNegativeFormatting(Formatting value) {
 		return affectCurrentAttribute ? Formatting.BLUE : value;
 	}

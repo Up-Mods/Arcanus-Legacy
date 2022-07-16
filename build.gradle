@@ -1,23 +1,14 @@
-import com.modrinth.minotaur.TaskModrinthUpload
-
 plugins {
     id 'fabric-loom' version '0.12.+'
     id 'maven-publish'
-    id "com.modrinth.minotaur" version "1.1.0"
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
-def ENV = System.getenv()
-def buildTime = ENV.BUILD_TIME ?: new Date().format('yyyyMMddHHmmss')
-
 archivesBaseName = project.archives_base_name
+version = project.mod_version
 group = project.maven_group
-
-boolean isPreviewBuild = !ENV.TAG || ENV.TAG.matches(".+-.+")
-def buildNumber = !ENV.TAG ? ("${ENV.BUILD_NUMBER ? "build.${ENV.BUILD_NUMBER}" : buildTime}-${project.minecraft_version}") : ""
-version = (ENV.TAG ?: "development") + ((isPreviewBuild && !ENV.TAG) ? "+${buildNumber}" : "")
 
 repositories {
     maven { url "https://maven.shedaniel.me" }
@@ -72,15 +63,14 @@ jar {
     from "LICENSE"
 }
 
-artifacts {
-    archives(remapJar)
-    archives(sourcesJar)
-}
-
+// configure the maven publication
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact(remapJar)
+            // add all the jars that should be included when publishing to maven
+            artifact(remapJar) {
+                builtBy remapJar
+            }
             artifact(sourcesJar) {
                 builtBy remapSourcesJar
             }
@@ -92,23 +82,4 @@ publishing {
         // uncomment to publish to the local maven
         // mavenLocal()
     }
-}
-
-task publishToModrinth(type: TaskModrinthUpload, dependsOn: assemble) {
-    if (ENV.MODRINTH_TOKEN) {
-        token = ENV.MODRINTH_TOKEN
-    }
-    projectId = project.modrinth_id
-    uploadFile = remapJar
-    versionNumber = ENV.TAG ?: version
-    versionName = versionNumber // need this here because the Modrinth API doesn't do that by default
-    releaseType = isPreviewBuild ? ((ENV.TAG && ENV.TAG.contains("-beta")) ? "beta" : "alpha") : "release"
-    "${project.modrinth_game_versions}".split(",").each {
-        addGameVersion(it)
-    }
-    addLoader("fabric")
-}
-
-if (ENV.MODRINTH_TOKEN) {
-    tasks.publish.dependsOn(publishToModrinth)
 }
