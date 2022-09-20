@@ -51,6 +51,21 @@ public class ArcanusConfig implements ConfigData {
 			"betterstrongholds:rooms/cmd_yung",
 			"betterstrongholds:rooms/grand_library",
 			"betterstrongholds:rooms/library_md",
+			"biomemakeover:ghosttown/houses/house_large_02",
+			"biomemakeover:ghosttown/houses/house_large_03",
+			"biomemakeover:ghosttown/houses/house_medium_01",
+			"biomemakeover:ghosttown/houses/house_medium_04",
+			"biomemakeover:ghosttown/houses/house_small_04",
+			"biomemakeover:mansion/boss_room",
+			"biomemakeover:mansion/corridor/corner/corridor_corner_3",
+			"biomemakeover:mansion/corridor/straight/corridor_straight_6",
+			"biomemakeover:mansion/room/big/room_big_1",
+			"biomemakeover:mansion/room/big/room_big_6",
+			"biomemakeover:mansion/room/big/room_big_9",
+			"biomemakeover:mansion/room/room_12",
+			"biomemakeover:mansion/room/room_17",
+			"biomemakeover:mansion/room/room_23",
+			"biomemakeover:mansion/room/room_6",
 			"dungeons_arise:bandit_towers/bandit_towers_crossing_2",
 			"dungeons_arise:bandit_towers/bandit_towers_crossing_5",
 			"dungeons_arise:bandit_towers/bandit_towers_part_0",
@@ -211,7 +226,20 @@ public class ArcanusConfig implements ConfigData {
 			"stonevaults:magetower/floors/library",
 			"stonevaults:magetower/sidetower/bedroom",
 			"stonevaults:pillager_dungeon/rooms/big_library",
-			"stonevaults:pillager_dungeon/rooms/library"
+			"stonevaults:pillager_dungeon/rooms/library",
+			"structory:ruin/taiga_underground/quarters_hall3_enchanting",
+			"structory:ruin/taiga_underground/quarters_hall_books",
+			"structory:ruin/taiga_underground/quarters_hall_library",
+			"structory:unsorted/villager_outpost",
+			"terralith:pillager_outpost/desert/desert_outpost",
+			"terralith:ruin/glacial/interior216",
+			"terralith:unsorted/villager_outpost",
+			"terralith:village/desert/houses/cartographer2",
+			"terralith:village/desert/houses/generic5",
+			"terralith:village/desert/houses/generic_big1",
+			"terralith:village/desert/houses/library1",
+			"terralith:village/fortified/houses/cartographer",
+			"terralith:village/fortified/houses/library"
 	);
 
 	@Comment("A list of structure paths that have Lecterns to be filled" +
@@ -221,6 +249,11 @@ public class ArcanusConfig implements ConfigData {
 			"betterstrongholds:rooms/grand_library",
 			"betterstrongholds:rooms/library_md",
 			"betterstrongholds:rooms/treasure_room_lg",
+			"biomemakeover:ghosttown/houses/house_large_02",
+			"biomemakeover:ghosttown/houses/house_large_05",
+			"biomemakeover:ghosttown/houses/house_small_04",
+			"biomemakeover:ghosttown/houses/house_small_11",
+			"biomemakeover:mansion/boss_room",
 			"dungeons_arise:monastery/monastery_top_0",
 			"endrem:end_castle/castle_bl",
 			"endrem:end_castle/castle_br",
@@ -263,7 +296,15 @@ public class ArcanusConfig implements ConfigData {
 			"stoneholm:poi/library_02",
 			"stonevaults:magetower/floors/library",
 			"stonevaults:pillager_dungeon/rooms/big_library",
-			"stonevaults:pillager_dungeon/rooms/storage_2"
+			"stonevaults:pillager_dungeon/rooms/storage_2",
+			"structory:unsorted/villager_outpost",
+			"terralith:pillager_outpost/desert/desert_outpost",
+			"terralith:unsorted/villager_outpost",
+			"terralith:village/desert/houses/castle",
+			"terralith:village/desert/houses/generic_big1",
+			"terralith:village/desert/houses/library1",
+			"terralith:village/fortified/houses/church",
+			"terralith:village/fortified/houses/library"
 	);
 
 	public static class SpellStuff {
