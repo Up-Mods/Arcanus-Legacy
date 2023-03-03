@@ -22,32 +22,42 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderPhase;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 public class ArcanusClient implements ClientModInitializer {
-	@Nullable
-	public static Shader renderTypeMagicShader;
-	public static final RenderLayer MAGIC = RenderLayer.of("magic", VertexFormats.POSITION_COLOR,
-			VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder()
-					.shader(new RenderPhase.Shader(() -> renderTypeMagicShader))
-					.writeMaskState(RenderLayer.ALL_MASK)
-					.transparency(RenderLayer.LIGHTNING_TRANSPARENCY)
-					.target(RenderLayer.WEATHER_TARGET)
-					.build(false));
-
 	@Override
 	public void onInitializeClient() {
 		screenRegistry();
 		entityRendererRegistry();
 		particleFactoryRegistry();
-		// ModKeybinds.register();
 		itemPredicateRegistry();
 		blockRenderLayerRegistry();
 		blockEntityRendererRegistry();
 		EventHandler.clientEvents();
+	}
+
+	public static RenderLayer getMagicCircles(Identifier texture) {
+		return RenderLayer.of(
+				Arcanus.id("magic").toString(),
+				VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
+				VertexFormat.DrawMode.QUADS,
+				256,
+				false,
+				true,
+				RenderLayer.MultiPhaseParameters.builder()
+						.program(RenderLayer.ENTITY_TRANSLUCENT_EMISSIVE_PROGRAM)
+						.texture(new RenderPhase.Texture(texture, false, false))
+						.overlay(RenderPhase.ENABLE_OVERLAY_COLOR)
+						.transparency(RenderLayer.ADDITIVE_TRANSPARENCY)
+						.writeMaskState(RenderLayer.ALL_MASK)
+						.cull(RenderPhase.DISABLE_CULLING)
+						.build(false)
+		);
 	}
 
 	public void screenRegistry() {

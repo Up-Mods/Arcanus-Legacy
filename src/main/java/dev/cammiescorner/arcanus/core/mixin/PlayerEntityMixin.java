@@ -4,10 +4,14 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.entities.ArcaneBarrierEntity;
 import dev.cammiescorner.arcanus.common.entities.MagicMissileEntity;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
+import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
 import dev.cammiescorner.arcanus.core.registry.ModParticles;
 import dev.cammiescorner.arcanus.core.registry.ModSoundEvents;
 import dev.cammiescorner.arcanus.core.registry.ModSpells;
-import dev.cammiescorner.arcanus.core.util.*;
+import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
+import dev.cammiescorner.arcanus.core.util.CanBeDiscombobulated;
+import dev.cammiescorner.arcanus.core.util.MagicUser;
+import dev.cammiescorner.arcanus.core.util.Spell;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
@@ -32,7 +36,6 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -47,7 +50,6 @@ import java.util.Optional;
 
 import static dev.cammiescorner.arcanus.Arcanus.DataTrackers.*;
 import static dev.cammiescorner.arcanus.Arcanus.EntityAttributes.*;
-import static dev.cammiescorner.arcanus.Arcanus.getConfig;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements MagicUser {
@@ -102,8 +104,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				spellTimer = 0;
 
 			if(world.getTime() >= lastCastTime + 20) {
-				int manaCooldown = (int) Math.round(getConfig().baseManaCooldown * ArcanusHelper.getManaRegen((PlayerEntity) (Object) this));
-				int burnoutCooldown = (int) Math.round(getConfig().baseBurnoutCooldown * ArcanusHelper.getBurnoutRegen((PlayerEntity) (Object) this));
+				int manaCooldown = (int) Math.round(ArcanusConfig.baseManaCooldown * ArcanusHelper.getManaRegen((PlayerEntity) (Object) this));
+				int burnoutCooldown = (int) Math.round(ArcanusConfig.baseBurnoutCooldown * ArcanusHelper.getBurnoutRegen((PlayerEntity) (Object) this));
 
 				if(manaCooldown != 0 && getMana() < getMaxMana() - getBurnout() && world.getTime() % manaCooldown == 0)
 					addMana(1);
@@ -288,7 +290,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 			if(isOnGround() && spellTimer <= 8) {
 				spellTimer = 0;
-				world.createExplosion(this, getX(), getY() + 0.5, getZ(), 1, Explosion.DestructionType.NONE);
+				world.createExplosion(this, getX(), getY() + 0.5, getZ(), 1, World.ExplosionSourceType.NONE);
 				activeSpell = null;
 				hasHit.clear();
 			}

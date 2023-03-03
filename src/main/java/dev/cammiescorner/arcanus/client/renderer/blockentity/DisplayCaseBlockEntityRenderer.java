@@ -12,7 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 
 public class DisplayCaseBlockEntityRenderer implements BlockEntityRenderer<DisplayCaseBlockEntity> {
 	private final ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
@@ -32,13 +32,13 @@ public class DisplayCaseBlockEntityRenderer implements BlockEntityRenderer<Displ
 			if(stack.getItem() instanceof BlockItem) {
 				matrices.translate(0.5D, 0.9D, 0.5D);
 				matrices.scale(0.35F, 0.35F, 0.35F);
-				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rotation));
+				matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
 			}
 			else {
 				matrices.translate(0.5D, 0.84D, 0.5D);
 				matrices.scale(0.7F, 0.7F, 0.7F);
-				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rotation));
-				matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(90));
+				matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
+				matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90));
 			}
 
 			itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED, light, overlay, matrices, vertexConsumers, (int) entity.getPos().asLong());

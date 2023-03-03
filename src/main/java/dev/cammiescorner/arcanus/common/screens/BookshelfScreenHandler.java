@@ -7,11 +7,11 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class BookshelfScreenHandler extends ScreenHandler {
 	private final Inventory inventory;
@@ -150,7 +150,7 @@ public class BookshelfScreenHandler extends ScreenHandler {
 	}
 
 	@Override
-	public ItemStack transferSlot(PlayerEntity player, int invSlot) {
+	public ItemStack quickMove(PlayerEntity player, int invSlot) {
 		ItemStack newStack = ItemStack.EMPTY;
 		Slot slot = this.slots.get(invSlot);
 
@@ -175,7 +175,7 @@ public class BookshelfScreenHandler extends ScreenHandler {
 	}
 
 	public static class BookSlot extends Slot {
-		private static final TagKey<Item> BOOKS = TagKey.of(Registry.ITEM_KEY, new Identifier("c", "books"));
+		private static final TagKey<Item> BOOKS = TagKey.of(Registries.ITEM.getKey(), new Identifier("c", "books"));
 
 		public BookSlot(Inventory inventory, int index, int x, int y) {
 			super(inventory, index, x, y);

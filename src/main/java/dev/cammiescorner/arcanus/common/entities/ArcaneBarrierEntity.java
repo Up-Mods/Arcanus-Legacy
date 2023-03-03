@@ -1,7 +1,9 @@
 package dev.cammiescorner.arcanus.common.entities;
 
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -9,8 +11,6 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.ShulkerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -54,7 +54,7 @@ public class ArcaneBarrierEntity extends Entity {
 	}
 
 	@Override
-	public boolean collides() {
+	public boolean canHit() {
 		return !isRemoved();
 	}
 
@@ -127,11 +127,6 @@ public class ArcaneBarrierEntity extends Entity {
 		setHitTimer(5);
 
 		return true;
-	}
-
-	@Override
-	public Packet<?> createSpawnPacket() {
-		return new EntitySpawnS2CPacket(this, owner == null ? 0 : owner.getId());
 	}
 
 	public void setOwner(PlayerEntity owner) {

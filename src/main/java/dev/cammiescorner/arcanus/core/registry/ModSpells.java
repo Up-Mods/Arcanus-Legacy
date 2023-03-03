@@ -2,52 +2,42 @@ package dev.cammiescorner.arcanus.core.registry;
 
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.spells.*;
+import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
 import dev.cammiescorner.arcanus.core.util.Spell;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
-import java.util.LinkedHashMap;
-
-import static dev.cammiescorner.arcanus.Arcanus.*;
 import static dev.cammiescorner.arcanus.core.util.Pattern.LEFT;
 import static dev.cammiescorner.arcanus.core.util.Pattern.RIGHT;
 
 public class ModSpells {
-	//-----Spell Map-----//
-	public static final LinkedHashMap<Spell, Identifier> SPELLS = new LinkedHashMap<>();
-
 	//-----Spells-----//
-	public static final Spell LUNGE = new LungeSpell(RIGHT, RIGHT, RIGHT, getConfig().spells.manaCosts.lungeCastingCost);
-	public static final Spell DREAM_WARP = new DreamWarpSpell(RIGHT, LEFT, RIGHT, getConfig().spells.manaCosts.dreamWarpCastingCost);
-	public static final Spell MAGIC_MISSILE = new MagicMissileSpell(LEFT, LEFT, LEFT, getConfig().spells.manaCosts.magicMissileCastingCost);
-	public static final Spell TELEKINESIS = new TelekinesisSpell(LEFT, RIGHT, LEFT, getConfig().spells.manaCosts.telekinesisCastingCost);
-	public static final Spell HEAL = new HealSpell(RIGHT, LEFT, LEFT, getConfig().spells.manaCosts.healCastingCost);
-	public static final Spell DISCOMBOBULATE = new DiscombobulateSpell(LEFT, RIGHT, RIGHT, getConfig().spells.manaCosts.discombobulateCastingCost);
-	public static final Spell SOLAR_STRIKE = new SolarStrikeSpell(LEFT, LEFT, RIGHT, getConfig().spells.manaCosts.solarStrikeCastingCost);
-	public static final Spell ARCANE_BARRIER = new ArcaneBarrierSpell(RIGHT, RIGHT, LEFT, getConfig().spells.manaCosts.arcaneBarrierCastingCost);
+	public static final Spell LUNGE = new LungeSpell(RIGHT, RIGHT, RIGHT, ArcanusConfig.lungeCastingCost);
+	public static final Spell DREAM_WARP = new DreamWarpSpell(RIGHT, LEFT, RIGHT, ArcanusConfig.dreamWarpCastingCost);
+	public static final Spell MAGIC_MISSILE = new MagicMissileSpell(LEFT, LEFT, LEFT, ArcanusConfig.magicMissileCastingCost);
+	public static final Spell TELEKINESIS = new TelekinesisSpell(LEFT, RIGHT, LEFT, ArcanusConfig.telekinesisCastingCost);
+	public static final Spell HEAL = new HealSpell(RIGHT, LEFT, LEFT, ArcanusConfig.healCastingCost);
+	public static final Spell DISCOMBOBULATE = new DiscombobulateSpell(LEFT, RIGHT, RIGHT, ArcanusConfig.discombobulateCastingCost);
+	public static final Spell SOLAR_STRIKE = new SolarStrikeSpell(LEFT, LEFT, RIGHT, ArcanusConfig.solarStrikeCastingCost);
+	public static final Spell ARCANE_BARRIER = new ArcaneBarrierSpell(RIGHT, RIGHT, LEFT, ArcanusConfig.arcaneBarrierCastingCost);
 
 	//-----Registry-----//
 	public static void register() {
-		if(getConfig().spells.enableLunge)
+		if(ArcanusConfig.enableLunge)
 			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "lunge"), LUNGE);
-		if(getConfig().spells.enableDreamWarp)
+		if(ArcanusConfig.enableDreamWarp)
 			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "dream_warp"), DREAM_WARP);
-		if(getConfig().spells.enableMagicMissile)
+		if(ArcanusConfig.enableMagicMissile)
 			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "magic_missile"), MAGIC_MISSILE);
-		if(getConfig().spells.enableTelekineticShock)
+		if(ArcanusConfig.enableTelekineticShock)
 			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "telekinetic_shock"), TELEKINESIS);
-		if(getConfig().spells.enableHeal)
+		if(ArcanusConfig.enableHeal)
 			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "heal"), HEAL);
-		if(getConfig().spells.enableDiscombobulate)
+		if(ArcanusConfig.enableDiscombobulate)
 			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "discombobulate"), DISCOMBOBULATE);
-		if(getConfig().spells.enableSolarStrike)
+		if(ArcanusConfig.enableSolarStrike)
 			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "solar_strike"), SOLAR_STRIKE);
-		if(getConfig().spells.enableArcaneBarrier)
+		if(ArcanusConfig.enableArcaneBarrier)
 			Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "arcane_barrier"), ARCANE_BARRIER);
-	}
-
-	private static <T extends Spell> T create(String name, T spell) {
-		SPELLS.put(spell, new Identifier(Arcanus.MOD_ID, name));
-		return spell;
 	}
 }

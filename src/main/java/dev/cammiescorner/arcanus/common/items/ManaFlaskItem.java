@@ -6,13 +6,15 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsage;
+import net.minecraft.item.PotionItem;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +22,7 @@ import java.util.List;
 
 public class ManaFlaskItem extends Item {
 	public ManaFlaskItem() {
-		super(new FabricItemSettings().group(Arcanus.ITEM_GROUP).maxCount(1));
+		super(new FabricItemSettings().maxCount(1));
 	}
 
 	@Override
@@ -64,21 +66,6 @@ public class ManaFlaskItem extends Item {
 	}
 
 	@Override
-	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-		if(isIn(group)) {
-			ItemStack stack = new ItemStack(this);
-			NbtCompound tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
-			tag.putInt("Mana", 0);
-			stacks.add(stack);
-
-			stack = new ItemStack(this);
-			tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
-			tag.putInt("Mana", 4);
-			stacks.add(stack);
-		}
-	}
-
-	@Override
 	public boolean isItemBarVisible(ItemStack stack) {
 		int mana = stack.getOrCreateSubNbt(Arcanus.MOD_ID).getInt("Mana");
 		return mana > 0;
@@ -106,14 +93,14 @@ public class ManaFlaskItem extends Item {
 		NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
 
 		if(tag == null || tag.getInt("Mana") <= 0)
-			return Util.createTranslationKey("item", Registry.ITEM.getId(this)) + "_empty";
+			return Util.createTranslationKey("item", Registries.ITEM.getId(this)) + "_empty";
 
 		return super.getTranslationKey(stack);
 	}
 
 	@Override
 	public int getMaxUseTime(ItemStack stack) {
-		return PotionItem.field_30888;
+		return PotionItem.DEFAULT_MAX_USE_TIME;
 	}
 
 	@Override

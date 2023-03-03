@@ -1,17 +1,20 @@
 package dev.cammiescorner.arcanus.client.renderer.entity;
 
-import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.client.ArcanusClient;
 import dev.cammiescorner.arcanus.common.entities.ArcaneBarrierEntity;
+import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 public class ArcaneBarrierEntityRenderer extends EntityRenderer<ArcaneBarrierEntity> {
 	public ArcaneBarrierEntityRenderer(EntityRendererFactory.Context context) {
@@ -27,40 +30,42 @@ public class ArcaneBarrierEntityRenderer extends EntityRenderer<ArcaneBarrierEnt
 	public void renderBeam(ArcaneBarrierEntity entity, float x, float y, float z, float tickDelta, MatrixStack matrices, VertexConsumerProvider provider, int light) {
 		float squaredLength = x * x + y * y + z * z;
 		float length = MathHelper.sqrt(squaredLength);
-
 		final int maxQuads = 4;
 		final float radius = 0.71F;
 		float ageDelta = entity.age + tickDelta;
 		float hitTimerDelta = entity.getHitTimer() + tickDelta;
-		final int red = Integer.parseInt(Arcanus.getConfig().magicColour, 16) >> 16;
-		final int green = Integer.parseInt(Arcanus.getConfig().magicColour, 16) >> 8;
-		final int blue = Integer.parseInt(Arcanus.getConfig().magicColour, 16);
-		int alpha;
+		float alpha;
+		int colour = Integer.parseInt(ArcanusConfig.magicColour, 16);
 
 		if(entity.getHitTimer() == 0)
-			alpha = ageDelta < 5 ? (int) (255 * (ageDelta / 6F)) : 255;
+			alpha = ageDelta < 5 ? (int) (ageDelta / 6F) : 1F;
 		else
-			alpha = (int) (255 * (hitTimerDelta / (5F + tickDelta)));
+			alpha = (int) (hitTimerDelta / (5F + tickDelta));
+
+		float r = ((colour >> 16 & 255) / 255F) * alpha;
+		float g = ((colour >> 8 & 255) / 255F) * alpha;
+		float b = ((colour & 255) / 255F) * alpha;
 
 		matrices.push();
 
-		VertexConsumer vertexConsumer = provider.getBuffer(ArcanusClient.MAGIC);
+		VertexConsumer vertexConsumer = provider.getBuffer(ArcanusClient.getMagicCircles(new Identifier("textures/misc/white.png")));
 		MatrixStack.Entry entry = matrices.peek();
 		Matrix4f matrix4f = entry.getPositionMatrix();
+		Matrix3f normal = entry.getNormalMatrix();
 		float f = 0.5025F;
 
-		vertexConsumer.vertex(matrix4f, -f, length, -f).color(red, green, blue, alpha).next();
-		vertexConsumer.vertex(matrix4f, -f, length, f).color(red, green, blue, alpha).next();
-		vertexConsumer.vertex(matrix4f, f, length, f).color(red, green, blue, alpha).next();
-		vertexConsumer.vertex(matrix4f, f, length, -f).color(red, green, blue, alpha).next();
+		vertexConsumer.vertex(matrix4f, -f, length, -f).color(r, g, b, 1F).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.UP.getVector().getX(), Direction.UP.getVector().getY(), Direction.UP.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, -f, length, f).color(r, g, b, 1F).texture(1, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.UP.getVector().getX(), Direction.UP.getVector().getY(), Direction.UP.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, f, length, f).color(r, g, b, 1F).texture(1, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.UP.getVector().getX(), Direction.UP.getVector().getY(), Direction.UP.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, f, length, -f).color(r, g, b, 1F).texture(0, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.UP.getVector().getX(), Direction.UP.getVector().getY(), Direction.UP.getVector().getZ()).next();
 
-		vertexConsumer.vertex(matrix4f, -f, 0F, -f).color(red, green, blue, alpha).next();
-		vertexConsumer.vertex(matrix4f, f, 0F, -f).color(red, green, blue, alpha).next();
-		vertexConsumer.vertex(matrix4f, f, 0F, f).color(red, green, blue, alpha).next();
-		vertexConsumer.vertex(matrix4f, -f, 0F, f).color(red, green, blue, alpha).next();
+		vertexConsumer.vertex(matrix4f, -f, 0F, -f).color(r, g, b, 1F).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.DOWN.getVector().getX(), Direction.DOWN.getVector().getY(), Direction.DOWN.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, f, 0F, -f).color(r, g, b, 1F).texture(1, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.DOWN.getVector().getX(), Direction.DOWN.getVector().getY(), Direction.DOWN.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, f, 0F, f).color(r, g, b, 1F).texture(1, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.DOWN.getVector().getX(), Direction.DOWN.getVector().getY(), Direction.DOWN.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, -f, 0F, f).color(r, g, b, 1F).texture(0, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.DOWN.getVector().getX(), Direction.DOWN.getVector().getY(), Direction.DOWN.getVector().getZ()).next();
 
 		matrices.push();
-		matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(45));
+		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(45));
 		entry = matrices.peek();
 		matrix4f = entry.getPositionMatrix();
 		float vertX1 = 0F;
@@ -69,11 +74,12 @@ public class ArcaneBarrierEntityRenderer extends EntityRenderer<ArcaneBarrierEnt
 		for(int i = 1; i <= maxQuads; i++) {
 			float vertX2 = MathHelper.sin(i * 6.2831855F / maxQuads) * radius;
 			float vertY2 = MathHelper.cos(i * 6.2831855F / maxQuads) * radius;
+			Direction direction = Direction.values()[i + 1];
 
-			vertexConsumer.vertex(matrix4f, vertX1, 0F, vertY1).color(red, green, blue, alpha).next();
-			vertexConsumer.vertex(matrix4f, vertX2, 0F, vertY2).color(red, green, blue, alpha).next();
-			vertexConsumer.vertex(matrix4f, vertX2, length, vertY2).color(red, green, blue, alpha).next();
-			vertexConsumer.vertex(matrix4f, vertX1, length, vertY1).color(red, green, blue, alpha).next();
+			vertexConsumer.vertex(matrix4f, vertX1, 0F, vertY1).color(r, g, b, 1F).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
+			vertexConsumer.vertex(matrix4f, vertX2, 0F, vertY2).color(r, g, b, 1F).texture(1, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
+			vertexConsumer.vertex(matrix4f, vertX2, length, vertY2).color(r, g, b, 1F).texture(1, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
+			vertexConsumer.vertex(matrix4f, vertX1, length, vertY1).color(r, g, b, 1F).texture(0, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
 
 			vertX1 = vertX2;
 			vertY1 = vertY2;

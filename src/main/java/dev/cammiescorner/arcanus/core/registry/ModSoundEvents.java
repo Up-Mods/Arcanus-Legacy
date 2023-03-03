@@ -1,9 +1,10 @@
 package dev.cammiescorner.arcanus.core.registry;
 
 import dev.cammiescorner.arcanus.Arcanus;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.LinkedHashMap;
 
@@ -19,11 +20,11 @@ public class ModSoundEvents {
 
 	//-----Registry-----//
 	public static void register() {
-		SOUNDS.keySet().forEach(sound -> Registry.register(Registry.SOUND_EVENT, SOUNDS.get(sound), sound));
+		SOUNDS.keySet().forEach(sound -> Registry.register(Registries.SOUND_EVENT, SOUNDS.get(sound), sound));
 	}
 
 	private static SoundEvent create(String name) {
-		SoundEvent sound = new SoundEvent(new Identifier(Arcanus.MOD_ID, name));
+		SoundEvent sound = SoundEvent.of(new Identifier(Arcanus.MOD_ID, name));
 		SOUNDS.put(sound, new Identifier(Arcanus.MOD_ID, name));
 		return sound;
 	}

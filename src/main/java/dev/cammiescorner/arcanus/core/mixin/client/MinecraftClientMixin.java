@@ -81,7 +81,7 @@ public class MinecraftClientMixin implements ClientUtils {
 			unfinishedSpell = true;
 			pattern.add(Pattern.RIGHT);
 			player.swingHand(Hand.MAIN_HAND);
-			player.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 1F, 1.1F);
+			player.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 1F, 1.1F, 0L);
 			info.cancel();
 		}
 	}
@@ -93,7 +93,7 @@ public class MinecraftClientMixin implements ClientUtils {
 			unfinishedSpell = true;
 			pattern.add(Pattern.LEFT);
 			player.swingHand(Hand.MAIN_HAND);
-			player.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 1F, 1.3F);
+			player.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 1F, 1.3F, 0L);
 			info.cancel();
 		}
 	}

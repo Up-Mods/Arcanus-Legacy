@@ -12,8 +12,6 @@
 		"WrittenBookItemMixin"
 	],
 	"client": [
-		"client.ClientPlayNetworkHandlerMixin",
-		"client.GameRendererMixin",
 		"client.InGameHudMixin",
 		"client.MinecraftClientMixin",
 		"client.MouseMixin"

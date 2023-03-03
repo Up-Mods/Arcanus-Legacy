@@ -8,6 +8,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -25,8 +26,6 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 import static dev.cammiescorner.arcanus.Arcanus.EntityAttributes.*;
 
@@ -89,19 +88,19 @@ public class ArcanusHelper {
 		return start + (end - start) * alpha;
 	}
 
-	public static void addWandsToTab(List<ItemStack> list) {
+	public static void addWandsToTab(ItemGroup.Entries entries) {
 		ItemStack stack = new ItemStack(ModItems.INITIATE_WAND);
-		list.add(stack);
+		entries.add(stack);
 
 		stack = new ItemStack(ModItems.ADEPT_WAND);
 		NbtCompound tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
 		tag.putInt("Exp", 3200);
-		list.add(stack);
+		entries.add(stack);
 
 		stack = new ItemStack(ModItems.MASTER_WAND);
 		tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
 		tag.putInt("Exp", 6400);
-		list.add(stack);
+		entries.add(stack);
 	}
 
 	@ApiStatus.Internal
