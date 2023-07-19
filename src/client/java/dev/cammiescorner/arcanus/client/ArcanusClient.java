@@ -10,11 +10,12 @@ import dev.cammiescorner.arcanus.client.renderer.entity.ArcaneBarrierEntityRende
 import dev.cammiescorner.arcanus.client.renderer.entity.MagicMissileEntityRenderer;
 import dev.cammiescorner.arcanus.client.renderer.entity.SolarStrikeEntityRenderer;
 import dev.cammiescorner.arcanus.client.screens.BookshelfScreen;
+import dev.cammiescorner.arcanus.client.util.ClientEventHandler;
 import dev.cammiescorner.arcanus.core.registry.ModBlockEntities;
 import dev.cammiescorner.arcanus.core.registry.ModBlocks;
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import dev.cammiescorner.arcanus.core.registry.ModParticles;
-import dev.cammiescorner.arcanus.core.util.EventHandler;
+import dev.cammiescorner.arcanus.core.util.Pattern;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -27,7 +28,11 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ArcanusClient implements ClientModInitializer {
+	public static final List<Pattern> pattern = new ArrayList<>(3);
 	@Nullable
 	public static Shader renderTypeMagicShader;
 	public static final RenderLayer MAGIC = RenderLayer.of("magic", VertexFormats.POSITION_COLOR,
@@ -37,6 +42,8 @@ public class ArcanusClient implements ClientModInitializer {
 					.transparency(RenderLayer.LIGHTNING_TRANSPARENCY)
 					.target(RenderLayer.WEATHER_TARGET)
 					.build(false));
+	public static boolean unfinishedSpell = true;
+	public static int timer = 0;
 
 	@Override
 	public void onInitializeClient() {
@@ -47,7 +54,7 @@ public class ArcanusClient implements ClientModInitializer {
 		itemPredicateRegistry();
 		blockRenderLayerRegistry();
 		blockEntityRendererRegistry();
-		EventHandler.clientEvents();
+		ClientEventHandler.clientEvents();
 	}
 
 	public void screenRegistry() {

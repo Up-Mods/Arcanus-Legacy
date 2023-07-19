@@ -1,4 +1,4 @@
-package dev.cammiescorner.arcanus.core.registry;
+package dev.cammiescorner.arcanus.client.init;
 
 import dev.cammiescorner.arcanus.Arcanus;
 import net.minecraft.client.render.entity.model.EntityModelLayer;

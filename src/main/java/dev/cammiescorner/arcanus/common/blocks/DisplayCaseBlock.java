@@ -3,11 +3,11 @@ package dev.cammiescorner.arcanus.common.blocks;
 import dev.cammiescorner.arcanus.common.blocks.entities.DisplayCaseBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -17,8 +17,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -43,15 +41,10 @@ public class DisplayCaseBlock extends BlockWithEntity {
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if(world.isClient() && player.isSneaking()) {
-			if(state.get(OPEN))
-				world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, SoundCategory.BLOCKS, (float) MathHelper.clamp(1 - (MinecraftClient.getInstance().player.getPos().distanceTo(Vec3d.ofCenter(pos)) / 10F), 0, 1), world.random.nextFloat() * 0.1F + 0.9F, false);
-			else
-				world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.BLOCKS, (float) MathHelper.clamp(1 - (MinecraftClient.getInstance().player.getPos().distanceTo(Vec3d.ofCenter(pos)) / 10F), 0, 1), world.random.nextFloat() * 0.1F + 0.9F, false);
-		}
-
 		if(!world.isClient() && world.getBlockEntity(pos) instanceof DisplayCaseBlockEntity blockEntity) {
 			if(player.isSneaking()) {
+				SoundEvent sound = state.get(OPEN) ? SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE : SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN;
+				world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, sound, SoundCategory.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
 				world.setBlockState(pos, state.with(OPEN, !state.get(OPEN)));
 				return ActionResult.SUCCESS;
 			}

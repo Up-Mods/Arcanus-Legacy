@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "dev.cammiescorner.arcanus.core.mixin.client",
+	"compatibilityLevel": "JAVA_17",
+	"client": [
+		"ClientPlayNetworkHandlerMixin",
+		"GameRendererMixin",
+		"InGameHudMixin",
+		"MinecraftClientMixin",
+		"MouseMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

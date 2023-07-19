@@ -5,7 +5,8 @@
 	"name": "Arcanus",
 	"description": "A magic mod with a magic system inspired by Wynncraft and Electroblob's Wizardry",
 	"authors": [
-		"ComradeCammie"
+		"ComradeCammie",
+		"Up"
 	],
 	"contact": {
 		"homepage": "https://www.curseforge.com/minecraft/mc-mods/arcanus",
@@ -22,18 +23,22 @@
 			"dev.cammiescorner.arcanus.client.ArcanusClient"
 		],
 		"modmenu": [
-			"dev.cammiescorner.arcanus.core.integration.ArcanusModMenu"
+			"dev.cammiescorner.arcanus.client.integration.ArcanusModMenu"
 		]
 	},
 	"mixins": [
-		"arcanus.mixins.json"
+		"arcanus.mixins.json",
+		{
+			"config": "arcanus.client.mixins.json",
+			"environment": "client"
+		}
 	],
 	"accessWidener": "META-INF/arcanus.accesswidener",
 	"depends": {
-		"fabricloader": ">=0.12.5",
-		"fabric": "*",
+		"fabricloader": ">=0.14.0 <=0.14.14",
+		"fabric-api": "*",
 		"minecraft": "~1.18.2",
-		"cloth-config2": ">=6.0.39",
+		"cloth-config2": "^6.0.0",
 		"java": ">=17"
 	}
 }
