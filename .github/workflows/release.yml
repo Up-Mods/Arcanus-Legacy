@@ -33,23 +33,22 @@ jobs:
         run: echo "TAG=${GITHUB_REF:10}" >> $GITHUB_ENV
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Assemble jar with Gradle
+      - name: Build with Gradle
         env:
           BUILD_TIME: ${{ steps.current-time.outputs.formattedTime }}
           BUILD_NUMBER: ${{ github.run_number }}
-        run: ./gradlew assemble
-      - name: Upload release assets to Modrinth & CF
-        id: publish_release_assets
-        run: ./gradlew publish
-        env:
-          BUILD_TIME: ${{ steps.current-time.outputs.formattedTime }}
-          BUILD_NUMBER: ${{ github.run_number }}
-          MODRINTH_USER: ${{ secrets.MODRINTH_USER }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      - name: Upload release assets
-        id: upload_release_assets
-        uses: AButler/upload-release-assets@v2.0
+        run: ./gradlew build
+      - name: Publish
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
-          release-tag: ${{ env.TAG }}
-          repo-token: ${{ github.token }}
-          files: 'build/libs/*[!-dev].jar'
+          modrinth-id: zgaWtmrV
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+#          curseforge-id: 517833
+#          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          github-token: ${{ github.token }}
+
+          game-versions: |
+            1.18.2
+          loaders: |
+            fabric
+            quilt
