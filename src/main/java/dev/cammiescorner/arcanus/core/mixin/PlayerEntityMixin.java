@@ -313,7 +313,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 		if(optionalSpawnPoint.isPresent()) {
 			Vec3d spawnPoint = optionalSpawnPoint.get();
-			System.out.println(spawnPoint);
 			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
 			serverPlayer.teleport(serverWorld, spawnPoint.x, spawnPoint.y, spawnPoint.z, (float) rotation.x, (float) rotation.y);
 			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
