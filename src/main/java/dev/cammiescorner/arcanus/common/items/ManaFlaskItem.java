@@ -15,13 +15,14 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class ManaFlaskItem extends Item {
 	public ManaFlaskItem() {
-		super(new FabricItemSettings().group(Arcanus.ITEM_GROUP).maxCount(1));
+		super(new FabricItemSettings().group(Arcanus.ITEM_GROUP).maxCount(1).food(new FoodComponent.Builder().alwaysEdible().build()));
 	}
 
 	@Override
@@ -40,6 +41,7 @@ public class ManaFlaskItem extends Item {
 			else if(tag.getInt("Mana") > 0){
 				if(!player.isCreative()) {
 					magicUser.addMana(MathHelper.clamp((magicUser.getMaxMana() - magicUser.getBurnout()) - magicUser.getMana(), 0, 5));
+					world.emitGameEvent(user, GameEvent.DRINKING_FINISH, user.getCameraBlockPos());
 					magicUser.setLastCastTime(world.getTime());
 				}
 
