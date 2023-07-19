@@ -8,6 +8,7 @@ import dev.cammiescorner.arcanus.core.registry.ModParticles;
 import dev.cammiescorner.arcanus.core.registry.ModSoundEvents;
 import dev.cammiescorner.arcanus.core.registry.ModSpells;
 import dev.cammiescorner.arcanus.core.util.*;
+import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
@@ -32,6 +33,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
+import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Mixin;
@@ -314,7 +316,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		if(optionalSpawnPoint.isPresent()) {
 			Vec3d spawnPoint = optionalSpawnPoint.get();
 			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
-			serverPlayer.teleport(serverWorld, spawnPoint.x, spawnPoint.y, spawnPoint.z, (float) rotation.x, (float) rotation.y);
+			FabricDimensions.teleport(serverPlayer, serverWorld, new TeleportTarget(spawnPoint, Vec3d.ZERO, (float) rotation.x, (float) rotation.y));
 			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
 		}
 		else {
