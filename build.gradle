@@ -1,13 +1,10 @@
 import com.modrinth.minotaur.TaskModrinthUpload
 
 plugins {
-    id 'fabric-loom' version '0.10.+'
+    id 'fabric-loom' version '1.3-SNAPSHOT'
     id 'maven-publish'
-    id "com.modrinth.minotaur" version "1.1.0"
+    id "com.modrinth.minotaur" version '2.+'
 }
-
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
 
 def ENV = System.getenv()
 def buildTime = ENV.BUILD_TIME ?: new Date().format('yyyyMMddHHmmss')
@@ -19,10 +16,20 @@ boolean isPreviewBuild = !ENV.TAG || ENV.TAG.matches(".+-.+")
 def buildNumber = !ENV.TAG ? ("${ENV.BUILD_NUMBER ? "build.${ENV.BUILD_NUMBER}" : buildTime}-${project.minecraft_version}") : ""
 version = (ENV.TAG ?: "development") + ((isPreviewBuild && !ENV.TAG) ? "+${buildNumber}" : "")
 
+java {
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this line, sources will not be generated.
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
 repositories {
     maven { url "https://maven.shedaniel.me" }
     maven { url "https://maven.terraformersmc.com" }
-    maven { url "https://ladysnake.jfrog.io/artifactory/mods" }
+    maven { url "https://maven.ladysnake.org/releases" }
     maven { url "https://jitpack.io" }
 }
 
@@ -41,6 +48,15 @@ dependencies {
 
 loom {
     accessWidenerPath.set(project.file("src/main/resources/META-INF/arcanus.accesswidener"))
+    splitEnvironmentSourceSets()
+
+    mods {
+        "arcanus" {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
+
 }
 
 processResources {
@@ -58,32 +74,19 @@ processResources {
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
-}
-
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
-    from sourceSets.main.allSource
+    options.release = 17
 }
 
 jar {
-    from "LICENSE"
-}
-
-artifacts {
-    archives(remapJar)
-    archives(sourcesJar)
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact(remapJar)
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
+            from components.java
         }
     }
 
@@ -94,21 +97,17 @@ publishing {
     }
 }
 
-task publishToModrinth(type: TaskModrinthUpload, dependsOn: assemble) {
+modrinth {
     if (ENV.MODRINTH_TOKEN) {
         token = ENV.MODRINTH_TOKEN
     }
     projectId = project.modrinth_id
     uploadFile = remapJar
-    versionNumber = ENV.TAG ?: version
-    versionName = versionNumber // need this here because the Modrinth API doesn't do that by default
-    releaseType = isPreviewBuild ? ((ENV.TAG && ENV.TAG.contains("-beta")) ? "beta" : "alpha") : "release"
-    "${project.modrinth_game_versions}".split(",").each {
-        addGameVersion(it)
-    }
-    addLoader("fabric")
+    versionType = isPreviewBuild ? ((ENV.TAG && ENV.TAG.contains("-beta")) ? "beta" : "alpha") : "release"
+    gameVersions = "${project.modrinth_game_versions}".split(",").toList()
+    loaders = ["fabric", "quilt"]
 }
 
 if (ENV.MODRINTH_TOKEN) {
-    tasks.publish.dependsOn(publishToModrinth)
+    tasks.publish.dependsOn(modrinth)
 }
