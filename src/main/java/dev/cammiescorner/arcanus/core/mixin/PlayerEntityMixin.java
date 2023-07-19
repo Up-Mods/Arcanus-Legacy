@@ -243,7 +243,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	public void castLunge() {
 		if(isFallFlying()) {
 			if(spellTimer == 10)
-				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+				world.playSound(null, getX(), getY(), getZ(), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 
 			if(spellTimer > 0) {
 				Vec3d rotation = getRotationVector();
@@ -270,7 +270,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		else {
 			if(spellTimer == 10) {
 				setVelocity(0F, 0.75F, 0F);
-				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+				world.playSound(null, getX(), getY(), getZ(), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 			}
 
 			float adjustedPitch = MathHelper.abs(MathHelper.abs(getPitch() / 90F) - 1);
@@ -315,9 +315,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 		if(optionalSpawnPoint.isPresent()) {
 			Vec3d spawnPoint = optionalSpawnPoint.get();
-			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
+			world.playSound(null, getX(), getY(), getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1F, 1F);
 			FabricDimensions.teleport(serverPlayer, serverWorld, new TeleportTarget(spawnPoint, Vec3d.ZERO, (float) rotation.x, (float) rotation.y));
-			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
+			serverWorld.playSound(null, spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1F, 1F);
 		}
 		else {
 			sendMessage(new TranslatableText("block.minecraft.spawn.not_valid"), false);
@@ -332,7 +332,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		magicMissile.setVelocity(this, getPitch(), getYaw(), getRoll(), 4.5F, 0F);
 
 		world.spawnEntity(magicMissile);
-		world.playSound(null, getBlockPos(), ModSoundEvents.MAGIC_MISSILE, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+		world.playSound(null, getX(), getY(), getZ(), ModSoundEvents.MAGIC_MISSILE, SoundCategory.PLAYERS, 1F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 		activeSpell = null;
 	}
 
@@ -350,7 +350,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			ArcanusHelper.drawLine(startPos, endPos, world, 0.5F, (ParticleEffect) ModParticles.TELEKINETIC_SHOCK);
 		}
 
-		world.playSound(null, getBlockPos(), ModSoundEvents.TELEKINETIC_SHOCK, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+		world.playSound(null, getX(), getY(), getZ(), ModSoundEvents.TELEKINETIC_SHOCK, SoundCategory.PLAYERS, 1F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 
 		switch(result.getType()) {
 			case ENTITY -> {
@@ -397,7 +397,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique
 	public void castHeal() {
 		heal(10);
-		world.playSound(null, getBlockPos(), ModSoundEvents.HEAL, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+		world.playSound(null, getX(), getY(), getZ(), ModSoundEvents.HEAL, SoundCategory.PLAYERS, 1F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 
 		for(int amount = 0; amount < 32; amount++) {
 			float offsetX = ((random.nextInt(3) - 1) * random.nextFloat());
