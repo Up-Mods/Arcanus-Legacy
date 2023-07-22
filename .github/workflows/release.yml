@@ -3,36 +3,27 @@ name: Upload Release Artifacts
 on:
   push:
     tags:
-      - '*'
+      - '*.*'
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
+          distribution: 'microsoft'
           java-version: 17
       - name: Get current time
         uses: srfrnk/current-time@master
         id: current-time
         with:
           format: YYYYMMDDHHmmss
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
       - name: Setup ENV
-        run: echo "TAG=${GITHUB_REF:10}" >> $GITHUB_ENV
+        run: echo "TAG=${{github.ref_name}}" >> $GITHUB_ENV
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run: chmod +x ./gradlew
       - name: Build with Gradle
         env:
           BUILD_TIME: ${{ steps.current-time.outputs.formattedTime }}
@@ -43,8 +34,8 @@ jobs:
         with:
           modrinth-id: zgaWtmrV
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-#          curseforge-id: 517833
-#          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          curseforge-id: 517833
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           github-token: ${{ github.token }}
 
           game-versions: |
