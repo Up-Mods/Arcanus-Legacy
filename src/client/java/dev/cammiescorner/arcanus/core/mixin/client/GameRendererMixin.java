@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus.core.mixin.client;
 
 import com.mojang.datafixers.util.Pair;
-import dev.cammiescorner.arcanus.client.ArcanusClient;
+import dev.cammiescorner.arcanus.client.renderer.ArcanusRenderLayers;
 import net.minecraft.client.gl.Program;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Shader;
@@ -21,6 +21,6 @@ import java.util.function.Consumer;
 public class GameRendererMixin {
 	@Inject(method = "loadShaders", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 53), locals = LocalCapture.CAPTURE_FAILSOFT)
 	private void loadShaders(ResourceManager manager, CallbackInfo info, List<Program> list, List<Pair<Shader, Consumer<Shader>>> list2) throws IOException {
-		list2.add(Pair.of(new Shader(manager, "rendertype_arcanus_magic", VertexFormats.POSITION_COLOR), (shader) -> ArcanusClient.renderTypeMagicShader = shader));
+		list2.add(Pair.of(new Shader(manager, "rendertype_arcanus_magic", VertexFormats.POSITION_COLOR), (shader) -> ArcanusRenderLayers.renderTypeMagicShader = shader));
 	}
 }

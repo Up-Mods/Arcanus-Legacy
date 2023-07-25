@@ -2,7 +2,6 @@ package dev.cammiescorner.arcanus.core.mixin.client;
 
 import dev.cammiescorner.arcanus.client.ArcanusClient;
 import dev.cammiescorner.arcanus.common.items.WandItem;
-import dev.cammiescorner.arcanus.core.util.ClientUtils;
 import dev.cammiescorner.arcanus.core.util.Pattern;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -16,10 +15,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
-
 @Mixin(MinecraftClient.class)
-public class MinecraftClientMixin implements ClientUtils {
+public class MinecraftClientMixin {
 	@Shadow	@Nullable public ClientPlayerEntity player;
 
 	@Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doItemUse()V", ordinal = 0), cancellable = true)
@@ -44,20 +41,5 @@ public class MinecraftClientMixin implements ClientUtils {
 			player.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 1F, 1.3F);
 			info.cancel();
 		}
-	}
-
-	@Override
-	public List<Pattern> getPattern() {
-		return ArcanusClient.pattern;
-	}
-
-	@Override
-	public void setTimer(int value) {
-		ArcanusClient.timer = value;
-	}
-
-	@Override
-	public void setUnfinishedSpell(boolean value) {
-		ArcanusClient.unfinishedSpell = value;
 	}
 }

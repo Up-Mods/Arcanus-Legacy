@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus.client.renderer.entity;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.client.ArcanusClient;
+import dev.cammiescorner.arcanus.client.renderer.ArcanusRenderLayers;
 import dev.cammiescorner.arcanus.common.entities.ArcaneBarrierEntity;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -44,7 +44,7 @@ public class ArcaneBarrierEntityRenderer extends EntityRenderer<ArcaneBarrierEnt
 
 		matrices.push();
 
-		VertexConsumer vertexConsumer = provider.getBuffer(ArcanusClient.MAGIC);
+		VertexConsumer vertexConsumer = provider.getBuffer(ArcanusRenderLayers.MAGIC);
 		MatrixStack.Entry entry = matrices.peek();
 		Matrix4f matrix4f = entry.getPositionMatrix();
 		float f = 0.5025F;

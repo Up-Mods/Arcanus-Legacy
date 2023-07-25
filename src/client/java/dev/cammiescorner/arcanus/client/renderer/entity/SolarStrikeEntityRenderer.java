@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus.client.renderer.entity;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.client.ArcanusClient;
+import dev.cammiescorner.arcanus.client.renderer.ArcanusRenderLayers;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.VertexConsumer;
@@ -41,7 +41,7 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90));
 		matrices.scale(scale, scale, 1);
 
-		VertexConsumer vertexConsumer = provider.getBuffer(ArcanusClient.MAGIC);
+		VertexConsumer vertexConsumer = provider.getBuffer(ArcanusRenderLayers.MAGIC);
 		MatrixStack.Entry entry = matrices.peek();
 		Matrix4f matrix4f = entry.getPositionMatrix();
 		float vertX1 = 0F;
