@@ -12,11 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
-	@Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
-	@Inject(method = "getHeartRows", at = @At("RETURN"), cancellable = true)
-	public void getHeartRows(int heartCount, CallbackInfoReturnable<Integer> info) {
-		if(client.player instanceof MagicUser user && user.isManaVisible())
-			info.setReturnValue(info.getReturnValueI() + 1);
-	}
+    @Inject(method = "getHeartRows", at = @At("RETURN"), cancellable = true)
+    public void getHeartRows(int heartCount, CallbackInfoReturnable<Integer> info) {
+        if (client.player instanceof MagicUser user && user.isManaVisible())
+            info.setReturnValue(info.getReturnValueI() + 1);
+    }
 }

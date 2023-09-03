@@ -15,34 +15,34 @@ import net.minecraft.util.math.Axis;
 import net.minecraft.util.math.Direction;
 
 public class DisplayCaseBlockEntityRenderer implements BlockEntityRenderer<DisplayCaseBlockEntity> {
-	private final ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
+    private final ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
 
-	public DisplayCaseBlockEntityRenderer(BlockEntityRendererFactory.Context cxt) { }
+    public DisplayCaseBlockEntityRenderer(BlockEntityRendererFactory.Context cxt) {
+    }
 
-	@Override
-	public void render(DisplayCaseBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		ItemStack stack = entity.getStack(0);
+    @Override
+    public void render(DisplayCaseBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        ItemStack stack = entity.getStack(0);
 
-		if(stack.getCount() > 0) {
-			Direction direction = entity.getCachedState().get(DisplayCaseBlock.FACING);
-			float rotation = direction == Direction.NORTH ? 0 : direction == Direction.EAST ? 270 : direction == Direction.SOUTH ? 180 : 90;
+        if (stack.getCount() > 0) {
+            Direction direction = entity.getCachedState().get(DisplayCaseBlock.FACING);
+            float rotation = direction == Direction.NORTH ? 0 : direction == Direction.EAST ? 270 : direction == Direction.SOUTH ? 180 : 90;
 
-			matrices.push();
+            matrices.push();
 
-			if(stack.getItem() instanceof BlockItem) {
-				matrices.translate(0.5D, 0.9D, 0.5D);
-				matrices.scale(0.35F, 0.35F, 0.35F);
-				matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(rotation));
-			}
-			else {
-				matrices.translate(0.5D, 0.84D, 0.5D);
-				matrices.scale(0.7F, 0.7F, 0.7F);
-				matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(rotation));
-				matrices.multiply(Axis.X_POSITIVE.rotationDegrees(90));
-			}
+            if (stack.getItem() instanceof BlockItem) {
+                matrices.translate(0.5D, 0.9D, 0.5D);
+                matrices.scale(0.35F, 0.35F, 0.35F);
+                matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(rotation));
+            } else {
+                matrices.translate(0.5D, 0.84D, 0.5D);
+                matrices.scale(0.7F, 0.7F, 0.7F);
+                matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(rotation));
+                matrices.multiply(Axis.X_POSITIVE.rotationDegrees(90));
+            }
 
-			itemRenderer.renderItem(stack, ModelTransformationMode.FIXED, light, overlay, matrices, vertexConsumers, entity.getWorld (), (int) entity.getPos().asLong());
-			matrices.pop();
-		}
-	}
+            itemRenderer.renderItem(stack, ModelTransformationMode.FIXED, light, overlay, matrices, vertexConsumers, entity.getWorld(), (int) entity.getPos().asLong());
+            matrices.pop();
+        }
+    }
 }

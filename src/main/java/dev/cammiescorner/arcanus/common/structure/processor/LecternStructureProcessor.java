@@ -15,22 +15,22 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 public class LecternStructureProcessor extends StructureProcessor {
-	public static final LecternStructureProcessor INSTANCE = new LecternStructureProcessor();
-	public static final Codec<LecternStructureProcessor> CODEC = Codec.unit(() -> LecternStructureProcessor.INSTANCE);
+    public static final LecternStructureProcessor INSTANCE = new LecternStructureProcessor();
+    public static final Codec<LecternStructureProcessor> CODEC = Codec.unit(() -> LecternStructureProcessor.INSTANCE);
 
-	@Nullable
-	@Override
-	public Structure.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, Structure.StructureBlockInfo localBlockInfo, Structure.StructureBlockInfo absoluteBlockInfo, StructurePlacementData placementData) {
-		if (!absoluteBlockInfo.state.isOf(Blocks.LECTERN))
-			return absoluteBlockInfo;
+    @Nullable
+    @Override
+    public Structure.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, Structure.StructureBlockInfo localBlockInfo, Structure.StructureBlockInfo absoluteBlockInfo, StructurePlacementData placementData) {
+        if (!absoluteBlockInfo.state.isOf(Blocks.LECTERN))
+            return absoluteBlockInfo;
 
-		absoluteBlockInfo.nbt.put("Book", SpellBooks.getRandomSpellBook(placementData.getRandom(absoluteBlockInfo.pos)).writeNbt(new NbtCompound()));
+        absoluteBlockInfo.nbt.put("Book", SpellBooks.getRandomSpellBook(placementData.getRandom(absoluteBlockInfo.pos)).writeNbt(new NbtCompound()));
 
-		return new Structure.StructureBlockInfo(absoluteBlockInfo.pos, absoluteBlockInfo.state.with(LecternBlock.HAS_BOOK, true), absoluteBlockInfo.nbt);
-	}
+        return new Structure.StructureBlockInfo(absoluteBlockInfo.pos, absoluteBlockInfo.state.with(LecternBlock.HAS_BOOK, true), absoluteBlockInfo.nbt);
+    }
 
-	@Override
-	protected StructureProcessorType<?> getType() {
-		return Arcanus.LECTERN_PROCESSOR;
-	}
+    @Override
+    protected StructureProcessorType<?> getType() {
+        return Arcanus.LECTERN_PROCESSOR;
+    }
 }

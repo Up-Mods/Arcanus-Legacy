@@ -11,36 +11,36 @@ import net.minecraft.loot.function.LootFunction;
 import net.minecraft.loot.function.LootFunctionType;
 
 public class ArcanusLootFunction extends ConditionalLootFunction {
-	protected ArcanusLootFunction(LootCondition[] conditions) {
-		super(conditions);
-	}
+    protected ArcanusLootFunction(LootCondition[] conditions) {
+        super(conditions);
+    }
 
-	@Override
-	protected ItemStack process(ItemStack stack, LootContext context) {
-		return SpellBooks.getRandomSpellBook(stack, context.getRandom());
-	}
+    @Override
+    protected ItemStack process(ItemStack stack, LootContext context) {
+        return SpellBooks.getRandomSpellBook(stack, context.getRandom());
+    }
 
-	@Override
-	public LootFunctionType getType() {
-		return Arcanus.ARCANUS_LOOT_FUNCTION;
-	}
+    @Override
+    public LootFunctionType getType() {
+        return Arcanus.ARCANUS_LOOT_FUNCTION;
+    }
 
-	public static class Builder extends ConditionalLootFunction.Builder<ArcanusLootFunction.Builder> {
-		@Override
-		protected ArcanusLootFunction.Builder getThisBuilder() {
-			return this;
-		}
+    public static class Builder extends ConditionalLootFunction.Builder<ArcanusLootFunction.Builder> {
+        @Override
+        protected ArcanusLootFunction.Builder getThisBuilder() {
+            return this;
+        }
 
-		@Override
-		public LootFunction build() {
-			return new ArcanusLootFunction(this.getConditions());
-		}
-	}
+        @Override
+        public LootFunction build() {
+            return new ArcanusLootFunction(this.getConditions());
+        }
+    }
 
-	public static class Serializer extends ConditionalLootFunction.Serializer<ArcanusLootFunction> {
-		@Override
-		public ArcanusLootFunction fromJson(JsonObject json, JsonDeserializationContext context, LootCondition[] conditions) {
-			return new ArcanusLootFunction(conditions);
-		}
-	}
+    public static class Serializer extends ConditionalLootFunction.Serializer<ArcanusLootFunction> {
+        @Override
+        public ArcanusLootFunction fromJson(JsonObject json, JsonDeserializationContext context, LootCondition[] conditions) {
+            return new ArcanusLootFunction(conditions);
+        }
+    }
 }

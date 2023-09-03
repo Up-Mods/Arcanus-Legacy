@@ -31,69 +31,69 @@ import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 
 public class ArcanusClient implements ClientModInitializer {
-	@Override
-	public void onInitializeClient(ModContainer mod) {
-		screenRegistry();
-		entityRendererRegistry();
-		particleFactoryRegistry();
-		itemPredicateRegistry();
-		blockRenderLayerRegistry();
-		blockEntityRendererRegistry();
-		EventHandler.clientEvents();
-	}
+    public static RenderLayer getMagicCircles(Identifier texture) {
+        return RenderLayer.of(
+                Arcanus.id("magic").toString(),
+                VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
+                VertexFormat.DrawMode.QUADS,
+                256,
+                false,
+                true,
+                RenderLayer.MultiPhaseParameters.builder()
+                        .shader(RenderLayer.ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+                        .texture(new RenderPhase.Texture(texture, false, false))
+                        .overlay(RenderPhase.ENABLE_OVERLAY_COLOR)
+                        .transparency(RenderLayer.ADDITIVE_TRANSPARENCY)
+                        .writeMaskState(RenderLayer.ALL_MASK)
+                        .cull(RenderPhase.DISABLE_CULLING)
+                        .build(false)
+        );
+    }
 
-	public static RenderLayer getMagicCircles(Identifier texture) {
-		return RenderLayer.of(
-				Arcanus.id("magic").toString(),
-				VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
-				VertexFormat.DrawMode.QUADS,
-				256,
-				false,
-				true,
-				RenderLayer.MultiPhaseParameters.builder()
-						.shader(RenderLayer.ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
-						.texture(new RenderPhase.Texture(texture, false, false))
-						.overlay(RenderPhase.ENABLE_OVERLAY_COLOR)
-						.transparency(RenderLayer.ADDITIVE_TRANSPARENCY)
-						.writeMaskState(RenderLayer.ALL_MASK)
-						.cull(RenderPhase.DISABLE_CULLING)
-						.build(false)
-		);
-	}
+    @Override
+    public void onInitializeClient(ModContainer mod) {
+        screenRegistry();
+        entityRendererRegistry();
+        particleFactoryRegistry();
+        itemPredicateRegistry();
+        blockRenderLayerRegistry();
+        blockEntityRendererRegistry();
+        EventHandler.clientEvents();
+    }
 
-	public void screenRegistry() {
-		ScreenRegistry.register(Arcanus.BOOKSHELF_SCREEN_HANDLER, BookshelfScreen::new);
-	}
+    public void screenRegistry() {
+        ScreenRegistry.register(Arcanus.BOOKSHELF_SCREEN_HANDLER, BookshelfScreen::new);
+    }
 
-	public void entityRendererRegistry() {
-		EntityRendererRegistry.register(ModEntities.SOLAR_STRIKE, SolarStrikeEntityRenderer::new);
-		EntityRendererRegistry.register(ModEntities.ARCANE_BARRIER, ArcaneBarrierEntityRenderer::new);
-		EntityRendererRegistry.register(ModEntities.MAGIC_MISSILE, MagicMissileEntityRenderer::new);
-	}
+    public void entityRendererRegistry() {
+        EntityRendererRegistry.register(ModEntities.SOLAR_STRIKE, SolarStrikeEntityRenderer::new);
+        EntityRendererRegistry.register(ModEntities.ARCANE_BARRIER, ArcaneBarrierEntityRenderer::new);
+        EntityRendererRegistry.register(ModEntities.MAGIC_MISSILE, MagicMissileEntityRenderer::new);
+    }
 
-	public void particleFactoryRegistry() {
-		ParticleFactoryRegistry.getInstance().register(ModParticles.MAGIC_MISSILE, MagicMissileParticle.Factory::new);
-		ParticleFactoryRegistry.getInstance().register(ModParticles.TELEKINETIC_SHOCK, TelekineticShockParticle.Factory::new);
-		ParticleFactoryRegistry.getInstance().register(ModParticles.HEAL, HealParticle.Factory::new);
-		ParticleFactoryRegistry.getInstance().register(ModParticles.DISCOMBOBULATE, DiscombobulateParticle.Factory::new);
-	}
+    public void particleFactoryRegistry() {
+        ParticleFactoryRegistry.getInstance().register(ModParticles.MAGIC_MISSILE, MagicMissileParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.TELEKINETIC_SHOCK, TelekineticShockParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.HEAL, HealParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.DISCOMBOBULATE, DiscombobulateParticle.Factory::new);
+    }
 
-	public void itemPredicateRegistry() {
-		FabricModelPredicateProviderRegistry.register(new Identifier(Arcanus.MOD_ID, "mana"), (stack, world, entity, seed) -> {
-			NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
+    public void itemPredicateRegistry() {
+        FabricModelPredicateProviderRegistry.register(new Identifier(Arcanus.MOD_ID, "mana"), (stack, world, entity, seed) -> {
+            NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
 
-			if(tag == null)
-				return 0;
+            if (tag == null)
+                return 0;
 
-			return tag.getInt("Mana") / 4F;
-		});
-	}
+            return tag.getInt("Mana") / 4F;
+        });
+    }
 
-	public void blockRenderLayerRegistry() {
-		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.DISPLAY_CASE);
-	}
+    public void blockRenderLayerRegistry() {
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.DISPLAY_CASE);
+    }
 
-	public void blockEntityRendererRegistry() {
-		BlockEntityRendererRegistry.register(ModBlockEntities.DISPLAY_CASE, DisplayCaseBlockEntityRenderer::new);
-	}
+    public void blockEntityRendererRegistry() {
+        BlockEntityRendererRegistry.register(ModBlockEntities.DISPLAY_CASE, DisplayCaseBlockEntityRenderer::new);
+    }
 }

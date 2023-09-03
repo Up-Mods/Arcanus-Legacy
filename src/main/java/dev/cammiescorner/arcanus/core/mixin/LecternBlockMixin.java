@@ -11,9 +11,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LecternBlock.class)
-public class LecternBlockMixin{
-	@Inject(method = "openScreen", at = @At(value = "RETURN")) // have to do it this way, else the max JVM stack size is exceeded
-	public void openScreen(World world, BlockPos pos, PlayerEntity player, CallbackInfo info) {
-		ArcanusHelper.interactLecternBlock(world, pos, player);
-	}
+public class LecternBlockMixin {
+    @Inject(method = "openScreen", at = @At(value = "RETURN"))
+    // have to do it this way, else the max JVM stack size is exceeded
+    public void openScreen(World world, BlockPos pos, PlayerEntity player, CallbackInfo info) {
+        ArcanusHelper.interactLecternBlock(world, pos, player);
+    }
 }

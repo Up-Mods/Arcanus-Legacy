@@ -21,33 +21,33 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 public class BookshelfReplacerStructureProcessor extends StructureProcessor {
-	public static final BookshelfReplacerStructureProcessor INSTANCE = new BookshelfReplacerStructureProcessor();
-	public static final Codec<BookshelfReplacerStructureProcessor> CODEC = Codec.unit(() -> BookshelfReplacerStructureProcessor.INSTANCE);
+    public static final BookshelfReplacerStructureProcessor INSTANCE = new BookshelfReplacerStructureProcessor();
+    public static final Codec<BookshelfReplacerStructureProcessor> CODEC = Codec.unit(() -> BookshelfReplacerStructureProcessor.INSTANCE);
 
-	@Nullable
-	@Override
-	public Structure.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, Structure.StructureBlockInfo structureInfoLocal, Structure.StructureBlockInfo structureInfoWorld, StructurePlacementData data) {
-		RandomGenerator random = data.getRandom(structureInfoWorld.pos);
+    @Nullable
+    @Override
+    public Structure.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, Structure.StructureBlockInfo structureInfoLocal, Structure.StructureBlockInfo structureInfoWorld, StructurePlacementData data) {
+        RandomGenerator random = data.getRandom(structureInfoWorld.pos);
 
-		if(!structureInfoWorld.state.isOf(Blocks.BOOKSHELF) || random.nextInt(5) > 0)
-			return structureInfoWorld;
+        if (!structureInfoWorld.state.isOf(Blocks.BOOKSHELF) || random.nextInt(5) > 0)
+            return structureInfoWorld;
 
-		int bookCount = random.nextInt(5);
-		BlockState state = ModBlocks.BOOKSHELF.getDefaultState();
-		DefaultedList<ItemStack> inventory = DefaultedList.ofSize(16, ItemStack.EMPTY);
-		NbtCompound nbt = new NbtCompound();
+        int bookCount = random.nextInt(5);
+        BlockState state = ModBlocks.BOOKSHELF.getDefaultState();
+        DefaultedList<ItemStack> inventory = DefaultedList.ofSize(16, ItemStack.EMPTY);
+        NbtCompound nbt = new NbtCompound();
 
-		for(int i = 0; i < bookCount; ++i)
-			inventory.set(random.nextInt(16), SpellBooks.getRandomSpellBook(random));
+        for (int i = 0; i < bookCount; ++i)
+            inventory.set(random.nextInt(16), SpellBooks.getRandomSpellBook(random));
 
-		state = state.with(FillableBookshelfBlock.BOOK_COUNT, bookCount);
-		Inventories.writeNbt(nbt, inventory);
+        state = state.with(FillableBookshelfBlock.BOOK_COUNT, bookCount);
+        Inventories.writeNbt(nbt, inventory);
 
-		return new Structure.StructureBlockInfo(structureInfoWorld.pos, state, nbt);
-	}
+        return new Structure.StructureBlockInfo(structureInfoWorld.pos, state, nbt);
+    }
 
-	@Override
-	protected StructureProcessorType<?> getType() {
-		return Arcanus.BOOKSHELF_PROCESSOR;
-	}
+    @Override
+    protected StructureProcessorType<?> getType() {
+        return Arcanus.BOOKSHELF_PROCESSOR;
+    }
 }

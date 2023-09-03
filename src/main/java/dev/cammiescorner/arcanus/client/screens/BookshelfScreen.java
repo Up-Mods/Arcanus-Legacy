@@ -11,32 +11,32 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class BookshelfScreen extends HandledScreen<BookshelfScreenHandler> {
-	private static final Identifier TEXTURE = new Identifier(Arcanus.MOD_ID, "textures/gui/container/bookshelf.png");
+    private static final Identifier TEXTURE = new Identifier(Arcanus.MOD_ID, "textures/gui/container/bookshelf.png");
 
-	public BookshelfScreen(BookshelfScreenHandler handler, PlayerInventory inventory, Text title) {
-		super(handler, inventory, title);
-	}
+    public BookshelfScreen(BookshelfScreenHandler handler, PlayerInventory inventory, Text title) {
+        super(handler, inventory, title);
+    }
 
-	@Override
-	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShaderTexture(0, TEXTURE);
-		int x = (width - backgroundWidth) / 2;
-		int y = (height - backgroundHeight) / 2;
-		drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
-	}
+    @Override
+    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        int x = (width - backgroundWidth) / 2;
+        int y = (height - backgroundHeight) / 2;
+        drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
+    }
 
-	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		renderBackground(matrices);
-		super.render(matrices, mouseX, mouseY, delta);
-		drawMouseoverTooltip(matrices, mouseX, mouseY);
-	}
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        renderBackground(matrices);
+        super.render(matrices, mouseX, mouseY, delta);
+        drawMouseoverTooltip(matrices, mouseX, mouseY);
+    }
 
-	@Override
-	protected void init() {
-		super.init();
-		titleX = (backgroundWidth - textRenderer.getWidth(title)) / 2;
-	}
+    @Override
+    protected void init() {
+        super.init();
+        titleX = (backgroundWidth - textRenderer.getWidth(title)) / 2;
+    }
 }

@@ -20,60 +20,60 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class FillableBookshelfBlock extends BlockWithEntity {
-	public static final IntProperty BOOK_COUNT = IntProperty.of("book_count", 0, 16);
+    public static final IntProperty BOOK_COUNT = IntProperty.of("book_count", 0, 16);
 
-	public FillableBookshelfBlock(Settings settings) {
-		super(settings);
-		setDefaultState(getDefaultState().with(BOOK_COUNT, 0));
-	}
+    public FillableBookshelfBlock(Settings settings) {
+        super(settings);
+        setDefaultState(getDefaultState().with(BOOK_COUNT, 0));
+    }
 
-	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if(!world.isClient) {
-			NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!world.isClient) {
+            NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
 
-			if(screenHandlerFactory != null)
-				player.openHandledScreen(screenHandlerFactory);
-		}
+            if (screenHandlerFactory != null)
+                player.openHandledScreen(screenHandlerFactory);
+        }
 
-		return ActionResult.SUCCESS;
-	}
+        return ActionResult.SUCCESS;
+    }
 
-	@Override
-	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-		if(state.getBlock() != newState.getBlock()) {
-			if(world.getBlockEntity(pos) instanceof FillableBookshelfBlockEntity bookshelf) {
-				ItemScatterer.spawn(world, pos, bookshelf);
-				world.updateComparators(pos, this);
-			}
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.getBlock() != newState.getBlock()) {
+            if (world.getBlockEntity(pos) instanceof FillableBookshelfBlockEntity bookshelf) {
+                ItemScatterer.spawn(world, pos, bookshelf);
+                world.updateComparators(pos, this);
+            }
 
-			super.onStateReplaced(state, world, pos, newState, moved);
-		}
-	}
+            super.onStateReplaced(state, world, pos, newState, moved);
+        }
+    }
 
-	@Override
-	public boolean hasComparatorOutput(BlockState state) {
-		return true;
-	}
+    @Override
+    public boolean hasComparatorOutput(BlockState state) {
+        return true;
+    }
 
-	@Override
-	public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-		return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
-	}
+    @Override
+    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+        return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
+    }
 
-	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		builder.add(BOOK_COUNT);
-	}
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(BOOK_COUNT);
+    }
 
-	@Override
-	public BlockRenderType getRenderType(BlockState state) {
-		return BlockRenderType.MODEL;
-	}
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
 
-	@Nullable
-	@Override
-	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-		return new FillableBookshelfBlockEntity(pos, state);
-	}
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new FillableBookshelfBlockEntity(pos, state);
+    }
 }

@@ -18,22 +18,24 @@ import static dev.cammiescorner.arcanus.Arcanus.EntityAttributes.*;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
-	@Unique private final List<EntityAttribute> inverseAttributes = List.of(MANA_COST, MANA_REGEN, BURNOUT_REGEN, MANA_LOCK);
-	@Unique private boolean affectCurrentAttribute;
+    @Unique
+    private final List<EntityAttribute> inverseAttributes = List.of(MANA_COST, MANA_REGEN, BURNOUT_REGEN, MANA_LOCK);
+    @Unique
+    private boolean affectCurrentAttribute;
 
-	@ModifyVariable(method = "getTooltip", slice = @Slice(from = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;")), at = @At(value = "STORE"), ordinal = 0)
-	private Map.Entry<EntityAttribute, EntityAttributeModifier> captureEntry(Map.Entry<EntityAttribute, EntityAttributeModifier> entry) {
-		affectCurrentAttribute = inverseAttributes.contains(entry.getKey());
-		return entry;
-	}
+    @ModifyVariable(method = "getTooltip", slice = @Slice(from = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;")), at = @At(value = "STORE"), ordinal = 0)
+    private Map.Entry<EntityAttribute, EntityAttributeModifier> captureEntry(Map.Entry<EntityAttribute, EntityAttributeModifier> entry) {
+        affectCurrentAttribute = inverseAttributes.contains(entry.getKey());
+        return entry;
+    }
 
-	@ModifyArg(method = "getTooltip", slice = @Slice(from = @At(value = "CONSTANT", args = "doubleValue=0.0", ordinal = 0)), at = @At(value = "INVOKE", target = "Lnet/minecraft/text/MutableText;formatted(Lnet/minecraft/util/Formatting;)Lnet/minecraft/text/MutableText;", ordinal = 0))
-	private Formatting changePositiveFormatting(Formatting value) {
-		return affectCurrentAttribute ? Formatting.RED : value;
-	}
+    @ModifyArg(method = "getTooltip", slice = @Slice(from = @At(value = "CONSTANT", args = "doubleValue=0.0", ordinal = 0)), at = @At(value = "INVOKE", target = "Lnet/minecraft/text/MutableText;formatted(Lnet/minecraft/util/Formatting;)Lnet/minecraft/text/MutableText;", ordinal = 0))
+    private Formatting changePositiveFormatting(Formatting value) {
+        return affectCurrentAttribute ? Formatting.RED : value;
+    }
 
-	@ModifyArg(method = "getTooltip", slice = @Slice(from = @At(value = "CONSTANT", args = "doubleValue=0.0", ordinal = 1)), at = @At(value = "INVOKE", target = "Lnet/minecraft/text/MutableText;formatted(Lnet/minecraft/util/Formatting;)Lnet/minecraft/text/MutableText;", ordinal = 0))
-	private Formatting changeNegativeFormatting(Formatting value) {
-		return affectCurrentAttribute ? Formatting.BLUE : value;
-	}
+    @ModifyArg(method = "getTooltip", slice = @Slice(from = @At(value = "CONSTANT", args = "doubleValue=0.0", ordinal = 1)), at = @At(value = "INVOKE", target = "Lnet/minecraft/text/MutableText;formatted(Lnet/minecraft/util/Formatting;)Lnet/minecraft/text/MutableText;", ordinal = 0))
+    private Formatting changeNegativeFormatting(Formatting value) {
+        return affectCurrentAttribute ? Formatting.BLUE : value;
+    }
 }

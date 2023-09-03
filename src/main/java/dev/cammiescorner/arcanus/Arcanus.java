@@ -39,72 +39,72 @@ import java.util.List;
 
 public class Arcanus implements ModInitializer {
 
-	//-----Miscellaneous-----//
-	public static final String MOD_ID = "arcanus";
-	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    //-----Miscellaneous-----//
+    public static final String MOD_ID = "arcanus";
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-	//-----Custom Registries-----//
-	public static final Registry<Spell> SPELL = createRegistry("spell", Spell.class);
-	public static final RegistryKey<Registry<Spell>> SPELL_KEY = RegistryKey.ofRegistry(new Identifier(MOD_ID, "spell"));
+    //-----Custom Registries-----//
+    public static final Registry<Spell> SPELL = createRegistry("spell", Spell.class);
+    public static final RegistryKey<Registry<Spell>> SPELL_KEY = RegistryKey.ofRegistry(new Identifier(MOD_ID, "spell"));
 
-	//-----Loot Functions-----//
-	public static final LootFunctionType ARCANUS_LOOT_FUNCTION = new LootFunctionType(new ArcanusLootFunction.Serializer());
+    //-----Loot Functions-----//
+    public static final LootFunctionType ARCANUS_LOOT_FUNCTION = new LootFunctionType(new ArcanusLootFunction.Serializer());
 
-	//-----Structure Processors-----//
-	public static final StructureProcessorType<LecternStructureProcessor> LECTERN_PROCESSOR = StructureProcessorType.register("set_lectern_book", LecternStructureProcessor.CODEC);
-	public static final StructureProcessorType<BookshelfReplacerStructureProcessor> BOOKSHELF_PROCESSOR = StructureProcessorType.register("replace_bookshelf", BookshelfReplacerStructureProcessor.CODEC);
+    //-----Structure Processors-----//
+    public static final StructureProcessorType<LecternStructureProcessor> LECTERN_PROCESSOR = StructureProcessorType.register("set_lectern_book", LecternStructureProcessor.CODEC);
+    public static final StructureProcessorType<BookshelfReplacerStructureProcessor> BOOKSHELF_PROCESSOR = StructureProcessorType.register("replace_bookshelf", BookshelfReplacerStructureProcessor.CODEC);
 
-	//-----Screen Handlers-----//
-	public static final ScreenHandlerType<BookshelfScreenHandler> BOOKSHELF_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(Arcanus.MOD_ID, "fillable_bookshelf"), BookshelfScreenHandler::new);
+    public static Identifier id(String name) {
+        return new Identifier(MOD_ID, name);
+    }    //-----Screen Handlers-----//
+    public static final ScreenHandlerType<BookshelfScreenHandler> BOOKSHELF_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(Arcanus.MOD_ID, "fillable_bookshelf"), BookshelfScreenHandler::new);
 
-	@Override
-	public void onInitialize(ModContainer mod) {
-		DataTrackers.MANA.getId();
-		MidnightConfig.init(MOD_ID, ArcanusConfig.class);
+    @SuppressWarnings("unchecked")
+    private static <T> Registry<T> createRegistry(String name, Class<?> clazz) {
+        Registry<?> registry = FabricRegistryBuilder.createSimple(clazz, new Identifier(MOD_ID, name)).buildAndRegister();
+        return (Registry<T>) registry;
+    }
 
-		ServerPlayNetworking.registerGlobalReceiver(CastSpellPacket.ID, CastSpellPacket::handle);
-		Registry.register(Registries.LOOK_FUNCTION_TYPE, new Identifier(Arcanus.MOD_ID, "arcanus_loot_function"), ARCANUS_LOOT_FUNCTION);
-		Registry.register(Registries.ENTITY_ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "casting_multiplier"), EntityAttributes.MANA_COST);
-		Registry.register(Registries.ENTITY_ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_regen"), EntityAttributes.MANA_REGEN);
-		Registry.register(Registries.ENTITY_ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "burnout_regen"), EntityAttributes.BURNOUT_REGEN);
-		Registry.register(Registries.ENTITY_ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_lock"), EntityAttributes.MANA_LOCK);
+    public static MutableText getSpellInputs(List<Pattern> pattern, int index) {
+        return index >= pattern.size() || pattern.get(index) == null ? Text.literal("?").formatted(Formatting.GRAY, Formatting.UNDERLINE) : Text.literal(pattern.get(index).getSymbol()).formatted(Formatting.GREEN);
+    }
 
-		ModItems.register();
-		ModBlocks.register();
-		ModBlockEntities.register();
-		ModSpells.register();
-		ModEntities.register();
-		ModParticles.register();
-		ModSoundEvents.register();
-		EventHandler.commonEvents();
+    @Override
+    public void onInitialize(ModContainer mod) {
+        DataTrackers.MANA.getId();
+        MidnightConfig.init(MOD_ID, ArcanusConfig.class);
 
-		LOGGER.info("imagine people still looking for these :hahayes:");
-	}
+        ServerPlayNetworking.registerGlobalReceiver(CastSpellPacket.ID, CastSpellPacket::handle);
+        Registry.register(Registries.LOOK_FUNCTION_TYPE, new Identifier(Arcanus.MOD_ID, "arcanus_loot_function"), ARCANUS_LOOT_FUNCTION);
+        Registry.register(Registries.ENTITY_ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "casting_multiplier"), EntityAttributes.MANA_COST);
+        Registry.register(Registries.ENTITY_ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_regen"), EntityAttributes.MANA_REGEN);
+        Registry.register(Registries.ENTITY_ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "burnout_regen"), EntityAttributes.BURNOUT_REGEN);
+        Registry.register(Registries.ENTITY_ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_lock"), EntityAttributes.MANA_LOCK);
 
-	public static Identifier id(String name) {
-		return new Identifier(MOD_ID, name);
-	}
+        ModItems.register();
+        ModBlocks.register();
+        ModBlockEntities.register();
+        ModSpells.register();
+        ModEntities.register();
+        ModParticles.register();
+        ModSoundEvents.register();
+        EventHandler.commonEvents();
 
-	@SuppressWarnings("unchecked")
-	private static <T> Registry<T> createRegistry(String name, Class<?> clazz) {
-		Registry<?> registry = FabricRegistryBuilder.createSimple(clazz, new Identifier(MOD_ID, name)).buildAndRegister();
-		return (Registry<T>) registry;
-	}
+        LOGGER.info("imagine people still looking for these :hahayes:");
+    }
 
-	public static MutableText getSpellInputs(List<Pattern> pattern, int index) {
-		return index >= pattern.size() || pattern.get(index) == null ? Text.literal("?").formatted(Formatting.GRAY, Formatting.UNDERLINE) : Text.literal(pattern.get(index).getSymbol()).formatted(Formatting.GREEN);
-	}
+    public static class DataTrackers {
+        public static final TrackedData<Integer> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        public static final TrackedData<Integer> BURNOUT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        public static final TrackedData<Boolean> SHOW_MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    }
 
-	public static class DataTrackers {
-		public static final TrackedData<Integer> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
-		public static final TrackedData<Integer> BURNOUT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
-		public static final TrackedData<Boolean> SHOW_MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-	}
+    public static class EntityAttributes {
+        public static final EntityAttribute MANA_COST = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_cost", 1D, 0D, 1024D).setTracked(true);
+        public static final EntityAttribute MANA_REGEN = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_regen", 1D, 0D, 1024D).setTracked(true);
+        public static final EntityAttribute BURNOUT_REGEN = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".burnout_regen", 1D, 0D, 1024D).setTracked(true);
+        public static final EntityAttribute MANA_LOCK = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_lock", 0D, 0D, 20D).setTracked(true);
+    }
 
-	public static class EntityAttributes {
-		public static final EntityAttribute MANA_COST = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_cost", 1D, 0D, 1024D).setTracked(true);
-		public static final EntityAttribute MANA_REGEN = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_regen", 1D, 0D, 1024D).setTracked(true);
-		public static final EntityAttribute BURNOUT_REGEN = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".burnout_regen", 1D, 0D, 1024D).setTracked(true);
-		public static final EntityAttribute MANA_LOCK = new ClampedEntityAttribute("attribute.name.generic." + Arcanus.MOD_ID + ".mana_lock", 0D, 0D, 20D).setTracked(true);
-	}
+
 }

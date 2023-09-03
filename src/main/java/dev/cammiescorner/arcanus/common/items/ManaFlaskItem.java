@@ -2,7 +2,6 @@ package dev.cammiescorner.arcanus.common.items;
 
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +22,7 @@ import java.util.List;
 
 public class ManaFlaskItem extends Item {
     public ManaFlaskItem() {
-        super(new FabricItemSettings().maxCount(1).food(new FoodComponent.Builder().alwaysEdible().build()));
+        super(new Item.Settings().maxCount(1).food(new FoodComponent.Builder().alwaysEdible().build()));
     }
 
     @Override

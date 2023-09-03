@@ -5,31 +5,31 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 
 public interface MagicUser {
-	List<Spell> getKnownSpells();
+    List<Spell> getKnownSpells();
 
-	void setKnownSpell(Identifier spellId);
+    void setKnownSpell(Identifier spellId);
 
-	int getMana();
+    int getMana();
 
-	int getMaxMana();
+    void setMana(int amount);
 
-	void setMana(int amount);
+    int getMaxMana();
 
-	void addMana(int amount);
+    void addMana(int amount);
 
-	int getBurnout();
+    int getBurnout();
 
-	int getMaxBurnout();
+    void setBurnout(int amount);
 
-	void setBurnout(int amount);
+    int getMaxBurnout();
 
-	void addBurnout(int amount);
+    void addBurnout(int amount);
 
-	boolean isManaVisible();
+    boolean isManaVisible();
 
-	void shouldShowMana(boolean shouldShowMana);
+    void shouldShowMana(boolean shouldShowMana);
 
-	void setLastCastTime(long lastCastTime);
+    void setLastCastTime(long lastCastTime);
 
-	void setActiveSpell(Spell spell, int timer);
+    void setActiveSpell(Spell spell, int timer);
 }

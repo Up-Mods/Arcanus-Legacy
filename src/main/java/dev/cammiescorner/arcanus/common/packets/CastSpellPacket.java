@@ -22,64 +22,62 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
 public class CastSpellPacket {
-	public static final Identifier ID = new Identifier(Arcanus.MOD_ID, "cast_spell");
+    public static final Identifier ID = new Identifier(Arcanus.MOD_ID, "cast_spell");
 
-	public static void send(int spellId) {
-		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-		buf.writeVarInt(spellId);
+    public static void send(int spellId) {
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        buf.writeVarInt(spellId);
 
-		ClientPlayNetworking.send(ID, buf);
-	}
+        ClientPlayNetworking.send(ID, buf);
+    }
 
-	public static void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler network, PacketByteBuf buf, PacketSender sender) {
-		int spellId = buf.readVarInt();
+    public static void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler network, PacketByteBuf buf, PacketSender sender) {
+        int spellId = buf.readVarInt();
 
-		server.execute(() -> {
-			MagicUser user = (MagicUser) player;
-			ItemStack stack = player.getMainHandStack();
-			WandItem wand = (WandItem) stack.getItem();
-			Spell spell = Arcanus.SPELL.get(spellId);
+        server.execute(() -> {
+            MagicUser user = (MagicUser) player;
+            ItemStack stack = player.getMainHandStack();
+            WandItem wand = (WandItem) stack.getItem();
+            Spell spell = Arcanus.SPELL.get(spellId);
 
-			if(user.getKnownSpells().contains(spell) && spell != null) {
-				int realManaCost = (int) (spell.getManaCost() * ArcanusHelper.getManaCost(player));
+            if (user.getKnownSpells().contains(spell) && spell != null) {
+                int realManaCost = (int) (spell.getManaCost() * ArcanusHelper.getManaCost(player));
 
-				if(player.isCreative() || (ArcanusConfig.haveBurnout && user.getMana() > 0) || (!ArcanusConfig.haveBurnout && user.getMana() >= realManaCost)) {
-					player.sendMessage(Text.translatable(spell.getTranslationKey()).formatted(Formatting.GREEN), true);
-					spell.onCast(player.world, player);
+                if (player.isCreative() || (ArcanusConfig.haveBurnout && user.getMana() > 0) || (!ArcanusConfig.haveBurnout && user.getMana() >= realManaCost)) {
+                    player.sendMessage(Text.translatable(spell.getTranslationKey()).formatted(Formatting.GREEN), true);
+                    spell.onCast(player.world, player);
 
-					if(!player.isCreative()) {
-						user.setLastCastTime(player.world.getTime());
+                    if (!player.isCreative()) {
+                        user.setLastCastTime(player.world.getTime());
 
-						if(user.getMana() < realManaCost && ArcanusConfig.haveBurnout) {
-							int burnoutAmount = realManaCost - user.getMana();
-							user.addBurnout(burnoutAmount);
-							player.damage(ModDamageTypes.burnout(player.world), burnoutAmount);
-							player.sendMessage(Text.translatable("error." + Arcanus.MOD_ID + ".burnout").formatted(Formatting.RED), false);
-						}
+                        if (user.getMana() < realManaCost && ArcanusConfig.haveBurnout) {
+                            int burnoutAmount = realManaCost - user.getMana();
+                            user.addBurnout(burnoutAmount);
+                            player.damage(ModDamageTypes.burnout(player.world), burnoutAmount);
+                            player.sendMessage(Text.translatable("error." + Arcanus.MOD_ID + ".burnout").formatted(Formatting.RED), false);
+                        }
 
-						user.addMana(-realManaCost);
-					}
+                        user.addMana(-realManaCost);
+                    }
 
-					NbtCompound tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
+                    NbtCompound tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
 
-					if(wand.hasUpgrade()) {
-						tag.putInt("Exp", tag.getInt("Exp") + realManaCost);
+                    if (wand.hasUpgrade()) {
+                        tag.putInt("Exp", tag.getInt("Exp") + realManaCost);
 
-						if(tag.getInt("Exp") >= wand.getMaxExp()) {
-							ItemStack newStack = new ItemStack(wand.getUpgrade());
-							tag = newStack.getOrCreateSubNbt(Arcanus.MOD_ID);
-							tag.putInt("Exp", wand.getMaxExp());
-							player.setStackInHand(Hand.MAIN_HAND, newStack);
-						}
-					}
-				}
-				else {
-					player.sendMessage(Text.translatable("error." + Arcanus.MOD_ID + ".not_enough_mana").formatted(Formatting.RED), false);
-				}
-			}
-			else {
-				player.sendMessage(Text.translatable("error." + Arcanus.MOD_ID + ".unknown_spell").formatted(Formatting.RED), true);
-			}
-		});
-	}
+                        if (tag.getInt("Exp") >= wand.getMaxExp()) {
+                            ItemStack newStack = new ItemStack(wand.getUpgrade());
+                            tag = newStack.getOrCreateSubNbt(Arcanus.MOD_ID);
+                            tag.putInt("Exp", wand.getMaxExp());
+                            player.setStackInHand(Hand.MAIN_HAND, newStack);
+                        }
+                    }
+                } else {
+                    player.sendMessage(Text.translatable("error." + Arcanus.MOD_ID + ".not_enough_mana").formatted(Formatting.RED), false);
+                }
+            } else {
+                player.sendMessage(Text.translatable("error." + Arcanus.MOD_ID + ".unknown_spell").formatted(Formatting.RED), true);
+            }
+        });
+    }
 }

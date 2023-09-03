@@ -17,37 +17,36 @@ import net.minecraft.util.Identifier;
 import java.util.LinkedHashMap;
 
 public class ModItems {
-	//-----Item Map-----//
-	public static final LinkedHashMap<Item, Identifier> ITEMS = new LinkedHashMap<>();
+    //-----Item Map-----//
+    public static final LinkedHashMap<Item, Identifier> ITEMS = new LinkedHashMap<>();
+    public static final Item MASTER_WAND = create("master_wand", new WandItem(-0.5F, 6400, null));
+    public static final Item ADEPT_WAND = create("adept_wand", new WandItem(0F, 6400, () -> ModItems.MASTER_WAND));
+    //-----Items-----//
+    public static final Item INITIATE_WAND = create("initiate_wand", new WandItem(0.5F, 2400, () -> ModItems.ADEPT_WAND));
+    public static final Item MANA_FLASK = create("mana_flask", new ManaFlaskItem());
 
-	//-----Items-----//
-	public static final Item INITIATE_WAND = create("initiate_wand", new WandItem(0.5F, 2400, () -> ModItems.ADEPT_WAND));
-	public static final Item ADEPT_WAND = create("adept_wand", new WandItem(0F, 6400,  () -> ModItems.MASTER_WAND));
-	public static final Item MASTER_WAND = create("master_wand", new WandItem(-0.5F, 6400, null));
-	public static final Item MANA_FLASK = create("mana_flask", new ManaFlaskItem());
+    //-----Registry-----//
+    public static void register() {
+        FabricItemGroup.builder(Arcanus.id("general")).icon(() -> new ItemStack(ModItems.MASTER_WAND)).entries((displayParams, entries) -> {
+            entries.addItem(ModBlocks.BOOKSHELF);
+            entries.addItem(ModBlocks.DISPLAY_CASE);
+            ArcanusHelper.addWandsToTab(entries);
+            ItemStack stack = new ItemStack(MANA_FLASK);
+            NbtCompound tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
+            tag.putInt("Mana", 0);
+            entries.addStack(stack);
+            stack = new ItemStack(MANA_FLASK);
+            tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
+            tag.putInt("Mana", 4);
+            entries.addStack(stack);
+            Arcanus.SPELL.forEach(spell -> entries.addStack(SpellBooks.getSpellBook(spell, MinecraftClient.getInstance().player.getRandom())));
+        }).build();
 
-	//-----Registry-----//
-	public static void register() {
-		FabricItemGroup.builder(Arcanus.id("general")).icon(() -> new ItemStack(ModItems.MASTER_WAND)).entries((displayParams, entries) -> {
-			entries.addItem(ModBlocks.BOOKSHELF);
-			entries.addItem(ModBlocks.DISPLAY_CASE);
-			ArcanusHelper.addWandsToTab(entries);
-			ItemStack stack = new ItemStack(MANA_FLASK);
-			NbtCompound tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
-			tag.putInt("Mana", 0);
-			entries.addStack(stack);
-			stack = new ItemStack(MANA_FLASK);
-			tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
-			tag.putInt("Mana", 4);
-			entries.addStack(stack);
-			Arcanus.SPELL.forEach(spell -> entries.addStack(SpellBooks.getSpellBook(spell, MinecraftClient.getInstance().player.getRandom())));
-		}).build();
+        ITEMS.keySet().forEach(item -> Registry.register(Registries.ITEM, ITEMS.get(item), item));
+    }
 
-		ITEMS.keySet().forEach(item -> Registry.register(Registries.ITEM, ITEMS.get(item), item));
-	}
-
-	private static <T extends Item> T create(String name, T item) {
-		ITEMS.put(item, new Identifier(Arcanus.MOD_ID, name));
-		return item;
-	}
+    private static <T extends Item> T create(String name, T item) {
+        ITEMS.put(item, new Identifier(Arcanus.MOD_ID, name));
+        return item;
+    }
 }

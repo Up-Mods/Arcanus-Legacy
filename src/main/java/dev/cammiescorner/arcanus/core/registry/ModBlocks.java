@@ -15,25 +15,25 @@ import net.minecraft.util.Identifier;
 import java.util.LinkedHashMap;
 
 public class ModBlocks {
-	//-----Block Map-----//
-	public static final LinkedHashMap<Block, Identifier> BLOCKS = new LinkedHashMap<>();
+    //-----Block Map-----//
+    public static final LinkedHashMap<Block, Identifier> BLOCKS = new LinkedHashMap<>();
 
-	//-----Blocks-----//
-	public static final Block BOOKSHELF = create("fillable_bookshelf", new FillableBookshelfBlock(FabricBlockSettings.copyOf(Blocks.BOOKSHELF)));
-	public static final Block DISPLAY_CASE = create("display_case", new DisplayCaseBlock(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE).requiresTool().nonOpaque()));
+    //-----Blocks-----//
+    public static final Block BOOKSHELF = create("fillable_bookshelf", new FillableBookshelfBlock(FabricBlockSettings.copyOf(Blocks.BOOKSHELF)));
+    public static final Block DISPLAY_CASE = create("display_case", new DisplayCaseBlock(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE).requiresTool().nonOpaque()));
 
-	//-----Registry-----//
-	public static void register() {
-		BLOCKS.keySet().forEach(block -> Registry.register(Registries.BLOCK, BLOCKS.get(block), block));
-		BLOCKS.keySet().forEach(block -> Registry.register(Registries.ITEM, BLOCKS.get(block), getItem(block)));
-	}
+    //-----Registry-----//
+    public static void register() {
+        BLOCKS.keySet().forEach(block -> Registry.register(Registries.BLOCK, BLOCKS.get(block), block));
+        BLOCKS.keySet().forEach(block -> Registry.register(Registries.ITEM, BLOCKS.get(block), getItem(block)));
+    }
 
-	private static BlockItem getItem(Block block) {
-		return new BlockItem(block, new Item.Settings());
-	}
+    private static BlockItem getItem(Block block) {
+        return new BlockItem(block, new Item.Settings());
+    }
 
-	private static <T extends Block> T create(String name, T block) {
-		BLOCKS.put(block, new Identifier(Arcanus.MOD_ID, name));
-		return block;
-	}
+    private static <T extends Block> T create(String name, T block) {
+        BLOCKS.put(block, new Identifier(Arcanus.MOD_ID, name));
+        return block;
+    }
 }
