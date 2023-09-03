@@ -15,7 +15,6 @@ import dev.cammiescorner.arcanus.core.util.Spell;
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -56,7 +55,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Shadow public abstract void addExhaustion(float exhaustion);
 	@Shadow public abstract void sendMessage(Text message, boolean actionBar);
 
-	@Shadow protected HungerManager hungerManager;
 	@Unique private final List<Spell> knownSpells = new ArrayList<>(8);
 	@Unique private Spell activeSpell = null;
 	@Unique private long lastCastTime = 0;
@@ -242,7 +240,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	public void castLunge() {
 		if(isFallFlying()) {
 			if(spellTimer == 10)
-				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+				world.playSound(null, getX(), getY(), getZ(), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 
 			if(spellTimer > 0) {
 				Vec3d rotation = getRotationVector();
@@ -269,7 +267,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		else {
 			if(spellTimer == 10) {
 				setVelocity(0F, 0.75F, 0F);
-				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+				world.playSound(null, getX(), getY(), getZ(), SoundEvents.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 			}
 
 			float adjustedPitch = MathHelper.abs(MathHelper.abs(getPitch() / 90F) - 1);
@@ -311,9 +309,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		if(serverWorld != null && spawnPos != null) {
 			Vec3d spawnPoint = PlayerEntity.findRespawnPosition(serverWorld, spawnPos, spawnAngle, hasSpawnPoint, true).orElse(null);
 			if(spawnPoint != null) {
-				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
+				world.playSound(null, getX(), getY(), getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
 				QuiltDimensions.teleport(serverPlayer, serverWorld, new TeleportTarget(spawnPoint, Vec3d.ZERO, (float) rotation.x, (float) rotation.y));
-				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
+				world.playSound(null, getX(), getY(), getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
 				return;
 			}
 		}
@@ -327,7 +325,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		magicMissile.setProperties(this, getPitch(), getYaw(), getRoll(), 4.5F, 0F);
 
 		world.spawnEntity(magicMissile);
-		world.playSound(null, getBlockPos(), ModSoundEvents.MAGIC_MISSILE, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+		world.playSound(null, getX(), getY(), getZ(), ModSoundEvents.MAGIC_MISSILE, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 		activeSpell = null;
 	}
 
@@ -345,7 +343,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 			ArcanusHelper.drawLine(startPos, endPos, world, 0.5F, (ParticleEffect) ModParticles.TELEKINETIC_SHOCK);
 		}
 
-		world.playSound(null, getBlockPos(), ModSoundEvents.TELEKINETIC_SHOCK, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+		world.playSound(null, getX(), getY(), getZ(), ModSoundEvents.TELEKINETIC_SHOCK, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 
 		switch(result.getType()) {
 			case ENTITY -> {
@@ -392,7 +390,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique
 	public void castHeal() {
 		heal(10);
-		world.playSound(null, getBlockPos(), ModSoundEvents.HEAL, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+		world.playSound(null, getX(), getY(), getZ(), ModSoundEvents.HEAL, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
 
 		for(int amount = 0; amount < 32; amount++) {
 			float offsetX = ((random.nextInt(3) - 1) * random.nextFloat());
