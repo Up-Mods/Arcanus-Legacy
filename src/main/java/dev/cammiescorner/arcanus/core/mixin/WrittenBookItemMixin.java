@@ -47,7 +47,7 @@ public abstract class WrittenBookItemMixin extends Item {
 	@Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context, CallbackInfo info, NbtCompound nbtCompound, String string) {
 		if(stack.hasNbt() && stack.getNbt().contains("spell")) {
-			tooltip.add(Text.translatable("book.byAuthor").append(Text.translatable(string)).formatted(Formatting.GRAY));
+			tooltip.add(Text.translatable("book.byAuthor", null, Text.translatable(string)).formatted(Formatting.GRAY));
 			info.cancel();
 		}
 	}
