@@ -16,7 +16,7 @@ def buildNumber = !ENV.TAG ? ("${ENV.BUILD_NUMBER ? "build.${ENV.BUILD_NUMBER}" 
 version = (ENV.TAG ?: "development") + ((isPreviewBuild && !ENV.TAG) ? "+${buildNumber}" : "")
 
 // messy workaround for bug in quilt loom 1.3.3
-project.configurations.all {
+project.configurations.configureEach {
     exclude(group: "net.fabricmc", module: "fabric-loader")
     exclude(group: "net.fabricmc.fabric-api")
 }
