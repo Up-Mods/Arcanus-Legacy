@@ -45,7 +45,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static dev.cammiescorner.arcanus.Arcanus.DataTrackers.*;
 import static dev.cammiescorner.arcanus.Arcanus.EntityAttributes.*;
@@ -302,27 +301,22 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		ServerWorld serverWorld = this.getServer().getWorld(serverPlayer.getSpawnPointDimension());
 		BlockPos spawnPos = serverPlayer.getSpawnPointPosition();
 		Vec3d rotation = this.getRotationVec(1F);
-		Optional<Vec3d> optionalSpawnPoint;
 		float spawnAngle = serverPlayer.getSpawnAngle();
 		boolean hasSpawnPoint = serverPlayer.isSpawnPointSet();
 
-		if(serverWorld != null && spawnPos != null)
-			optionalSpawnPoint = PlayerEntity.findRespawnPosition(serverWorld, spawnPos, spawnAngle, hasSpawnPoint, true);
-		else
-			optionalSpawnPoint = Optional.empty();
-
-		if(optionalSpawnPoint.isPresent()) {
-			Vec3d spawnPoint = optionalSpawnPoint.get();
-			System.out.println(spawnPoint);
-			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
-			serverPlayer.teleport(serverWorld, spawnPoint.x, spawnPoint.y, spawnPoint.z, (float) rotation.x, (float) rotation.y);
-			world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
-		}
-		else {
-			sendMessage(Text.translatable("block.minecraft.spawn.not_valid"), false);
-		}
-
 		activeSpell = null;
+
+		if(serverWorld != null && spawnPos != null) {
+			Vec3d spawnPoint = PlayerEntity.findRespawnPosition(serverWorld, spawnPos, spawnAngle, hasSpawnPoint, true).orElse(null);
+			if(spawnPoint != null) {
+				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
+				serverPlayer.teleport(serverWorld, spawnPoint.x, spawnPoint.y, spawnPoint.z, (float) rotation.x, (float) rotation.y);
+				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 2F, 1F);
+				return;
+			}
+		}
+
+		sendMessage(Text.translatable("block.minecraft.spawn.not_valid"), false);
 	}
 
 	@Unique
