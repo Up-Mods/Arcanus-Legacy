@@ -1,11 +1,8 @@
 {
-	//-----Errors-----//
 	"error.arcanus.missing_spell": "This spell doesn't exist",
 	"error.arcanus.unknown_spell": "You don't know this spell yet",
 	"error.arcanus.not_enough_mana": "You don't have enough mana to cast this spell",
 	"error.arcanus.burnout": "You're feeling a bit worn out...",
-
-	//-----Spells-----//
 	"spell.arcanus.lunge": "Lunge",
 	"spell.arcanus.dream_warp": "Dream Warp",
 	"spell.arcanus.magic_missile": "Magic Missile",
@@ -15,8 +12,6 @@
 	"spell.arcanus.solar_strike": "Solar Strike",
 	"spell.arcanus.arcane_barrier": "Arcane Barrier",
 	"spell.arcanus.no_target": "Spell missed",
-
-	//-----Book Titles-----//
 	"book.arcanus.lunge.title": "Lunge Spell Book",
 	"book.arcanus.dream_warp.title": "Dream Warp Spell Book",
 	"book.arcanus.magic_missile.title": "Magic Missile Spell Book",
@@ -25,8 +20,6 @@
 	"book.arcanus.discombobulate.title": "Discombobulate Spell Book",
 	"book.arcanus.solar_strike.title": "Solar Strike Spell Book",
 	"book.arcanus.arcane_barrier.title": "Arcane Barrier Spell Book",
-
-	//-----Book Authors-----//
 	"book.arcanus.00.author": "Grand Mage fizzgig511",
 	"book.arcanus.01.author": "ComradeCammie the Seer",
 	"book.arcanus.02.author": "Kiori the Alchemist",
@@ -48,8 +41,6 @@
 	"book.arcanus.18.author": "MoriyaShiine the King",
 	"book.arcanus.19.author": "Aelpecyem the Heretic",
 	"book.arcanus.20.author": "_toErIpNid_ the Coward",
-
-	//-----Book Descriptions-----//
 	"book.arcanus.casting_pattern": "\n\n-------------------\n\n    Casting Pattern:\n",
 	"book.arcanus.lunge.description": "This spell will launch you forward with enough force to hurt anything you collide with.",
 	"book.arcanus.dream_warp.description": "Utilizing planar travel, you can \"teleport\" home to escape even the most awkward of dinner parties.",
@@ -59,8 +50,6 @@
 	"book.arcanus.discombobulate.description": "Severely mess with your enemies' perception of the world... for about 8 seconds.\n\nIt's still enough time to escape.",
 	"book.arcanus.solar_strike.description": "Casting this spell will call down a beam of light from the Sun itself, incinerating most foes.",
 	"book.arcanus.arcane_barrier.description": "Building is overrated. In this house we use pillars made of magical energy to keep the monsters out.",
-
-	//-----Items-----//
 	"item.arcanus.initiate_wand": "Initiate Wand",
 	"item.arcanus.adept_wand": "Adept Wand",
 	"item.arcanus.master_wand": "Master Wand",
@@ -68,29 +57,17 @@
 	"item.arcanus.mana_flask_empty.description": "Use while sneaking to fill with Mana.",
 	"item.arcanus.mana_flask": "Mana Flask",
 	"item.arcanus.mana_flask.description": "Drink to regain the stored Mana.",
-
-	//-----Blocks-----//
 	"block.arcanus.fillable_bookshelf": "Bookshelf",
 	"block.arcanus.display_case": "Display Case",
-
-	//-----Entities-----//
 	"entity.arcanus.magic_missile": "Magic Missile",
 	"entity.arcanus.solar_strike": "Solar Strike",
 	"entity.arcanus.arcane_barrier": "Arcane Barrier",
-
-	//-----Entity Attributes-----//
 	"attribute.name.generic.arcanus.mana_cost": "Mana Cost",
 	"attribute.name.generic.arcanus.mana_regen": "Mana Regen",
 	"attribute.name.generic.arcanus.burnout_regen": "Burnout Regen",
 	"attribute.name.generic.arcanus.mana_lock": "Mana Lock",
-
-	//-----Item Groups-----//
 	"itemGroup.arcanus.general": "Arcanus: Legacy",
-
-	//-----Wand-----//
 	"wand.arcanus.casting_cost": "Casting Cost",
-
-	//-----Advancements-----//
 	"advancements.arcanus.wand.title": "Too Many Magic Mods: The Mod",
 	"advancements.arcanus.wand.description": "Craft a Wand.",
 	"advancements.arcanus.lunge.title": "I am become Froge, Savior of Worlds",
@@ -111,8 +88,6 @@
 	"advancements.arcanus.arcane_barrier.description": "Find the Arcane Barrier Spell Book in a dungeon.",
 	"advancements.arcanus.all_spells.title": "Unlimited Power!",
 	"advancements.arcanus.all_spells.description": "Craft a Wand and collect all 8 Spell Books.",
-
-	//-----Commands-----//
 	"commands.arcanus.spells.list": "%s's Known Spells: %s",
 	"commands.arcanus.spells.added": "Gave [%s] to %s",
 	"commands.arcanus.spells.removed": "Removed [%s] from %s",
@@ -123,25 +98,17 @@
 	"commands.arcanus.spells.already_known": "%s already knows [%s]",
 	"commands.arcanus.spells.not_valid_spell": "Must be a valid spell",
 	"commands.arcanus.spells.no_known_spells": "%s doesn't know any spells. What a nerd!",
-
-	//-----Death Messages-----//
 	"death.attack.magic_burnout": "%s found out what it feels like to be a mod developer",
 	"death.attack.magic_burnout.player": "%2$s asked %1$s for a Forge port",
 	"death.attack.solar_strike": "%s got a severe sunburn while spending time with %s",
 	"death.attack.solar_strike.item": "%s got a severe sunburn from %s using %s",
-
-	//-----Subtitles-----//
 	"subtitles.arcanus.magic_missile": "Magic Missile",
 	"subtitles.arcanus.telekinetic_shock": "Telekinetic Shock",
 	"subtitles.arcanus.solar_strike": "Solar Strike",
 	"subtitles.arcanus.heal": "Heal",
-
-	//-----Keybinds-----//
 	"category.arcanus.general": "Arcanus: Legacy",
 	"key.arcanus.activate_amulet": "Activate Amulet",
 	"key.arcanus.spell_modifier": "Spell Modifier (Does Nothing)",
-
-	//-----ModMenu-----//
 	"arcanus.midnightconfig.title": "Arcanus: Legacy",
 	"arcanus.midnightconfig.doLecternProcessor": "Run Lectern Structure Processor.",
 	"arcanus.midnightconfig.doBookshelfProcessor": "Run Bookshelf Structure Processor.",
