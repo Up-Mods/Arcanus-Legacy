@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public abstract class MouseMixin {
 	@Shadow @Final private MinecraftClient client;
 
-	@ModifyArg(method = "updateMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"), index = 0)
+	@ModifyArg(method = "updateLookDirection", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"), index = 0)
 	public double changeLookDirectionX(double x) {
 		if(client.player instanceof CanBeDiscombobulated player && player.isDiscombobulated())
 			return -x;
@@ -21,7 +21,7 @@ public abstract class MouseMixin {
 		return x;
 	}
 
-	@ModifyArg(method = "updateMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"), index = 1)
+	@ModifyArg(method = "updateLookDirection", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"), index = 1)
 	public double changeLookDirectionY(double y) {
 		if(client.player instanceof CanBeDiscombobulated player && player.isDiscombobulated())
 			return -y;

@@ -60,7 +60,7 @@ public class DisplayCaseBlock extends BlockWithEntity {
 				ItemStack handStack = player.getStackInHand(hand);
 				ItemStack entityStack = blockEntity.removeStack(0);
 
-				if(ItemStack.areItemsEqual(handStack, entityStack) && handStack.getCount() < handStack.getMaxCount()) {
+				if(ItemStack.canCombine(handStack, entityStack) && handStack.getCount() < handStack.getMaxCount()) {
 					handStack.increment(1);
 					return ActionResult.SUCCESS;
 				}

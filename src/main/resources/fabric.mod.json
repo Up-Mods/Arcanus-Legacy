@@ -15,14 +15,11 @@
 	"icon": "assets/arcanus/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
+		"init": [
 			"dev.cammiescorner.arcanus.Arcanus"
 		],
-		"client": [
+		"client_init": [
 			"dev.cammiescorner.arcanus.client.ArcanusClient"
-		],
-		"modmenu": [
-			"dev.cammiescorner.arcanus.core.integration.ArcanusModMenu"
 		]
 	},
 	"mixins": [

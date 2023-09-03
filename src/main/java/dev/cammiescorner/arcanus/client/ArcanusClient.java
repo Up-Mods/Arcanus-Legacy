@@ -1,5 +1,7 @@
 package dev.cammiescorner.arcanus.client;
 
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormats;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.client.particle.DiscombobulateParticle;
 import dev.cammiescorner.arcanus.client.particle.HealParticle;
@@ -15,7 +17,6 @@ import dev.cammiescorner.arcanus.core.registry.ModBlocks;
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import dev.cammiescorner.arcanus.core.registry.ModParticles;
 import dev.cammiescorner.arcanus.core.util.EventHandler;
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
@@ -24,14 +25,14 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderPhase;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 
 public class ArcanusClient implements ClientModInitializer {
 	@Override
-	public void onInitializeClient() {
+	public void onInitializeClient(ModContainer mod) {
 		screenRegistry();
 		entityRendererRegistry();
 		particleFactoryRegistry();
@@ -50,7 +51,7 @@ public class ArcanusClient implements ClientModInitializer {
 				false,
 				true,
 				RenderLayer.MultiPhaseParameters.builder()
-						.program(RenderLayer.ENTITY_TRANSLUCENT_EMISSIVE_PROGRAM)
+						.shader(RenderLayer.ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
 						.texture(new RenderPhase.Texture(texture, false, false))
 						.overlay(RenderPhase.ENABLE_OVERLAY_COLOR)
 						.transparency(RenderLayer.ADDITIVE_TRANSPARENCY)

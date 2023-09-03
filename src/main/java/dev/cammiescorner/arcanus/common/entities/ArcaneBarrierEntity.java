@@ -54,7 +54,7 @@ public class ArcaneBarrierEntity extends Entity {
 	}
 
 	@Override
-	public boolean canHit() {
+	public boolean canBeHitByProjectile() {
 		return !isRemoved();
 	}
 
@@ -68,7 +68,7 @@ public class ArcaneBarrierEntity extends Entity {
 			setHitTimer(Math.max(0, getHitTimer() - 1));
 
 			if(age > 0 && age % 600 == 0)
-				damage(DamageSource.GENERIC, 10);
+				damage(getDamageSources().generic(), 10);
 
 			if((getHealth() <= 0 && getHitTimer() <= 0))
 				kill();

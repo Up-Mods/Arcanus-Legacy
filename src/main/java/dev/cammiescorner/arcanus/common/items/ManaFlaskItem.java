@@ -9,7 +9,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsage;
-import net.minecraft.item.PotionItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
@@ -100,7 +99,7 @@ public class ManaFlaskItem extends Item {
 
 	@Override
 	public int getMaxUseTime(ItemStack stack) {
-		return PotionItem.DEFAULT_MAX_USE_TIME;
+		return 32;
 	}
 
 	@Override

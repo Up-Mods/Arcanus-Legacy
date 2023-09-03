@@ -6,9 +6,11 @@ import dev.cammiescorner.arcanus.common.structure.processor.BookshelfReplacerStr
 import dev.cammiescorner.arcanus.common.structure.processor.LecternStructureProcessor;
 import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
 import dev.cammiescorner.arcanus.core.registry.*;
-import dev.cammiescorner.arcanus.core.util.*;
+import dev.cammiescorner.arcanus.core.util.ArcanusLootFunction;
+import dev.cammiescorner.arcanus.core.util.EventHandler;
+import dev.cammiescorner.arcanus.core.util.Pattern;
+import dev.cammiescorner.arcanus.core.util.Spell;
 import eu.midnightdust.lib.config.MidnightConfig;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
@@ -21,6 +23,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.loot.function.LootFunctionType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.text.MutableText;
@@ -29,16 +32,20 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 
 import java.util.List;
 
 public class Arcanus implements ModInitializer {
-	//-----Custom Registries-----//
-	public static final Registry<Spell> SPELL = createRegistry("spell", Spell.class);
 
 	//-----Miscellaneous-----//
 	public static final String MOD_ID = "arcanus";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+
+	//-----Custom Registries-----//
+	public static final Registry<Spell> SPELL = createRegistry("spell", Spell.class);
+	public static final RegistryKey<Registry<Spell>> SPELL_KEY = RegistryKey.ofRegistry(new Identifier(MOD_ID, "spell"));
 
 	//-----Loot Functions-----//
 	public static final LootFunctionType ARCANUS_LOOT_FUNCTION = new LootFunctionType(new ArcanusLootFunction.Serializer());
@@ -51,16 +58,16 @@ public class Arcanus implements ModInitializer {
 	public static final ScreenHandlerType<BookshelfScreenHandler> BOOKSHELF_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(Arcanus.MOD_ID, "fillable_bookshelf"), BookshelfScreenHandler::new);
 
 	@Override
-	public void onInitialize() {
+	public void onInitialize(ModContainer mod) {
 		DataTrackers.MANA.getId();
 		MidnightConfig.init(MOD_ID, ArcanusConfig.class);
 
 		ServerPlayNetworking.registerGlobalReceiver(CastSpellPacket.ID, CastSpellPacket::handle);
-		Registry.register(Registries.LOOT_FUNCTION_TYPE, new Identifier(Arcanus.MOD_ID, "arcanus_loot_function"), ARCANUS_LOOT_FUNCTION);
-		Registry.register(Registries.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "casting_multiplier"), EntityAttributes.MANA_COST);
-		Registry.register(Registries.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_regen"), EntityAttributes.MANA_REGEN);
-		Registry.register(Registries.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "burnout_regen"), EntityAttributes.BURNOUT_REGEN);
-		Registry.register(Registries.ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_lock"), EntityAttributes.MANA_LOCK);
+		Registry.register(Registries.LOOK_FUNCTION_TYPE, new Identifier(Arcanus.MOD_ID, "arcanus_loot_function"), ARCANUS_LOOT_FUNCTION);
+		Registry.register(Registries.ENTITY_ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "casting_multiplier"), EntityAttributes.MANA_COST);
+		Registry.register(Registries.ENTITY_ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_regen"), EntityAttributes.MANA_REGEN);
+		Registry.register(Registries.ENTITY_ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "burnout_regen"), EntityAttributes.BURNOUT_REGEN);
+		Registry.register(Registries.ENTITY_ATTRIBUTE, new Identifier(Arcanus.MOD_ID, "mana_lock"), EntityAttributes.MANA_LOCK);
 
 		ModItems.register();
 		ModBlocks.register();
@@ -69,8 +76,6 @@ public class Arcanus implements ModInitializer {
 		ModEntities.register();
 		ModParticles.register();
 		ModSoundEvents.register();
-		ModCommands.register();
-
 		EventHandler.commonEvents();
 
 		LOGGER.info("imagine people still looking for these :hahayes:");

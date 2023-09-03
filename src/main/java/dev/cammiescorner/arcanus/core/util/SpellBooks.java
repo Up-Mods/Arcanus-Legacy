@@ -8,15 +8,13 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
-
-import java.util.Random;
+import net.minecraft.util.random.RandomGenerator;
 
 public class SpellBooks {
-	private static final Random RAND = new Random();
 	private static final int MAX_AUTHORS = 21;
 
-	public static ItemStack getSpellBook(ItemStack stack, Spell spell) {
-		int randInt = RAND.nextInt(MAX_AUTHORS);
+	public static ItemStack getSpellBook(ItemStack stack, Spell spell, RandomGenerator random) {
+		int randInt = random.nextInt(MAX_AUTHORS);
 		String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
 		NbtCompound tag = stack.getOrCreateNbt();
 		NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
@@ -32,18 +30,18 @@ public class SpellBooks {
 		return stack;
 	}
 
-	public static ItemStack getSpellBook(Spell spell) {
+	public static ItemStack getSpellBook(Spell spell, RandomGenerator random) {
 		ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 
-		return SpellBooks.getSpellBook(stack, spell);
+		return SpellBooks.getSpellBook(stack, spell, random);
 	}
 
-	public static ItemStack getRandomSpellBook(ItemStack stack) {
-		return SpellBooks.getSpellBook(stack, Arcanus.SPELL.get(RAND.nextInt(Arcanus.SPELL.getEntrySet().size())));
+	public static ItemStack getRandomSpellBook(ItemStack stack, RandomGenerator random) {
+		return SpellBooks.getSpellBook(stack, Arcanus.SPELL.getRandom(random).orElseThrow().value(), random);
 	}
 
-	public static ItemStack getRandomSpellBook() {
-		return getRandomSpellBook(new ItemStack(Items.WRITTEN_BOOK));
+	public static ItemStack getRandomSpellBook(RandomGenerator random) {
+		return getRandomSpellBook(new ItemStack(Items.WRITTEN_BOOK), random);
 	}
 
 	private static NbtString textToNbt(Text text) {

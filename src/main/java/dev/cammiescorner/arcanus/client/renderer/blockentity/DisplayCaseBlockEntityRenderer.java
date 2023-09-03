@@ -7,12 +7,12 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.Axis;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationAxis;
 
 public class DisplayCaseBlockEntityRenderer implements BlockEntityRenderer<DisplayCaseBlockEntity> {
 	private final ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
@@ -32,16 +32,16 @@ public class DisplayCaseBlockEntityRenderer implements BlockEntityRenderer<Displ
 			if(stack.getItem() instanceof BlockItem) {
 				matrices.translate(0.5D, 0.9D, 0.5D);
 				matrices.scale(0.35F, 0.35F, 0.35F);
-				matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
+				matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(rotation));
 			}
 			else {
 				matrices.translate(0.5D, 0.84D, 0.5D);
 				matrices.scale(0.7F, 0.7F, 0.7F);
-				matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
-				matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90));
+				matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(rotation));
+				matrices.multiply(Axis.X_POSITIVE.rotationDegrees(90));
 			}
 
-			itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED, light, overlay, matrices, vertexConsumers, (int) entity.getPos().asLong());
+			itemRenderer.renderItem(stack, ModelTransformationMode.FIXED, light, overlay, matrices, vertexConsumers, entity.getWorld (), (int) entity.getPos().asLong());
 			matrices.pop();
 		}
 	}

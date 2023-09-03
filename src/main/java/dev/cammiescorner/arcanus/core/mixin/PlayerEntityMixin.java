@@ -12,15 +12,14 @@ import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.core.util.CanBeDiscombobulated;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.particle.ParticleEffect;
@@ -68,8 +67,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 		super(entityType, world);
 	}
 
-	@Inject(method = "createPlayerAttributes", at = @At("RETURN"))
-	private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> info) {
+	@Inject(method = "createAttributes", at = @At("RETURN"))
+	private static void createAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> info) {
 		info.getReturnValue().add(MANA_COST).add(MANA_REGEN).add(BURNOUT_REGEN).add(MANA_LOCK);
 	}
 
@@ -121,7 +120,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
 	public void readNbt(NbtCompound tag, CallbackInfo info) {
 		NbtCompound rootTag = tag.getCompound(Arcanus.MOD_ID);
-		NbtList listTag = rootTag.getList("KnownSpells", NbtType.STRING);
+		NbtList listTag = rootTag.getList("KnownSpells", NbtElement.STRING_TYPE);
 
 		for(int i = 0; i < listTag.size(); i++)
 			Arcanus.SPELL.getOrEmpty(new Identifier(listTag.getString(i))).ifPresent(knownSpells::add);
@@ -253,7 +252,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
 				world.getOtherEntities(null, getBoundingBox().expand(2)).forEach(entity -> {
 					if(entity != this && entity instanceof LivingEntity && !hasHit.contains(entity)) {
-						entity.damage(DamageSource.player((PlayerEntity) (Object) this), 10);
+						entity.damage(getDamageSources().playerAttack((PlayerEntity) (Object) this), 10);
 						hasHit.add(entity);
 					}
 				});
@@ -278,7 +277,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 				addVelocity((getRotationVector().x * 0.025F + (getRotationVector().x - getVelocity().x)) * adjustedPitch, 0F, (getRotationVector().z * 0.025F + (getRotationVector().z - getVelocity().z)) * adjustedPitch);
 				world.getOtherEntities(null, getBoundingBox().expand(2)).forEach(entity -> {
 					if(entity != this && entity instanceof LivingEntity && !hasHit.contains(entity)) {
-						entity.damage(DamageSource.player((PlayerEntity) (Object) this), 10);
+						entity.damage(getDamageSources().playerAttack((PlayerEntity) (Object) this), 10);
 						hasHit.add(entity);
 					}
 				});
@@ -300,12 +299,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique
 	public void castDreamWarp() {
 		ServerPlayerEntity serverPlayer = (ServerPlayerEntity) (Object) this;
-		ServerWorld serverWorld = serverPlayer.getServer().getWorld(serverPlayer.getSpawnPointDimension());
+		ServerWorld serverWorld = this.getServer().getWorld(serverPlayer.getSpawnPointDimension());
 		BlockPos spawnPos = serverPlayer.getSpawnPointPosition();
-		Vec3d rotation = serverPlayer.getRotationVec(1F);
+		Vec3d rotation = this.getRotationVec(1F);
 		Optional<Vec3d> optionalSpawnPoint;
 		float spawnAngle = serverPlayer.getSpawnAngle();
-		boolean hasSpawnPoint = serverPlayer.isSpawnForced();
+		boolean hasSpawnPoint = serverPlayer.isSpawnPointSet();
 
 		if(serverWorld != null && spawnPos != null)
 			optionalSpawnPoint = PlayerEntity.findRespawnPosition(serverWorld, spawnPos, spawnAngle, hasSpawnPoint, true);
@@ -329,7 +328,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	@Unique
 	public void castMagicMissile() {
 		MagicMissileEntity magicMissile = new MagicMissileEntity(this, world);
-		magicMissile.setVelocity(this, getPitch(), getYaw(), getRoll(), 4.5F, 0F);
+		magicMissile.setProperties(this, getPitch(), getYaw(), getRoll(), 4.5F, 0F);
 
 		world.spawnEntity(magicMissile);
 		world.playSound(null, getBlockPos(), ModSoundEvents.MAGIC_MISSILE, SoundCategory.PLAYERS, 2F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
@@ -375,14 +374,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 					TntBlock.primeTnt(world, pos, this);
 					world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
 
-					world.getEntitiesByClass(TntEntity.class, box, tnt -> tnt.isAlive() && tnt.getCausingEntity() == this).forEach(target -> {
+					world.getEntitiesByClass(TntEntity.class, box, tnt -> tnt.isAlive() && tnt.getOwner() == this).forEach(target -> {
 						target.setVelocity(rotation.multiply(2.5F));
 						target.velocityModified = true;
 					});
 				}
 
 				if(block instanceof FallingBlock fallingBlock) {
-					FallingBlockEntity target = FallingBlockEntity.spawnFromBlock(world, pos, state);
+					FallingBlockEntity target = FallingBlockEntity.fall(world, pos, state);
 					fallingBlock.configureFallingBlockEntity(target);
 					target.setVelocity(rotation.multiply(2.5F));
 					target.velocityModified = true;
@@ -440,8 +439,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 	public void castSolarStrike() {
 		HitResult result = ArcanusHelper.raycast(this, 640F, false);
 
-		if(result.getType() != HitResult.Type.MISS) {
-			ChunkPos chunkPos = new ChunkPos(new BlockPos(result.getPos()));
+		if(result.getType() != HitResult.Type.MISS && result instanceof BlockHitResult blockHitResult) {
+			ChunkPos chunkPos = new ChunkPos(blockHitResult.getBlockPos());
 			((ServerWorld) world).setChunkForced(chunkPos.x, chunkPos.z, true);
 			SolarStrikeEntity solarStrike = new SolarStrikeEntity(this, world);
 			solarStrike.setPosition(result.getPos());

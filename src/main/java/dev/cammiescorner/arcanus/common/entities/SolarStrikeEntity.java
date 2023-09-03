@@ -1,6 +1,6 @@
 package dev.cammiescorner.arcanus.common.entities;
 
-import dev.cammiescorner.arcanus.core.registry.ModDamageSource;
+import dev.cammiescorner.arcanus.core.registry.ModDamageTypes;
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import dev.cammiescorner.arcanus.core.registry.ModSoundEvents;
 import net.minecraft.client.MinecraftClient;
@@ -51,7 +51,7 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
 							if(entity instanceof LivingEntity)
 								entity.setOnFireFor(4);
 
-							entity.damage(ModDamageSource.solarStrike(getOwner()), Math.max(10F, 50F * (1 - (MathHelper.sqrt(pos1.distanceSquared(pos2)) / radius))));
+							entity.damage(ModDamageTypes.solarStrike(this, getOwner()), Math.max(10F, 50F * (1 - (MathHelper.sqrt(pos1.distanceSquared(pos2)) / radius))));
 							entity.timeUntilRegen = 0;
 							hasHit.add(entity);
 						}

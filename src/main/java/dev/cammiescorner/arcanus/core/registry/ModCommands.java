@@ -2,24 +2,17 @@ package dev.cammiescorner.arcanus.core.registry;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-import com.mojang.brigadier.suggestion.Suggestions;
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
 import dev.cammiescorner.arcanus.core.util.SpellBooks;
-import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.CommandSource;
+import net.minecraft.command.CommandBuildContext;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
+import net.minecraft.command.argument.RegistryEntryArgumentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
@@ -27,16 +20,10 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
-import java.util.concurrent.CompletableFuture;
 
 public class ModCommands {
-	public static void register() {
-		ArgumentTypeRegistry.registerArgumentType(Arcanus.id("spells"), SpellArgumentType.class, ConstantArgumentSerializer.of(SpellArgumentType::new));
-	}
 
-	public static void init(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess access, CommandManager.RegistrationEnvironment environment) {
+	public static void init(CommandDispatcher<ServerCommandSource> dispatcher, CommandBuildContext buildContext, CommandManager.RegistrationEnvironment environment) {
 		dispatcher.register(CommandManager.literal("spells")
 				.then(CommandManager.literal("list").requires(source -> source.hasPermissionLevel(0))
 						.executes(context -> SpellsCommand.listPlayerSpells(context, context.getSource().getPlayer()))
@@ -45,55 +32,32 @@ public class ModCommands {
 				.then(CommandManager.literal("add").requires(source -> source.hasPermissionLevel(3))
 						.then(CommandManager.argument("all", StringArgumentType.word())
 								.executes(SpellsCommand::addAllSpellsToSelf))
-						.then(CommandManager.argument("spell", SpellArgumentType.spell())
+						.then(CommandManager.argument("spell", RegistryEntryArgumentType.registryEntry(buildContext, Arcanus.SPELL.getKey()))
 								.executes(SpellsCommand::addSpellToSelf))
 						.then(CommandManager.argument("player", EntityArgumentType.player())
 								.then(CommandManager.argument("all", StringArgumentType.word())
 										.executes(SpellsCommand::addAllSpellsToPlayer))
-								.then(CommandManager.argument("spell", SpellArgumentType.spell())
+								.then(CommandManager.argument("spell", RegistryEntryArgumentType.registryEntry(buildContext, Arcanus.SPELL.getKey()))
 										.executes(SpellsCommand::addSpellToPlayer))))
 				.then(CommandManager.literal("remove").requires(source -> source.hasPermissionLevel(3))
 						.then(CommandManager.argument("all", StringArgumentType.word())
 								.executes(SpellsCommand::removeAllSpellsFromSelf))
-						.then(CommandManager.argument("spell", SpellArgumentType.spell())
+						.then(CommandManager.argument("spell", RegistryEntryArgumentType.registryEntry(buildContext, Arcanus.SPELL.getKey()))
 								.executes(SpellsCommand::removeSpellFromSelf))
 						.then(CommandManager.argument("player", EntityArgumentType.player())
 								.then(CommandManager.argument("all", StringArgumentType.word())
 										.executes(SpellsCommand::removeAllSpellsFromPlayer))
-								.then(CommandManager.argument("spell", SpellArgumentType.spell())
+								.then(CommandManager.argument("spell", RegistryEntryArgumentType.registryEntry(buildContext, Arcanus.SPELL.getKey()))
 										.executes(SpellsCommand::removeSpellFromPlayer))))
 				.then(CommandManager.literal("spellbook").requires(source -> source.hasPermissionLevel(2))
 						.then(CommandManager.literal("all")
 								.executes(context -> SpellsCommand.giveSpellBook(context, context.getSource().getPlayer(), null))
 								.then(CommandManager.argument("player", EntityArgumentType.player())
 										.executes(context -> SpellsCommand.giveSpellBook(context, EntityArgumentType.getPlayer(context, "player"), null))))
-						.then(CommandManager.argument("spell", SpellArgumentType.spell())
-								.executes(context -> SpellsCommand.giveSpellBook(context, context.getSource().getPlayer(), SpellArgumentType.getSpell(context, "spell")))
+						.then(CommandManager.argument("spell", RegistryEntryArgumentType.registryEntry(buildContext, Arcanus.SPELL.getKey()))
+								.executes(context -> SpellsCommand.giveSpellBook(context, context.getSource().getPlayer(), RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value()))
 								.then(CommandManager.argument("player", EntityArgumentType.player())
-										.executes(context -> SpellsCommand.giveSpellBook(context, EntityArgumentType.getPlayer(context, "player"), SpellArgumentType.getSpell(context, "spell")))))));
-	}
-
-	public static class SpellArgumentType implements ArgumentType<Spell> {
-		public static final DynamicCommandExceptionType INVALID_SPELL_EXCEPTION = new DynamicCommandExceptionType(object -> Text.translatable("commands." + Arcanus.MOD_ID + ".spells.not_found", object));
-
-		public static SpellArgumentType spell() {
-			return new SpellArgumentType();
-		}
-
-		public static Spell getSpell(CommandContext<ServerCommandSource> commandContext, String string) {
-			return commandContext.getArgument(string, Spell.class);
-		}
-
-		@Override
-		public Spell parse(StringReader reader) throws CommandSyntaxException {
-			Identifier identifier = Identifier.fromCommandInput(reader);
-			return Arcanus.SPELL.getOrEmpty(identifier).orElseThrow(() -> INVALID_SPELL_EXCEPTION.create(identifier));
-		}
-
-		@Override
-		public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-			return CommandSource.suggestIdentifiers(Arcanus.SPELL.getIds(), builder);
-		}
+										.executes(context -> SpellsCommand.giveSpellBook(context, EntityArgumentType.getPlayer(context, "player"), RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value()))))));
 	}
 
 	private static class SpellsCommand {
@@ -130,7 +94,7 @@ public class ModCommands {
 		public static int addSpellToSelf(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = context.getSource().getPlayer();
 			MagicUser user = (MagicUser) player;
-			Spell spell = ModCommands.SpellArgumentType.getSpell(context, "spell");
+			Spell spell = RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value();
 
 			if(!user.getKnownSpells().contains(spell)) {
 				user.getKnownSpells().add(spell);
@@ -159,7 +123,7 @@ public class ModCommands {
 		public static int addSpellToPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
 			MagicUser user = (MagicUser) player;
-			Spell spell = ModCommands.SpellArgumentType.getSpell(context, "spell");
+			Spell spell = RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value();
 
 			if(!user.getKnownSpells().contains(spell)) {
 				user.getKnownSpells().add(spell);
@@ -183,7 +147,7 @@ public class ModCommands {
 		public static int removeSpellFromSelf(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = context.getSource().getPlayer();
 			MagicUser user = (MagicUser) player;
-			Spell spell = ModCommands.SpellArgumentType.getSpell(context, "spell");
+			Spell spell = RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value();
 
 			if(user.getKnownSpells().contains(spell)) {
 				user.getKnownSpells().remove(spell);
@@ -207,7 +171,7 @@ public class ModCommands {
 		public static int removeSpellFromPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 			PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
 			MagicUser user = (MagicUser) player;
-			Spell spell = ModCommands.SpellArgumentType.getSpell(context, "spell");
+			Spell spell = RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value();
 
 			if(user.getKnownSpells().contains(spell)) {
 				user.getKnownSpells().remove(spell);
@@ -232,7 +196,7 @@ public class ModCommands {
 		}
 
 		public static void giveSpellBook(ServerPlayerEntity player, Spell spell) {
-			ItemStack book = SpellBooks.getSpellBook(spell);
+			ItemStack book = SpellBooks.getSpellBook(spell, player.getRandom());
 			ArcanusHelper.giveOrDrop(player, book);
 		}
 	}

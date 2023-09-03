@@ -24,7 +24,7 @@ public class ModSoundEvents {
 	}
 
 	private static SoundEvent create(String name) {
-		SoundEvent sound = SoundEvent.of(new Identifier(Arcanus.MOD_ID, name));
+		SoundEvent sound = SoundEvent.createVariableRangeEvent(new Identifier(Arcanus.MOD_ID, name));
 		SOUNDS.put(sound, new Identifier(Arcanus.MOD_ID, name));
 		return sound;
 	}

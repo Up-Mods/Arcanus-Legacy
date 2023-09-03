@@ -10,13 +10,13 @@ import net.minecraft.block.Blocks;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.processor.StructureProcessor;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,8 +26,8 @@ public class BookshelfReplacerStructureProcessor extends StructureProcessor {
 
 	@Nullable
 	@Override
-	public StructureTemplate.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo structureInfoLocal, StructureTemplate.StructureBlockInfo structureInfoWorld, StructurePlacementData data) {
-		Random random = data.getRandom(structureInfoWorld.pos);
+	public Structure.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, Structure.StructureBlockInfo structureInfoLocal, Structure.StructureBlockInfo structureInfoWorld, StructurePlacementData data) {
+		RandomGenerator random = data.getRandom(structureInfoWorld.pos);
 
 		if(!structureInfoWorld.state.isOf(Blocks.BOOKSHELF) || random.nextInt(5) > 0)
 			return structureInfoWorld;
@@ -38,12 +38,12 @@ public class BookshelfReplacerStructureProcessor extends StructureProcessor {
 		NbtCompound nbt = new NbtCompound();
 
 		for(int i = 0; i < bookCount; ++i)
-			inventory.set(random.nextInt(16), SpellBooks.getRandomSpellBook());
+			inventory.set(random.nextInt(16), SpellBooks.getRandomSpellBook(random));
 
 		state = state.with(FillableBookshelfBlock.BOOK_COUNT, bookCount);
 		Inventories.writeNbt(nbt, inventory);
 
-		return new StructureTemplate.StructureBlockInfo(structureInfoWorld.pos, state, nbt);
+		return new Structure.StructureBlockInfo(structureInfoWorld.pos, state, nbt);
 	}
 
 	@Override

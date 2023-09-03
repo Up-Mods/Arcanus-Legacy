@@ -3,7 +3,7 @@ package dev.cammiescorner.arcanus.common.packets;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.common.items.WandItem;
 import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
-import dev.cammiescorner.arcanus.core.registry.ModDamageSource;
+import dev.cammiescorner.arcanus.core.registry.ModDamageTypes;
 import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.core.util.MagicUser;
 import dev.cammiescorner.arcanus.core.util.Spell;
@@ -53,7 +53,7 @@ public class CastSpellPacket {
 						if(user.getMana() < realManaCost && ArcanusConfig.haveBurnout) {
 							int burnoutAmount = realManaCost - user.getMana();
 							user.addBurnout(burnoutAmount);
-							player.damage(ModDamageSource.MAGIC_BURNOUT, burnoutAmount);
+							player.damage(ModDamageTypes.burnout(player.world), burnoutAmount);
 							player.sendMessage(Text.translatable("error." + Arcanus.MOD_ID + ".burnout").formatted(Formatting.RED), false);
 						}
 

@@ -10,7 +10,6 @@ import dev.cammiescorner.arcanus.core.registry.ModCommands;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
@@ -24,14 +23,15 @@ import net.minecraft.loot.LootPool;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
+import net.minecraft.registry.Holder;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.structure.pool.SinglePoolElement;
 import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.processor.StructureProcessor;
 import net.minecraft.structure.processor.StructureProcessorList;
 import net.minecraft.util.Identifier;
+import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,7 +118,7 @@ public class EventHandler {
 
 	public static void commonEvents() {
 		//-----Server Starting Callback-----//
-		ServerLifecycleEvents.SERVER_STARTING.register(server -> EventHandler.addStructureProcessors(server.getRegistryManager().get(RegistryKeys.TEMPLATE_POOL)));
+		ServerLifecycleEvents.SERVER_STARTING.register(server -> EventHandler.addStructureProcessors(server.getRegistryManager().get(RegistryKeys.STRUCTURE_POOL)));
 
 		//-----Loot Table Callback-----//
 		LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, tableSource) -> {
@@ -154,8 +154,8 @@ public class EventHandler {
 
 	public static void addStructureProcessors(Registry<StructurePool> templatePoolRegistry) {
 		templatePoolRegistry.forEach(pool -> pool.elements.forEach(element -> {
-			if(element instanceof SinglePoolElement singleElement && singleElement.location.left().isPresent()) {
-				String currentElement = singleElement.location.left().get().toString();
+			if(element instanceof SinglePoolElement singleElement && singleElement.template.left().isPresent()) {
+				String currentElement = singleElement.template.left().get().toString();
 
 				if(ArcanusConfig.structuresWithBookshelves.contains(currentElement) || ArcanusConfig.structuresWithLecterns.contains(currentElement)) {
 					StructureProcessorList originalProcessorList = singleElement.processors.value();
@@ -168,7 +168,7 @@ public class EventHandler {
 
 					StructureProcessorList newProcessorList = new StructureProcessorList(mutableProcessorList);
 
-					singleElement.processors = RegistryEntry.of(newProcessorList);
+					singleElement.processors = Holder.createDirect(newProcessorList);
 				}
 			}
 		}));

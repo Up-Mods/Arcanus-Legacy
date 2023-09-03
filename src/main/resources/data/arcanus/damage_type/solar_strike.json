@@ -1,0 +1,6 @@
+{
+  "message_id": "solar_strike",
+  "exhaustion": 0.1,
+  "scaling": "always",
+  "effects": "burning"
+}

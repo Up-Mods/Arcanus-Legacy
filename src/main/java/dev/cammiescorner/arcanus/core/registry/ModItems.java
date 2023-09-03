@@ -6,6 +6,7 @@ import dev.cammiescorner.arcanus.common.items.WandItem;
 import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.core.util.SpellBooks;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -27,19 +28,19 @@ public class ModItems {
 
 	//-----Registry-----//
 	public static void register() {
-		FabricItemGroup.builder(Arcanus.id("general")).icon(() -> new ItemStack(ModItems.MASTER_WAND)).entries((enabledFeatures, entries, operatorsEnabled) -> {
-			entries.add(ModBlocks.BOOKSHELF);
-			entries.add(ModBlocks.DISPLAY_CASE);
+		FabricItemGroup.builder(Arcanus.id("general")).icon(() -> new ItemStack(ModItems.MASTER_WAND)).entries((displayParams, entries) -> {
+			entries.addItem(ModBlocks.BOOKSHELF);
+			entries.addItem(ModBlocks.DISPLAY_CASE);
 			ArcanusHelper.addWandsToTab(entries);
 			ItemStack stack = new ItemStack(MANA_FLASK);
 			NbtCompound tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
 			tag.putInt("Mana", 0);
-			entries.add(stack);
+			entries.addStack(stack);
 			stack = new ItemStack(MANA_FLASK);
 			tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
 			tag.putInt("Mana", 4);
-			entries.add(stack);
-			Arcanus.SPELL.forEach(spell -> entries.add(SpellBooks.getSpellBook(spell)));
+			entries.addStack(stack);
+			Arcanus.SPELL.forEach(spell -> entries.addStack(SpellBooks.getSpellBook(spell, MinecraftClient.getInstance().player.getRandom())));
 		}).build();
 
 		ITEMS.keySet().forEach(item -> Registry.register(Registries.ITEM, ITEMS.get(item), item));

@@ -1,22 +1,25 @@
 package dev.cammiescorner.arcanus.client.renderer.entity;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanus.client.ArcanusClient;
 import dev.cammiescorner.arcanus.common.entities.ArcaneBarrierEntity;
 import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
 import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Axis;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 public class ArcaneBarrierEntityRenderer extends EntityRenderer<ArcaneBarrierEntity> {
+
+	private static final Identifier TEXTURE = new Identifier("textures/misc/white.png");
+
 	public ArcaneBarrierEntityRenderer(EntityRendererFactory.Context context) {
 		super(context);
 	}
@@ -48,26 +51,26 @@ public class ArcaneBarrierEntityRenderer extends EntityRenderer<ArcaneBarrierEnt
 
 		matrices.push();
 
-		VertexConsumer vertexConsumer = provider.getBuffer(ArcanusClient.getMagicCircles(new Identifier("textures/misc/white.png")));
+		VertexConsumer vertexConsumer = provider.getBuffer(ArcanusClient.getMagicCircles(TEXTURE));
 		MatrixStack.Entry entry = matrices.peek();
-		Matrix4f matrix4f = entry.getPositionMatrix();
-		Matrix3f normal = entry.getNormalMatrix();
+		Matrix4f matrix4f = entry.getModel();
+		Matrix3f normal = entry.getNormal();
 		float f = 0.5025F;
 
-		vertexConsumer.vertex(matrix4f, -f, length, -f).color(r, g, b, 1F).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.UP.getVector().getX(), Direction.UP.getVector().getY(), Direction.UP.getVector().getZ()).next();
-		vertexConsumer.vertex(matrix4f, -f, length, f).color(r, g, b, 1F).texture(1, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.UP.getVector().getX(), Direction.UP.getVector().getY(), Direction.UP.getVector().getZ()).next();
-		vertexConsumer.vertex(matrix4f, f, length, f).color(r, g, b, 1F).texture(1, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.UP.getVector().getX(), Direction.UP.getVector().getY(), Direction.UP.getVector().getZ()).next();
-		vertexConsumer.vertex(matrix4f, f, length, -f).color(r, g, b, 1F).texture(0, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.UP.getVector().getX(), Direction.UP.getVector().getY(), Direction.UP.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, -f, length, -f).color(r, g, b, 1F).uv(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.UP.getVector().getX(), Direction.UP.getVector().getY(), Direction.UP.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, -f, length, f).color(r, g, b, 1F).uv(1, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.UP.getVector().getX(), Direction.UP.getVector().getY(), Direction.UP.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, f, length, f).color(r, g, b, 1F).uv(1, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.UP.getVector().getX(), Direction.UP.getVector().getY(), Direction.UP.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, f, length, -f).color(r, g, b, 1F).uv(0, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.UP.getVector().getX(), Direction.UP.getVector().getY(), Direction.UP.getVector().getZ()).next();
 
-		vertexConsumer.vertex(matrix4f, -f, 0F, -f).color(r, g, b, 1F).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.DOWN.getVector().getX(), Direction.DOWN.getVector().getY(), Direction.DOWN.getVector().getZ()).next();
-		vertexConsumer.vertex(matrix4f, f, 0F, -f).color(r, g, b, 1F).texture(1, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.DOWN.getVector().getX(), Direction.DOWN.getVector().getY(), Direction.DOWN.getVector().getZ()).next();
-		vertexConsumer.vertex(matrix4f, f, 0F, f).color(r, g, b, 1F).texture(1, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.DOWN.getVector().getX(), Direction.DOWN.getVector().getY(), Direction.DOWN.getVector().getZ()).next();
-		vertexConsumer.vertex(matrix4f, -f, 0F, f).color(r, g, b, 1F).texture(0, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.DOWN.getVector().getX(), Direction.DOWN.getVector().getY(), Direction.DOWN.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, -f, 0F, -f).color(r, g, b, 1F).uv(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.DOWN.getVector().getX(), Direction.DOWN.getVector().getY(), Direction.DOWN.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, f, 0F, -f).color(r, g, b, 1F).uv(1, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.DOWN.getVector().getX(), Direction.DOWN.getVector().getY(), Direction.DOWN.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, f, 0F, f).color(r, g, b, 1F).uv(1, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.DOWN.getVector().getX(), Direction.DOWN.getVector().getY(), Direction.DOWN.getVector().getZ()).next();
+		vertexConsumer.vertex(matrix4f, -f, 0F, f).color(r, g, b, 1F).uv(0, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, Direction.DOWN.getVector().getX(), Direction.DOWN.getVector().getY(), Direction.DOWN.getVector().getZ()).next();
 
 		matrices.push();
-		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(45));
+		matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(45));
 		entry = matrices.peek();
-		matrix4f = entry.getPositionMatrix();
+		matrix4f = entry.getModel();
 		float vertX1 = 0F;
 		float vertY1 = radius;
 
@@ -76,10 +79,10 @@ public class ArcaneBarrierEntityRenderer extends EntityRenderer<ArcaneBarrierEnt
 			float vertY2 = MathHelper.cos(i * 6.2831855F / maxQuads) * radius;
 			Direction direction = Direction.values()[i + 1];
 
-			vertexConsumer.vertex(matrix4f, vertX1, 0F, vertY1).color(r, g, b, 1F).texture(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
-			vertexConsumer.vertex(matrix4f, vertX2, 0F, vertY2).color(r, g, b, 1F).texture(1, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
-			vertexConsumer.vertex(matrix4f, vertX2, length, vertY2).color(r, g, b, 1F).texture(1, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
-			vertexConsumer.vertex(matrix4f, vertX1, length, vertY1).color(r, g, b, 1F).texture(0, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
+			vertexConsumer.vertex(matrix4f, vertX1, 0F, vertY1).color(r, g, b, 1F).uv(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
+			vertexConsumer.vertex(matrix4f, vertX2, 0F, vertY2).color(r, g, b, 1F).uv(1, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
+			vertexConsumer.vertex(matrix4f, vertX2, length, vertY2).color(r, g, b, 1F).uv(1, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
+			vertexConsumer.vertex(matrix4f, vertX1, length, vertY1).color(r, g, b, 1F).uv(0, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
 
 			vertX1 = vertX2;
 			vertY1 = vertY2;
@@ -91,6 +94,6 @@ public class ArcaneBarrierEntityRenderer extends EntityRenderer<ArcaneBarrierEnt
 
 	@Override
 	public Identifier getTexture(ArcaneBarrierEntity entity) {
-		return null;
+		return TEXTURE;
 	}
 }

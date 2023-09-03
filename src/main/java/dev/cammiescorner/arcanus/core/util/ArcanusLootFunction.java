@@ -17,7 +17,7 @@ public class ArcanusLootFunction extends ConditionalLootFunction {
 
 	@Override
 	protected ItemStack process(ItemStack stack, LootContext context) {
-		return SpellBooks.getRandomSpellBook(stack);
+		return SpellBooks.getRandomSpellBook(stack, context.getRandom());
 	}
 
 	@Override

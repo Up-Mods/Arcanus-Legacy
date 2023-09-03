@@ -88,19 +88,19 @@ public class ArcanusHelper {
 		return start + (end - start) * alpha;
 	}
 
-	public static void addWandsToTab(ItemGroup.Entries entries) {
+	public static void addWandsToTab(ItemGroup.ItemStackCollector entries) {
 		ItemStack stack = new ItemStack(ModItems.INITIATE_WAND);
-		entries.add(stack);
+		entries.addStack(stack);
 
 		stack = new ItemStack(ModItems.ADEPT_WAND);
 		NbtCompound tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
 		tag.putInt("Exp", 3200);
-		entries.add(stack);
+		entries.addStack(stack);
 
 		stack = new ItemStack(ModItems.MASTER_WAND);
 		tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
 		tag.putInt("Exp", 6400);
-		entries.add(stack);
+		entries.addStack(stack);
 	}
 
 	@ApiStatus.Internal
