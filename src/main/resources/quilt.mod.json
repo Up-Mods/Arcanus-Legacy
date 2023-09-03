@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "dev.cammiescorner",
+    "id": "arcanus",
+    "version": "${version}",
+    "metadata": {
+      "name": "Arcanus Legacy",
+      "description": "A magic mod with a magic system inspired by Wynncraft and Electroblob's Wizardry",
+      "contributors": {
+        "Cammie": "Owner",
+        "Up": "Maintainer"
+      },
+      "contact": {
+        "homepage": "https://cammiescorner.dev/",
+        "issues": "https://github.com/Up-Mods/Arcanus-Legacy/issues",
+        "sources": "https://github.com/Up-Mods/Arcanus-Legacy"
+      },
+      "license": {
+        "name": "Custom License",
+        "id": "Custom License",
+        "url": "https://github.com/Up-Mods/Arcanus-Legacy/blob/1.19.4/LICENSE",
+        "description": "This license permits small portions of the code to be used without prior permission, but not large parts."
+      },
+      "icon": "assets/arcanus/icon.png"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": "dev.cammiescorner.arcanus.Arcanus",
+      "client_init": "dev.cammiescorner.arcanus.client.ArcanusClient"
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.20.0-"
+      },
+      {
+        "id": "quilted_fabric_api",
+        "versions": ">=5.0.0-",
+        "mc-publish": {
+          "modrinth": "qvIfYCYJ",
+          "curseforge": "634179"
+        }
+      },
+      {
+        "id": "minecraft",
+        "versions": "=1.19.4"
+      },
+      {
+        "id": "midnightlib",
+        "mc-publish": {
+          "modrinth": "codAaoxh",
+          "curseforge": "488090"
+        }
+      },
+      {
+        "id": "java",
+        "versions": ">=17"
+      }
+    ]
+  },
+  "access_widener": "arcanus.accesswidener",
+  "mixin": "arcanus.mixins.json",
+  "mc-publish": {
+    "curseforge": "517833",
+    "modrinth": "zgaWtmrV",
+    "loaders": [
+      "quilt"
+    ]
+  }
+}
