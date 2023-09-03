@@ -17,7 +17,7 @@ public class ArcanusConfig extends MidnightConfig {
     @Entry
     public static boolean haveBurnout = true;
     @Entry
-    public static String magicColour = Integer.toString(0x7ecdfb, 16);
+    public static String magicColour = Integer.toHexString(0x7ecdfb);
     @Entry
     public static int baseManaCooldown = 20;
     @Entry
