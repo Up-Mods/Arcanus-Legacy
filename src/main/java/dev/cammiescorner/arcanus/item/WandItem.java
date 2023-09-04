@@ -12,6 +12,7 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +26,8 @@ import java.util.function.Supplier;
 public class WandItem extends Item {
     private static final UUID MANA_COST = UUID.fromString("41d46dfa-5776-4839-91d6-d8403ef35a00");
     private final int maxExp;
-    private final Supplier<Item> upgrade;
+    @Nullable
+    private Supplier<Item> upgrade;
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
 
     public WandItem(float castingMultiplier, int maxExp, @Nullable Supplier<Item> upgrade, Item.Settings settings) {
@@ -39,8 +41,12 @@ public class WandItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(Text.literal(stack.getOrCreateSubNbt(Arcanus.MOD_ID).getInt("Exp") + "/" + getMaxExp())
-                .append(" Exp").formatted(Formatting.DARK_AQUA));
+        NbtCompound nbt = stack.getSubNbt(Arcanus.MOD_ID);
+        int xp = nbt != null ? nbt.getInt("Exp") : 0;
+        tooltip.add(Text.literal(xp + "/" + getMaxExp()).append(" Exp").formatted(Formatting.DARK_AQUA));
+        if (hasUpgrade()) {
+            tooltip.add(Arcanus.translate("tooltip", "wand_upgrade").formatted(Formatting.DARK_AQUA));
+        }
     }
 
     @Override
@@ -64,6 +70,10 @@ public class WandItem extends Item {
 
     public Item getUpgrade() {
         return upgrade.get();
+    }
+
+    public void setUpgrade(Supplier<Item> upgrade) {
+        this.upgrade = upgrade;
     }
 
     public boolean hasUpgrade() {

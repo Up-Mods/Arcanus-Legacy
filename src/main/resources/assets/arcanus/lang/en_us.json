@@ -53,6 +53,7 @@
 	"item.arcanus.initiate_wand": "Initiate Wand",
 	"item.arcanus.adept_wand": "Adept Wand",
 	"item.arcanus.master_wand": "Master Wand",
+	"tooltip.arcanus.wand_upgrade": "Cast more spells to level up your wand.",
 	"item.arcanus.mana_flask_empty": "Empty Mana Flask",
 	"item.arcanus.mana_flask_empty.description": "Use while sneaking to fill with Mana.",
 	"item.arcanus.mana_flask": "Mana Flask",

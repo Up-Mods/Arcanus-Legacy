@@ -20,8 +20,9 @@ public abstract class LivingEntityMixin extends Entity {
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     public Vec3d invertInput(Vec3d movementInput) {
-        if (this.getComponent(ArcanusComponents.CAN_BE_DISCOMBOBULATED).isDiscombobulated())
+        if (this.getComponent(ArcanusComponents.CAN_BE_DISCOMBOBULATED).isDiscombobulated()) {
             movementInput = movementInput.multiply(-1, 1, -1);
+        }
 
         return movementInput;
     }

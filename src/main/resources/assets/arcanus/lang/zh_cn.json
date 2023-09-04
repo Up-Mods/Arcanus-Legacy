@@ -53,6 +53,7 @@
 	"item.arcanus.initiate_wand": "初学魔杖",
 	"item.arcanus.adept_wand": "精通魔杖",
 	"item.arcanus.master_wand": "大师魔杖",
+	"tooltip.arcanus.wand_upgrade": "Cast more spells to level up your wand.",
 	"item.arcanus.mana_flask_empty": "空法力瓶",
 	"item.arcanus.mana_flask_empty.description": "潜行时使用以填充法力。",
 	"item.arcanus.mana_flask": "法力瓶",
