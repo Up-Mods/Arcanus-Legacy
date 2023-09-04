@@ -22,7 +22,6 @@ project.configurations.configureEach {
 }
 
 repositories {
-    mavenCentral()
     maven { url "https://maven.ladysnake.org/releases" }
     maven { url "https://maven.terraformersmc.com" }
     exclusiveContent {
