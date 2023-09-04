@@ -79,9 +79,9 @@ public class ArcaneBarrierEntityRenderer extends EntityRenderer<ArcaneBarrierEnt
             Direction direction = Direction.values()[i + 1];
 
             vertexConsumer.vertex(matrix4f, vertX1, 0F, vertY1).color(rgb[0], rgb[1], rgb[2], 1F).uv(0, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
-            vertexConsumer.vertex(matrix4f, vertX2, 0F, vertY2).color(rgb[0], rgb[1], rgb[2], 1F).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
-            vertexConsumer.vertex(matrix4f, vertX2, length, vertY2).color(rgb[0], rgb[1], rgb[2], 1F).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
-            vertexConsumer.vertex(matrix4f, vertX1, length, vertY1).color(rgb[0], rgb[1], rgb[2], 1F).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
+            vertexConsumer.vertex(matrix4f, vertX2, 0F, vertY2).color(rgb[0], rgb[1], rgb[2], 1F).uv(1, 1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
+            vertexConsumer.vertex(matrix4f, vertX2, length, vertY2).color(rgb[0], rgb[1], rgb[2], 1F).uv(1, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
+            vertexConsumer.vertex(matrix4f, vertX1, length, vertY1).color(rgb[0], rgb[1], rgb[2], 1F).uv(0, 0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
 
             vertX1 = vertX2;
             vertY1 = vertY2;
