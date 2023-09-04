@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus.client.renderer.blockentity;
 
-import dev.cammiescorner.arcanus.common.blocks.DisplayCaseBlock;
-import dev.cammiescorner.arcanus.common.blocks.entities.DisplayCaseBlockEntity;
+import dev.cammiescorner.arcanus.block.DisplayCaseBlock;
+import dev.cammiescorner.arcanus.block.entity.DisplayCaseBlockEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;

@@ -2,7 +2,7 @@ package dev.cammiescorner.arcanus.client.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.common.screens.BookshelfScreenHandler;
+import dev.cammiescorner.arcanus.screen.BookshelfScreenHandler;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;

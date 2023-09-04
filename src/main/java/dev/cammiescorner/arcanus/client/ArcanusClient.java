@@ -12,11 +12,8 @@ import dev.cammiescorner.arcanus.client.renderer.entity.ArcaneBarrierEntityRende
 import dev.cammiescorner.arcanus.client.renderer.entity.MagicMissileEntityRenderer;
 import dev.cammiescorner.arcanus.client.renderer.entity.SolarStrikeEntityRenderer;
 import dev.cammiescorner.arcanus.client.screens.BookshelfScreen;
-import dev.cammiescorner.arcanus.core.registry.ModBlockEntities;
-import dev.cammiescorner.arcanus.core.registry.ModBlocks;
-import dev.cammiescorner.arcanus.core.registry.ModEntities;
-import dev.cammiescorner.arcanus.core.registry.ModParticles;
-import dev.cammiescorner.arcanus.core.util.EventHandler;
+import dev.cammiescorner.arcanus.registry.*;
+import dev.cammiescorner.arcanus.util.EventHandler;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
@@ -52,19 +49,19 @@ public class ArcanusClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient(ModContainer mod) {
-        HandledScreens.register(Arcanus.BOOKSHELF_SCREEN_HANDLER, BookshelfScreen::new);
+        HandledScreens.register(ArcanusScreens.BOOKSHELF_SCREEN_HANDLER, BookshelfScreen::new);
 
-        EntityRendererRegistry.register(ModEntities.SOLAR_STRIKE, SolarStrikeEntityRenderer::new);
-        EntityRendererRegistry.register(ModEntities.ARCANE_BARRIER, ArcaneBarrierEntityRenderer::new);
-        EntityRendererRegistry.register(ModEntities.MAGIC_MISSILE, MagicMissileEntityRenderer::new);
+        EntityRendererRegistry.register(ArcanusEntities.SOLAR_STRIKE, SolarStrikeEntityRenderer::new);
+        EntityRendererRegistry.register(ArcanusEntities.ARCANE_BARRIER, ArcaneBarrierEntityRenderer::new);
+        EntityRendererRegistry.register(ArcanusEntities.MAGIC_MISSILE, MagicMissileEntityRenderer::new);
 
-        ParticleFactoryRegistry.getInstance().register(ModParticles.MAGIC_MISSILE, MagicMissileParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.TELEKINETIC_SHOCK, TelekineticShockParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.HEAL, HealParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.DISCOMBOBULATE, DiscombobulateParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ArcanusParticles.MAGIC_MISSILE, MagicMissileParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ArcanusParticles.TELEKINETIC_SHOCK, TelekineticShockParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ArcanusParticles.HEAL, HealParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ArcanusParticles.DISCOMBOBULATE, DiscombobulateParticle.Factory::new);
 
-        BlockEntityRendererFactories.register(ModBlockEntities.DISPLAY_CASE, DisplayCaseBlockEntityRenderer::new);
-        BlockRenderLayerMap.put(RenderLayer.getCutout(), ModBlocks.DISPLAY_CASE);
+        BlockEntityRendererFactories.register(ArcanusBlockEntities.DISPLAY_CASE, DisplayCaseBlockEntityRenderer::new);
+        BlockRenderLayerMap.put(RenderLayer.getCutout(), ArcanusBlocks.DISPLAY_CASE);
 
         EventHandler.clientEvents();
 

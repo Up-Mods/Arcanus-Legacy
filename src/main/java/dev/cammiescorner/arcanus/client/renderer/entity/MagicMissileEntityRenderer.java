@@ -1,6 +1,6 @@
 package dev.cammiescorner.arcanus.client.renderer.entity;
 
-import dev.cammiescorner.arcanus.common.entities.MagicMissileEntity;
+import dev.cammiescorner.arcanus.entity.MagicMissileEntity;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;

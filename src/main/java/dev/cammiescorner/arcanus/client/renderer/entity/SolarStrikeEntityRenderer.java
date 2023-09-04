@@ -2,9 +2,9 @@ package dev.cammiescorner.arcanus.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanus.client.ArcanusClient;
-import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
-import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
-import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
+import dev.cammiescorner.arcanus.entity.SolarStrikeEntity;
+import dev.cammiescorner.arcanus.util.ArcanusConfig;
+import dev.cammiescorner.arcanus.util.ArcanusHelper;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
