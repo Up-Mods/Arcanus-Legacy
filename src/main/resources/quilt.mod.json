@@ -27,7 +27,8 @@
     "intermediate_mappings": "net.fabricmc:intermediary",
     "entrypoints": {
       "init": "dev.cammiescorner.arcanus.Arcanus",
-      "client_init": "dev.cammiescorner.arcanus.client.ArcanusClient"
+      "client_init": "dev.cammiescorner.arcanus.client.ArcanusClient",
+      "cardinal-components": "dev.cammiescorner.arcanus.component.ArcanusComponents"
     },
     "depends": [
       {
@@ -80,6 +81,11 @@
   },
   "access_widener": "arcanus.accesswidener",
   "mixin": "arcanus.mixins.json",
+  "cardinal-components": [
+    "arcanus:can_be_discombobulated",
+    "arcanus:magic_caster",
+    "arcanus:spell_memory"
+  ],
   "mc-publish": {
     "curseforge": "517833",
     "modrinth": "zgaWtmrV",

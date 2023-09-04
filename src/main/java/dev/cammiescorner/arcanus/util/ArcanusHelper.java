@@ -1,12 +1,13 @@
 package dev.cammiescorner.arcanus.util;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.entity.MagicUser;
+import dev.cammiescorner.arcanus.component.ArcanusComponents;
 import dev.cammiescorner.arcanus.registry.ArcanusItems;
+import dev.cammiescorner.arcanus.spell.Spell;
 import net.minecraft.block.entity.LecternBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemGroup;
@@ -26,30 +27,14 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 import static dev.cammiescorner.arcanus.registry.ArcanusEntityAttributes.*;
 
 public class ArcanusHelper {
-    public static double getManaCost(PlayerEntity player) {
-        @Nullable final EntityAttributeInstance castingMultiplier = player.getAttributeInstance(MANA_COST);
-        return castingMultiplier != null ? castingMultiplier.getValue() : 1D;
-    }
 
-    public static double getManaRegen(PlayerEntity player) {
-        @Nullable final EntityAttributeInstance manaRegen = player.getAttributeInstance(MANA_REGEN);
-        return manaRegen != null ? manaRegen.getValue() : 1D;
-    }
-
-    public static double getBurnoutRegen(PlayerEntity player) {
-        @Nullable final EntityAttributeInstance burnoutRegen = player.getAttributeInstance(BURNOUT_REGEN);
-        return burnoutRegen != null ? burnoutRegen.getValue() : 1D;
-    }
-
-    public static int getManaLock(PlayerEntity player) {
-        @Nullable final EntityAttributeInstance manaLock = player.getAttributeInstance(MANA_LOCK);
-        return (int) (manaLock != null ? manaLock.getValue() : 0D);
-    }
+    public static final Set<EntityAttribute> INVERSE_ENTITY_ATTRIBUTES = Set.of(MANA_COST, MANA_REGEN, BURNOUT_REGEN, MANA_LOCK);
 
     public static HitResult raycast(Entity origin, double maxDistance, boolean hitsEntities) {
         Vec3d startPos = origin.getCameraPosVec(1F);
@@ -109,8 +94,10 @@ public class ArcanusHelper {
         if (!world.isClient() && world.getBlockEntity(pos) instanceof LecternBlockEntity lectern && player.currentScreenHandler instanceof LecternScreenHandler) {
             NbtCompound nbt = lectern.getBook().getNbt();
 
-            if (nbt != null && nbt.contains("spell", NbtElement.STRING_TYPE))
-                ((MagicUser) player).setKnownSpell(new Identifier(nbt.getString("spell")));
+            if (nbt != null && nbt.contains("spell", NbtElement.STRING_TYPE)) {
+                Spell spell = Arcanus.SPELL.get(new Identifier(nbt.getString("spell")));
+                player.getComponent(ArcanusComponents.SPELL_MEMORY).unlockSpell(spell);
+            }
         }
     }
 

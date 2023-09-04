@@ -1,12 +1,15 @@
 package dev.cammiescorner.arcanus.mixin;
 
-import dev.cammiescorner.arcanus.entity.MagicUser;
+import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.component.ArcanusComponents;
+import dev.cammiescorner.arcanus.spell.Spell;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.WrittenBookItem;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -39,8 +42,15 @@ public abstract class WrittenBookItemMixin extends Item {
 
     @Inject(method = "use", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
     public void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> info, ItemStack stack) {
-        if (!world.isClient() && stack.getOrCreateNbt().contains("spell"))
-            ((MagicUser) user).setKnownSpell(new Identifier(stack.getOrCreateNbt().getString("spell")));
+        if (!world.isClient() && stack.getOrCreateNbt().contains("spell", NbtElement.STRING_TYPE)) {
+            Spell spell = Arcanus.SPELL.get(new Identifier(stack.getOrCreateNbt().getString("spell")));
+            if(spell == null) {
+                Arcanus.LOGGER.error("Spell {} does not exist!", stack.getOrCreateNbt().getString("spell"));
+                return;
+            }
+
+            user.getComponent(ArcanusComponents.SPELL_MEMORY).unlockSpell(spell);
+        }
     }
 
     @Inject(method = "getName", at = @At(value = "INVOKE",

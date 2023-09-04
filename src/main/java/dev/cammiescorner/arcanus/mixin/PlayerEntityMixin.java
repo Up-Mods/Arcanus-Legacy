@@ -1,29 +1,24 @@
 package dev.cammiescorner.arcanus.mixin;
 
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.component.ArcanusComponents;
+import dev.cammiescorner.arcanus.component.base.MagicCaster;
 import dev.cammiescorner.arcanus.entity.ArcaneBarrierEntity;
 import dev.cammiescorner.arcanus.entity.MagicMissileEntity;
+import dev.cammiescorner.arcanus.entity.MagicUser;
 import dev.cammiescorner.arcanus.entity.SolarStrikeEntity;
-import dev.cammiescorner.arcanus.util.ArcanusConfig;
 import dev.cammiescorner.arcanus.registry.ArcanusParticles;
 import dev.cammiescorner.arcanus.registry.ArcanusSoundEvents;
 import dev.cammiescorner.arcanus.registry.ArcanusSpells;
-import dev.cammiescorner.arcanus.util.ArcanusHelper;
-import dev.cammiescorner.arcanus.entity.CanBeDiscombobulated;
-import dev.cammiescorner.arcanus.entity.MagicUser;
 import dev.cammiescorner.arcanus.spell.Spell;
+import dev.cammiescorner.arcanus.util.ArcanusConfig;
+import dev.cammiescorner.arcanus.util.ArcanusHelper;
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -56,23 +51,11 @@ import static dev.cammiescorner.arcanus.registry.ArcanusEntityAttributes.*;
 public abstract class PlayerEntityMixin extends LivingEntity implements MagicUser {
 
     @Unique
-    private static final TrackedData<Integer> MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    @Unique
-    private static final TrackedData<Integer> BURNOUT = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    @Unique
-    private static final TrackedData<Boolean> SHOW_MANA = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    @Unique
-    private static final int MAX_MANA = 20;
-    @Unique
-    private final List<Spell> knownSpells = new ArrayList<>(8);
-    @Unique
     private final List<Entity> hasHit = new ArrayList<>();
     @Unique
-    private Spell activeSpell = null;
+    private Spell activeSpell;
     @Unique
-    private long lastCastTime = 0;
-    @Unique
-    private int spellTimer = 0;
+    private int spellTimer;
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -93,11 +76,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
     @Inject(method = "tick", at = @At("TAIL"))
     public void tick(CallbackInfo info) {
         if (!world.isClient()) {
-            if (getMana() > getMaxMana())
-                setMana(getMana());
-            if (getBurnout() > getMaxBurnout())
-                setBurnout(getBurnout());
-
+            MagicCaster caster = this.getComponent(ArcanusComponents.MAGIC_CASTER);
             if (activeSpell != null) {
                 if (ArcanusSpells.LUNGE.equals(activeSpell))
                     castLunge();
@@ -120,16 +99,24 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
             if (spellTimer-- <= 0)
                 spellTimer = 0;
 
-            if (world.getTime() >= lastCastTime + 20) {
-                int manaCooldown = (int) Math.round(ArcanusConfig.baseManaCooldown * ArcanusHelper.getManaRegen((PlayerEntity) (Object) this));
-                int burnoutCooldown = (int) Math.round(ArcanusConfig.baseBurnoutCooldown * ArcanusHelper.getBurnoutRegen((PlayerEntity) (Object) this));
+            if (world.getTime() - caster.getLastCastTime() >= 20) {
+                boolean dirty = false;
+                int manaCooldown = (int) Math.round(ArcanusConfig.baseManaCooldown * getManaRegen((PlayerEntity) (Object) this));
+                int burnoutCooldown = (int) Math.round(ArcanusConfig.baseBurnoutCooldown * getBurnoutRegen((PlayerEntity) (Object) this));
 
-                if (manaCooldown != 0 && getMana() < getMaxMana() - getBurnout() && world.getTime() % manaCooldown == 0)
-                    addMana(1);
+                if (manaCooldown != 0 && caster.getMana() < caster.getMaxMana() - caster.getBurnout() && world.getTime() % manaCooldown == 0) {
+                    caster.addMana(1);
+                    dirty = true;
+                }
 
-                if (burnoutCooldown != 0 && getBurnout() > 0 && world.getTime() % burnoutCooldown == 0) {
-                    addBurnout(-1);
+                if (burnoutCooldown != 0 && caster.getBurnout() > 0 && world.getTime() % burnoutCooldown == 0) {
+                    caster.addBurnout(-1);
                     addExhaustion(5F);
+                    dirty = true;
+                }
+
+                if (dirty) {
+                    syncComponent(ArcanusComponents.MAGIC_CASTER);
                 }
             }
         }
@@ -138,110 +125,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     public void readNbt(NbtCompound tag, CallbackInfo info) {
         NbtCompound rootTag = tag.getCompound(Arcanus.MOD_ID);
-        NbtList listTag = rootTag.getList("KnownSpells", NbtElement.STRING_TYPE);
-
-        for (int i = 0; i < listTag.size(); i++)
-            Arcanus.SPELL.getOrEmpty(new Identifier(listTag.getString(i))).ifPresent(knownSpells::add);
-
-        dataTracker.set(MANA, rootTag.getInt("Mana"));
-        dataTracker.set(BURNOUT, rootTag.getInt("Burnout"));
-        dataTracker.set(SHOW_MANA, rootTag.getBoolean("ShowMana"));
         activeSpell = Arcanus.SPELL.get(new Identifier(rootTag.getString("ActiveSpell")));
-        lastCastTime = rootTag.getLong("LastCastTime");
         spellTimer = rootTag.getInt("SpellTimer");
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
     public void writeNbt(NbtCompound tag, CallbackInfo info) {
         NbtCompound rootTag = new NbtCompound();
-        NbtList listTag = new NbtList();
-
-        tag.put(Arcanus.MOD_ID, rootTag);
-        knownSpells.forEach(spell -> listTag.add(NbtString.of(Arcanus.SPELL.getId(spell).toString())));
-        rootTag.put("KnownSpells", listTag);
-        rootTag.putInt("Mana", dataTracker.get(MANA));
-        rootTag.putInt("Burnout", dataTracker.get(BURNOUT));
-        rootTag.putBoolean("ShowMana", dataTracker.get(SHOW_MANA));
         rootTag.putString("ActiveSpell", activeSpell != null ? Arcanus.SPELL.getId(activeSpell).toString() : "");
-        rootTag.putLong("LastCastTime", lastCastTime);
         rootTag.putInt("SpellTimer", spellTimer);
-    }
-
-    @Inject(method = "initDataTracker", at = @At("HEAD"))
-    public void initTracker(CallbackInfo info) {
-        dataTracker.startTracking(MANA, MAX_MANA);
-        dataTracker.startTracking(BURNOUT, 0);
-        dataTracker.startTracking(SHOW_MANA, false);
-    }
-
-    @Override
-    public List<Spell> getKnownSpells() {
-        return knownSpells;
-    }
-
-    @Override
-    public void setKnownSpell(Identifier spellId) {
-        Spell spell = Arcanus.SPELL.get(spellId);
-
-        if (!knownSpells.contains(spell))
-            knownSpells.add(spell);
-        else if (spell != null)
-            Arcanus.LOGGER.warn("Spell " + spell.getTranslationKey() + " is already known!");
-    }
-
-    @Override
-    public int getMana() {
-        return dataTracker.get(MANA);
-    }
-
-    @Override
-    public void setMana(int amount) {
-        dataTracker.set(MANA, MathHelper.clamp(amount, 0, getMaxMana()));
-    }
-
-    @Override
-    public int getMaxMana() {
-        return MAX_MANA - ArcanusHelper.getManaLock((PlayerEntity) (Object) this);
-    }
-
-    @Override
-    public void addMana(int amount) {
-        setMana(Math.min(getMana() + amount, getMaxMana()));
-    }
-
-    @Override
-    public int getBurnout() {
-        return dataTracker.get(BURNOUT);
-    }
-
-    @Override
-    public void setBurnout(int amount) {
-        dataTracker.set(BURNOUT, MathHelper.clamp(amount, 0, getMaxBurnout()));
-    }
-
-    @Override
-    public int getMaxBurnout() {
-        return getMaxMana();
-    }
-
-    @Override
-    public void addBurnout(int amount) {
-        setBurnout(Math.min(getBurnout() + amount, getMaxBurnout()));
-    }
-
-    @Override
-    public boolean isManaVisible() {
-        return dataTracker.get(SHOW_MANA);
-    }
-
-    @Override
-    public void shouldShowMana(boolean shouldShowMana) {
-        dataTracker.set(SHOW_MANA, shouldShowMana);
-    }
-
-    @Override
-    public void setLastCastTime(long lastCastTime) {
-        this.lastCastTime = lastCastTime;
+        tag.put(Arcanus.MOD_ID, rootTag);
     }
 
     @Override
@@ -430,9 +323,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
         }
 
         if (result.getType() == HitResult.Type.ENTITY) {
-            if (((EntityHitResult) result).getEntity() instanceof CanBeDiscombobulated target) {
-                target.setDiscombobulatedTimer(160);
-            }
+            Entity target = ((EntityHitResult) result).getEntity();
+            ArcanusComponents.CAN_BE_DISCOMBOBULATED.maybeGet(target).ifPresent(component -> {
+                component.setDiscombobulatedTimer(160);
+                target.syncComponent(ArcanusComponents.CAN_BE_DISCOMBOBULATED);
+            });
         } else {
             sendMessage(Arcanus.translate("spell", "no_target"), false);
         }

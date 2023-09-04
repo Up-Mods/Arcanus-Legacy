@@ -28,6 +28,13 @@ import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
 
 public class ArcanusClient implements ClientModInitializer {
+
+    public static int manaTimer;
+
+    public static boolean shouldRenderManaBar() {
+        return manaTimer > 0;
+    }
+
     public static RenderLayer getMagicCircles(Identifier texture) {
         return RenderLayer.of(
                 Arcanus.id("magic").toString(),

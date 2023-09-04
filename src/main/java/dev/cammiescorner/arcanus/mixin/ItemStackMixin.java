@@ -1,5 +1,6 @@
 package dev.cammiescorner.arcanus.mixin;
 
+import dev.cammiescorner.arcanus.util.ArcanusHelper;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.item.ItemStack;
@@ -11,21 +12,16 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Slice;
 
-import java.util.List;
 import java.util.Map;
-
-import static dev.cammiescorner.arcanus.registry.ArcanusEntityAttributes.*;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
-    @Unique
-    private final List<EntityAttribute> inverseAttributes = List.of(MANA_COST, MANA_REGEN, BURNOUT_REGEN, MANA_LOCK);
     @Unique
     private boolean affectCurrentAttribute;
 
     @ModifyVariable(method = "getTooltip", slice = @Slice(from = @At(value = "INVOKE", target = "Ljava/util/Iterator;next()Ljava/lang/Object;")), at = @At(value = "STORE"), ordinal = 0)
     private Map.Entry<EntityAttribute, EntityAttributeModifier> captureEntry(Map.Entry<EntityAttribute, EntityAttributeModifier> entry) {
-        affectCurrentAttribute = inverseAttributes.contains(entry.getKey());
+        affectCurrentAttribute = ArcanusHelper.INVERSE_ENTITY_ATTRIBUTES.contains(entry.getKey());
         return entry;
     }
 

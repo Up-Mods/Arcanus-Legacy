@@ -2,9 +2,12 @@ package dev.cammiescorner.arcanus.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.entity.MagicUser;
+import dev.cammiescorner.arcanus.component.base.MagicCaster;
+import dev.cammiescorner.arcanus.client.ArcanusClient;
+import dev.cammiescorner.arcanus.component.ArcanusComponents;
 import dev.cammiescorner.arcanus.item.WandItem;
 import dev.cammiescorner.arcanus.loot.function.SetSpellBookNbtLootFunction;
+import dev.cammiescorner.arcanus.registry.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanus.structure.processor.BookshelfReplacerStructureProcessor;
 import dev.cammiescorner.arcanus.structure.processor.LecternStructureProcessor;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -29,7 +32,6 @@ import net.minecraft.structure.processor.StructureProcessorList;
 import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
-import org.quiltmc.qsl.entity.event.api.ServerPlayerEntityCopyCallback;
 import org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents;
 
 import java.util.ArrayList;
@@ -41,30 +43,26 @@ public class EventHandler {
     @ClientOnly
     public static void clientEvents() {
         final MinecraftClient client = MinecraftClient.getInstance();
-        var manaTimer = new Object() {
-            int value;
-        };
 
-        //-----HUD Render Callback-----//
         HudRenderCallback.EVENT.register((matrices, tickDelta) -> {
             if (client.cameraEntity instanceof PlayerEntity player && !player.isSpectator() && !player.isCreative()) {
-                MagicUser user = (MagicUser) player;
-                int mana = Math.min(user.getMana(), user.getMaxMana() - user.getBurnout());
-                int burnout = user.getBurnout();
-                int manaLock = ArcanusHelper.getManaLock(player);
+                MagicCaster caster = player.getComponent(ArcanusComponents.MAGIC_CASTER);
 
-                if (player.getMainHandStack().getItem() instanceof WandItem || mana < user.getMaxMana())
-                    manaTimer.value = Math.min(manaTimer.value + 1, 40);
+                int mana = Math.min(caster.getMana(), caster.getMaxMana() - caster.getBurnout());
+                int burnout = caster.getBurnout();
+                int manaLock = ArcanusEntityAttributes.getManaLock(player);
+
+                if (player.getMainHandStack().getItem() instanceof WandItem || mana < caster.getMaxMana())
+                    ArcanusClient.manaTimer = Math.min(ArcanusClient.manaTimer + 1, 40);
                 else
-                    manaTimer.value = Math.max(manaTimer.value - 1, 0);
+                    ArcanusClient.manaTimer = Math.max(ArcanusClient.manaTimer - 1, 0);
 
-                if (manaTimer.value > 0) {
-                    user.shouldShowMana(true);
+                if (ArcanusClient.shouldRenderManaBar()) {
                     int scaledWidth = client.getWindow().getScaledWidth();
                     int scaledHeight = client.getWindow().getScaledHeight();
                     int x = scaledWidth / 2 + 82;
                     int y = scaledHeight - (player.isCreative() ? 34 : 49);
-                    float alpha = manaTimer.value > 20 ? 1F : manaTimer.value / 20F;
+                    float alpha = ArcanusClient.manaTimer > 20 ? 1F : ArcanusClient.manaTimer / 20F;
 
                     RenderSystem.enableBlend();
                     RenderSystem.setShaderTexture(0, HUD_ELEMENTS);
@@ -106,8 +104,7 @@ public class EventHandler {
                     // Draw half mana lock orb
                     if (manaLock % 2 == 1)
                         DrawableHelper.drawTexture(matrices, x + adjustedManaLock, y, 48, 0, 8, 8, 256, 256);
-                } else
-                    user.shouldShowMana(false);
+                }
             }
         });
     }
@@ -132,12 +129,6 @@ public class EventHandler {
                 }
             });
         }
-
-        ServerPlayerEntityCopyCallback.EVENT.register((copy, original, wasDeath) -> {
-            ((MagicUser) copy).setMana(((MagicUser) original).getMana());
-            ((MagicUser) copy).setBurnout(((MagicUser) original).getBurnout());
-            ((MagicUser) original).getKnownSpells().forEach(spell -> ((MagicUser) copy).setKnownSpell(Arcanus.SPELL.getId(spell)));
-        });
     }
 
     private static ItemEntry.Builder<?> createItemEntry(ItemStack stack) {

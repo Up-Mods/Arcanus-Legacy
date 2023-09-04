@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanus.mixin.client;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.item.WandItem;
 import dev.cammiescorner.arcanus.net.CastSpellPacket;
-import dev.cammiescorner.arcanus.client.ClientUtils;
 import dev.cammiescorner.arcanus.spell.Spell;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(MinecraftClient.class)
-public class MinecraftClientMixin implements ClientUtils {
+public class MinecraftClientMixin {
     @Unique
     private final List<Spell.Pattern> pattern = new ArrayList<>(3);
     @Shadow
@@ -97,20 +96,5 @@ public class MinecraftClientMixin implements ClientUtils {
             player.world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 1F, 1.3F, 0L);
             info.cancel();
         }
-    }
-
-    @Override
-    public List<Spell.Pattern> getPattern() {
-        return pattern;
-    }
-
-    @Override
-    public void setTimer(int value) {
-        timer = value;
-    }
-
-    @Override
-    public void setUnfinishedSpell(boolean value) {
-        unfinishedSpell = value;
     }
 }

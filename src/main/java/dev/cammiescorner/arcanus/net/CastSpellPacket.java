@@ -1,12 +1,13 @@
 package dev.cammiescorner.arcanus.net;
 
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.component.base.MagicCaster;
+import dev.cammiescorner.arcanus.component.ArcanusComponents;
 import dev.cammiescorner.arcanus.item.WandItem;
-import dev.cammiescorner.arcanus.util.ArcanusConfig;
 import dev.cammiescorner.arcanus.registry.ArcanusDamageTypes;
-import dev.cammiescorner.arcanus.util.ArcanusHelper;
-import dev.cammiescorner.arcanus.entity.MagicUser;
+import dev.cammiescorner.arcanus.registry.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanus.spell.Spell;
+import dev.cammiescorner.arcanus.util.ArcanusConfig;
 import io.netty.buffer.Unpooled;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -33,29 +34,34 @@ public class CastSpellPacket {
 
     public static void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         int spellId = buf.readVarInt();
+        Spell spell = Arcanus.SPELL.get(spellId);
+        if (spell == null) {
+            Arcanus.LOGGER.error("Received unknown spell id {} from player {}", spellId, player.getGameProfile().getName());
+            return;
+        }
 
         server.execute(() -> {
-            MagicUser user = (MagicUser) player;
-            Spell spell = Arcanus.SPELL.get(spellId);
+            MagicCaster caster = player.getComponent(ArcanusComponents.MAGIC_CASTER);
 
-            if (user.getKnownSpells().contains(spell) && spell != null) {
-                int realManaCost = (int) (spell.getManaCost() * ArcanusHelper.getManaCost(player));
+            if (player.getComponent(ArcanusComponents.SPELL_MEMORY).hasSpell(spell)) {
+                int realManaCost = (int) (spell.getManaCost() * ArcanusEntityAttributes.getManaCost(player));
 
-                if (player.isCreative() || (ArcanusConfig.haveBurnout && user.getMana() > 0) || (!ArcanusConfig.haveBurnout && user.getMana() >= realManaCost)) {
+                if (player.isCreative() || (ArcanusConfig.haveBurnout && caster.getMana() > 0) || (!ArcanusConfig.haveBurnout && caster.getMana() >= realManaCost)) {
                     player.sendMessage(Text.translatable(spell.getTranslationKey()).formatted(Formatting.GREEN), true);
                     spell.onCast(player.world, player);
 
                     if (!player.isCreative()) {
-                        user.setLastCastTime(player.world.getTime());
+                        caster.setLastCastTime(player.world.getTime());
 
-                        if (user.getMana() < realManaCost && ArcanusConfig.haveBurnout) {
-                            int burnoutAmount = realManaCost - user.getMana();
-                            user.addBurnout(burnoutAmount);
+                        if (caster.getMana() < realManaCost && ArcanusConfig.haveBurnout) {
+                            int burnoutAmount = realManaCost - caster.getMana();
+                            caster.addBurnout(burnoutAmount);
                             player.damage(ArcanusDamageTypes.burnout(player.world), burnoutAmount);
                             player.sendMessage(Arcanus.translate("error", "burnout").formatted(Formatting.RED), false);
                         }
 
-                        user.addMana(-realManaCost);
+                        caster.addMana(-realManaCost);
+                        player.syncComponent(ArcanusComponents.MAGIC_CASTER);
                     }
 
                     ItemStack stack = player.getMainHandStack();

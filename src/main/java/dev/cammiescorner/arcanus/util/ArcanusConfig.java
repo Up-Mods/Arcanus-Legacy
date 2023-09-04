@@ -23,6 +23,8 @@ public class ArcanusConfig extends MidnightConfig {
     public static int baseManaCooldown = 20;
     @Entry
     public static int baseBurnoutCooldown = 60;
+    @Entry(min = 0)
+    public static int maxMana = 20;
 
     @Entry
     public static boolean enableLunge = true;

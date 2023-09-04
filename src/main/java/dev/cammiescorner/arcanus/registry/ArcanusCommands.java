@@ -5,7 +5,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.entity.MagicUser;
+import dev.cammiescorner.arcanus.component.ArcanusComponents;
+import dev.cammiescorner.arcanus.component.base.SpellMemory;
 import dev.cammiescorner.arcanus.spell.Spell;
 import dev.cammiescorner.arcanus.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.util.SpellBooks;
@@ -18,81 +19,92 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
+
+import java.util.Comparator;
+import java.util.Set;
 
 public class ArcanusCommands {
 
     public static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> dispatcher.register(CommandManager.literal("spells")
                 .then(CommandManager.literal("list").requires(source -> source.hasPermissionLevel(0))
-                        .executes(context -> SpellsCommand.listPlayerSpells(context, context.getSource().getPlayer()))
+                        .executes(context -> SpellsCommand.listPlayerSpells(context, context.getSource().getPlayerOrThrow()))
                         .then(CommandManager.argument("player", EntityArgumentType.player()).requires(source -> source.hasPermissionLevel(3))
                                 .executes(context -> SpellsCommand.listPlayerSpells(context, EntityArgumentType.getPlayer(context, "player")))))
                 .then(CommandManager.literal("add").requires(source -> source.hasPermissionLevel(3))
                         .then(CommandManager.argument("all", StringArgumentType.word())
-                                .executes(SpellsCommand::addAllSpellsToSelf))
+                                .executes(ctx -> {
+                                    ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
+                                    return SpellsCommand.addAllSpellsToPlayer(ctx, player);
+                                }))
                         .then(CommandManager.argument("spell", RegistryEntryArgumentType.registryEntry(buildContext, Arcanus.SPELL.getKey()))
-                                .executes(SpellsCommand::addSpellToSelf))
+                                .executes(ctx -> {
+                                    ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
+                                    return SpellsCommand.addSpellToPlayer(ctx, player);
+                                }))
                         .then(CommandManager.argument("player", EntityArgumentType.player())
                                 .then(CommandManager.argument("all", StringArgumentType.word())
-                                        .executes(SpellsCommand::addAllSpellsToPlayer))
+                                        .executes(ctx -> {
+                                            ServerPlayerEntity player = EntityArgumentType.getPlayer(ctx, "player");
+                                            return SpellsCommand.addAllSpellsToPlayer(ctx, player);
+                                        }))
                                 .then(CommandManager.argument("spell", RegistryEntryArgumentType.registryEntry(buildContext, Arcanus.SPELL.getKey()))
-                                        .executes(SpellsCommand::addSpellToPlayer))))
+                                        .executes(ctx -> {
+                                            ServerPlayerEntity player = EntityArgumentType.getPlayer(ctx, "player");
+                                            return SpellsCommand.addSpellToPlayer(ctx, player);
+                                        }))))
                 .then(CommandManager.literal("remove").requires(source -> source.hasPermissionLevel(3))
                         .then(CommandManager.argument("all", StringArgumentType.word())
-                                .executes(SpellsCommand::removeAllSpellsFromSelf))
+                                .executes(ctx -> SpellsCommand.removeAllSpellsFromPlayer(ctx, ctx.getSource().getPlayerOrThrow())))
                         .then(CommandManager.argument("spell", RegistryEntryArgumentType.registryEntry(buildContext, Arcanus.SPELL.getKey()))
-                                .executes(SpellsCommand::removeSpellFromSelf))
+                                .executes(ctx -> SpellsCommand.removeSpellFromPlayer(ctx, ctx.getSource().getPlayerOrThrow()))
                         .then(CommandManager.argument("player", EntityArgumentType.player())
                                 .then(CommandManager.argument("all", StringArgumentType.word())
-                                        .executes(SpellsCommand::removeAllSpellsFromPlayer))
+                                        .executes(ctx -> SpellsCommand.removeAllSpellsFromPlayer(ctx, EntityArgumentType.getPlayer(ctx, "player"))))
                                 .then(CommandManager.argument("spell", RegistryEntryArgumentType.registryEntry(buildContext, Arcanus.SPELL.getKey()))
-                                        .executes(SpellsCommand::removeSpellFromPlayer))))
+                                        .executes(ctx -> SpellsCommand.removeSpellFromPlayer(ctx, EntityArgumentType.getPlayer(ctx, "player"))))))
                 .then(CommandManager.literal("spellbook").requires(source -> source.hasPermissionLevel(2))
                         .then(CommandManager.literal("all")
-                                .executes(context -> SpellsCommand.giveSpellBook(context, context.getSource().getPlayer(), null))
+                                .executes(context -> SpellsCommand.giveAllSpellBooks(context.getSource().getPlayerOrThrow()))
                                 .then(CommandManager.argument("player", EntityArgumentType.player())
-                                        .executes(context -> SpellsCommand.giveSpellBook(context, EntityArgumentType.getPlayer(context, "player"), null))))
+                                        .executes(context -> SpellsCommand.giveSpellBook(EntityArgumentType.getPlayer(context, "player"), RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value())))
                         .then(CommandManager.argument("spell", RegistryEntryArgumentType.registryEntry(buildContext, Arcanus.SPELL.getKey()))
-                                .executes(context -> SpellsCommand.giveSpellBook(context, context.getSource().getPlayer(), RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value()))
+                                .executes(context -> SpellsCommand.giveSpellBook(context.getSource().getPlayerOrThrow(), RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value()))
                                 .then(CommandManager.argument("player", EntityArgumentType.player())
-                                        .executes(context -> SpellsCommand.giveSpellBook(context, EntityArgumentType.getPlayer(context, "player"), RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value())))))));
+                                        .executes(context -> SpellsCommand.giveSpellBook(EntityArgumentType.getPlayer(context, "player"), RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value())))))))));
     }
 
     private static class SpellsCommand {
         public static int listPlayerSpells(CommandContext<ServerCommandSource> context, PlayerEntity player) {
-            if (((MagicUser) player).getKnownSpells().isEmpty()) {
+            Set<Spell> spells = player.getComponent(ArcanusComponents.SPELL_MEMORY).getKnownSpells();
+            if (spells.isEmpty()) {
                 context.getSource().sendError(Arcanus.translate("commands", "spells.no_known_spells", player.getDisplayName()));
                 return 0;
             }
 
             MutableText knownSpells = Text.literal("");
-
-            for (Spell spell : ((MagicUser) player).getKnownSpells())
-                knownSpells = knownSpells.append("\n    - ").append(Text.translatable(spell.getTranslationKey())).append(" (" + spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol() + ")");
+            spells.stream().sorted(Comparator.comparing(spell -> Arcanus.SPELL.getId(spell).toString())).forEachOrdered(spell -> knownSpells.append("\n    - ").append(Text.translatable(spell.getTranslationKey())).append(" (" + spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol() + ")"));
 
             context.getSource().sendFeedback(Arcanus.translate("commands", "spells.list", player.getEntityName(), knownSpells), false);
-            return ((MagicUser) player).getKnownSpells().size();
+            return spells.size();
         }
 
-        public static int addAllSpellsToSelf(CommandContext<ServerCommandSource> context) {
-            PlayerEntity player = context.getSource().getPlayer();
-            MagicUser user = (MagicUser) player;
-            Arcanus.SPELL.getIds().forEach(user::setKnownSpell);
-
+        public static int addAllSpellsToPlayer(CommandContext<ServerCommandSource> context, ServerPlayerEntity player) throws CommandSyntaxException {
+            SpellMemory memory = player.getComponent(ArcanusComponents.SPELL_MEMORY);
+            int count = (int) Arcanus.SPELL.stream().filter(memory::unlockSpell).count();
+            player.syncComponent(ArcanusComponents.SPELL_MEMORY);
             context.getSource().sendFeedback(Arcanus.translate("commands", "spells.added_all", player.getDisplayName()), false);
-            return Command.SINGLE_SUCCESS;
+            return Math.max(count, 1);
         }
 
-        public static int addSpellToSelf(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-            PlayerEntity player = context.getSource().getPlayer();
-            MagicUser user = (MagicUser) player;
+        public static int addSpellToPlayer(CommandContext<ServerCommandSource> context, ServerPlayerEntity player) throws CommandSyntaxException {
+            SpellMemory memory = player.getComponent(ArcanusComponents.SPELL_MEMORY);
             Spell spell = RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value();
 
-            if (!user.getKnownSpells().contains(spell)) {
-                user.getKnownSpells().add(spell);
+            if (memory.unlockSpell(spell)) {
                 context.getSource().sendFeedback(Arcanus.translate("commands", "spells.added", Text.translatable(spell.getTranslationKey(), Arcanus.SPELL.getId(spell)), player.getEntityName()), false);
+                player.syncComponent(ArcanusComponents.SPELL_MEMORY);
                 return Command.SINGLE_SUCCESS;
             }
 
@@ -100,48 +112,21 @@ public class ArcanusCommands {
             return 0;
         }
 
-        public static int addAllSpellsToPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-            PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
-            MagicUser user = (MagicUser) player;
-            Arcanus.SPELL.getIds().forEach(user::setKnownSpell);
-
-            context.getSource().sendFeedback(Arcanus.translate("commands", "spells.added_all", player.getDisplayName()), false);
-            return Command.SINGLE_SUCCESS;
-        }
-
-        public static int addSpellToPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-            PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
-            MagicUser user = (MagicUser) player;
-            Spell spell = RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value();
-
-            if (!user.getKnownSpells().contains(spell)) {
-                user.getKnownSpells().add(spell);
-
-                context.getSource().sendFeedback(Arcanus.translate("commands", "spells.added", Text.translatable(spell.getTranslationKey(), Arcanus.SPELL.getId(spell)), player.getEntityName()), false);
-                return Command.SINGLE_SUCCESS;
-            }
-
-            context.getSource().sendError(Arcanus.translate("commands", "spells.already_known", player.getEntityName(), Text.translatable(spell.getTranslationKey(), Arcanus.SPELL.getId(spell))));
-            return 0;
-        }
-
-        public static int removeAllSpellsFromSelf(CommandContext<ServerCommandSource> context) {
-            PlayerEntity player = context.getSource().getPlayer();
-
-            ((MagicUser) player).getKnownSpells().clear();
-
+        public static int removeAllSpellsFromPlayer(CommandContext<ServerCommandSource> context, ServerPlayerEntity player) throws CommandSyntaxException {
+            SpellMemory memory = player.getComponent(ArcanusComponents.SPELL_MEMORY);
+            memory.clear();
+            player.syncComponent(ArcanusComponents.SPELL_MEMORY);
             context.getSource().sendFeedback(Arcanus.translate("commands", "spells.cleared", player.getDisplayName()), false);
             return Command.SINGLE_SUCCESS;
         }
 
-        public static int removeSpellFromSelf(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-            PlayerEntity player = context.getSource().getPlayer();
-            MagicUser user = (MagicUser) player;
+        public static int removeSpellFromPlayer(CommandContext<ServerCommandSource> context, ServerPlayerEntity player) throws CommandSyntaxException {
+            SpellMemory memory = player.getComponent(ArcanusComponents.SPELL_MEMORY);
             Spell spell = RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value();
 
-            if (user.getKnownSpells().contains(spell)) {
-                user.getKnownSpells().remove(spell);
+            if (memory.removeSpell(spell)) {
                 context.getSource().sendFeedback(Arcanus.translate("commands", "spells.removed", Text.translatable(spell.getTranslationKey(), Arcanus.SPELL.getId(spell)), player.getDisplayName()), false);
+                player.syncComponent(ArcanusComponents.SPELL_MEMORY);
                 return Command.SINGLE_SUCCESS;
             }
 
@@ -149,46 +134,15 @@ public class ArcanusCommands {
             return 0;
         }
 
-        public static int removeAllSpellsFromPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-            PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
-
-            ((MagicUser) player).getKnownSpells().clear();
-
-            context.getSource().sendFeedback(Arcanus.translate("commands", "spells.cleared", player.getDisplayName()), false);
-            return Command.SINGLE_SUCCESS;
+        public static int giveAllSpellBooks(ServerPlayerEntity player) {
+            Arcanus.SPELL.forEach(spell -> giveSpellBook(player, spell));
+            return Arcanus.SPELL.size();
         }
 
-        public static int removeSpellFromPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-            PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
-            MagicUser user = (MagicUser) player;
-            Spell spell = RegistryEntryArgumentType.getRegistryEntry(context, "spell", Arcanus.SPELL_KEY).value();
-
-            if (user.getKnownSpells().contains(spell)) {
-                user.getKnownSpells().remove(spell);
-
-                context.getSource().sendFeedback(Arcanus.translate("commands", "spells.removed", Text.translatable(spell.getTranslationKey(), Arcanus.SPELL.getId(spell)), player.getDisplayName()), false);
-                return Command.SINGLE_SUCCESS;
-            }
-
-            context.getSource().sendError(Arcanus.translate("commands", "spells.does_not_have", player.getDisplayName(), Text.translatable(spell.getTranslationKey(), Arcanus.SPELL.getId(spell))));
-            return 0;
-        }
-
-        public static int giveSpellBook(CommandContext<ServerCommandSource> context, ServerPlayerEntity player, @Nullable Spell spell) {
-            if (spell == null) {
-                Arcanus.SPELL.forEach(spell1 -> giveSpellBook(player, spell1));
-
-                return Arcanus.SPELL.size();
-            }
-
-            giveSpellBook(player, spell);
-
-            return Command.SINGLE_SUCCESS;
-        }
-
-        public static void giveSpellBook(ServerPlayerEntity player, Spell spell) {
+        public static int giveSpellBook(ServerPlayerEntity player, Spell spell) {
             ItemStack book = SpellBooks.getSpellBook(spell, player.getRandom());
             ArcanusHelper.giveOrDrop(player, book);
+            return Command.SINGLE_SUCCESS;
         }
     }
 }

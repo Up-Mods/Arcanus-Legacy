@@ -3,8 +3,11 @@ package dev.cammiescorner.arcanus.registry;
 import dev.cammiescorner.arcanus.Arcanus;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import org.jetbrains.annotations.Nullable;
 
 public class ArcanusEntityAttributes {
 
@@ -18,5 +21,25 @@ public class ArcanusEntityAttributes {
         Registry.register(Registries.ENTITY_ATTRIBUTE, Arcanus.id("mana_regen"), MANA_REGEN);
         Registry.register(Registries.ENTITY_ATTRIBUTE, Arcanus.id("burnout_regen"), BURNOUT_REGEN);
         Registry.register(Registries.ENTITY_ATTRIBUTE, Arcanus.id("mana_lock"), MANA_LOCK);
+    }
+
+    public static double getManaCost(PlayerEntity player) {
+        @Nullable final EntityAttributeInstance castingMultiplier = player.getAttributeInstance(MANA_COST);
+        return castingMultiplier != null ? castingMultiplier.getValue() : 1D;
+    }
+
+    public static double getManaRegen(PlayerEntity player) {
+        @Nullable final EntityAttributeInstance manaRegen = player.getAttributeInstance(MANA_REGEN);
+        return manaRegen != null ? manaRegen.getValue() : 1D;
+    }
+
+    public static double getBurnoutRegen(PlayerEntity player) {
+        @Nullable final EntityAttributeInstance burnoutRegen = player.getAttributeInstance(BURNOUT_REGEN);
+        return burnoutRegen != null ? burnoutRegen.getValue() : 1D;
+    }
+
+    public static int getManaLock(PlayerEntity player) {
+        @Nullable final EntityAttributeInstance manaLock = player.getAttributeInstance(MANA_LOCK);
+        return (int) (manaLock != null ? manaLock.getValue() : 0D);
     }
 }
