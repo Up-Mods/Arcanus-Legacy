@@ -3,7 +3,7 @@ package dev.cammiescorner.arcanus.core.util;
 public enum Pattern {
     LEFT("L"), RIGHT("R");
 
-    String symbol;
+    private final String symbol;
 
     Pattern(String symbol) {
         this.symbol = symbol;

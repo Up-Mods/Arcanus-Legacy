@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class BookshelfScreen extends HandledScreen<BookshelfScreenHandler> {
-    private static final Identifier TEXTURE = new Identifier(Arcanus.MOD_ID, "textures/gui/container/bookshelf.png");
+    private static final Identifier TEXTURE = Arcanus.id("textures/gui/container/bookshelf.png");
 
     public BookshelfScreen(BookshelfScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);

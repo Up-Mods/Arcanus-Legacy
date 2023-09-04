@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanus.common.items;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import dev.cammiescorner.arcanus.Arcanus;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
@@ -28,8 +27,8 @@ public class WandItem extends Item {
     private final Supplier<Item> upgrade;
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
 
-    public WandItem(float castingMultiplier, int maxExp, @Nullable Supplier<Item> upgrade) {
-        super(new FabricItemSettings().maxCount(1));
+    public WandItem(float castingMultiplier, int maxExp, @Nullable Supplier<Item> upgrade, Item.Settings settings) {
+        super(settings.maxCount(1));
         this.maxExp = maxExp;
         this.upgrade = upgrade;
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();

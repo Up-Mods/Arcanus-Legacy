@@ -2,7 +2,6 @@ package dev.cammiescorner.arcanus.client.renderer.blockentity;
 
 import dev.cammiescorner.arcanus.common.blocks.DisplayCaseBlock;
 import dev.cammiescorner.arcanus.common.blocks.entities.DisplayCaseBlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -15,9 +14,11 @@ import net.minecraft.util.math.Axis;
 import net.minecraft.util.math.Direction;
 
 public class DisplayCaseBlockEntityRenderer implements BlockEntityRenderer<DisplayCaseBlockEntity> {
-    private final ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
 
-    public DisplayCaseBlockEntityRenderer(BlockEntityRendererFactory.Context cxt) {
+    private final ItemRenderer itemRenderer;
+
+    public DisplayCaseBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+        this.itemRenderer = ctx.getItemRenderer();
     }
 
     @Override

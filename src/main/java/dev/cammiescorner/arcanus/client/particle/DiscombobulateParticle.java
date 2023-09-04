@@ -1,11 +1,10 @@
 package dev.cammiescorner.arcanus.client.particle;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.util.math.MathHelper;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public class DiscombobulateParticle extends SpriteBillboardParticle {
     private final SpriteProvider spriteProvider;
@@ -30,7 +29,7 @@ public class DiscombobulateParticle extends SpriteBillboardParticle {
         return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public static class Factory implements ParticleFactory<DefaultParticleType> {
         private final SpriteProvider spriteProvider;
 

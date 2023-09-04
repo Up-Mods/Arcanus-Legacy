@@ -5,7 +5,6 @@ import dev.cammiescorner.arcanus.common.spells.*;
 import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
 import dev.cammiescorner.arcanus.core.util.Spell;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 
 import static dev.cammiescorner.arcanus.core.util.Pattern.LEFT;
 import static dev.cammiescorner.arcanus.core.util.Pattern.RIGHT;
@@ -24,20 +23,20 @@ public class ModSpells {
     //-----Registry-----//
     public static void register() {
         if (ArcanusConfig.enableLunge)
-            Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "lunge"), LUNGE);
+            Registry.register(Arcanus.SPELL, Arcanus.id("lunge"), LUNGE);
         if (ArcanusConfig.enableDreamWarp)
-            Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "dream_warp"), DREAM_WARP);
+            Registry.register(Arcanus.SPELL, Arcanus.id("dream_warp"), DREAM_WARP);
         if (ArcanusConfig.enableMagicMissile)
-            Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "magic_missile"), MAGIC_MISSILE);
+            Registry.register(Arcanus.SPELL, Arcanus.id("magic_missile"), MAGIC_MISSILE);
         if (ArcanusConfig.enableTelekineticShock)
-            Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "telekinetic_shock"), TELEKINESIS);
+            Registry.register(Arcanus.SPELL, Arcanus.id("telekinetic_shock"), TELEKINESIS);
         if (ArcanusConfig.enableHeal)
-            Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "heal"), HEAL);
+            Registry.register(Arcanus.SPELL, Arcanus.id("heal"), HEAL);
         if (ArcanusConfig.enableDiscombobulate)
-            Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "discombobulate"), DISCOMBOBULATE);
+            Registry.register(Arcanus.SPELL, Arcanus.id("discombobulate"), DISCOMBOBULATE);
         if (ArcanusConfig.enableSolarStrike)
-            Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "solar_strike"), SOLAR_STRIKE);
+            Registry.register(Arcanus.SPELL, Arcanus.id("solar_strike"), SOLAR_STRIKE);
         if (ArcanusConfig.enableArcaneBarrier)
-            Registry.register(Arcanus.SPELL, new Identifier(Arcanus.MOD_ID, "arcane_barrier"), ARCANE_BARRIER);
+            Registry.register(Arcanus.SPELL, Arcanus.id("arcane_barrier"), ARCANE_BARRIER);
     }
 }

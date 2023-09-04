@@ -132,4 +132,20 @@ public class ArcanusHelper {
             }
         }
     }
+
+    public static float[] getRGB(int color) {
+        float r = ((color >> 16 & 255) / 255F);
+        float g = ((color >> 8 & 255) / 255F);
+        float b = ((color & 255) / 255F);
+
+        return new float[] {r, g, b};
+    }
+
+    public static float[] getRGBMultiply(int color, float multiplier) {
+        float[] values = getRGB(color);
+        values[0] *= multiplier;
+        values[1] *= multiplier;
+        values[2] *= multiplier;
+        return values;
+    }
 }

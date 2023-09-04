@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+//FIXME use MixinExtras
 @Mixin(HungerManager.class)
 public class HungerManagerMixin {
     @ModifyVariable(method = "update", at = @At(value = "INVOKE_ASSIGN",

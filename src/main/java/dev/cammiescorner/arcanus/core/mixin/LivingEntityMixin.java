@@ -18,17 +18,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+//TODO port to CCA entity component
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements CanBeDiscombobulated {
     @Unique
     private static final TrackedData<Boolean> IS_DISCOMBOBULATED = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     @Unique
     private static final TrackedData<Integer> DISCOMBOBULATED_TIMER = DataTracker.registerData(LivingEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    public LivingEntityMixin(EntityType<?> type, World world) {
+
+    private LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
+        throw new UnsupportedOperationException();
     }
 
-    @ModifyVariable(method = "travel", at = @At("HEAD"))
+    @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     public Vec3d invertInput(Vec3d movementInput) {
         if (((CanBeDiscombobulated) this).isDiscombobulated())
             movementInput = movementInput.multiply(-1, 1, -1);

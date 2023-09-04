@@ -1,11 +1,10 @@
 package dev.cammiescorner.arcanus.client.particle;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.util.math.MathHelper;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public class TelekineticShockParticle extends SpriteBillboardParticle {
     private final SpriteProvider spriteProvider;
@@ -30,7 +29,7 @@ public class TelekineticShockParticle extends SpriteBillboardParticle {
         return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public record Factory(SpriteProvider spriteProvider) implements ParticleFactory<DefaultParticleType> {
         @Override
         public Particle createParticle(DefaultParticleType defaultParticleType, ClientWorld clientWorld, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ) {

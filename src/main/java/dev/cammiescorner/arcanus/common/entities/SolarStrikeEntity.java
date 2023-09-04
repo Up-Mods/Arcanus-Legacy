@@ -21,17 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SolarStrikeEntity extends PersistentProjectileEntity {
-    public List<Entity> hasHit = new ArrayList<>();
+
+    public final List<Entity> hasHit = new ArrayList<>();
 
     public SolarStrikeEntity(LivingEntity owner, World world) {
         super(ModEntities.SOLAR_STRIKE, owner, world);
     }
 
-    public SolarStrikeEntity(World world, double x, double y, double z) {
-        super(ModEntities.SOLAR_STRIKE, x, y, z, world);
-    }
-
-    public SolarStrikeEntity(EntityType type, World world) {
+    public SolarStrikeEntity(EntityType<? extends SolarStrikeEntity> type, World world) {
         super(type, world);
     }
 

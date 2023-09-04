@@ -64,8 +64,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
     private long lastCastTime = 0;
     @Unique
     private int spellTimer = 0;
-    protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
+
+    private PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
+        throw new UnsupportedOperationException();
     }
 
     @Inject(method = "createAttributes", at = @At("RETURN"))
@@ -216,11 +218,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
     @Override
     public void addBurnout(int amount) {
         setBurnout(Math.min(getBurnout() + amount, getMaxBurnout()));
-    }
-
-    public void setManaLock(int amount) {
-        setMana(getMana());
-        setBurnout(getBurnout());
     }
 
     @Override
@@ -429,7 +426,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
                 target.setDiscombobulatedTimer(160);
             }
         } else {
-            sendMessage(Text.translatable("spell." + Arcanus.MOD_ID + ".no_target"), false);
+            sendMessage(Arcanus.translate("spell", "no_target"), false);
         }
 
         activeSpell = null;
@@ -446,7 +443,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
             solarStrike.setPosition(result.getPos());
             world.spawnEntity(solarStrike);
         } else {
-            sendMessage(Text.translatable("spell." + Arcanus.MOD_ID + ".no_target"), false);
+            sendMessage(Arcanus.translate("spell", "no_target"), false);
         }
 
         activeSpell = null;
@@ -464,7 +461,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
             arcaneWall.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             world.spawnEntity(arcaneWall);
         } else {
-            sendMessage(Text.translatable("spell." + Arcanus.MOD_ID + ".no_target"), false);
+            sendMessage(Arcanus.translate("spell", "no_target"), false);
         }
 
         activeSpell = null;

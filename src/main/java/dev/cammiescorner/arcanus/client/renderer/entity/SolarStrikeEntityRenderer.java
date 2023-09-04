@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanus.client.ArcanusClient;
 import dev.cammiescorner.arcanus.common.entities.SolarStrikeEntity;
 import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
+import dev.cammiescorner.arcanus.core.util.ArcanusHelper;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -37,9 +38,8 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 
         final int maxQuads = 16;
         final float radius = 2.25F;
-        float r = ((colour >> 16 & 255) / 255F) * alpha;
-        float g = ((colour >> 8 & 255) / 255F) * alpha;
-        float b = ((colour & 255) / 255F) * alpha;
+
+        float[] rgb = ArcanusHelper.getRGBMultiply(colour, alpha);
 
         matrices.push();
         matrices.multiply(Axis.X_POSITIVE.rotationDegrees(-90));
@@ -59,10 +59,10 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
             Vector3f v = new Vector3f(vertX1 - vertX2, vertY1 - vertY2, -length);
             Vector3f normal = u.cross(v);
 
-            vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(r, g, b, 1F).uv(0, 1).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
-            vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(r, g, b, 1F).uv(1, 1).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
-            vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(r, g, b, 1F).uv(1, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
-            vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(r, g, g, 1F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
+            vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(rgb[0], rgb[1], rgb[2], 1F).uv(0, 1).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
+            vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(rgb[0], rgb[1], rgb[2], 1F).uv(1, 1).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
+            vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(rgb[0], rgb[1], rgb[2], 1F).uv(1, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
+            vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(rgb[0], rgb[1], rgb[2], 1F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
 
             vertX1 = vertX2;
             vertY1 = vertY2;

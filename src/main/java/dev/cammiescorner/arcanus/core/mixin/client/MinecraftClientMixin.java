@@ -59,7 +59,7 @@ public class MinecraftClientMixin implements ClientUtils {
                             break;
                         } else {
                             if (Arcanus.SPELL.getRawId(spell) + 1 == Arcanus.SPELL.getIds().size()) {
-                                player.sendMessage(Text.translatable("error." + Arcanus.MOD_ID + ".missing_spell").formatted(Formatting.RED), true);
+                                player.sendMessage(Arcanus.translate("error", "missing_spell").formatted(Formatting.RED), true);
                                 unfinishedSpell = false;
                             }
                         }

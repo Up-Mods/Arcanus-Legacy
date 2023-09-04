@@ -41,6 +41,7 @@ public class DisplayCaseBlock extends BlockWithEntity {
         setDefaultState(getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false));
     }
 
+    @Deprecated
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient() && player.isSneaking()) {
@@ -79,6 +80,7 @@ public class DisplayCaseBlock extends BlockWithEntity {
         return ActionResult.SUCCESS;
     }
 
+    @Deprecated
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         VoxelShape directionalTop = state.get(FACING) == Direction.NORTH ?
@@ -121,16 +123,19 @@ public class DisplayCaseBlock extends BlockWithEntity {
         return getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(OPEN, false);
     }
 
+    @Deprecated
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
 
+    @Deprecated
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
 
+    @Deprecated
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
@@ -148,11 +153,13 @@ public class DisplayCaseBlock extends BlockWithEntity {
         return BlockRenderType.MODEL;
     }
 
+    @Deprecated
     @Override
     public boolean hasComparatorOutput(BlockState state) {
         return true;
     }
 
+    @Deprecated
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         return state.get(OPEN) ? 5 : 0;

@@ -25,8 +25,10 @@ import java.util.List;
 
 @Mixin(value = WrittenBookItem.class, priority = 1100)
 public abstract class WrittenBookItemMixin extends Item {
-    public WrittenBookItemMixin(Settings settings) {
+
+    private WrittenBookItemMixin(Settings settings) {
         super(settings);
+        throw new UnsupportedOperationException();
     }
 
     @Inject(method = "isValid", at = @At(value = "INVOKE", target = "Ljava/lang/String;length()I"), cancellable = true)

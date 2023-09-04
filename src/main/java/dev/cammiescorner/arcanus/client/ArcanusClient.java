@@ -17,18 +17,18 @@ import dev.cammiescorner.arcanus.core.registry.ModBlocks;
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import dev.cammiescorner.arcanus.core.registry.ModParticles;
 import dev.cammiescorner.arcanus.core.util.EventHandler;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderPhase;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
+import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
 
 public class ArcanusClient implements ClientModInitializer {
     public static RenderLayer getMagicCircles(Identifier texture) {
@@ -52,34 +52,23 @@ public class ArcanusClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient(ModContainer mod) {
-        screenRegistry();
-        entityRendererRegistry();
-        particleFactoryRegistry();
-        itemPredicateRegistry();
-        blockRenderLayerRegistry();
-        blockEntityRendererRegistry();
-        EventHandler.clientEvents();
-    }
+        HandledScreens.register(Arcanus.BOOKSHELF_SCREEN_HANDLER, BookshelfScreen::new);
 
-    public void screenRegistry() {
-        ScreenRegistry.register(Arcanus.BOOKSHELF_SCREEN_HANDLER, BookshelfScreen::new);
-    }
-
-    public void entityRendererRegistry() {
         EntityRendererRegistry.register(ModEntities.SOLAR_STRIKE, SolarStrikeEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.ARCANE_BARRIER, ArcaneBarrierEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.MAGIC_MISSILE, MagicMissileEntityRenderer::new);
-    }
 
-    public void particleFactoryRegistry() {
         ParticleFactoryRegistry.getInstance().register(ModParticles.MAGIC_MISSILE, MagicMissileParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.TELEKINETIC_SHOCK, TelekineticShockParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.HEAL, HealParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.DISCOMBOBULATE, DiscombobulateParticle.Factory::new);
-    }
 
-    public void itemPredicateRegistry() {
-        FabricModelPredicateProviderRegistry.register(new Identifier(Arcanus.MOD_ID, "mana"), (stack, world, entity, seed) -> {
+        BlockEntityRendererFactories.register(ModBlockEntities.DISPLAY_CASE, DisplayCaseBlockEntityRenderer::new);
+        BlockRenderLayerMap.put(RenderLayer.getCutout(), ModBlocks.DISPLAY_CASE);
+
+        EventHandler.clientEvents();
+
+        ModelPredicateProviderRegistry.register(Arcanus.id("mana"), (stack, world, entity, seed) -> {
             NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
 
             if (tag == null)
@@ -89,11 +78,4 @@ public class ArcanusClient implements ClientModInitializer {
         });
     }
 
-    public void blockRenderLayerRegistry() {
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.DISPLAY_CASE);
-    }
-
-    public void blockEntityRendererRegistry() {
-        BlockEntityRendererRegistry.register(ModBlockEntities.DISPLAY_CASE, DisplayCaseBlockEntityRenderer::new);
-    }
 }

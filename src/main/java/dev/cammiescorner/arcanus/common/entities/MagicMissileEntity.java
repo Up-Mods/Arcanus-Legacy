@@ -2,7 +2,6 @@ package dev.cammiescorner.arcanus.common.entities;
 
 import dev.cammiescorner.arcanus.core.registry.ModEntities;
 import dev.cammiescorner.arcanus.core.registry.ModParticles;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,21 +14,17 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
+import org.quiltmc.qsl.networking.api.PlayerLookup;
 
 public class MagicMissileEntity extends PersistentProjectileEntity {
+
     public MagicMissileEntity(LivingEntity owner, World world) {
         super(ModEntities.MAGIC_MISSILE, owner, world);
         setNoGravity(true);
         setDamage(1.5D);
     }
 
-    public MagicMissileEntity(World world, double x, double y, double z) {
-        super(ModEntities.MAGIC_MISSILE, x, y, z, world);
-        setNoGravity(true);
-        setDamage(1.5D);
-    }
-
-    public MagicMissileEntity(EntityType type, World world) {
+    public MagicMissileEntity(EntityType<? extends MagicMissileEntity> type, World world) {
         super(type, world);
         setNoGravity(true);
         setDamage(1.5D);

@@ -27,6 +27,7 @@ public class FillableBookshelfBlock extends BlockWithEntity {
         setDefaultState(getDefaultState().with(BOOK_COUNT, 0));
     }
 
+    @Deprecated
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
@@ -39,6 +40,7 @@ public class FillableBookshelfBlock extends BlockWithEntity {
         return ActionResult.SUCCESS;
     }
 
+    @Deprecated
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
@@ -51,11 +53,13 @@ public class FillableBookshelfBlock extends BlockWithEntity {
         }
     }
 
+    @Deprecated
     @Override
     public boolean hasComparatorOutput(BlockState state) {
         return true;
     }
 
+    @Deprecated
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));

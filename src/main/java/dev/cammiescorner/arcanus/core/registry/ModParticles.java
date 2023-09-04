@@ -12,22 +12,20 @@ import net.minecraft.util.Identifier;
 import java.util.LinkedHashMap;
 
 public class ModParticles {
-    //-----Particle Map-----//
+
     public static final LinkedHashMap<ParticleType<?>, Identifier> PARTICLE_TYPES = new LinkedHashMap<>();
 
-    //-----Particles-----//
     public static final ParticleType<DefaultParticleType> MAGIC_MISSILE = create("magic_missile", FabricParticleTypes.simple());
     public static final ParticleType<DefaultParticleType> TELEKINETIC_SHOCK = create("telekinetic_shock", FabricParticleTypes.simple());
     public static final ParticleType<DefaultParticleType> HEAL = create("heal", FabricParticleTypes.simple());
     public static final ParticleType<DefaultParticleType> DISCOMBOBULATE = create("discombobulate", FabricParticleTypes.simple());
 
-    //-----Registry-----//
     public static void register() {
-        PARTICLE_TYPES.keySet().forEach(particleType -> Registry.register(Registries.PARTICLE_TYPE, PARTICLE_TYPES.get(particleType), particleType));
+        PARTICLE_TYPES.forEach((particleType, id) -> Registry.register(Registries.PARTICLE_TYPE, id, particleType));
     }
 
     private static <T extends ParticleEffect> ParticleType<T> create(String name, ParticleType<T> type) {
-        PARTICLE_TYPES.put(type, new Identifier(Arcanus.MOD_ID, name));
+        PARTICLE_TYPES.put(type, Arcanus.id(name));
         return type;
     }
 }

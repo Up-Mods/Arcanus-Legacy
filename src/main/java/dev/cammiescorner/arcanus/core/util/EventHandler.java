@@ -7,19 +7,15 @@ import dev.cammiescorner.arcanus.common.structure.processor.BookshelfReplacerStr
 import dev.cammiescorner.arcanus.common.structure.processor.LecternStructureProcessor;
 import dev.cammiescorner.arcanus.core.integration.ArcanusConfig;
 import dev.cammiescorner.arcanus.core.registry.ModCommands;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
+import net.minecraft.loot.LootTables;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
@@ -31,17 +27,19 @@ import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.processor.StructureProcessor;
 import net.minecraft.structure.processor.StructureProcessorList;
 import net.minecraft.util.Identifier;
+import org.quiltmc.loader.api.QuiltLoader;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
+import org.quiltmc.qsl.entity.event.api.ServerPlayerEntityCopyCallback;
+import org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EventHandler {
-    private static final Identifier HUD_ELEMENTS = new Identifier(Arcanus.MOD_ID, "textures/gui/hud_elements.png");
-    private static final Identifier RUINED_PORTAL_LOOT_TABLE = new Identifier("minecraft", "chests/ruined_portal");
-    private static final Identifier STRONGHOLD_LIBRARY_LOOT_TABLE = new Identifier("minecraft", "chests/stronghold_library");
+    private static final Identifier HUD_ELEMENTS = Arcanus.id("textures/gui/hud_elements.png");
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public static void clientEvents() {
         final MinecraftClient client = MinecraftClient.getInstance();
         var manaTimer = new Object() {
@@ -116,30 +114,32 @@ public class EventHandler {
     }
 
     public static void commonEvents() {
-        //-----Server Starting Callback-----//
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> EventHandler.addStructureProcessors(server.getRegistryManager().get(RegistryKeys.STRUCTURE_POOL)));
+        ServerLifecycleEvents.STARTING.register(server -> EventHandler.addStructureProcessors(server.getRegistryManager().get(RegistryKeys.STRUCTURE_POOL)));
 
-        //-----Loot Table Callback-----//
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, tableSource) -> {
-            if (ArcanusConfig.strongholdsHaveBooks && STRONGHOLD_LIBRARY_LOOT_TABLE.equals(id) && !FabricLoader.getInstance().isModLoaded("betterstrongholds")) {
-                LootPool.Builder poolBuilder = LootPool.builder().rolls(ConstantLootNumberProvider.create(4)).conditionally(RandomChanceLootCondition.builder(0.5F).build()).with(createItemEntry(new ItemStack(Items.WRITTEN_BOOK)).build());
-                tableBuilder.pool(poolBuilder);
-            }
+        if(ArcanusConfig.ruinedPortalsHaveBooks) {
+            LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, tableSource) -> {
+                if (LootTables.RUINED_PORTAL_CHEST.equals(id)) {
+                    LootPool.Builder poolBuilder = LootPool.builder().rolls(ConstantLootNumberProvider.create(1)).conditionally(RandomChanceLootCondition.builder(0.1F).build()).with(createItemEntry(new ItemStack(Items.WRITTEN_BOOK)).build());
+                    tableBuilder.pool(poolBuilder);
+                }
+            });
+        }
 
-            if (ArcanusConfig.ruinedPortalsHaveBooks && RUINED_PORTAL_LOOT_TABLE.equals(id)) {
-                LootPool.Builder poolBuilder = LootPool.builder().rolls(ConstantLootNumberProvider.create(1)).conditionally(RandomChanceLootCondition.builder(0.1F).build()).with(createItemEntry(new ItemStack(Items.WRITTEN_BOOK)).build());
-                tableBuilder.pool(poolBuilder);
-            }
+        if (ArcanusConfig.strongholdsHaveBooks && !QuiltLoader.isModLoaded("betterstrongholds")) {
+            LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, tableSource) -> {
+                if (LootTables.STRONGHOLD_LIBRARY_CHEST.equals(id)) {
+                    LootPool.Builder poolBuilder = LootPool.builder().rolls(ConstantLootNumberProvider.create(4)).conditionally(RandomChanceLootCondition.builder(0.5F).build()).with(createItemEntry(new ItemStack(Items.WRITTEN_BOOK)).build());
+                    tableBuilder.pool(poolBuilder);
+                }
+            });
+        }
+
+        ServerPlayerEntityCopyCallback.EVENT.register((copy, original, wasDeath) -> {
+            ((MagicUser) copy).setMana(((MagicUser) original).getMana());
+            ((MagicUser) copy).setBurnout(((MagicUser) original).getBurnout());
+            ((MagicUser) original).getKnownSpells().forEach(spell -> ((MagicUser) copy).setKnownSpell(Arcanus.SPELL.getId(spell)));
         });
 
-        //-----Copy Player Data Callback-----//
-        ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
-            ((MagicUser) newPlayer).setMana(((MagicUser) oldPlayer).getMana());
-            ((MagicUser) newPlayer).setBurnout(((MagicUser) oldPlayer).getBurnout());
-            ((MagicUser) oldPlayer).getKnownSpells().forEach(spell -> ((MagicUser) newPlayer).setKnownSpell(Arcanus.SPELL.getId(spell)));
-        });
-
-        //-----Command Callback-----//
         CommandRegistrationCallback.EVENT.register(ModCommands::init);
     }
 

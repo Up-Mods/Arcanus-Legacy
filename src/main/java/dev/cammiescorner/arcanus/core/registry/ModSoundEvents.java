@@ -9,23 +9,21 @@ import net.minecraft.util.Identifier;
 import java.util.LinkedHashMap;
 
 public class ModSoundEvents {
-    //-----Sound Map-----//
+
     public static final LinkedHashMap<SoundEvent, Identifier> SOUNDS = new LinkedHashMap<>();
 
-    //-----Sound Events-----//
     public static final SoundEvent MAGIC_MISSILE = create("magic_missile");
     public static final SoundEvent TELEKINETIC_SHOCK = create("telekinetic_shock");
     public static final SoundEvent SOLAR_STRIKE = create("solar_strike");
     public static final SoundEvent HEAL = create("heal");
 
-    //-----Registry-----//
     public static void register() {
-        SOUNDS.keySet().forEach(sound -> Registry.register(Registries.SOUND_EVENT, SOUNDS.get(sound), sound));
+        SOUNDS.forEach((sound, id) -> Registry.register(Registries.SOUND_EVENT, id, sound));
     }
 
     private static SoundEvent create(String name) {
-        SoundEvent sound = SoundEvent.createVariableRangeEvent(new Identifier(Arcanus.MOD_ID, name));
-        SOUNDS.put(sound, new Identifier(Arcanus.MOD_ID, name));
+        SoundEvent sound = SoundEvent.createVariableRangeEvent(Arcanus.id(name));
+        SOUNDS.put(sound, Arcanus.id(name));
         return sound;
     }
 }

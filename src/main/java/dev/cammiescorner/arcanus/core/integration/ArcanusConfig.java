@@ -5,6 +5,7 @@ import eu.midnightdust.lib.config.MidnightConfig;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("CanBeFinal")
 public class ArcanusConfig extends MidnightConfig {
     @Entry
     public static boolean doLecternProcessor = true;

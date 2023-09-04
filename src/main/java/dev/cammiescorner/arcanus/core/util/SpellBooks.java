@@ -19,12 +19,12 @@ public class SpellBooks {
         NbtCompound tag = stack.getOrCreateNbt();
         NbtList listTag = tag.getList("pages", NbtElement.STRING_TYPE);
 
-        tag.putString("title", "book." + Arcanus.SPELL.getId(spell).toString().replace(':', '.') + ".title");
-        tag.putString("author", "book." + Arcanus.MOD_ID + "." + number + ".author");
+        tag.putString("title", Arcanus.SPELL.getId(spell).method_48747("book", "title").replace('/', '.'));
+        tag.putString("author", Arcanus.translationKey("book", number, "author"));
         tag.putString("spell", Arcanus.SPELL.getId(spell).toString());
-        listTag.add(textToNbt(Text.translatable("book." + Arcanus.SPELL.getId(spell).getNamespace() + "." + Arcanus.SPELL.getId(spell).getPath() + ".description")
-                .append(Text.translatable("book." + Arcanus.MOD_ID + ".casting_pattern"))
-                .append("          " + spellToPattern(spell))));
+        listTag.add(NbtString.of(Text.Serializer.toJson(Text.translatable(Arcanus.SPELL.getId(spell).method_48747("book", "description").replace('/', '.'))
+                .append(Arcanus.translate("book", "casting_pattern"))
+                .append("          " + spellToPattern(spell)))));
         tag.put("pages", listTag);
 
         return stack;
@@ -42,10 +42,6 @@ public class SpellBooks {
 
     public static ItemStack getRandomSpellBook(RandomGenerator random) {
         return getRandomSpellBook(new ItemStack(Items.WRITTEN_BOOK), random);
-    }
-
-    private static NbtString textToNbt(Text text) {
-        return NbtString.of(Text.Serializer.toJson(text));
     }
 
     private static String spellToPattern(Spell spell) {
