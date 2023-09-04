@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus.structure.processor;
 
 import com.mojang.serialization.Codec;
-import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.registry.ArcanusStructureProcessors;
 import dev.cammiescorner.arcanus.util.SpellBooks;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LecternBlock;
@@ -31,6 +31,6 @@ public class LecternStructureProcessor extends StructureProcessor {
 
     @Override
     protected StructureProcessorType<?> getType() {
-        return Arcanus.LECTERN_PROCESSOR;
+        return ArcanusStructureProcessors.LECTERN_PROCESSOR;
     }
 }

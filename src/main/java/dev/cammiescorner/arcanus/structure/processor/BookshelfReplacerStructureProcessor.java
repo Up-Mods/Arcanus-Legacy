@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanus.structure.processor;
 
 import com.mojang.serialization.Codec;
-import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.block.FillableBookshelfBlock;
 import dev.cammiescorner.arcanus.registry.ArcanusBlocks;
+import dev.cammiescorner.arcanus.registry.ArcanusStructureProcessors;
 import dev.cammiescorner.arcanus.util.SpellBooks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -48,6 +48,6 @@ public class BookshelfReplacerStructureProcessor extends StructureProcessor {
 
     @Override
     protected StructureProcessorType<?> getType() {
-        return Arcanus.BOOKSHELF_PROCESSOR;
+        return ArcanusStructureProcessors.BOOKSHELF_PROCESSOR;
     }
 }
