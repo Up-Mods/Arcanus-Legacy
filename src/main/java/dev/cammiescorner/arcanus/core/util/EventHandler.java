@@ -151,6 +151,7 @@ public class EventHandler {
         return builder;
     }
 
+    //TODO make tags
     public static void addStructureProcessors(Registry<StructurePool> templatePoolRegistry) {
         templatePoolRegistry.forEach(pool -> pool.elements.forEach(element -> {
             if (element instanceof SinglePoolElement singleElement && singleElement.template.left().isPresent()) {

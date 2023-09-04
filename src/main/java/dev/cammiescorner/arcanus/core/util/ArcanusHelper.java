@@ -104,7 +104,7 @@ public class ArcanusHelper {
     }
 
     @ApiStatus.Internal
-    public static void interactLecternBlock(World world, BlockPos pos, PlayerEntity player) {
+    public static void onInteractLecternBlock(World world, BlockPos pos, PlayerEntity player) {
         if (!world.isClient() && world.getBlockEntity(pos) instanceof LecternBlockEntity lectern && player.currentScreenHandler instanceof LecternScreenHandler) {
             NbtCompound nbt = lectern.getBook().getNbt();
 

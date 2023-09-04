@@ -1,9 +1,10 @@
 package dev.cammiescorner.arcanus.core.util;
 
 public interface CanBeDiscombobulated {
-    boolean isDiscombobulated();
 
-    void setDiscombobulated(boolean discombobulated);
+    default boolean isDiscombobulated() {
+        return getDiscombobulatedTimer() > 0;
+    }
 
     int getDiscombobulatedTimer();
 

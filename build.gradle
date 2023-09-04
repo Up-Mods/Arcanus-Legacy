@@ -22,6 +22,7 @@ project.configurations.configureEach {
 }
 
 repositories {
+    mavenCentral()
     maven { url "https://maven.terraformersmc.com" }
     maven { url "https://api.modrinth.com/maven" }
 }
@@ -35,6 +36,10 @@ dependencies {
     modImplementation libs.quilted.fabric.api
 
     modImplementation libs.midnightlib
+
+    include libs.mixinextras
+    implementation libs.mixinextras
+    annotationProcessor libs.mixinextras
 
     // modmenu
     modLocalRuntime libs.modmenu

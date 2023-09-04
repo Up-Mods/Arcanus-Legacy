@@ -422,7 +422,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements MagicUse
 
         if (result.getType() == HitResult.Type.ENTITY) {
             if (((EntityHitResult) result).getEntity() instanceof CanBeDiscombobulated target) {
-                target.setDiscombobulated(true);
                 target.setDiscombobulatedTimer(160);
             }
         } else {
