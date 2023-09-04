@@ -54,6 +54,25 @@
         }
       },
       {
+        "id": "com_github_llamalad7_mixinextras",
+        "mc-publish": {
+          "ignore": true
+        }
+      },
+      {
+        "id": "cardinal-components-base",
+        "mc-publish": {
+          "modrinth": "K01OU20C",
+          "curseforge": "318449"
+        }
+      },
+      {
+        "id": "cardinal-components-entity",
+        "mc-publish": {
+          "ignore": true
+        }
+      },
+      {
         "id": "java",
         "versions": ">=17"
       }

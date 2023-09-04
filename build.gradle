@@ -23,8 +23,19 @@ project.configurations.configureEach {
 
 repositories {
     mavenCentral()
+    maven { url "https://maven.ladysnake.org/releases" }
     maven { url "https://maven.terraformersmc.com" }
-    maven { url "https://api.modrinth.com/maven" }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 dependencies {
@@ -40,6 +51,8 @@ dependencies {
     include libs.mixinextras
     implementation libs.mixinextras
     annotationProcessor libs.mixinextras
+
+    modImplementation libs.bundles.cca
 
     // modmenu
     modLocalRuntime libs.modmenu

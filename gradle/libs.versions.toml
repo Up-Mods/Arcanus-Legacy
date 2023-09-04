@@ -7,6 +7,7 @@ quilt_loader = "0.20.0-beta.15"
 quilted_fabric_api = "6.0.0-beta.9+0.83.0-1.19.4"
 midnightlib = "1.3.0-quilt"
 mixinextras = "0.2.0-beta.10"
+cca = "5.1.0"
 modmenu = "6.3.1"
 lazydfu = "0.1.3"
 
@@ -19,12 +20,15 @@ quilted_fabric_api = { module = "org.quiltmc.quilted-fabric-api:quilted-fabric-a
 #quilted_fabric_api_deprecated = { module = "org.quiltmc.quilted-fabric-api:quilted-fabric-api-deprecated", version.ref = "quilted_fabric_api" }
 midnightlib = { module = "maven.modrinth:midnightlib", version.ref = "midnightlib" }
 mixinextras = { module = "io.github.llamalad7:mixinextras-fabric", version.ref = "mixinextras" }
+cca_base = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-base", version.ref = "cca" }
+cca_entity = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-entity", version.ref = "cca" }
 modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
 lazydfu = { module = "maven.modrinth:lazydfu", version.ref = "lazydfu" }
 
 # If you have multiple similar dependencies, you can declare a dependency bundle and reference it on the build script with "libs.bundles.example".
 [bundles]
 #quilted_fabric_api = ["quilted_fabric_api", "quilted_fabric_api_deprecated"]
+cca = ["cca_base", "cca_entity"]
 
 [plugins]
 quilt_loom = { id = "org.quiltmc.loom", version = "1.3.+" }
