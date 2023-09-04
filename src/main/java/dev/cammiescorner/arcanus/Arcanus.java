@@ -1,6 +1,5 @@
 package dev.cammiescorner.arcanus;
 
-import dev.cammiescorner.arcanus.loot.function.ArcanusLootFunction;
 import dev.cammiescorner.arcanus.net.CastSpellPacket;
 import dev.cammiescorner.arcanus.registry.*;
 import dev.cammiescorner.arcanus.spell.Spell;
@@ -10,7 +9,6 @@ import dev.cammiescorner.arcanus.util.ArcanusConfig;
 import dev.cammiescorner.arcanus.util.EventHandler;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
-import net.minecraft.loot.function.LootFunctionType;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.structure.processor.StructureProcessorType;
@@ -34,8 +32,6 @@ public class Arcanus implements ModInitializer {
 
     public static final RegistryKey<Registry<Spell>> SPELL_KEY = RegistryKey.ofRegistry(id("spell"));
     public static final Registry<Spell> SPELL = FabricRegistryBuilder.createSimple(SPELL_KEY).buildAndRegister();
-
-    public static final LootFunctionType ARCANUS_LOOT_FUNCTION = new LootFunctionType(new ArcanusLootFunction.Serializer());
 
     public static final StructureProcessorType<LecternStructureProcessor> LECTERN_PROCESSOR = StructureProcessorType.register("set_lectern_book", LecternStructureProcessor.CODEC);
     public static final StructureProcessorType<BookshelfReplacerStructureProcessor> BOOKSHELF_PROCESSOR = StructureProcessorType.register("replace_bookshelf", BookshelfReplacerStructureProcessor.CODEC);

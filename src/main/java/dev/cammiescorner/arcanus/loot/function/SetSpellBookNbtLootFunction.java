@@ -2,7 +2,7 @@ package dev.cammiescorner.arcanus.loot.function;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.registry.ArcanusLootFunctions;
 import dev.cammiescorner.arcanus.util.SpellBooks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.condition.LootCondition;
@@ -11,8 +11,8 @@ import net.minecraft.loot.function.ConditionalLootFunction;
 import net.minecraft.loot.function.LootFunction;
 import net.minecraft.loot.function.LootFunctionType;
 
-public class ArcanusLootFunction extends ConditionalLootFunction {
-    protected ArcanusLootFunction(LootCondition[] conditions) {
+public class SetSpellBookNbtLootFunction extends ConditionalLootFunction {
+    protected SetSpellBookNbtLootFunction(LootCondition[] conditions) {
         super(conditions);
     }
 
@@ -23,25 +23,25 @@ public class ArcanusLootFunction extends ConditionalLootFunction {
 
     @Override
     public LootFunctionType getType() {
-        return Arcanus.ARCANUS_LOOT_FUNCTION;
+        return ArcanusLootFunctions.SET_SPELL_BOOK_NBT;
     }
 
-    public static class Builder extends ConditionalLootFunction.Builder<ArcanusLootFunction.Builder> {
+    public static class Builder extends ConditionalLootFunction.Builder<SetSpellBookNbtLootFunction.Builder> {
         @Override
-        protected ArcanusLootFunction.Builder getThisBuilder() {
+        protected SetSpellBookNbtLootFunction.Builder getThisBuilder() {
             return this;
         }
 
         @Override
         public LootFunction build() {
-            return new ArcanusLootFunction(this.getConditions());
+            return new SetSpellBookNbtLootFunction(this.getConditions());
         }
     }
 
-    public static class Serializer extends ConditionalLootFunction.Serializer<ArcanusLootFunction> {
+    public static class Serializer extends ConditionalLootFunction.Serializer<SetSpellBookNbtLootFunction> {
         @Override
-        public ArcanusLootFunction fromJson(JsonObject json, JsonDeserializationContext context, LootCondition[] conditions) {
-            return new ArcanusLootFunction(conditions);
+        public SetSpellBookNbtLootFunction fromJson(JsonObject json, JsonDeserializationContext context, LootCondition[] conditions) {
+            return new SetSpellBookNbtLootFunction(conditions);
         }
     }
 }

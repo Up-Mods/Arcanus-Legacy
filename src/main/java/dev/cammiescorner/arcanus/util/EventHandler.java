@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.entity.MagicUser;
 import dev.cammiescorner.arcanus.item.WandItem;
-import dev.cammiescorner.arcanus.loot.function.ArcanusLootFunction;
+import dev.cammiescorner.arcanus.loot.function.SetSpellBookNbtLootFunction;
 import dev.cammiescorner.arcanus.structure.processor.BookshelfReplacerStructureProcessor;
 import dev.cammiescorner.arcanus.structure.processor.LecternStructureProcessor;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -143,7 +143,7 @@ public class EventHandler {
     private static ItemEntry.Builder<?> createItemEntry(ItemStack stack) {
         ItemEntry.Builder<?> builder = ItemEntry.builder(stack.getItem());
 
-        builder.apply(new ArcanusLootFunction.Builder());
+        builder.apply(new SetSpellBookNbtLootFunction.Builder());
 
         return builder;
     }
