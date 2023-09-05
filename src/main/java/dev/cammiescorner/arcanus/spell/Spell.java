@@ -1,11 +1,12 @@
 package dev.cammiescorner.arcanus.spell;
 
 import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.component.base.MagicCaster;
+import net.minecraft.Util;
+import net.minecraft.world.level.Level;
+
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.Util;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 
 public abstract class Spell {
     private final List<Pattern> spellPattern = new ArrayList<>(3);
@@ -19,11 +20,21 @@ public abstract class Spell {
         this.manaCost = manaCost;
     }
 
+    public int getMaxSpellTime() {
+        return 0;
+    }
+
     public List<Pattern> getSpellPattern() {
         return spellPattern;
     }
 
-    public abstract void onCast(Level world, Player player);
+    public void onCast(MagicCaster caster) {
+    }
+
+    /**
+     * only fired if {@link #getMaxSpellTime()} returns a value greater than 0
+     */
+    public void onActiveTick(Level world, MagicCaster caster, int remainingTicks) { }
 
     public int getManaCost() {
         return manaCost;

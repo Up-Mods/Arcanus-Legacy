@@ -1,7 +1,10 @@
 package dev.cammiescorner.arcanus.component.base;
 
+import dev.cammiescorner.arcanus.spell.Spell;
 import dev.cammiescorner.arcanus.util.ArcanusConfig;
 import dev.onyxstudios.cca.api.v3.component.Component;
+import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 
 public interface MagicCaster extends Component {
 
@@ -41,4 +44,16 @@ public interface MagicCaster extends Component {
     long getLastCastTime();
 
     void setLastCastTime(long lastCastTime);
+
+    LivingEntity asEntity();
+
+    boolean cast(Spell spell);
+
+    void setActiveSpellTime(@Nullable Spell spell, int remainingTicks);
+
+    default void clearActiveSpell() {
+        setActiveSpellTime(null, 0);
+    }
+
+    Spell getActiveSpell();
 }

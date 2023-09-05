@@ -4,11 +4,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.registry.ArcanusEntityAttributes;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -22,6 +17,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 public class WandItem extends Item {
     private static final UUID MANA_COST = UUID.fromString("41d46dfa-5776-4839-91d6-d8403ef35a00");
@@ -69,7 +69,7 @@ public class WandItem extends Item {
     }
 
     public Item getUpgrade() {
-        return upgrade.get();
+        return upgrade != null ? upgrade.get() : null;
     }
 
     public void setUpgrade(Supplier<Item> upgrade) {

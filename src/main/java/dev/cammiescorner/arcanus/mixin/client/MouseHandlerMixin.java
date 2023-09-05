@@ -17,6 +17,7 @@ public abstract class MouseHandlerMixin {
 
     @ModifyArg(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"), index = 0)
     public double changeLookDirectionX(double x) {
+        assert minecraft.player != null;
         if (minecraft.player.getComponent(ArcanusComponents.CAN_BE_DISCOMBOBULATED).isDiscombobulated())
             return -x;
 
@@ -25,6 +26,7 @@ public abstract class MouseHandlerMixin {
 
     @ModifyArg(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"), index = 1)
     public double changeLookDirectionY(double y) {
+        assert minecraft.player != null;
         if (minecraft.player.getComponent(ArcanusComponents.CAN_BE_DISCOMBOBULATED).isDiscombobulated())
             return -y;
 

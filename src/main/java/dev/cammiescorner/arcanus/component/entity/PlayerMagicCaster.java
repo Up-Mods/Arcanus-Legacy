@@ -1,19 +1,32 @@
 package dev.cammiescorner.arcanus.component.entity;
 
+import dev.cammiescorner.arcanus.Arcanus;
+import dev.cammiescorner.arcanus.component.ArcanusComponents;
 import dev.cammiescorner.arcanus.component.base.MagicCaster;
+import dev.cammiescorner.arcanus.event.SpellEvents;
 import dev.cammiescorner.arcanus.registry.ArcanusEntityAttributes;
+import dev.cammiescorner.arcanus.spell.Spell;
+import dev.cammiescorner.arcanus.util.ArcanusConfig;
 import dev.onyxstudios.cca.api.v3.component.CopyableComponent;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.base.api.util.TriState;
 
-public class PlayerMagicCaster implements MagicCaster, CopyableComponent<PlayerMagicCaster>, AutoSyncedComponent {
+public class PlayerMagicCaster implements MagicCaster, CopyableComponent<PlayerMagicCaster>, AutoSyncedComponent, ServerTickingComponent {
 
     private final Player player;
     private int mana;
     private int burnout;
     private long lastCastTime;
+    private Spell activeSpell;
+    private int activeSpellTimer;
 
     public PlayerMagicCaster(Player player) {
         this.player = player;
@@ -25,6 +38,16 @@ public class PlayerMagicCaster implements MagicCaster, CopyableComponent<PlayerM
         mana = tag.getInt("mana");
         burnout = tag.getInt("burnout");
         lastCastTime = tag.getLong("lastCastTime");
+        if(tag.contains("activeSpell")) {
+            activeSpell = Arcanus.SPELL.get(new ResourceLocation(tag.getString("activeSpell")));
+            if(activeSpell == null) {
+                Arcanus.LOGGER.error("Received unknown spell id {} while reading component data for player {}", tag.getString("activeSpell"), player.getGameProfile().getName());
+                activeSpellTimer = 0;
+            }
+            else {
+                activeSpellTimer = tag.getInt("activeSpellTimer");
+            }
+        }
     }
 
     @Override
@@ -32,6 +55,10 @@ public class PlayerMagicCaster implements MagicCaster, CopyableComponent<PlayerM
         tag.putInt("mana", mana);
         tag.putInt("burnout", burnout);
         tag.putLong("lastCastTime", lastCastTime);
+        if(activeSpell != null) {
+            tag.putString("activeSpell", Arcanus.SPELL.getKey(activeSpell).toString());
+            tag.putInt("activeSpellTimer", activeSpellTimer);
+        }
     }
 
     @Override
@@ -79,5 +106,72 @@ public class PlayerMagicCaster implements MagicCaster, CopyableComponent<PlayerM
     @Override
     public void setLastCastTime(long lastCastTime) {
         this.lastCastTime = lastCastTime;
+    }
+
+    @Override
+    public LivingEntity asEntity() {
+        return player;
+    }
+
+    @Override
+    public boolean cast(Spell spell) {
+        if(SpellEvents.TRY_CAST.invoker().tryCast(this, spell) == TriState.FALSE) {
+            return false;
+        }
+
+        SpellEvents.ON_CAST.invoker().onCast(this, spell);
+        spell.onCast(this);
+        if(spell.getMaxSpellTime() > 0) {
+            setActiveSpellTime(spell, spell.getMaxSpellTime());
+        }
+        return true;
+    }
+
+    @Override
+    public void setActiveSpellTime(@Nullable Spell spell, int remainingTicks) {
+        activeSpell = spell;
+        activeSpellTimer = activeSpell != null ? remainingTicks : 0;
+    }
+
+    @Override
+    public Spell getActiveSpell() {
+        return activeSpell;
+    }
+
+    @Override
+    public void serverTick() {
+        Level level = player.getLevel();
+        if (activeSpell != null) {
+            activeSpell.onActiveTick(level, this, activeSpellTimer);
+
+            if (activeSpellTimer == 0) {
+                activeSpell = null;
+                asEntity().syncComponent(ArcanusComponents.MAGIC_CASTER);
+            }
+            else {
+                activeSpellTimer--;
+            }
+        }
+
+        if (level.getGameTime() - this.getLastCastTime() >= 20) {
+            boolean dirty = false;
+            int manaCooldown = (int) Math.round(ArcanusConfig.baseManaCooldown * ArcanusEntityAttributes.getManaRegen(player));
+            int burnoutCooldown = (int) Math.round(ArcanusConfig.baseBurnoutCooldown * ArcanusEntityAttributes.getBurnoutRegen(player));
+
+            if (manaCooldown != 0 && this.getMana() < this.getMaxMana() - this.getBurnout() && level.getGameTime() % manaCooldown == 0) {
+                this.addMana(1);
+                dirty = true;
+            }
+
+            if (burnoutCooldown != 0 && this.getBurnout() > 0 && level.getGameTime() % burnoutCooldown == 0) {
+                this.addBurnout(-1);
+                player.causeFoodExhaustion(5F);
+                dirty = true;
+            }
+
+            if (dirty) {
+                player.syncComponent(ArcanusComponents.MAGIC_CASTER);
+            }
+        }
     }
 }

@@ -1,7 +1,6 @@
 package dev.cammiescorner.arcanus.entity;
 
 import dev.cammiescorner.arcanus.registry.ArcanusEntities;
-import java.util.List;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -17,6 +16,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.List;
+
 public class ArcaneBarrierEntity extends Entity {
     public static final float MAX_HEIGHT = 3F;
     public static final float GROWTH_RATE = 1F / 3F;
@@ -26,11 +27,6 @@ public class ArcaneBarrierEntity extends Entity {
 
     public ArcaneBarrierEntity(Level world) {
         super(ArcanusEntities.ARCANE_BARRIER, world);
-    }
-
-    public ArcaneBarrierEntity(Player owner, Level world) {
-        this(world);
-        this.owner = owner;
     }
 
     public ArcaneBarrierEntity(Level world, double x, double y, double z) {

@@ -48,11 +48,12 @@ public class CastSpellPacket {
 
                 if (player.isCreative() || (ArcanusConfig.haveBurnout && caster.getMana() > 0) || (!ArcanusConfig.haveBurnout && caster.getMana() >= realManaCost)) {
                     player.displayClientMessage(Component.translatable(spell.getTranslationKey()).withStyle(ChatFormatting.GREEN), true);
-                    spell.onCast(player.level, player);
+                    if(!caster.cast(spell)) {
+                        return;
+                    }
+                    caster.setLastCastTime(player.level.getGameTime());
 
                     if (!player.isCreative()) {
-                        caster.setLastCastTime(player.level.getGameTime());
-
                         if (caster.getMana() < realManaCost && ArcanusConfig.haveBurnout) {
                             int burnoutAmount = realManaCost - caster.getMana();
                             caster.addBurnout(burnoutAmount);
@@ -60,9 +61,9 @@ public class CastSpellPacket {
                             player.displayClientMessage(Arcanus.translate("error", "burnout").withStyle(ChatFormatting.RED), false);
                         }
 
-                        caster.addMana(-realManaCost);
-                        player.syncComponent(ArcanusComponents.MAGIC_CASTER);
+                        caster.drainMana(realManaCost);
                     }
+                    player.syncComponent(ArcanusComponents.MAGIC_CASTER);
 
                     ItemStack stack = player.getMainHandItem();
                     WandItem wand = (WandItem) stack.getItem();

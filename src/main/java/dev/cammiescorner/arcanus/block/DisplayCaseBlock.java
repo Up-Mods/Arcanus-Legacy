@@ -1,12 +1,11 @@
 package dev.cammiescorner.arcanus.block;
 
 import dev.cammiescorner.arcanus.block.entity.DisplayCaseBlockEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.*;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,11 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -54,9 +49,9 @@ public class DisplayCaseBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (world.isClientSide() && player.isShiftKeyDown()) {
             if (state.getValue(OPEN))
-                world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, (float) Mth.clamp(1 - (Minecraft.getInstance().player.position().distanceTo(Vec3.atCenterOf(pos)) / 10F), 0, 1), world.random.nextFloat() * 0.1F + 0.9F, false);
+                world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, (float) Mth.clamp(1 - (player.position().distanceTo(Vec3.atCenterOf(pos)) / 10F), 0, 1), world.random.nextFloat() * 0.1F + 0.9F, false);
             else
-                world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, (float) Mth.clamp(1 - (Minecraft.getInstance().player.position().distanceTo(Vec3.atCenterOf(pos)) / 10F), 0, 1), world.random.nextFloat() * 0.1F + 0.9F, false);
+                world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, (float) Mth.clamp(1 - (player.position().distanceTo(Vec3.atCenterOf(pos)) / 10F), 0, 1), world.random.nextFloat() * 0.1F + 0.9F, false);
         }
 
         if (!world.isClientSide() && world.getBlockEntity(pos) instanceof DisplayCaseBlockEntity blockEntity) {

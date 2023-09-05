@@ -10,10 +10,6 @@ import dev.cammiescorner.arcanus.component.base.SpellMemory;
 import dev.cammiescorner.arcanus.spell.Spell;
 import dev.cammiescorner.arcanus.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.util.SpellBooks;
-import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
-
-import java.util.Comparator;
-import java.util.Set;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -23,6 +19,10 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
+
+import java.util.Comparator;
+import java.util.Set;
 
 public class ArcanusCommands {
 
@@ -90,7 +90,7 @@ public class ArcanusCommands {
             return spells.size();
         }
 
-        public static int addAllSpellsToPlayer(CommandContext<CommandSourceStack> context, ServerPlayer player) throws CommandSyntaxException {
+        public static int addAllSpellsToPlayer(CommandContext<CommandSourceStack> context, ServerPlayer player) {
             SpellMemory memory = player.getComponent(ArcanusComponents.SPELL_MEMORY);
             int count = (int) Arcanus.SPELL.stream().filter(memory::unlockSpell).count();
             player.syncComponent(ArcanusComponents.SPELL_MEMORY);
@@ -112,7 +112,7 @@ public class ArcanusCommands {
             return 0;
         }
 
-        public static int removeAllSpellsFromPlayer(CommandContext<CommandSourceStack> context, ServerPlayer player) throws CommandSyntaxException {
+        public static int removeAllSpellsFromPlayer(CommandContext<CommandSourceStack> context, ServerPlayer player) {
             SpellMemory memory = player.getComponent(ArcanusComponents.SPELL_MEMORY);
             memory.clear();
             player.syncComponent(ArcanusComponents.SPELL_MEMORY);
