@@ -11,6 +11,7 @@ import dev.onyxstudios.cca.api.v3.component.CopyableComponent;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,7 +39,7 @@ public class PlayerMagicCaster implements MagicCaster, CopyableComponent<PlayerM
         mana = tag.getInt("mana");
         burnout = tag.getInt("burnout");
         lastCastTime = tag.getLong("lastCastTime");
-        if(tag.contains("activeSpell")) {
+        if(tag.contains("activeSpell", Tag.TAG_STRING)) {
             activeSpell = Arcanus.SPELL.get(new ResourceLocation(tag.getString("activeSpell")));
             if(activeSpell == null) {
                 Arcanus.LOGGER.error("Received unknown spell id {} while reading component data for player {}", tag.getString("activeSpell"), player.getGameProfile().getName());
