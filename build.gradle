@@ -22,16 +22,22 @@ project.configurations.configureEach {
 }
 
 repositories {
-    maven { url "https://maven.ladysnake.org/releases" }
-    maven { url "https://maven.terraformersmc.com" }
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = "Modrinth"
-                url = "https://api.modrinth.com/maven"
-            }
-        }
-        filter {
+    maven {
+        name = "Ladysnake"
+        url = "https://maven.ladysnake.org/releases"
+    }
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com"
+    }
+    maven {
+        name = "ParchmentMC"
+        url = "https://maven.parchmentmc.org"
+    }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
             includeGroup "maven.modrinth"
         }
     }
@@ -40,7 +46,11 @@ repositories {
 dependencies {
     minecraft libs.minecraft
 
-    mappings variantOf(libs.quilt.mappings) { classifier "intermediary-v2" }
+    mappings(loom.layered {
+        it.mappings variantOf(libs.quilt.mappings) { classifier 'intermediary-v2' }
+        it.parchment("${libs.parchment.mappings.get()}@zip")
+        it.officialMojangMappings { nameSyntheticMembers = false }
+    })
 
     modImplementation libs.quilt.loader
     modImplementation libs.quilted.fabric.api

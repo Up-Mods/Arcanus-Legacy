@@ -3,8 +3,7 @@ package dev.cammiescorner.arcanus.registry;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.spell.*;
 import dev.cammiescorner.arcanus.util.ArcanusConfig;
-import dev.cammiescorner.arcanus.spell.Spell;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
 
 import static dev.cammiescorner.arcanus.spell.Spell.Pattern.LEFT;
 import static dev.cammiescorner.arcanus.spell.Spell.Pattern.RIGHT;

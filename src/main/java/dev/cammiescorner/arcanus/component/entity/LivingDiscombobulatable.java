@@ -4,10 +4,10 @@ import dev.cammiescorner.arcanus.component.base.CanBeDiscombobulated;
 import dev.cammiescorner.arcanus.component.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 
 public class LivingDiscombobulatable implements CanBeDiscombobulated, ServerTickingComponent, AutoSyncedComponent {
 
@@ -48,23 +48,23 @@ public class LivingDiscombobulatable implements CanBeDiscombobulated, ServerTick
     }
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(CompoundTag tag) {
         this.discombobulatedTimer = tag.getInt("discombobulatedTimer");
         this.isDiscombobulated = getDiscombobulatedTimer() > 0;
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
+    public void writeToNbt(CompoundTag tag) {
         tag.putInt("discombobulatedTimer", getDiscombobulatedTimer());
     }
 
     @Override
-    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
         buf.writeBoolean(this.isDiscombobulated());
     }
 
     @Override
-    public void applySyncPacket(PacketByteBuf buf) {
+    public void applySyncPacket(FriendlyByteBuf buf) {
         this.isDiscombobulated = buf.readBoolean();
     }
 }

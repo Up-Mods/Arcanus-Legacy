@@ -3,78 +3,77 @@ package dev.cammiescorner.arcanus.entity;
 import dev.cammiescorner.arcanus.registry.ArcanusDamageTypes;
 import dev.cammiescorner.arcanus.registry.ArcanusEntities;
 import dev.cammiescorner.arcanus.registry.ArcanusSoundEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.world.World;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
 
-public class SolarStrikeEntity extends PersistentProjectileEntity {
+public class SolarStrikeEntity extends AbstractArrow {
 
     public final List<Entity> hasHit = new ArrayList<>();
 
-    public SolarStrikeEntity(LivingEntity owner, World world) {
+    public SolarStrikeEntity(LivingEntity owner, Level world) {
         super(ArcanusEntities.SOLAR_STRIKE, owner, world);
     }
 
-    public SolarStrikeEntity(EntityType<? extends SolarStrikeEntity> type, World world) {
+    public SolarStrikeEntity(EntityType<? extends SolarStrikeEntity> type, Level world) {
         super(type, world);
     }
 
     @Override
     public void tick() {
-        if (!world.isClient()) {
-            if (age <= 9) {
-                Box box = new Box(getX() - 4, getY() - 1, getZ() - 4, getX() + 4, (world.getHeight() + 2048) - getY(), getZ() + 4);
+        if (!level.isClientSide()) {
+            if (tickCount <= 9) {
+                AABB box = new AABB(getX() - 4, getY() - 1, getZ() - 4, getX() + 4, (level.getHeight() + 2048) - getY(), getZ() + 4);
                 float radius = (float) (box.maxX - box.minX) / 2;
 
-                world.getOtherEntities(null, box).forEach(entity -> {
+                level.getEntities(null, box).forEach(entity -> {
                     if (!hasHit.contains(entity)) {
-                        Vec2f pos1 = new Vec2f((float) getX(), (float) getZ());
-                        Vec2f pos2 = new Vec2f((float) entity.getX(), (float) entity.getZ());
+                        Vec2 pos1 = new Vec2((float) getX(), (float) getZ());
+                        Vec2 pos2 = new Vec2((float) entity.getX(), (float) entity.getZ());
 
                         if (entity instanceof LivingEntity || entity instanceof ArcaneBarrierEntity) {
                             if (entity instanceof LivingEntity)
-                                entity.setOnFireFor(4);
+                                entity.setSecondsOnFire(4);
 
-                            entity.damage(ArcanusDamageTypes.solarStrike(this, getOwner()), Math.max(10F, 50F * (1 - (MathHelper.sqrt(pos1.distanceSquared(pos2)) / radius))));
-                            entity.timeUntilRegen = 0;
+                            entity.hurt(ArcanusDamageTypes.solarStrike(this, getOwner()), Math.max(10F, 50F * (1 - (Mth.sqrt(pos1.distanceToSqr(pos2)) / radius))));
+                            entity.invulnerableTime = 0;
                             hasHit.add(entity);
                         }
                     }
                 });
             }
 
-            if (age > 23)
+            if (tickCount > 23)
                 kill();
         } else {
-            if (age == 1)
-                world.playSound(getX(), getY(), getZ(), ArcanusSoundEvents.SOLAR_STRIKE, SoundCategory.PLAYERS, MathHelper.clamp(1 - (MinecraftClient.getInstance().player.distanceTo(this) / 256F), 0, 1), (1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F) * 0.7F, false);
+            if (tickCount == 1)
+                level.playLocalSound(getX(), getY(), getZ(), ArcanusSoundEvents.SOLAR_STRIKE, SoundSource.PLAYERS, Mth.clamp(1 - (Minecraft.getInstance().player.distanceTo(this) / 256F), 0, 1), (1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F) * 0.7F, false);
 
-            if (age >= 2 && age <= 5) {
-                world.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() + 2, getY(), getZ(), 1.0D, 0.0D, 0.0D);
-                world.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() - 2, getY(), getZ(), 1.0D, 0.0D, 0.0D);
-                world.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ() + 2, 1.0D, 0.0D, 0.0D);
-                world.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ() - 2, 1.0D, 0.0D, 0.0D);
+            if (tickCount >= 2 && tickCount <= 5) {
+                level.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() + 2, getY(), getZ(), 1.0D, 0.0D, 0.0D);
+                level.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() - 2, getY(), getZ(), 1.0D, 0.0D, 0.0D);
+                level.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ() + 2, 1.0D, 0.0D, 0.0D);
+                level.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ() - 2, 1.0D, 0.0D, 0.0D);
             }
         }
     }
 
     @Override
     public void kill() {
-        if (!world.isClient())
-            ((ServerWorld) world).setChunkForced(getChunkPos().x, getChunkPos().z, false);
+        if (!level.isClientSide())
+            ((ServerLevel) level).setChunkForced(chunkPosition().x, chunkPosition().z, false);
 
         super.kill();
     }
@@ -85,12 +84,12 @@ public class SolarStrikeEntity extends PersistentProjectileEntity {
     }
 
     @Override
-    public boolean shouldRender(double distance) {
+    public boolean shouldRenderAtSqrDistance(double distance) {
         return true;
     }
 
     @Override
-    protected ItemStack asItemStack() {
+    protected ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 }

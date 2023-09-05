@@ -7,12 +7,12 @@ import dev.cammiescorner.arcanus.util.ArcanusConfig;
 import dev.cammiescorner.arcanus.util.EventHandler;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -27,19 +27,19 @@ public class Arcanus implements ModInitializer {
     public static final String MOD_ID = "arcanus";
     public static final Logger LOGGER = LogManager.getLogger("Arcanus");
 
-    public static final RegistryKey<Registry<Spell>> SPELL_KEY = RegistryKey.ofRegistry(id("spell"));
+    public static final ResourceKey<Registry<Spell>> SPELL_KEY = ResourceKey.createRegistryKey(id("spell"));
     public static final Registry<Spell> SPELL = FabricRegistryBuilder.createSimple(SPELL_KEY).buildAndRegister();
 
-    public static Identifier id(String name) {
-        return new Identifier(MOD_ID, name);
+    public static ResourceLocation id(String name) {
+        return new ResourceLocation(MOD_ID, name);
     }
 
-    public static MutableText translate(@Nullable String prefix, String... value) {
-        return Text.translatable(translationKey(prefix, value));
+    public static MutableComponent translate(@Nullable String prefix, String... value) {
+        return Component.translatable(translationKey(prefix, value));
     }
 
-    public static MutableText translate(@Nullable String prefix, String value, Object... args) {
-        return Text.translatable(translationKey(prefix, value), null, args);
+    public static MutableComponent translate(@Nullable String prefix, String value, Object... args) {
+        return Component.translatableWithFallback(translationKey(prefix, value), null, args);
     }
 
     public static String translationKey(@Nullable String prefix, String... value) {
@@ -47,8 +47,8 @@ public class Arcanus implements ModInitializer {
         return prefix != null ? (prefix + "." + translationKey) : translationKey;
     }
 
-    public static MutableText getSpellInputs(List<Spell.Pattern> pattern, int index) {
-        return index >= pattern.size() || pattern.get(index) == null ? Text.literal("?").formatted(Formatting.GRAY, Formatting.UNDERLINE) : Text.literal(pattern.get(index).getSymbol()).formatted(Formatting.GREEN);
+    public static MutableComponent getSpellInputs(List<Spell.Pattern> pattern, int index) {
+        return index >= pattern.size() || pattern.get(index) == null ? Component.literal("?").withStyle(ChatFormatting.GRAY, ChatFormatting.UNDERLINE) : Component.literal(pattern.get(index).getSymbol()).withStyle(ChatFormatting.GREEN);
     }
 
     @Override

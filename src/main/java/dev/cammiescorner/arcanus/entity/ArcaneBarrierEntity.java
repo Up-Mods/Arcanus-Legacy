@@ -1,55 +1,54 @@
 package dev.cammiescorner.arcanus.entity;
 
 import dev.cammiescorner.arcanus.registry.ArcanusEntities;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.ShulkerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
 import java.util.List;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.monster.Shulker;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class ArcaneBarrierEntity extends Entity {
     public static final float MAX_HEIGHT = 3F;
     public static final float GROWTH_RATE = 1F / 3F;
-    private static final TrackedData<Float> HEALTH = DataTracker.registerData(ArcaneBarrierEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Integer> HIT_TIMER = DataTracker.registerData(ArcaneBarrierEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private PlayerEntity owner;
+    private static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(ArcaneBarrierEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> HIT_TIMER = SynchedEntityData.defineId(ArcaneBarrierEntity.class, EntityDataSerializers.INT);
+    private Player owner;
 
-    public ArcaneBarrierEntity(World world) {
+    public ArcaneBarrierEntity(Level world) {
         super(ArcanusEntities.ARCANE_BARRIER, world);
     }
 
-    public ArcaneBarrierEntity(PlayerEntity owner, World world) {
+    public ArcaneBarrierEntity(Player owner, Level world) {
         this(world);
         this.owner = owner;
     }
 
-    public ArcaneBarrierEntity(World world, double x, double y, double z) {
+    public ArcaneBarrierEntity(Level world, double x, double y, double z) {
         this(world);
-        this.setPos(x, y, z);
+        this.setPosRaw(x, y, z);
     }
 
-    public ArcaneBarrierEntity(EntityType<?> type, World world) {
+    public ArcaneBarrierEntity(EntityType<?> type, Level world) {
         super(type, world);
     }
 
     @Override
-    public boolean collidesWith(Entity other) {
+    public boolean canCollideWith(Entity other) {
         return true;
     }
 
     @Override
-    public boolean isCollidable() {
+    public boolean canBeCollidedWith() {
         return true;
     }
 
@@ -64,11 +63,11 @@ public class ArcaneBarrierEntity extends Entity {
 
         super.tick();
 
-        if (!world.isClient()) {
+        if (!level.isClientSide()) {
             setHitTimer(Math.max(0, getHitTimer() - 1));
 
-            if (age > 0 && age % 600 == 0)
-                damage(getDamageSources().generic(), 10);
+            if (tickCount > 0 && tickCount % 600 == 0)
+                hurt(damageSources().generic(), 10);
 
             if ((getHealth() <= 0 && getHitTimer() <= 0))
                 kill();
@@ -78,45 +77,45 @@ public class ArcaneBarrierEntity extends Entity {
     // Top of bounding box collision breaks at y intervals of 16, starting at y=-1
     // (but not other y levels) if ArcaneBarrierEntity.MAX_HEIGHT is not a whole number????
     @Override
-    protected Box calculateBoundingBox() {
-        return super.calculateBoundingBox().stretch(0F, Math.min(ArcaneBarrierEntity.MAX_HEIGHT, age * ArcaneBarrierEntity.GROWTH_RATE), 0F);
+    protected AABB makeBoundingBox() {
+        return super.makeBoundingBox().expandTowards(0F, Math.min(ArcaneBarrierEntity.MAX_HEIGHT, tickCount * ArcaneBarrierEntity.GROWTH_RATE), 0F);
     }
 
     private void moveEntities() {
-        if (age <= Math.ceil(ArcaneBarrierEntity.MAX_HEIGHT / ArcaneBarrierEntity.GROWTH_RATE)) {
-            refreshPosition();
+        if (tickCount <= Math.ceil(ArcaneBarrierEntity.MAX_HEIGHT / ArcaneBarrierEntity.GROWTH_RATE)) {
+            reapplyPosition();
 
-            List<Entity> list = world.getOtherEntities(this, getBoundingBox(), EntityPredicates.EXCEPT_SPECTATOR.and((entity) -> !entity.isConnectedThroughVehicle(this)));
+            List<Entity> list = level.getEntities(this, getBoundingBox(), EntitySelector.NO_SPECTATORS.and((entity) -> !entity.isPassengerOfSameVehicle(this)));
 
             for (Entity entity : list)
-                if (!(entity instanceof ShulkerEntity || entity instanceof ArcaneBarrierEntity) && !entity.noClip)
-                    entity.move(MovementType.SHULKER, new Vec3d(0, ArcaneBarrierEntity.GROWTH_RATE, 0));
+                if (!(entity instanceof Shulker || entity instanceof ArcaneBarrierEntity) && !entity.noPhysics)
+                    entity.move(MoverType.SHULKER, new Vec3(0, ArcaneBarrierEntity.GROWTH_RATE, 0));
         }
     }
 
     @Override
-    protected void initDataTracker() {
-        dataTracker.startTracking(HEALTH, 40F);
-        dataTracker.startTracking(HIT_TIMER, 0);
+    protected void defineSynchedData() {
+        entityData.define(HEALTH, 40F);
+        entityData.define(HIT_TIMER, 0);
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
+    protected void readAdditionalSaveData(CompoundTag nbt) {
         if (nbt.contains("Owner"))
-            owner = world.getPlayerByUuid(nbt.getUuid("Owner"));
+            owner = level.getPlayerByUUID(nbt.getUUID("Owner"));
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    protected void addAdditionalSaveData(CompoundTag nbt) {
         if (owner != null)
-            nbt.putUuid("Owner", owner.getUuid());
+            nbt.putUUID("Owner", owner.getUUID());
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         if (this.isInvulnerableTo(source))
             return false;
-        else if (this.world.isClient)
+        else if (this.level.isClientSide)
             return false;
         else if (this.isRemoved())
             return false;
@@ -129,23 +128,23 @@ public class ArcaneBarrierEntity extends Entity {
         return true;
     }
 
-    public void setOwner(PlayerEntity owner) {
+    public void setOwner(Player owner) {
         this.owner = owner;
     }
 
     public float getHealth() {
-        return dataTracker.get(HEALTH);
+        return entityData.get(HEALTH);
     }
 
     public void setHealth(float amount) {
-        dataTracker.set(HEALTH, amount);
+        entityData.set(HEALTH, amount);
     }
 
     public int getHitTimer() {
-        return dataTracker.get(HIT_TIMER);
+        return entityData.get(HIT_TIMER);
     }
 
     public void setHitTimer(int amount) {
-        dataTracker.set(HIT_TIMER, amount);
+        entityData.set(HIT_TIMER, amount);
     }
 }

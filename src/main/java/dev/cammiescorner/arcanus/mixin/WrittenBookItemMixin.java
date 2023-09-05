@@ -3,19 +3,19 @@ package dev.cammiescorner.arcanus.mixin;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.component.ArcanusComponents;
 import dev.cammiescorner.arcanus.spell.Spell;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.WrittenBookItem;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.WrittenBookItem;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,23 +29,23 @@ import java.util.List;
 @Mixin(value = WrittenBookItem.class, priority = 1100)
 public abstract class WrittenBookItemMixin extends Item {
 
-    private WrittenBookItemMixin(Settings settings) {
+    private WrittenBookItemMixin(Properties settings) {
         super(settings);
         throw new UnsupportedOperationException();
     }
 
-    @Inject(method = "isValid", at = @At(value = "INVOKE", target = "Ljava/lang/String;length()I"), cancellable = true)
-    private static void isValid(NbtCompound nbt, CallbackInfoReturnable<Boolean> info) {
+    @Inject(method = "makeSureTagIsValid", at = @At(value = "INVOKE", target = "Ljava/lang/String;length()I"), cancellable = true)
+    private static void isValid(CompoundTag nbt, CallbackInfoReturnable<Boolean> info) {
         String string = nbt.getString("title");
         info.setReturnValue(string.length() <= 40 && nbt.contains("author", 8));
     }
 
     @Inject(method = "use", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    public void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> info, ItemStack stack) {
-        if (!world.isClient() && stack.getOrCreateNbt().contains("spell", NbtElement.STRING_TYPE)) {
-            Spell spell = Arcanus.SPELL.get(new Identifier(stack.getOrCreateNbt().getString("spell")));
-            if(spell == null) {
-                Arcanus.LOGGER.error("Spell {} does not exist!", stack.getOrCreateNbt().getString("spell"));
+    public void use(Level world, Player user, InteractionHand hand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> info, ItemStack stack) {
+        if (!world.isClientSide() && stack.getOrCreateTag().contains("spell", Tag.TAG_STRING)) {
+            Spell spell = Arcanus.SPELL.get(new ResourceLocation(stack.getOrCreateTag().getString("spell")));
+            if (spell == null) {
+                Arcanus.LOGGER.error("Spell {} does not exist!", stack.getOrCreateTag().getString("spell"));
                 return;
             }
 
@@ -53,19 +53,17 @@ public abstract class WrittenBookItemMixin extends Item {
         }
     }
 
-    @Inject(method = "getName", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/text/Text;literal(Ljava/lang/String;)Lnet/minecraft/text/MutableText;"
-    ), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
-    public void getName(ItemStack stack, CallbackInfoReturnable<Text> info, NbtCompound nbtCompound, String string) {
-        if (stack.hasNbt() && stack.getNbt().contains("spell")) {
-            info.setReturnValue(Text.translatable(string));
+    @Inject(method = "getName", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/Component;literal(Ljava/lang/String;)Lnet/minecraft/network/chat/MutableComponent;"), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
+    public void getName(ItemStack stack, CallbackInfoReturnable<Component> info, CompoundTag nbtCompound, String string) {
+        if (stack.hasTag() && stack.getTag().contains("spell")) {
+            info.setReturnValue(Component.translatable(string));
         }
     }
 
-    @Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context, CallbackInfo info, NbtCompound nbtCompound, String string) {
-        if (stack.hasNbt() && stack.getNbt().contains("spell")) {
-            tooltip.add(Text.translatable("book.byAuthor", null, Text.translatable(string)).formatted(Formatting.GRAY));
+    @Inject(method = "appendHoverText", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
+    public void appendTooltip(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context, CallbackInfo info, CompoundTag nbtCompound, String string) {
+        if (stack.hasTag() && stack.getTag().contains("spell")) {
+            tooltip.add(Component.translatableWithFallback("book.byAuthor", null, Component.translatable(string)).withStyle(ChatFormatting.GRAY));
             info.cancel();
         }
     }

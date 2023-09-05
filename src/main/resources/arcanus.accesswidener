@@ -1,17 +1,17 @@
 accessWidener v1 named
 
-accessible method net/minecraft/block/TntBlock primeTnt (Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/LivingEntity;)V
+accessible method net/minecraft/world/level/block/TntBlock explode (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/LivingEntity;)V
 
-accessible method net/minecraft/block/FallingBlock configureFallingBlockEntity (Lnet/minecraft/entity/FallingBlockEntity;)V
+accessible method net/minecraft/world/level/block/FallingBlock falling (Lnet/minecraft/world/entity/item/FallingBlockEntity;)V
 
-accessible method net/minecraft/entity/projectile/PersistentProjectileEntity fall ()V
+accessible method net/minecraft/world/entity/projectile/AbstractArrow startFalling ()V
 
-accessible field net/minecraft/structure/pool/StructurePool elements Lit/unimi/dsi/fastutil/objects/ObjectArrayList;
+accessible field net/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool templates Lit/unimi/dsi/fastutil/objects/ObjectArrayList;
 
-accessible field net/minecraft/structure/pool/SinglePoolElement processors Lnet/minecraft/registry/Holder;
-mutable field net/minecraft/structure/pool/SinglePoolElement processors Lnet/minecraft/registry/Holder;
-accessible field net/minecraft/structure/pool/SinglePoolElement template Lcom/mojang/datafixers/util/Either;
+accessible field net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement processors Lnet/minecraft/core/Holder;
+mutable field net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement processors Lnet/minecraft/core/Holder;
+accessible field net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement template Lcom/mojang/datafixers/util/Either;
 
-accessible class net/minecraft/client/render/RenderLayer$MultiPhase
-accessible class net/minecraft/client/render/RenderLayer$MultiPhaseParameters
-accessible class net/minecraft/client/render/RenderPhase$Texture
+accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
+accessible class net/minecraft/client/renderer/RenderType$CompositeState
+accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard

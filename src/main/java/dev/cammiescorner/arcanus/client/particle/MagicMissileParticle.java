@@ -1,46 +1,46 @@
 package dev.cammiescorner.arcanus.client.particle;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
-public class MagicMissileParticle extends SpriteBillboardParticle {
-    private final SpriteProvider spriteProvider;
+public class MagicMissileParticle extends TextureSheetParticle {
+    private final SpriteSet spriteProvider;
 
-    public MagicMissileParticle(ClientWorld world, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ, SpriteProvider spriteProvider) {
+    public MagicMissileParticle(ClientLevel world, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ, SpriteSet spriteProvider) {
         super(world, posX, posY, posZ, 0, 0, 0);
-        this.maxAge = (int) (15 * MathHelper.clamp(random.nextFloat(), 0.5, 1.0));
+        this.lifetime = (int) (15 * Mth.clamp(random.nextFloat(), 0.5, 1.0));
         this.spriteProvider = spriteProvider;
-        this.velocityX = velocityX;
-        this.velocityY = velocityY;
-        this.velocityZ = velocityZ;
+        this.xd = velocityX;
+        this.yd = velocityY;
+        this.zd = velocityZ;
     }
 
     @Override
     public void tick() {
-        setSpriteForAge(spriteProvider);
+        setSpriteFromAge(spriteProvider);
         super.tick();
     }
 
     @Override
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     @ClientOnly
-    public static class Factory implements ParticleFactory<DefaultParticleType> {
-        private final SpriteProvider spriteProvider;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteProvider;
 
-        public Factory(SpriteProvider spriteProvider) {
+        public Factory(SpriteSet spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
 
         @Override
-        public Particle createParticle(DefaultParticleType defaultParticleType, ClientWorld clientWorld, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ) {
+        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ) {
             MagicMissileParticle particle = new MagicMissileParticle(clientWorld, posX, posY, posZ, velocityX, velocityY, velocityZ, spriteProvider);
-            particle.setSpriteForAge(spriteProvider);
+            particle.setSpriteFromAge(spriteProvider);
             return particle;
         }
     }

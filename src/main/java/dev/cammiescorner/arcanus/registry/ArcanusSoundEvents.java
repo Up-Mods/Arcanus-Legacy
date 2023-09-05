@@ -1,16 +1,15 @@
 package dev.cammiescorner.arcanus.registry;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-
 import java.util.LinkedHashMap;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 
 public class ArcanusSoundEvents {
 
-    public static final LinkedHashMap<SoundEvent, Identifier> SOUNDS = new LinkedHashMap<>();
+    public static final LinkedHashMap<SoundEvent, ResourceLocation> SOUNDS = new LinkedHashMap<>();
 
     public static final SoundEvent MAGIC_MISSILE = create("magic_missile");
     public static final SoundEvent TELEKINETIC_SHOCK = create("telekinetic_shock");
@@ -18,7 +17,7 @@ public class ArcanusSoundEvents {
     public static final SoundEvent HEAL = create("heal");
 
     public static void register() {
-        SOUNDS.forEach((sound, id) -> Registry.register(Registries.SOUND_EVENT, id, sound));
+        SOUNDS.forEach((sound, id) -> Registry.register(BuiltInRegistries.SOUND_EVENT, id, sound));
     }
 
     private static SoundEvent create(String name) {

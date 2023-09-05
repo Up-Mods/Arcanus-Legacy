@@ -4,49 +4,49 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.component.ArcanusComponents;
 import dev.cammiescorner.arcanus.registry.ArcanusItems;
 import dev.cammiescorner.arcanus.spell.Spell;
-import net.minecraft.block.entity.LecternBlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.screen.LecternScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Set;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.inventory.LecternMenu;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.LecternBlockEntity;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 import static dev.cammiescorner.arcanus.registry.ArcanusEntityAttributes.*;
 
 public class ArcanusHelper {
 
-    public static final Set<EntityAttribute> INVERSE_ENTITY_ATTRIBUTES = Set.of(MANA_COST, MANA_REGEN, BURNOUT_REGEN, MANA_LOCK);
+    public static final Set<Attribute> INVERSE_ENTITY_ATTRIBUTES = Set.of(MANA_COST, MANA_REGEN, BURNOUT_REGEN, MANA_LOCK);
 
     public static HitResult raycast(Entity origin, double maxDistance, boolean hitsEntities) {
-        Vec3d startPos = origin.getCameraPosVec(1F);
-        Vec3d rotation = origin.getRotationVec(1F);
-        Vec3d endPos = startPos.add(rotation.x * maxDistance, rotation.y * maxDistance, rotation.z * maxDistance);
-        HitResult hitResult = origin.world.raycast(new RaycastContext(startPos, endPos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, origin));
+        Vec3 startPos = origin.getEyePosition(1F);
+        Vec3 rotation = origin.getViewVector(1F);
+        Vec3 endPos = startPos.add(rotation.x * maxDistance, rotation.y * maxDistance, rotation.z * maxDistance);
+        HitResult hitResult = origin.level.clip(new ClipContext(startPos, endPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, origin));
 
         if (hitResult.getType() != HitResult.Type.MISS)
-            endPos = hitResult.getPos();
+            endPos = hitResult.getLocation();
 
         maxDistance *= 5;
-        HitResult entityHitResult = ProjectileUtil.raycast(origin, startPos, endPos, origin.getBoundingBox().stretch(rotation.multiply(maxDistance)).expand(1.0D, 1.0D, 1.0D), entity -> !entity.isSpectator(), maxDistance);
+        HitResult entityHitResult = ProjectileUtil.getEntityHitResult(origin, startPos, endPos, origin.getBoundingBox().expandTowards(rotation.scale(maxDistance)).inflate(1.0D, 1.0D, 1.0D), entity -> !entity.isSpectator(), maxDistance);
 
         if (hitsEntities && entityHitResult != null)
             hitResult = entityHitResult;
@@ -54,7 +54,7 @@ public class ArcanusHelper {
         return hitResult;
     }
 
-    public static void drawLine(Vec3d start, Vec3d end, World world, double density, ParticleEffect particle) {
+    public static void drawLine(Vec3 start, Vec3 end, Level world, double density, ParticleOptions particle) {
         double totalDistance = start.distanceTo(end);
 
         for (double distanceTraveled = 0; distanceTraveled < totalDistance; distanceTraveled += density) {
@@ -63,10 +63,10 @@ public class ArcanusHelper {
             double y = interpolate(start.y, end.y, alpha);
             double z = interpolate(start.z, end.z, alpha);
 
-            if (world.isClient())
+            if (world.isClientSide())
                 world.addParticle(particle, x, y, z, 0, 0, 0);
             else
-                ((ServerWorld) world).spawnParticles(particle, x, y, z, 1, 0, 0, 0, 0);
+                ((ServerLevel) world).sendParticles(particle, x, y, z, 1, 0, 0, 0, 0);
         }
     }
 
@@ -74,49 +74,49 @@ public class ArcanusHelper {
         return start + (end - start) * alpha;
     }
 
-    public static void addWandsToTab(ItemGroup.ItemStackCollector entries) {
+    public static void addWandsToTab(CreativeModeTab.Output entries) {
         ItemStack stack = new ItemStack(ArcanusItems.INITIATE_WAND);
-        entries.addStack(stack);
+        entries.accept(stack);
 
         stack = new ItemStack(ArcanusItems.ADEPT_WAND);
-        NbtCompound tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
+        CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
         tag.putInt("Exp", 3200);
-        entries.addStack(stack);
+        entries.accept(stack);
 
         stack = new ItemStack(ArcanusItems.MASTER_WAND);
-        tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
+        tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
         tag.putInt("Exp", 6400);
-        entries.addStack(stack);
+        entries.accept(stack);
     }
 
     @ApiStatus.Internal
-    public static void onInteractLecternBlock(World world, BlockPos pos, PlayerEntity player) {
-        if (!world.isClient() && world.getBlockEntity(pos) instanceof LecternBlockEntity lectern && player.currentScreenHandler instanceof LecternScreenHandler) {
-            NbtCompound nbt = lectern.getBook().getNbt();
+    public static void onInteractLecternBlock(Level world, BlockPos pos, Player player) {
+        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof LecternBlockEntity lectern && player.containerMenu instanceof LecternMenu) {
+            CompoundTag nbt = lectern.getBook().getTag();
 
-            if (nbt != null && nbt.contains("spell", NbtElement.STRING_TYPE)) {
-                Spell spell = Arcanus.SPELL.get(new Identifier(nbt.getString("spell")));
+            if (nbt != null && nbt.contains("spell", Tag.TAG_STRING)) {
+                Spell spell = Arcanus.SPELL.get(new ResourceLocation(nbt.getString("spell")));
                 player.getComponent(ArcanusComponents.SPELL_MEMORY).unlockSpell(spell);
             }
         }
     }
 
-    public static void giveOrDrop(ServerPlayerEntity player, ItemStack stack) {
-        if (player.getInventory().insertStack(stack) && stack.isEmpty()) {
+    public static void giveOrDrop(ServerPlayer player, ItemStack stack) {
+        if (player.getInventory().add(stack) && stack.isEmpty()) {
             stack.setCount(1);
-            ItemEntity entity = player.dropItem(stack, false);
+            ItemEntity entity = player.drop(stack, false);
 
             if (entity != null)
-                entity.setDespawnImmediately();
+                entity.makeFakeItem();
 
-            player.world.playSoundFromEntity(null, player, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-            player.playerScreenHandler.sendContentUpdates();
+            player.level.playSound(null, player, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+            player.inventoryMenu.broadcastChanges();
         } else {
-            ItemEntity entity = player.dropItem(stack, false);
+            ItemEntity entity = player.drop(stack, false);
 
             if (entity != null) {
-                entity.resetPickupDelay();
-                entity.setOwner(player.getUuid());
+                entity.setNoPickUpDelay();
+                entity.setTarget(player.getUUID());
             }
         }
     }

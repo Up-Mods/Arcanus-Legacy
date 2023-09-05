@@ -3,15 +3,15 @@ package dev.cammiescorner.arcanus.structure.processor;
 import com.mojang.serialization.Codec;
 import dev.cammiescorner.arcanus.registry.ArcanusStructureProcessors;
 import dev.cammiescorner.arcanus.util.SpellBooks;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LecternBlock;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.structure.Structure;
-import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.processor.StructureProcessor;
-import net.minecraft.structure.processor.StructureProcessorType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LecternBlock;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.Nullable;
 
 public class LecternStructureProcessor extends StructureProcessor {
@@ -20,13 +20,13 @@ public class LecternStructureProcessor extends StructureProcessor {
 
     @Nullable
     @Override
-    public Structure.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, Structure.StructureBlockInfo localBlockInfo, Structure.StructureBlockInfo absoluteBlockInfo, StructurePlacementData placementData) {
-        if (!absoluteBlockInfo.state.isOf(Blocks.LECTERN))
+    public StructureTemplate.StructureBlockInfo processBlock(LevelReader world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo localBlockInfo, StructureTemplate.StructureBlockInfo absoluteBlockInfo, StructurePlaceSettings placementData) {
+        if (!absoluteBlockInfo.state.is(Blocks.LECTERN))
             return absoluteBlockInfo;
 
-        absoluteBlockInfo.nbt.put("Book", SpellBooks.getRandomSpellBook(placementData.getRandom(absoluteBlockInfo.pos)).writeNbt(new NbtCompound()));
+        absoluteBlockInfo.nbt.put("Book", SpellBooks.getRandomSpellBook(placementData.getRandom(absoluteBlockInfo.pos)).save(new CompoundTag()));
 
-        return new Structure.StructureBlockInfo(absoluteBlockInfo.pos, absoluteBlockInfo.state.with(LecternBlock.HAS_BOOK, true), absoluteBlockInfo.nbt);
+        return new StructureTemplate.StructureBlockInfo(absoluteBlockInfo.pos, absoluteBlockInfo.state.setValue(LecternBlock.HAS_BOOK, true), absoluteBlockInfo.nbt);
     }
 
     @Override

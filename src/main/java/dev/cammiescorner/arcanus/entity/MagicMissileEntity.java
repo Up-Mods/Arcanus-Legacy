@@ -2,82 +2,82 @@ package dev.cammiescorner.arcanus.entity;
 
 import dev.cammiescorner.arcanus.registry.ArcanusEntities;
 import dev.cammiescorner.arcanus.registry.ArcanusParticles;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import org.quiltmc.qsl.networking.api.PlayerLookup;
 
-public class MagicMissileEntity extends PersistentProjectileEntity {
+public class MagicMissileEntity extends AbstractArrow {
 
-    public MagicMissileEntity(LivingEntity owner, World world) {
+    public MagicMissileEntity(LivingEntity owner, Level world) {
         super(ArcanusEntities.MAGIC_MISSILE, owner, world);
         setNoGravity(true);
-        setDamage(1.5D);
+        setBaseDamage(1.5D);
     }
 
-    public MagicMissileEntity(EntityType<? extends MagicMissileEntity> type, World world) {
+    public MagicMissileEntity(EntityType<? extends MagicMissileEntity> type, Level world) {
         super(type, world);
         setNoGravity(true);
-        setDamage(1.5D);
+        setBaseDamage(1.5D);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (!world.isClient()) {
+        if (!level.isClientSide()) {
             for (int count = 0; count < 16; count++) {
-                double x = getX() + (world.random.nextInt(3) - 1) / 4D;
-                double y = getY() + 0.2F + (world.random.nextInt(3) - 1) / 4D;
-                double z = getZ() + (world.random.nextInt(3) - 1) / 4D;
-                double deltaX = (world.random.nextInt(3) - 1) * world.random.nextDouble();
-                double deltaY = (world.random.nextInt(3) - 1) * world.random.nextDouble();
-                double deltaZ = (world.random.nextInt(3) - 1) * world.random.nextDouble();
+                double x = getX() + (level.random.nextInt(3) - 1) / 4D;
+                double y = getY() + 0.2F + (level.random.nextInt(3) - 1) / 4D;
+                double z = getZ() + (level.random.nextInt(3) - 1) / 4D;
+                double deltaX = (level.random.nextInt(3) - 1) * level.random.nextDouble();
+                double deltaY = (level.random.nextInt(3) - 1) * level.random.nextDouble();
+                double deltaZ = (level.random.nextInt(3) - 1) * level.random.nextDouble();
 
-                PlayerLookup.tracking(this).forEach(player -> ((ServerWorld) world).spawnParticles(player, (ParticleEffect) ArcanusParticles.MAGIC_MISSILE, true, x, y, z, 1, deltaX, deltaY, deltaZ, 0.1));
+                PlayerLookup.tracking(this).forEach(player -> ((ServerLevel) level).sendParticles(player, (ParticleOptions) ArcanusParticles.MAGIC_MISSILE, true, x, y, z, 1, deltaX, deltaY, deltaZ, 0.1));
             }
         }
 
-        if (age > 40)
+        if (tickCount > 40)
             kill();
     }
 
     @Override
-    protected SoundEvent getHitSound() {
-        return SoundEvents.BLOCK_AMETHYST_BLOCK_STEP;
+    protected SoundEvent getDefaultHitGroundSoundEvent() {
+        return SoundEvents.AMETHYST_BLOCK_STEP;
     }
 
     @Override
-    protected void onBlockHit(BlockHitResult blockHitResult) {
-        super.onBlockHit(blockHitResult);
+    protected void onHitBlock(BlockHitResult blockHitResult) {
+        super.onHitBlock(blockHitResult);
         kill();
     }
 
     @Override
-    protected void onEntityHit(EntityHitResult entityHitResult) {
-        super.onEntityHit(entityHitResult);
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        super.onHitEntity(entityHitResult);
 
         if (entityHitResult.getEntity() instanceof LivingEntity target)
-            target.timeUntilRegen = 0;
+            target.invulnerableTime = 0;
     }
 
     @Override
-    public void onPlayerCollision(PlayerEntity player) {
-        if (!world.isClient && (inGround || isNoClip()) && shake <= 0)
+    public void playerTouch(Player player) {
+        if (!level.isClientSide && (inGround || isNoPhysics()) && shakeTime <= 0)
             discard();
     }
 
     @Override
-    protected ItemStack asItemStack() {
+    protected ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 }

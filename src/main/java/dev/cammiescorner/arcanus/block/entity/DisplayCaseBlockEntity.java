@@ -1,30 +1,30 @@
 package dev.cammiescorner.arcanus.block.entity;
 
 import dev.cammiescorner.arcanus.registry.ArcanusBlockEntities;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class DisplayCaseBlockEntity extends BlockEntity implements Inventory {
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
+public class DisplayCaseBlockEntity extends BlockEntity implements Container {
+    private final NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
 
     public DisplayCaseBlockEntity(BlockPos pos, BlockState state) {
         super(ArcanusBlockEntities.DISPLAY_CASE, pos, state);
     }
 
     @Override
-    public int size() {
+    public int getContainerSize() {
         return this.inventory.size();
     }
 
@@ -34,71 +34,71 @@ public class DisplayCaseBlockEntity extends BlockEntity implements Inventory {
     }
 
     @Override
-    public ItemStack getStack(int slot) {
+    public ItemStack getItem(int slot) {
         return this.inventory.get(slot);
     }
 
     @Override
-    public ItemStack removeStack(int slot, int amount) {
-        ItemStack stack = Inventories.splitStack(this.inventory, slot, amount);
+    public ItemStack removeItem(int slot, int amount) {
+        ItemStack stack = ContainerHelper.removeItem(this.inventory, slot, amount);
         this.notifyListeners();
         return stack;
     }
 
     @Override
-    public ItemStack removeStack(int slot) {
-        ItemStack stack = Inventories.removeStack(this.inventory, slot);
+    public ItemStack removeItemNoUpdate(int slot) {
+        ItemStack stack = ContainerHelper.takeItem(this.inventory, slot);
         this.notifyListeners();
         return stack;
     }
 
     @Override
-    public void setStack(int slot, ItemStack stack) {
+    public void setItem(int slot, ItemStack stack) {
         this.inventory.set(slot, stack);
         this.notifyListeners();
     }
 
     @Override
-    public boolean canPlayerUse(PlayerEntity player) {
-        return !(player.squaredDistanceTo(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) > 64.0D);
+    public boolean stillValid(Player player) {
+        return !(player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D) > 64.0D);
     }
 
     @Override
-    public void clear() {
+    public void clearContent() {
         this.inventory.clear();
         this.notifyListeners();
     }
 
     @Override
-    public NbtCompound toSyncedNbt() {
-        NbtCompound tag = super.toSyncedNbt();
-        writeNbt(tag);
+    public CompoundTag getUpdateTag() {
+        CompoundTag tag = super.getUpdateTag();
+        saveAdditional(tag);
         return tag;
     }
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.of(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     public void notifyListeners() {
-        this.markDirty();
+        this.setChanged();
 
-        if (world != null && !world.isClient())
-            world.updateListeners(getPos(), getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+        if (level != null && !level.isClientSide())
+            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void load(CompoundTag nbt) {
         this.inventory.clear();
-        Inventories.readNbt(nbt, this.inventory);
-        super.readNbt(nbt);
+        ContainerHelper.loadAllItems(nbt, this.inventory);
+        super.load(nbt);
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        Inventories.writeNbt(nbt, this.inventory);
-        super.writeNbt(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        ContainerHelper.saveAllItems(nbt, this.inventory);
+        super.saveAdditional(nbt);
     }
 }

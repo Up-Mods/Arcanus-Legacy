@@ -4,43 +4,43 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import dev.cammiescorner.arcanus.registry.ArcanusLootFunctions;
 import dev.cammiescorner.arcanus.util.SpellBooks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.condition.LootCondition;
-import net.minecraft.loot.context.LootContext;
-import net.minecraft.loot.function.ConditionalLootFunction;
-import net.minecraft.loot.function.LootFunction;
-import net.minecraft.loot.function.LootFunctionType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-public class SetSpellBookNbtLootFunction extends ConditionalLootFunction {
-    protected SetSpellBookNbtLootFunction(LootCondition[] conditions) {
+public class SetSpellBookNbtLootFunction extends LootItemConditionalFunction {
+    protected SetSpellBookNbtLootFunction(LootItemCondition[] conditions) {
         super(conditions);
     }
 
     @Override
-    protected ItemStack process(ItemStack stack, LootContext context) {
+    protected ItemStack run(ItemStack stack, LootContext context) {
         return SpellBooks.getRandomSpellBook(stack, context.getRandom());
     }
 
     @Override
-    public LootFunctionType getType() {
+    public LootItemFunctionType getType() {
         return ArcanusLootFunctions.SET_SPELL_BOOK_NBT;
     }
 
-    public static class Builder extends ConditionalLootFunction.Builder<SetSpellBookNbtLootFunction.Builder> {
+    public static class Builder extends LootItemConditionalFunction.Builder<SetSpellBookNbtLootFunction.Builder> {
         @Override
-        protected SetSpellBookNbtLootFunction.Builder getThisBuilder() {
+        protected SetSpellBookNbtLootFunction.Builder getThis() {
             return this;
         }
 
         @Override
-        public LootFunction build() {
+        public LootItemFunction build() {
             return new SetSpellBookNbtLootFunction(this.getConditions());
         }
     }
 
-    public static class Serializer extends ConditionalLootFunction.Serializer<SetSpellBookNbtLootFunction> {
+    public static class Serializer extends LootItemConditionalFunction.Serializer<SetSpellBookNbtLootFunction> {
         @Override
-        public SetSpellBookNbtLootFunction fromJson(JsonObject json, JsonDeserializationContext context, LootCondition[] conditions) {
+        public SetSpellBookNbtLootFunction deserialize(JsonObject json, JsonDeserializationContext context, LootItemCondition[] conditions) {
             return new SetSpellBookNbtLootFunction(conditions);
         }
     }

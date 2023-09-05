@@ -12,8 +12,8 @@ import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class ArcanusComponents implements EntityComponentInitializer {
 
@@ -23,12 +23,12 @@ public class ArcanusComponents implements EntityComponentInitializer {
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-        registry.beginRegistration(PlayerEntity.class, MAGIC_CASTER)
+        registry.beginRegistration(Player.class, MAGIC_CASTER)
                 .impl(PlayerMagicCaster.class)
                 .respawnStrategy(RespawnCopyStrategy.CHARACTER)
                 .end(PlayerMagicCaster::new);
 
-        registry.beginRegistration(PlayerEntity.class, SPELL_MEMORY)
+        registry.beginRegistration(Player.class, SPELL_MEMORY)
                 .impl(PlayerSpellMemory.class)
                 .respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY)
                 .end(PlayerSpellMemory::new);

@@ -1,30 +1,30 @@
 package dev.cammiescorner.arcanus.screen;
 
 import dev.cammiescorner.arcanus.registry.ArcanusScreens;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
-public class BookshelfScreenHandler extends ScreenHandler {
-    private final Inventory inventory;
+public class BookshelfScreenHandler extends AbstractContainerMenu {
+    private final Container inventory;
 
-    public BookshelfScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(16));
+    public BookshelfScreenHandler(int syncId, Inventory playerInventory) {
+        this(syncId, playerInventory, new SimpleContainer(16));
     }
 
-    public BookshelfScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
+    public BookshelfScreenHandler(int syncId, Inventory playerInventory, Container inventory) {
         super(ArcanusScreens.BOOKSHELF_SCREEN_HANDLER, syncId);
-        checkSize(inventory, 16);
+        checkContainerSize(inventory, 16);
         this.inventory = inventory;
-        inventory.onOpen(playerInventory.player);
+        inventory.startOpen(playerInventory.player);
 
         int x;
         int y;
@@ -45,12 +45,12 @@ public class BookshelfScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
-        return this.inventory.canPlayerUse(player);
+    public boolean stillValid(Player player) {
+        return this.inventory.stillValid(player);
     }
 
     @Override
-    protected boolean insertItem(ItemStack stack, int startIndex, int endIndex, boolean fromLast) {
+    protected boolean moveItemStackTo(ItemStack stack, int startIndex, int endIndex, boolean fromLast) {
         boolean bl = false;
         int i = startIndex;
 
@@ -72,21 +72,21 @@ public class BookshelfScreenHandler extends ScreenHandler {
                 }
 
                 slot2 = this.slots.get(i);
-                itemStack = slot2.getStack();
+                itemStack = slot2.getItem();
 
-                if (!itemStack.isEmpty() && ItemStack.canCombine(stack, itemStack)) {
+                if (!itemStack.isEmpty() && ItemStack.isSameItemSameTags(stack, itemStack)) {
                     int j = itemStack.getCount() + stack.getCount();
-                    int maxCount = Math.min(stack.getMaxCount(), slot2.getMaxItemCount());
+                    int maxCount = Math.min(stack.getMaxStackSize(), slot2.getMaxStackSize());
 
                     if (j <= maxCount) {
                         stack.setCount(0);
                         itemStack.setCount(j);
-                        slot2.markDirty();
+                        slot2.setChanged();
                         bl = true;
                     } else if (itemStack.getCount() < maxCount) {
-                        stack.decrement(maxCount - itemStack.getCount());
+                        stack.shrink(maxCount - itemStack.getCount());
                         itemStack.setCount(maxCount);
-                        slot2.markDirty();
+                        slot2.setChanged();
                         bl = true;
                     }
                 }
@@ -116,16 +116,16 @@ public class BookshelfScreenHandler extends ScreenHandler {
                 }
 
                 slot2 = this.slots.get(i);
-                itemStack = slot2.getStack();
+                itemStack = slot2.getItem();
 
-                if (itemStack.isEmpty() && slot2.canInsert(stack)) {
-                    if (stack.getCount() > slot2.getMaxItemCount()) {
-                        slot2.setStack(stack.split(slot2.getMaxItemCount()));
+                if (itemStack.isEmpty() && slot2.mayPlace(stack)) {
+                    if (stack.getCount() > slot2.getMaxStackSize()) {
+                        slot2.set(stack.split(slot2.getMaxStackSize()));
                     } else {
-                        slot2.setStack(stack.split(stack.getCount()));
+                        slot2.set(stack.split(stack.getCount()));
                     }
 
-                    slot2.markDirty();
+                    slot2.setChanged();
                     bl = true;
 
                     break;
@@ -143,49 +143,49 @@ public class BookshelfScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public ItemStack quickTransfer(PlayerEntity player, int invSlot) {
+    public ItemStack quickMoveStack(Player player, int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(invSlot);
 
-        if (slot.hasStack()) {
-            ItemStack originalStack = slot.getStack();
+        if (slot.hasItem()) {
+            ItemStack originalStack = slot.getItem();
             newStack = originalStack.copy();
 
-            if (invSlot < this.inventory.size()) {
-                if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true))
+            if (invSlot < this.inventory.getContainerSize()) {
+                if (!this.moveItemStackTo(originalStack, this.inventory.getContainerSize(), this.slots.size(), true))
                     return ItemStack.EMPTY;
-            } else if (!this.insertItem(originalStack, 0, this.inventory.size(), false))
+            } else if (!this.moveItemStackTo(originalStack, 0, this.inventory.getContainerSize(), false))
                 return ItemStack.EMPTY;
 
             if (originalStack.isEmpty())
-                slot.setStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             else
-                slot.markDirty();
+                slot.setChanged();
         }
 
         return newStack;
     }
 
     public static class BookSlot extends Slot {
-        private static final TagKey<Item> BOOKS = TagKey.of(Registries.ITEM.getKey(), new Identifier("c", "books"));
+        private static final TagKey<Item> BOOKS = TagKey.create(BuiltInRegistries.ITEM.key(), new ResourceLocation("c", "books"));
 
-        public BookSlot(Inventory inventory, int index, int x, int y) {
+        public BookSlot(Container inventory, int index, int x, int y) {
             super(inventory, index, x, y);
         }
 
         @Override
-        public boolean canInsert(ItemStack stack) {
-            return stack.isIn(BOOKS);
+        public boolean mayPlace(ItemStack stack) {
+            return stack.is(BOOKS);
         }
 
         @Override
-        public int getMaxItemCount() {
+        public int getMaxStackSize() {
             return 1;
         }
 
         @Override
-        public void setStack(ItemStack stack) {
-            super.setStack(stack);
+        public void set(ItemStack stack) {
+            super.set(stack);
         }
     }
 }

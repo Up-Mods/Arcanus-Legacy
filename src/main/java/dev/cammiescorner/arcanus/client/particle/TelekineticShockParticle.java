@@ -1,40 +1,40 @@
 package dev.cammiescorner.arcanus.client.particle;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
-public class TelekineticShockParticle extends SpriteBillboardParticle {
-    private final SpriteProvider spriteProvider;
+public class TelekineticShockParticle extends TextureSheetParticle {
+    private final SpriteSet spriteProvider;
 
-    public TelekineticShockParticle(ClientWorld clientWorld, double posX, double posY, double posZ, SpriteProvider spriteProvider) {
+    public TelekineticShockParticle(ClientLevel clientWorld, double posX, double posY, double posZ, SpriteSet spriteProvider) {
         super(clientWorld, posX, posY, posZ, 0, 0, 0);
-        this.maxAge = (int) (20 * MathHelper.clamp(random.nextFloat(), 0.5, 1.0));
+        this.lifetime = (int) (20 * Mth.clamp(random.nextFloat(), 0.5, 1.0));
         this.spriteProvider = spriteProvider;
-        this.velocityX = 0;
-        this.velocityY = 0;
-        this.velocityZ = 0;
+        this.xd = 0;
+        this.yd = 0;
+        this.zd = 0;
     }
 
     @Override
     public void tick() {
-        setSpriteForAge(spriteProvider);
+        setSpriteFromAge(spriteProvider);
         super.tick();
     }
 
     @Override
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     @ClientOnly
-    public record Factory(SpriteProvider spriteProvider) implements ParticleFactory<DefaultParticleType> {
+    public record Factory(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
         @Override
-        public Particle createParticle(DefaultParticleType defaultParticleType, ClientWorld clientWorld, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ) {
+        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ) {
             TelekineticShockParticle particle = new TelekineticShockParticle(clientWorld, posX, posY, posZ, spriteProvider);
-            particle.setSpriteForAge(spriteProvider);
+            particle.setSpriteFromAge(spriteProvider);
             return particle;
         }
     }

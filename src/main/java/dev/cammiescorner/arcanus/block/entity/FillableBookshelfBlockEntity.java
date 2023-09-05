@@ -2,32 +2,32 @@ package dev.cammiescorner.arcanus.block.entity;
 
 import dev.cammiescorner.arcanus.block.FillableBookshelfBlock;
 import dev.cammiescorner.arcanus.screen.BookshelfScreenHandler;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import dev.cammiescorner.arcanus.registry.ArcanusBlockEntities;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
-public class FillableBookshelfBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, Inventory {
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(16, ItemStack.EMPTY);
+public class FillableBookshelfBlockEntity extends BlockEntity implements MenuProvider, Container {
+    private final NonNullList<ItemStack> inventory = NonNullList.withSize(16, ItemStack.EMPTY);
 
     public FillableBookshelfBlockEntity(BlockPos pos, BlockState state) {
         super(ArcanusBlockEntities.FILLABLE_BOOKSHELF, pos, state);
     }
 
     @Override
-    public int size() {
+    public int getContainerSize() {
         return this.inventory.size();
     }
 
@@ -37,48 +37,48 @@ public class FillableBookshelfBlockEntity extends BlockEntity implements NamedSc
     }
 
     @Override
-    public ItemStack getStack(int slot) {
+    public ItemStack getItem(int slot) {
         return this.inventory.get(slot);
     }
 
     @Override
-    public ItemStack removeStack(int slot, int amount) {
-        ItemStack stack = Inventories.splitStack(this.inventory, slot, amount);
+    public ItemStack removeItem(int slot, int amount) {
+        ItemStack stack = ContainerHelper.removeItem(this.inventory, slot, amount);
         this.notifyListeners();
         return stack;
     }
 
     @Override
-    public ItemStack removeStack(int slot) {
-        ItemStack stack = Inventories.removeStack(this.inventory, slot);
+    public ItemStack removeItemNoUpdate(int slot) {
+        ItemStack stack = ContainerHelper.takeItem(this.inventory, slot);
         this.notifyListeners();
         return stack;
     }
 
     @Override
-    public void setStack(int slot, ItemStack stack) {
+    public void setItem(int slot, ItemStack stack) {
         this.inventory.set(slot, stack);
         this.notifyListeners();
     }
 
     @Override
-    public boolean canPlayerUse(PlayerEntity player) {
-        return !(player.squaredDistanceTo(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) > 64.0D);
+    public boolean stillValid(Player player) {
+        return !(player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D) > 64.0D);
     }
 
     @Override
-    public void clear() {
+    public void clearContent() {
         this.inventory.clear();
         this.notifyListeners();
     }
 
     public void notifyListeners() {
-        this.markDirty();
+        this.setChanged();
 
-        if (world != null) {
-            BlockState oldState = getCachedState();
-            world.setBlockState(getPos(), world.getBlockState(getPos()).with(FillableBookshelfBlock.BOOK_COUNT, fullSlots()));
-            world.updateListeners(getPos(), oldState, getCachedState(), Block.NOTIFY_ALL);
+        if (level != null) {
+            BlockState oldState = getBlockState();
+            level.setBlockAndUpdate(getBlockPos(), level.getBlockState(getBlockPos()).setValue(FillableBookshelfBlock.BOOK_COUNT, fullSlots()));
+            level.sendBlockUpdated(getBlockPos(), oldState, getBlockState(), Block.UPDATE_ALL);
         }
     }
 
@@ -93,26 +93,26 @@ public class FillableBookshelfBlockEntity extends BlockEntity implements NamedSc
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void load(CompoundTag nbt) {
         this.inventory.clear();
-        Inventories.readNbt(nbt, this.inventory);
-        super.readNbt(nbt);
+        ContainerHelper.loadAllItems(nbt, this.inventory);
+        super.load(nbt);
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        Inventories.writeNbt(nbt, this.inventory);
-        super.writeNbt(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        ContainerHelper.saveAllItems(nbt, this.inventory);
+        super.saveAdditional(nbt);
     }
 
     @Override
-    public Text getDisplayName() {
-        return Text.translatable(getCachedState().getBlock().getTranslationKey());
+    public Component getDisplayName() {
+        return Component.translatable(getBlockState().getBlock().getDescriptionId());
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
         return new BookshelfScreenHandler(syncId, playerInventory, this);
     }
 }

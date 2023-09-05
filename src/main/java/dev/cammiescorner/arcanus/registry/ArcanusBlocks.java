@@ -3,28 +3,28 @@ package dev.cammiescorner.arcanus.registry;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.block.DisplayCaseBlock;
 import dev.cammiescorner.arcanus.block.FillableBookshelfBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.LinkedHashMap;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 public class ArcanusBlocks {
 
-    public static final LinkedHashMap<Block, Identifier> BLOCKS = new LinkedHashMap<>();
+    public static final LinkedHashMap<Block, ResourceLocation> BLOCKS = new LinkedHashMap<>();
 
     public static final Block BOOKSHELF = create("fillable_bookshelf", new FillableBookshelfBlock(QuiltBlockSettings.copyOf(Blocks.BOOKSHELF)));
-    public static final Block DISPLAY_CASE = create("display_case", new DisplayCaseBlock(QuiltBlockSettings.copyOf(Blocks.SMOOTH_STONE).requiresTool().nonOpaque()));
+    public static final Block DISPLAY_CASE = create("display_case", new DisplayCaseBlock(QuiltBlockSettings.copyOf(Blocks.SMOOTH_STONE).requiresCorrectToolForDrops().noOcclusion()));
 
     public static void register() {
         BLOCKS.forEach((block, id) -> {
-            Registry.register(Registries.BLOCK, id, block);
-            Registry.register(Registries.ITEM, id, new BlockItem(block, new Item.Settings()));
+            Registry.register(BuiltInRegistries.BLOCK, id, block);
+            Registry.register(BuiltInRegistries.ITEM, id, new BlockItem(block, new Item.Properties()));
         });
     }
 

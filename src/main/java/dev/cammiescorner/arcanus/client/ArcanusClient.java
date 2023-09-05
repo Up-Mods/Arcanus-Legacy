@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus.client;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormats;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.client.particle.DiscombobulateParticle;
 import dev.cammiescorner.arcanus.client.particle.HealParticle;
@@ -16,13 +16,13 @@ import dev.cammiescorner.arcanus.registry.*;
 import dev.cammiescorner.arcanus.util.EventHandler;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderPhase;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
@@ -35,28 +35,28 @@ public class ArcanusClient implements ClientModInitializer {
         return manaTimer > 0;
     }
 
-    public static RenderLayer getMagicCircles(Identifier texture) {
-        return RenderLayer.of(
+    public static RenderType getMagicCircles(ResourceLocation texture) {
+        return RenderType.create(
                 Arcanus.id("magic").toString(),
-                VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
-                VertexFormat.DrawMode.QUADS,
+                DefaultVertexFormat.NEW_ENTITY,
+                VertexFormat.Mode.QUADS,
                 256,
                 false,
                 true,
-                RenderLayer.MultiPhaseParameters.builder()
-                        .shader(RenderLayer.ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
-                        .texture(new RenderPhase.Texture(texture, false, false))
-                        .overlay(RenderPhase.ENABLE_OVERLAY_COLOR)
-                        .transparency(RenderLayer.ADDITIVE_TRANSPARENCY)
-                        .writeMaskState(RenderLayer.ALL_MASK)
-                        .cull(RenderPhase.DISABLE_CULLING)
-                        .build(false)
+                RenderType.CompositeState.builder()
+                        .setShaderState(RenderType.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+                        .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+                        .setOverlayState(RenderStateShard.OVERLAY)
+                        .setTransparencyState(RenderType.ADDITIVE_TRANSPARENCY)
+                        .setWriteMaskState(RenderType.COLOR_DEPTH_WRITE)
+                        .setCullState(RenderStateShard.NO_CULL)
+                        .createCompositeState(false)
         );
     }
 
     @Override
     public void onInitializeClient(ModContainer mod) {
-        HandledScreens.register(ArcanusScreens.BOOKSHELF_SCREEN_HANDLER, BookshelfScreen::new);
+        MenuScreens.register(ArcanusScreens.BOOKSHELF_SCREEN_HANDLER, BookshelfScreen::new);
 
         EntityRendererRegistry.register(ArcanusEntities.SOLAR_STRIKE, SolarStrikeEntityRenderer::new);
         EntityRendererRegistry.register(ArcanusEntities.ARCANE_BARRIER, ArcaneBarrierEntityRenderer::new);
@@ -67,13 +67,13 @@ public class ArcanusClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(ArcanusParticles.HEAL, HealParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ArcanusParticles.DISCOMBOBULATE, DiscombobulateParticle.Factory::new);
 
-        BlockEntityRendererFactories.register(ArcanusBlockEntities.DISPLAY_CASE, DisplayCaseBlockEntityRenderer::new);
-        BlockRenderLayerMap.put(RenderLayer.getCutout(), ArcanusBlocks.DISPLAY_CASE);
+        BlockEntityRenderers.register(ArcanusBlockEntities.DISPLAY_CASE, DisplayCaseBlockEntityRenderer::new);
+        BlockRenderLayerMap.put(RenderType.cutout(), ArcanusBlocks.DISPLAY_CASE);
 
         EventHandler.clientEvents();
 
-        ModelPredicateProviderRegistry.register(Arcanus.id("mana"), (stack, world, entity, seed) -> {
-            NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
+        ItemProperties.registerGeneric(Arcanus.id("mana"), (stack, world, entity, seed) -> {
+            CompoundTag tag = stack.getTagElement(Arcanus.MOD_ID);
 
             if (tag == null)
                 return 0;

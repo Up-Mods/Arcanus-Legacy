@@ -1,12 +1,11 @@
 package dev.cammiescorner.arcanus.spell;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Util;
-import net.minecraft.world.World;
-
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.Util;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public abstract class Spell {
     private final List<Pattern> spellPattern = new ArrayList<>(3);
@@ -24,7 +23,7 @@ public abstract class Spell {
         return spellPattern;
     }
 
-    public abstract void onCast(World world, PlayerEntity player);
+    public abstract void onCast(Level world, Player player);
 
     public int getManaCost() {
         return manaCost;
@@ -32,7 +31,7 @@ public abstract class Spell {
 
     protected String getOrCreateTranslationKey() {
         if (this.translationKey == null)
-            this.translationKey = Util.createTranslationKey("spell", Arcanus.SPELL.getId(this));
+            this.translationKey = Util.makeDescriptionId("spell", Arcanus.SPELL.getKey(this));
 
         return this.translationKey;
     }
