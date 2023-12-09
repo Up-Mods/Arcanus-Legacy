@@ -4,9 +4,6 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.component.ArcanusComponents;
 import dev.cammiescorner.arcanus.registry.ArcanusItems;
 import dev.cammiescorner.arcanus.spell.Spell;
-import org.jetbrains.annotations.ApiStatus;
-
-import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
@@ -29,6 +26,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.ApiStatus;
+
+import java.util.Set;
 
 import static dev.cammiescorner.arcanus.registry.ArcanusEntityAttributes.*;
 
@@ -40,7 +40,7 @@ public class ArcanusHelper {
         Vec3 startPos = origin.getEyePosition(1F);
         Vec3 rotation = origin.getViewVector(1F);
         Vec3 endPos = startPos.add(rotation.x * maxDistance, rotation.y * maxDistance, rotation.z * maxDistance);
-        HitResult hitResult = origin.level.clip(new ClipContext(startPos, endPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, origin));
+        HitResult hitResult = origin.level().clip(new ClipContext(startPos, endPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, origin));
 
         if (hitResult.getType() != HitResult.Type.MISS)
             endPos = hitResult.getLocation();
@@ -109,7 +109,7 @@ public class ArcanusHelper {
             if (entity != null)
                 entity.makeFakeItem();
 
-            player.level.playSound(null, player, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+            player.level().playSound(null, player, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
             player.inventoryMenu.broadcastChanges();
         } else {
             ItemEntity entity = player.drop(stack, false);

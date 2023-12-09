@@ -21,12 +21,12 @@ public class LecternStructureProcessor extends StructureProcessor {
     @Nullable
     @Override
     public StructureTemplate.StructureBlockInfo processBlock(LevelReader world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo localBlockInfo, StructureTemplate.StructureBlockInfo absoluteBlockInfo, StructurePlaceSettings placementData) {
-        if (!absoluteBlockInfo.state.is(Blocks.LECTERN))
+        if (!absoluteBlockInfo.state().is(Blocks.LECTERN))
             return absoluteBlockInfo;
 
-        absoluteBlockInfo.nbt.put("Book", SpellBooks.getRandomSpellBook(placementData.getRandom(absoluteBlockInfo.pos)).save(new CompoundTag()));
+        absoluteBlockInfo.nbt().put("Book", SpellBooks.getRandomSpellBook(placementData.getRandom(absoluteBlockInfo.pos())).save(new CompoundTag()));
 
-        return new StructureTemplate.StructureBlockInfo(absoluteBlockInfo.pos, absoluteBlockInfo.state.setValue(LecternBlock.HAS_BOOK, true), absoluteBlockInfo.nbt);
+        return new StructureTemplate.StructureBlockInfo(absoluteBlockInfo.pos(), absoluteBlockInfo.state().setValue(LecternBlock.HAS_BOOK, true), absoluteBlockInfo.nbt());
     }
 
     @Override

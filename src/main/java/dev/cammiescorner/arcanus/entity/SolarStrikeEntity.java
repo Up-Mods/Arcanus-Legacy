@@ -3,8 +3,6 @@ package dev.cammiescorner.arcanus.entity;
 import dev.cammiescorner.arcanus.registry.ArcanusDamageTypes;
 import dev.cammiescorner.arcanus.registry.ArcanusEntities;
 import dev.cammiescorner.arcanus.registry.ArcanusSoundEvents;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -18,6 +16,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SolarStrikeEntity extends AbstractArrow {
 
@@ -33,12 +34,12 @@ public class SolarStrikeEntity extends AbstractArrow {
 
     @Override
     public void tick() {
-        if (!level.isClientSide()) {
+        if (!level().isClientSide()) {
             if (tickCount <= 9) {
-                AABB box = new AABB(getX() - 4, getY() - 1, getZ() - 4, getX() + 4, (level.getHeight() + 2048) - getY(), getZ() + 4);
+                AABB box = new AABB(getX() - 4, getY() - 1, getZ() - 4, getX() + 4, (level().getHeight() + 2048) - getY(), getZ() + 4);
                 float radius = (float) (box.maxX - box.minX) / 2;
 
-                level.getEntities(null, box).forEach(entity -> {
+                level().getEntities(null, box).forEach(entity -> {
                     if (!hasHit.contains(entity)) {
                         Vec2 pos1 = new Vec2((float) getX(), (float) getZ());
                         Vec2 pos2 = new Vec2((float) entity.getX(), (float) entity.getZ());
@@ -59,21 +60,21 @@ public class SolarStrikeEntity extends AbstractArrow {
                 kill();
         } else {
             if (tickCount == 1)
-                level.playLocalSound(getX(), getY(), getZ(), ArcanusSoundEvents.SOLAR_STRIKE, SoundSource.PLAYERS, Mth.clamp(1 - (Minecraft.getInstance().player.distanceTo(this) / 256F), 0, 1), (1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F) * 0.7F, false);
+                level().playLocalSound(getX(), getY(), getZ(), ArcanusSoundEvents.SOLAR_STRIKE, SoundSource.PLAYERS, Mth.clamp(1 - (Minecraft.getInstance().player.distanceTo(this) / 256F), 0, 1), (1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F) * 0.7F, false);
 
             if (tickCount >= 2 && tickCount <= 5) {
-                level.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() + 2, getY(), getZ(), 1.0D, 0.0D, 0.0D);
-                level.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() - 2, getY(), getZ(), 1.0D, 0.0D, 0.0D);
-                level.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ() + 2, 1.0D, 0.0D, 0.0D);
-                level.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ() - 2, 1.0D, 0.0D, 0.0D);
+                level().addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() + 2, getY(), getZ(), 1.0D, 0.0D, 0.0D);
+                level().addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() - 2, getY(), getZ(), 1.0D, 0.0D, 0.0D);
+                level().addParticle(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ() + 2, 1.0D, 0.0D, 0.0D);
+                level().addParticle(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ() - 2, 1.0D, 0.0D, 0.0D);
             }
         }
     }
 
     @Override
     public void kill() {
-        if (!level.isClientSide())
-            ((ServerLevel) level).setChunkForced(chunkPosition().x, chunkPosition().z, false);
+        if (!level().isClientSide())
+            ((ServerLevel) level()).setChunkForced(chunkPosition().x, chunkPosition().z, false);
 
         super.kill();
     }

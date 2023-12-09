@@ -2,9 +2,9 @@ package dev.cammiescorner.arcanus.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.component.base.MagicCaster;
 import dev.cammiescorner.arcanus.client.ArcanusClient;
 import dev.cammiescorner.arcanus.component.ArcanusComponents;
+import dev.cammiescorner.arcanus.component.base.MagicCaster;
 import dev.cammiescorner.arcanus.item.WandItem;
 import dev.cammiescorner.arcanus.loot.function.SetSpellBookNbtLootFunction;
 import dev.cammiescorner.arcanus.registry.ArcanusEntityAttributes;
@@ -13,7 +13,6 @@ import dev.cammiescorner.arcanus.structure.processor.LecternStructureProcessor;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -44,7 +43,7 @@ public class EventHandler {
     public static void clientEvents() {
         final Minecraft client = Minecraft.getInstance();
 
-        HudRenderCallback.EVENT.register((matrices, tickDelta) -> {
+        HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
             if (client.cameraEntity instanceof Player player && !player.isSpectator() && !player.isCreative()) {
                 MagicCaster caster = player.getComponent(ArcanusComponents.MAGIC_CASTER);
 
@@ -65,20 +64,19 @@ public class EventHandler {
                     float alpha = ArcanusClient.manaTimer > 20 ? 1F : ArcanusClient.manaTimer / 20F;
 
                     RenderSystem.enableBlend();
-                    RenderSystem.setShaderTexture(0, HUD_ELEMENTS);
                     RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
 
                     // Draw background
                     for (int i = 0; i < 10; i++)
-                        GuiComponent.blit(matrices, x - (i * 8), y, 0, 15, 9, 9, 256, 256);
+                        drawContext.blit(HUD_ELEMENTS, x - (i * 8), y, 0, 15, 9, 9, 256, 256);
 
                     // Draw full mana orb
                     for (int i = 0; i < mana / 2; i++)
-                        GuiComponent.blit(matrices, x - (i * 8), y, 0, 0, 8, 8, 256, 256);
+                        drawContext.blit(HUD_ELEMENTS, x - (i * 8), y, 0, 0, 8, 8, 256, 256);
 
                     // Draw half mana orb
                     if (mana % 2 == 1)
-                        GuiComponent.blit(matrices, x - ((mana / 2) * 8), y, 8, 0, 8, 8, 256, 256);
+                        drawContext.blit(HUD_ELEMENTS, x - ((mana / 2) * 8), y, 8, 0, 8, 8, 256, 256);
 
                     boolean manaLockOdd = manaLock % 2 == 1;
                     boolean burnoutOdd = burnout % 2 == 1;
@@ -89,21 +87,21 @@ public class EventHandler {
                     // Draw full burnout orb
                     for (int i = 0; i < adjustedBurnout; i++)
                         if (manaLockOdd && i == 0)
-                            GuiComponent.blit(matrices, x + adjustedManaLock, y, 32, 0, 8, 8, 256, 256);
+                            drawContext.blit(HUD_ELEMENTS, x + adjustedManaLock, y, 32, 0, 8, 8, 256, 256);
                         else
-                            GuiComponent.blit(matrices, x + adjustedManaLock + (i * 8), y, 16, 0, 8, 8, 256, 256);
+                            drawContext.blit(HUD_ELEMENTS, x + adjustedManaLock + (i * 8), y, 16, 0, 8, 8, 256, 256);
 
                     // Draw half burnout orb
                     if (burnoutOdd != manaLockOdd && burnout > 0)
-                        GuiComponent.blit(matrices, x + adjustedManaLock + (adjustedBurnout * 8), y, 24, 0, 8, 8, 256, 256);
+                        drawContext.blit(HUD_ELEMENTS, x + adjustedManaLock + (adjustedBurnout * 8), y, 24, 0, 8, 8, 256, 256);
 
                     // Draw full mana lock orb
                     for (int i = 0; i < manaLock / 2; i++)
-                        GuiComponent.blit(matrices, x + (i * 8), y, 40, 0, 8, 8, 256, 256);
+                        drawContext.blit(HUD_ELEMENTS, x + (i * 8), y, 40, 0, 8, 8, 256, 256);
 
                     // Draw half mana lock orb
                     if (manaLock % 2 == 1)
-                        GuiComponent.blit(matrices, x + adjustedManaLock, y, 48, 0, 8, 8, 256, 256);
+                        drawContext.blit(HUD_ELEMENTS, x + adjustedManaLock, y, 48, 0, 8, 8, 256, 256);
                 }
             }
         });

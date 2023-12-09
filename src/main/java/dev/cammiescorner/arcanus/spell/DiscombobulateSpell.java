@@ -30,7 +30,7 @@ public class DiscombobulateSpell extends Spell {
             Vec3 startPos = entity.getEyePosition(1F).add((entity.getRandom().nextInt(3) - 1) / startDivisor, (entity.getRandom().nextInt(3) - 1) / startDivisor, (entity.getRandom().nextInt(3) - 1) / startDivisor);
             Vec3 endPos = result.getLocation().add((entity.getRandom().nextInt(3) - 1) / endDivisor, (entity.getRandom().nextInt(3) - 1) / endDivisor, (entity.getRandom().nextInt(3) - 1) / endDivisor);
 
-            ArcanusHelper.drawLine(startPos, endPos, entity.getLevel(), 0.5F, (ParticleOptions) ArcanusParticles.DISCOMBOBULATE);
+            ArcanusHelper.drawLine(startPos, endPos, entity.level(), 0.5F, (ParticleOptions) ArcanusParticles.DISCOMBOBULATE);
         }
 
         if (result.getType() == HitResult.Type.ENTITY) {

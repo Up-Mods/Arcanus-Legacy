@@ -34,16 +34,16 @@ public class MagicMissileEntity extends AbstractArrow {
     public void tick() {
         super.tick();
 
-        if (!level.isClientSide()) {
+        if (!level().isClientSide()) {
             for (int count = 0; count < 16; count++) {
-                double x = getX() + (level.random.nextInt(3) - 1) / 4D;
-                double y = getY() + 0.2F + (level.random.nextInt(3) - 1) / 4D;
-                double z = getZ() + (level.random.nextInt(3) - 1) / 4D;
-                double deltaX = (level.random.nextInt(3) - 1) * level.random.nextDouble();
-                double deltaY = (level.random.nextInt(3) - 1) * level.random.nextDouble();
-                double deltaZ = (level.random.nextInt(3) - 1) * level.random.nextDouble();
+                double x = getX() + (random.nextInt(3) - 1) / 4D;
+                double y = getY() + 0.2F + (random.nextInt(3) - 1) / 4D;
+                double z = getZ() + (random.nextInt(3) - 1) / 4D;
+                double deltaX = (random.nextInt(3) - 1) * random.nextDouble();
+                double deltaY = (random.nextInt(3) - 1) * random.nextDouble();
+                double deltaZ = (random.nextInt(3) - 1) * random.nextDouble();
 
-                PlayerLookup.tracking(this).forEach(player -> ((ServerLevel) level).sendParticles(player, (ParticleOptions) ArcanusParticles.MAGIC_MISSILE, true, x, y, z, 1, deltaX, deltaY, deltaZ, 0.1));
+                PlayerLookup.tracking(this).forEach(player -> ((ServerLevel) level()).sendParticles(player, (ParticleOptions) ArcanusParticles.MAGIC_MISSILE, true, x, y, z, 1, deltaX, deltaY, deltaZ, 0.1));
             }
         }
 
@@ -72,7 +72,7 @@ public class MagicMissileEntity extends AbstractArrow {
 
     @Override
     public void playerTouch(Player player) {
-        if (!level.isClientSide && (inGround || isNoPhysics()) && shakeTime <= 0)
+        if (!level().isClientSide() && (inGround || isNoPhysics()) && shakeTime <= 0)
             discard();
     }
 

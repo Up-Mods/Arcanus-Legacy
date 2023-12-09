@@ -86,7 +86,7 @@ public class ArcanusCommands {
             MutableComponent knownSpells = Component.literal("");
             spells.stream().sorted(Comparator.comparing(spell -> Arcanus.SPELL.getKey(spell).toString())).forEachOrdered(spell -> knownSpells.append("\n    - ").append(Component.translatable(spell.getTranslationKey())).append(" (" + spell.getSpellPattern().get(0).getSymbol() + "-" + spell.getSpellPattern().get(1).getSymbol() + "-" + spell.getSpellPattern().get(2).getSymbol() + ")"));
 
-            context.getSource().sendSuccess(Arcanus.translate("commands", "spells.list", player.getScoreboardName(), knownSpells), false);
+            context.getSource().sendSuccess(() -> Arcanus.translate("commands", "spells.list", player.getScoreboardName(), knownSpells), false);
             return spells.size();
         }
 
@@ -94,7 +94,7 @@ public class ArcanusCommands {
             SpellMemory memory = player.getComponent(ArcanusComponents.SPELL_MEMORY);
             int count = (int) Arcanus.SPELL.stream().filter(memory::unlockSpell).count();
             player.syncComponent(ArcanusComponents.SPELL_MEMORY);
-            context.getSource().sendSuccess(Arcanus.translate("commands", "spells.added_all", player.getDisplayName()), false);
+            context.getSource().sendSuccess(() -> Arcanus.translate("commands", "spells.added_all", player.getDisplayName()), false);
             return Math.max(count, 1);
         }
 
@@ -103,7 +103,7 @@ public class ArcanusCommands {
             Spell spell = ResourceArgument.getResource(context, "spell", Arcanus.SPELL_KEY).value();
 
             if (memory.unlockSpell(spell)) {
-                context.getSource().sendSuccess(Arcanus.translate("commands", "spells.added", Component.translatable(spell.getTranslationKey(), Arcanus.SPELL.getKey(spell)), player.getScoreboardName()), false);
+                context.getSource().sendSuccess(() -> Arcanus.translate("commands", "spells.added", Component.translatable(spell.getTranslationKey(), Arcanus.SPELL.getKey(spell)), player.getScoreboardName()), false);
                 player.syncComponent(ArcanusComponents.SPELL_MEMORY);
                 return Command.SINGLE_SUCCESS;
             }
@@ -116,7 +116,7 @@ public class ArcanusCommands {
             SpellMemory memory = player.getComponent(ArcanusComponents.SPELL_MEMORY);
             memory.clear();
             player.syncComponent(ArcanusComponents.SPELL_MEMORY);
-            context.getSource().sendSuccess(Arcanus.translate("commands", "spells.cleared", player.getDisplayName()), false);
+            context.getSource().sendSuccess(() -> Arcanus.translate("commands", "spells.cleared", player.getDisplayName()), false);
             return Command.SINGLE_SUCCESS;
         }
 
@@ -125,7 +125,7 @@ public class ArcanusCommands {
             Spell spell = ResourceArgument.getResource(context, "spell", Arcanus.SPELL_KEY).value();
 
             if (memory.removeSpell(spell)) {
-                context.getSource().sendSuccess(Arcanus.translate("commands", "spells.removed", Component.translatable(spell.getTranslationKey(), Arcanus.SPELL.getKey(spell)), player.getDisplayName()), false);
+                context.getSource().sendSuccess(() -> Arcanus.translate("commands", "spells.removed", Component.translatable(spell.getTranslationKey(), Arcanus.SPELL.getKey(spell)), player.getDisplayName()), false);
                 player.syncComponent(ArcanusComponents.SPELL_MEMORY);
                 return Command.SINGLE_SUCCESS;
             }

@@ -33,7 +33,7 @@ public class DreamWarpSpell extends Spell {
                     Vec3 prevPos = serverPlayer.position();
                     QuiltDimensions.teleport(serverPlayer, serverWorld, new PortalInfo(spawnPoint, Vec3.ZERO, (float) rotation.x, (float) rotation.y));
                     serverWorld.playSound(null, prevPos.x(), prevPos.y(), prevPos.z(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 2F, 1F);
-                    serverPlayer.getLevel().playSound(null, serverPlayer, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 2F, 1F);
+                    serverPlayer.level().playSound(null, serverPlayer, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 2F, 1F);
                     return;
                 }
             }

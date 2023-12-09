@@ -141,7 +141,7 @@ public class PlayerMagicCaster implements MagicCaster, CopyableComponent<PlayerM
 
     @Override
     public void serverTick() {
-        Level level = player.getLevel();
+        Level level = player.level();
         if (activeSpell != null) {
             activeSpell.onActiveTick(level, this, activeSpellTimer);
 

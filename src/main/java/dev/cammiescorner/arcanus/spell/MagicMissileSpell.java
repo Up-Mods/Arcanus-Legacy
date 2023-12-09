@@ -15,10 +15,10 @@ public class MagicMissileSpell extends Spell {
     @Override
     public void onCast(MagicCaster caster) {
         LivingEntity entity = caster.asEntity();
-        MagicMissileEntity magicMissile = new MagicMissileEntity(entity, entity.getLevel());
+        MagicMissileEntity magicMissile = new MagicMissileEntity(entity, entity.level());
         magicMissile.shootFromRotation(entity, entity.getXRot(), entity.getYRot(), 0, 4.5F, 0F);
 
-        entity.getLevel().addFreshEntity(magicMissile);
-        entity.getLevel().playSound(null, magicMissile, ArcanusSoundEvents.MAGIC_MISSILE, SoundSource.PLAYERS, 2F, entity.getRandom().nextFloat() * 0.2F + 1.0F);
+        entity.level().addFreshEntity(magicMissile);
+        entity.level().playSound(null, magicMissile, ArcanusSoundEvents.MAGIC_MISSILE, SoundSource.PLAYERS, 2F, entity.getRandom().nextFloat() * 0.2F + 1.0F);
     }
 }

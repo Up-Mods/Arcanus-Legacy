@@ -81,7 +81,7 @@ public class MinecraftMixin {
             unfinishedSpell = true;
             pattern.add(Spell.Pattern.RIGHT);
             player.swing(InteractionHand.MAIN_HAND);
-            player.level.playSeededSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 1F, 1.1F, 0L);
+            player.level().playSeededSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 1F, 1.1F, 0L);
             info.cancel();
         }
     }
@@ -93,7 +93,7 @@ public class MinecraftMixin {
             unfinishedSpell = true;
             pattern.add(Spell.Pattern.LEFT);
             player.swing(InteractionHand.MAIN_HAND);
-            player.level.playSeededSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 1F, 1.3F, 0L);
+            player.level().playSeededSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 1F, 1.3F, 0L);
             info.cancel();
         }
     }

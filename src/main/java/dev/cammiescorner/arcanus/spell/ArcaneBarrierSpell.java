@@ -26,18 +26,18 @@ public class ArcaneBarrierSpell extends Spell {
             BlockHitResult blockResult = ((BlockHitResult) result);
             Direction side = blockResult.getDirection();
             BlockPos pos = blockResult.getBlockPos().offset(side.getStepX(), side.getStepY(), side.getStepZ());
-            ArcaneBarrierEntity arcaneWall = new ArcaneBarrierEntity(entity.getLevel());
+            ArcaneBarrierEntity arcaneWall = new ArcaneBarrierEntity(entity.level());
 
             if (entity instanceof Player player) {
                 arcaneWall.setOwner(player);
 
-                if (!player.mayInteract(arcaneWall.getLevel(), pos)) {
+                if (!player.mayInteract(arcaneWall.level(), pos)) {
                     player.displayClientMessage(Arcanus.translate("spell", "cannot_interact"), false);
                     return;
                 }
             }
             arcaneWall.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-            entity.getLevel().addFreshEntity(arcaneWall);
+            entity.level().addFreshEntity(arcaneWall);
         } else {
             if (entity instanceof Player player) {
                 player.displayClientMessage(Arcanus.translate("spell", "no_target"), false);

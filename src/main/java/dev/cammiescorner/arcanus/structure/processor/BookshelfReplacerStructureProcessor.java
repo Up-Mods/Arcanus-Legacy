@@ -27,9 +27,9 @@ public class BookshelfReplacerStructureProcessor extends StructureProcessor {
     @Nullable
     @Override
     public StructureTemplate.StructureBlockInfo processBlock(LevelReader world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo structureInfoLocal, StructureTemplate.StructureBlockInfo structureInfoWorld, StructurePlaceSettings data) {
-        RandomSource random = data.getRandom(structureInfoWorld.pos);
+        RandomSource random = data.getRandom(structureInfoWorld.pos());
 
-        if (!structureInfoWorld.state.is(Blocks.BOOKSHELF) || random.nextInt(5) > 0)
+        if (!structureInfoWorld.state().is(Blocks.BOOKSHELF) || random.nextInt(5) > 0)
             return structureInfoWorld;
 
         int bookCount = random.nextInt(5);
@@ -43,7 +43,7 @@ public class BookshelfReplacerStructureProcessor extends StructureProcessor {
         state = state.setValue(FillableBookshelfBlock.BOOK_COUNT, bookCount);
         ContainerHelper.saveAllItems(nbt, inventory);
 
-        return new StructureTemplate.StructureBlockInfo(structureInfoWorld.pos, state, nbt);
+        return new StructureTemplate.StructureBlockInfo(structureInfoWorld.pos(), state, nbt);
     }
 
     @Override

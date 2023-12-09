@@ -25,7 +25,7 @@ public class SolarStrikeEntityRenderer extends EntityRenderer<SolarStrikeEntity>
 
     @Override
     public void render(SolarStrikeEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource provider, int light) {
-        renderBeam(entity, matrices, provider, 0, (float) ((entity.level.getHeight() + 2048) - entity.getY()), 0, tickDelta, OverlayTexture.NO_OVERLAY, light);
+        renderBeam(entity, matrices, provider, 0, (float) ((entity.level().getHeight() + 2048) - entity.getY()), 0, tickDelta, OverlayTexture.NO_OVERLAY, light);
     }
 
     public void renderBeam(SolarStrikeEntity entity, PoseStack matrices, MultiBufferSource provider, float x, float y, float z, float tickDelta, int overlay, int light) {

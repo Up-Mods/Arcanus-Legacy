@@ -59,7 +59,7 @@ public class LungeSpell extends Spell {
                 entity.hurtMarked = true;
             }
 
-            if (entity.isOnGround() || remainingTicks == 0) {
+            if (entity.onGround() || remainingTicks == 0) {
                 affectedEntities.remove(entity);
             }
         } else {
@@ -88,7 +88,7 @@ public class LungeSpell extends Spell {
 
             entity.fallDistance = 0;
 
-            if (entity.isOnGround() && remainingTicks <= 8) {
+            if (entity.onGround() && remainingTicks <= 8) {
                 level.explode(entity, entity.getX(), entity.getY() + 0.5, entity.getZ(), 1, Level.ExplosionInteraction.NONE);
                 caster.clearActiveSpell();
                 affectedEntities.remove(entity);

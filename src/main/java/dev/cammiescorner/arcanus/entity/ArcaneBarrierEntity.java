@@ -59,7 +59,7 @@ public class ArcaneBarrierEntity extends Entity {
 
         super.tick();
 
-        if (!level.isClientSide()) {
+        if (!level().isClientSide()) {
             setHitTimer(Math.max(0, getHitTimer() - 1));
 
             if (tickCount > 0 && tickCount % 600 == 0)
@@ -81,7 +81,7 @@ public class ArcaneBarrierEntity extends Entity {
         if (tickCount <= Math.ceil(ArcaneBarrierEntity.MAX_HEIGHT / ArcaneBarrierEntity.GROWTH_RATE)) {
             reapplyPosition();
 
-            List<Entity> list = level.getEntities(this, getBoundingBox(), EntitySelector.NO_SPECTATORS.and((entity) -> !entity.isPassengerOfSameVehicle(this)));
+            List<Entity> list = level().getEntities(this, getBoundingBox(), EntitySelector.NO_SPECTATORS.and((entity) -> !entity.isPassengerOfSameVehicle(this)));
 
             for (Entity entity : list)
                 if (!(entity instanceof Shulker || entity instanceof ArcaneBarrierEntity) && !entity.noPhysics)
@@ -98,7 +98,7 @@ public class ArcaneBarrierEntity extends Entity {
     @Override
     protected void readAdditionalSaveData(CompoundTag nbt) {
         if (nbt.contains("Owner"))
-            owner = level.getPlayerByUUID(nbt.getUUID("Owner"));
+            owner = level().getPlayerByUUID(nbt.getUUID("Owner"));
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ArcaneBarrierEntity extends Entity {
     public boolean hurt(DamageSource source, float amount) {
         if (this.isInvulnerableTo(source))
             return false;
-        else if (this.level.isClientSide)
+        else if (this.level().isClientSide())
             return false;
         else if (this.isRemoved())
             return false;

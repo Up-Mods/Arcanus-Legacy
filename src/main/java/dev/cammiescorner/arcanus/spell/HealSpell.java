@@ -18,14 +18,14 @@ public class HealSpell extends Spell {
     public void onCast(MagicCaster caster) {
         LivingEntity entity = caster.asEntity();
         entity.heal(10);
-        entity.getLevel().playSound(null, entity, ArcanusSoundEvents.HEAL, SoundSource.PLAYERS, 2F, entity.getRandom().nextFloat() * 0.2F + 1.0F);
+        entity.level().playSound(null, entity, ArcanusSoundEvents.HEAL, SoundSource.PLAYERS, 2F, entity.getRandom().nextFloat() * 0.2F + 1.0F);
 
         for (int amount = 0; amount < 32; amount++) {
             float offsetX = ((entity.getRandom().nextInt(3) - 1) * entity.getRandom().nextFloat());
             float offsetY = entity.getRandom().nextFloat() * 2F;
             float offsetZ = ((entity.getRandom().nextInt(3) - 1) * entity.getRandom().nextFloat());
 
-            ((ServerLevel) entity.getLevel()).sendParticles((ParticleOptions) ArcanusParticles.HEAL, entity.getX() + offsetX, entity.getY() - 0.5 + offsetY, entity.getZ() + offsetZ, 3, 0, 0, 0, 0);
+            ((ServerLevel) entity.level()).sendParticles((ParticleOptions) ArcanusParticles.HEAL, entity.getX() + offsetX, entity.getY() - 0.5 + offsetY, entity.getZ() + offsetZ, 3, 0, 0, 0, 0);
         }
     }
 }

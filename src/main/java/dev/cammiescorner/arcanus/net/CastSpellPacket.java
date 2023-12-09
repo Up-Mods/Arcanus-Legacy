@@ -51,13 +51,13 @@ public class CastSpellPacket {
                     if(!caster.cast(spell)) {
                         return;
                     }
-                    caster.setLastCastTime(player.level.getGameTime());
+                    caster.setLastCastTime(player.level().getGameTime());
 
                     if (!player.isCreative()) {
                         if (caster.getMana() < realManaCost && ArcanusConfig.haveBurnout) {
                             int burnoutAmount = realManaCost - caster.getMana();
                             caster.addBurnout(burnoutAmount);
-                            player.hurt(ArcanusDamageTypes.burnout(player.level), burnoutAmount);
+                            player.hurt(ArcanusDamageTypes.burnout(player.level()), burnoutAmount);
                             player.displayClientMessage(Arcanus.translate("error", "burnout").withStyle(ChatFormatting.RED), false);
                         }
 

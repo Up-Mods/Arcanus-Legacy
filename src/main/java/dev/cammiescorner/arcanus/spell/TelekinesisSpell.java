@@ -37,19 +37,19 @@ public class TelekinesisSpell extends Spell {
             Vec3 startPos = entity.getEyePosition(1F).add((entity.getRandom().nextInt(3) - 1) / startDivisor, (entity.getRandom().nextInt(3) - 1) / startDivisor, (entity.getRandom().nextInt(3) - 1) / startDivisor);
             Vec3 endPos = result.getLocation().add((entity.getRandom().nextInt(3) - 1) / endDivisor, (entity.getRandom().nextInt(3) - 1) / endDivisor, (entity.getRandom().nextInt(3) - 1) / endDivisor);
 
-            ArcanusHelper.drawLine(startPos, endPos, entity.getLevel(), 0.5F, (ParticleOptions) ArcanusParticles.TELEKINETIC_SHOCK);
+            ArcanusHelper.drawLine(startPos, endPos, entity.level(), 0.5F, (ParticleOptions) ArcanusParticles.TELEKINETIC_SHOCK);
         }
 
-        entity.getLevel().playSound(null, entity, ArcanusSoundEvents.TELEKINETIC_SHOCK, SoundSource.PLAYERS, 2F, entity.getRandom().nextFloat() * 0.2F + 1.0F);
+        entity.level().playSound(null, entity, ArcanusSoundEvents.TELEKINETIC_SHOCK, SoundSource.PLAYERS, 2F, entity.getRandom().nextFloat() * 0.2F + 1.0F);
 
         switch (result.getType()) {
             case ENTITY -> {
                 BlockPos pos = ((EntityHitResult) result).getEntity().blockPosition();
-                if (entity instanceof Player player && !player.mayInteract(entity.getLevel(), pos)) {
+                if (entity instanceof Player player && !player.mayInteract(entity.level(), pos)) {
                     return;
                 }
 
-                entity.getLevel().getEntities(entity, new AABB(pos), EntitySelector.ENTITY_STILL_ALIVE).forEach(target -> {
+                entity.level().getEntities(entity, new AABB(pos), EntitySelector.ENTITY_STILL_ALIVE).forEach(target -> {
                     if (target instanceof AbstractArrow projectile)
                         projectile.startFalling();
 
@@ -59,29 +59,29 @@ public class TelekinesisSpell extends Spell {
             }
             case BLOCK -> {
                 BlockPos pos = ((BlockHitResult) result).getBlockPos();
-                if (entity instanceof Player player && !player.mayInteract(entity.getLevel(), pos)) {
+                if (entity instanceof Player player && !player.mayInteract(entity.level(), pos)) {
                     return;
                 }
 
-                BlockState state = entity.getLevel().getBlockState(pos);
+                BlockState state = entity.level().getBlockState(pos);
                 Block block = state.getBlock();
 
                 if (block instanceof TntBlock) {
-                    TntBlock.explode(entity.getLevel(), pos, entity);
-                    entity.getLevel().removeBlock(pos, false);
+                    TntBlock.explode(entity.level(), pos, entity);
+                    entity.level().removeBlock(pos, false);
 
-                    entity.getLevel().getEntitiesOfClass(PrimedTnt.class, new AABB(pos), tnt -> tnt.isAlive() && tnt.getOwner() == entity).forEach(target -> {
+                    entity.level().getEntitiesOfClass(PrimedTnt.class, new AABB(pos), tnt -> tnt.isAlive() && tnt.getOwner() == entity).forEach(target -> {
                         target.setDeltaMovement(rotation.scale(2.5F));
                         target.hurtMarked = true;
                     });
                 }
 
                 if (block instanceof FallingBlock fallingBlock) {
-                    FallingBlockEntity target = FallingBlockEntity.fall(entity.getLevel(), pos, state);
+                    FallingBlockEntity target = FallingBlockEntity.fall(entity.level(), pos, state);
                     fallingBlock.falling(target);
                     target.setDeltaMovement(rotation.scale(2.5F));
                     target.hurtMarked = true;
-                    entity.getLevel().addFreshEntity(target);
+                    entity.level().addFreshEntity(target);
                 }
             }
         }

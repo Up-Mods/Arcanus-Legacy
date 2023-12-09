@@ -23,16 +23,16 @@ public class SolarStrikeSpell extends Spell {
         HitResult result = ArcanusHelper.raycast(entity, 640F, false);
 
         if (result.getType() == HitResult.Type.BLOCK && result instanceof BlockHitResult blockHitResult) {
-            if (entity instanceof Player player && !player.mayInteract(player.getLevel(), blockHitResult.getBlockPos())) {
+            if (entity instanceof Player player && !player.mayInteract(player.level(), blockHitResult.getBlockPos())) {
                 player.displayClientMessage(Arcanus.translate("spell", "cannot_interact"), false);
                 return;
             }
 
             ChunkPos chunkPos = new ChunkPos(blockHitResult.getBlockPos());
-            ((ServerLevel) entity.getLevel()).setChunkForced(chunkPos.x, chunkPos.z, true);
-            SolarStrikeEntity solarStrike = new SolarStrikeEntity(entity, entity.getLevel());
+            ((ServerLevel) entity.level()).setChunkForced(chunkPos.x, chunkPos.z, true);
+            SolarStrikeEntity solarStrike = new SolarStrikeEntity(entity, entity.level());
             solarStrike.setPos(result.getLocation());
-            entity.getLevel().addFreshEntity(solarStrike);
+            entity.level().addFreshEntity(solarStrike);
         } else {
             if (entity instanceof Player player) {
                 player.displayClientMessage(Arcanus.translate("spell", "no_target"), false);
