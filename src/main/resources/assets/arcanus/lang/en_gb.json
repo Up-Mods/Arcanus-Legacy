@@ -136,6 +136,6 @@
 	"arcanus.midnightconfig.discombobulateCastingCost": "The Mana cost for the Discombobulate spell.",
 	"arcanus.midnightconfig.solarStrikeCastingCost": "The Mana cost for the Solar Strike spell.",
 	"arcanus.midnightconfig.arcaneBarrierCastingCost": "The Mana cost for the Arcane Barrier spell.",
-	"arcanus.midnightconfig.structuresWithBookshelves": "List of structure paths with Bookshelves.",
-	"arcanus.midnightconfig.structuresWithLecterns": "List of structure paths with Lecterns."
+	"arcanus.midnightconfig.excludeStructuresWithBookshelves": "Bookshelf Structure Processor will not run on these structures.",
+	"arcanus.midnightconfig.excludeStructuresWithLecterns": "Lectern Structure Processor will not run on these structures."
 }

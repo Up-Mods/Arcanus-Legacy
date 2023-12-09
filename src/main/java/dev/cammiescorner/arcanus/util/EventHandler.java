@@ -139,25 +139,22 @@ public class EventHandler {
         return builder;
     }
 
-    //TODO make tags
+    //TODO make tag-like thing
     public static void addStructureProcessors(Registry<StructureTemplatePool> templatePoolRegistry) {
         templatePoolRegistry.forEach(pool -> pool.templates.forEach(element -> {
             if (element instanceof SinglePoolElement singleElement && singleElement.template.left().isPresent()) {
                 String currentElement = singleElement.template.left().get().toString();
+                StructureProcessorList originalProcessorList = singleElement.processors.value();
+                List<StructureProcessor> mutableProcessorList = new ArrayList<>(originalProcessorList.list());
 
-                if (ArcanusConfig.structuresWithBookshelves.contains(currentElement) || ArcanusConfig.structuresWithLecterns.contains(currentElement)) {
-                    StructureProcessorList originalProcessorList = singleElement.processors.value();
-                    List<StructureProcessor> mutableProcessorList = new ArrayList<>(originalProcessorList.list());
+                if (ArcanusConfig.doLecternProcessor && !ArcanusConfig.excludeStructuresWithLecterns.contains(currentElement))
+                    mutableProcessorList.add(LecternStructureProcessor.INSTANCE);
+                if (ArcanusConfig.doBookshelfProcessor && !ArcanusConfig.excludeStructuresWithBookshelves.contains(currentElement))
+                    mutableProcessorList.add(BookshelfReplacerStructureProcessor.INSTANCE);
 
-                    if (ArcanusConfig.doLecternProcessor)
-                        mutableProcessorList.add(LecternStructureProcessor.INSTANCE);
-                    if (ArcanusConfig.doBookshelfProcessor)
-                        mutableProcessorList.add(BookshelfReplacerStructureProcessor.INSTANCE);
+                StructureProcessorList newProcessorList = new StructureProcessorList(mutableProcessorList);
 
-                    StructureProcessorList newProcessorList = new StructureProcessorList(mutableProcessorList);
-
-                    singleElement.processors = Holder.direct(newProcessorList);
-                }
+                singleElement.processors = Holder.direct(newProcessorList);
             }
         }));
     }
