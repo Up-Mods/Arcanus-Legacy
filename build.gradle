@@ -35,6 +35,10 @@ repositories {
         url = "https://maven.parchmentmc.org"
     }
     maven {
+        name = "uuid.gg"
+        url = "https://maven.uuid.gg/releases"
+    }
+    maven {
         name = "Modrinth"
         url = "https://api.modrinth.com/maven"
         content {
@@ -62,6 +66,10 @@ dependencies {
     annotationProcessor libs.mixinextras
 
     modImplementation libs.bundles.cca
+
+    modImplementation(libs.sparkweave) {
+        exclude(group: "io.github.llamalad7")
+    }
 
     // modmenu
     modLocalRuntime libs.modmenu

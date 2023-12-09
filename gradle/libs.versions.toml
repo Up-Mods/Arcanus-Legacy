@@ -9,6 +9,7 @@ quilted_fabric_api = "7.4.0+0.90.0-1.20.1"
 midnightlib = "1.4.1-quilt"
 mixinextras = "0.3.1"
 cca = "5.2.2"
+sparkweave = "0.3.0"
 modmenu = "7.2.2"
 lazydfu = "0.1.3"
 
@@ -24,6 +25,8 @@ midnightlib = { module = "maven.modrinth:midnightlib", version.ref = "midnightli
 mixinextras = { module = "io.github.llamalad7:mixinextras-fabric", version.ref = "mixinextras" }
 cca_base = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-base", version.ref = "cca" }
 cca_entity = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-entity", version.ref = "cca" }
+sparkweave = { module = "dev.upcraft:Sparkweave", version.ref = "sparkweave" }
+
 modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
 lazydfu = { module = "maven.modrinth:lazydfu", version.ref = "lazydfu" }
 
