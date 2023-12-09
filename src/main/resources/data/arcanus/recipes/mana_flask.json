@@ -1,11 +1,12 @@
 {
-	"type": "minecraft:smithing",
-	"base": {
-		"item": "minecraft:glass_bottle"
-	},
+	"type": "minecraft:smithing_transform",
 	"addition": {
 		"item": "minecraft:amethyst_shard"
 	},
+	"base": {
+		"item": "minecraft:glass_bottle"
+	},
+	"template": [],
 	"result": {
 		"item": "arcanus:mana_flask"
 	}
