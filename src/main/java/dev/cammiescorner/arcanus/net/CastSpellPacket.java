@@ -44,8 +44,13 @@ public class CastSpellPacket {
         server.execute(() -> {
             MagicCaster caster = player.getComponent(ArcanusComponents.MAGIC_CASTER);
 
-            if (!player.getComponent(ArcanusComponents.SPELL_MEMORY).hasSpell(spell) || (spell instanceof CanBeDisabled canBeDisabled && !canBeDisabled.enabled())) {
+            if (!player.getComponent(ArcanusComponents.SPELL_MEMORY).hasSpell(spell)) {
                 player.displayClientMessage(Arcanus.translate("error", "unknown_spell").withStyle(ChatFormatting.RED), true);
+                return;
+            }
+
+            if (spell instanceof CanBeDisabled canBeDisabled && !canBeDisabled.enabled()) {
+                player.displayClientMessage(Arcanus.translate("error", "disabled_spell").withStyle(ChatFormatting.RED), false);
                 return;
             }
 

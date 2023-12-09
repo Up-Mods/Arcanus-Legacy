@@ -1,5 +1,6 @@
 {
 	"error.arcanus.missing_spell": "这个咒语并不存在",
+	"error.arcanus.disabled_spell": "This spell is disabled",
 	"error.arcanus.unknown_spell": "你还不知道这个咒语",
 	"error.arcanus.not_enough_mana": "你没有足够的法力来施展这个法术",
 	"error.arcanus.burnout": "你感觉有点疲惫...",
