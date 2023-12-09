@@ -19,7 +19,7 @@
       "license": {
         "name": "Custom License",
         "id": "Custom License",
-        "url": "https://github.com/Up-Mods/Arcanus-Legacy/blob/1.19.4/LICENSE",
+        "url": "https://github.com/Up-Mods/Arcanus-Legacy/blob/1.20.1/LICENSE",
         "description": "This license permits small portions of the code to be used without prior permission, but not large parts."
       },
       "icon": "assets/arcanus/icon.png"
@@ -37,7 +37,7 @@
       },
       {
         "id": "quilted_fabric_api",
-        "versions": ">=6.0.0-",
+        "versions": ">=7.0.0-",
         "mc-publish": {
           "modrinth": "qvIfYCYJ",
           "curseforge": "634179"
@@ -45,7 +45,7 @@
       },
       {
         "id": "minecraft",
-        "versions": "=1.19.4"
+        "versions": "=1.20.1"
       },
       {
         "id": "midnightlib",
