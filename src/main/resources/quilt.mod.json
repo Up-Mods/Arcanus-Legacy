@@ -33,11 +33,11 @@
     "depends": [
       {
         "id": "quilt_loader",
-        "versions": ">=0.20.0-"
+        "versions": ">=0.22.1-"
       },
       {
         "id": "quilted_fabric_api",
-        "versions": ">=5.0.0-",
+        "versions": ">=6.0.0-",
         "mc-publish": {
           "modrinth": "qvIfYCYJ",
           "curseforge": "634179"
