@@ -4,8 +4,9 @@ import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.component.ArcanusComponents;
 import dev.cammiescorner.arcanus.component.base.MagicCaster;
 import dev.cammiescorner.arcanus.registry.ArcanusParticles;
+import dev.cammiescorner.arcanus.util.ArcanusConfig;
 import dev.cammiescorner.arcanus.util.ArcanusHelper;
-import net.minecraft.core.particles.ParticleOptions;
+import dev.cammiescorner.arcanus.util.CanBeDisabled;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +14,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class DiscombobulateSpell extends Spell {
+public class DiscombobulateSpell extends Spell implements CanBeDisabled {
 
     public DiscombobulateSpell(Pattern first, Pattern second, Pattern last, int manaCost) {
         super(first, second, last, manaCost);
@@ -30,7 +31,7 @@ public class DiscombobulateSpell extends Spell {
             Vec3 startPos = entity.getEyePosition(1F).add((entity.getRandom().nextInt(3) - 1) / startDivisor, (entity.getRandom().nextInt(3) - 1) / startDivisor, (entity.getRandom().nextInt(3) - 1) / startDivisor);
             Vec3 endPos = result.getLocation().add((entity.getRandom().nextInt(3) - 1) / endDivisor, (entity.getRandom().nextInt(3) - 1) / endDivisor, (entity.getRandom().nextInt(3) - 1) / endDivisor);
 
-            ArcanusHelper.drawLine(startPos, endPos, entity.level(), 0.5F, (ParticleOptions) ArcanusParticles.DISCOMBOBULATE);
+            ArcanusHelper.drawLine(startPos, endPos, entity.level(), 0.5F, ArcanusParticles.DISCOMBOBULATE.get());
         }
 
         if (result.getType() == HitResult.Type.ENTITY) {
@@ -42,5 +43,10 @@ public class DiscombobulateSpell extends Spell {
         } else if (entity instanceof Player player) {
             player.displayClientMessage(Arcanus.translate("spell", "no_target"), false);
         }
+    }
+
+    @Override
+    public boolean enabled() {
+        return ArcanusConfig.enableDiscombobulate;
     }
 }

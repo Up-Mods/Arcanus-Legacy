@@ -3,7 +3,9 @@ package dev.cammiescorner.arcanus.spell;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.component.base.MagicCaster;
 import dev.cammiescorner.arcanus.entity.SolarStrikeEntity;
+import dev.cammiescorner.arcanus.util.ArcanusConfig;
 import dev.cammiescorner.arcanus.util.ArcanusHelper;
+import dev.cammiescorner.arcanus.util.CanBeDisabled;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -11,7 +13,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
-public class SolarStrikeSpell extends Spell {
+public class SolarStrikeSpell extends Spell implements CanBeDisabled {
 
     public SolarStrikeSpell(Pattern first, Pattern second, Pattern last, int manaCost) {
         super(first, second, last, manaCost);
@@ -38,5 +40,10 @@ public class SolarStrikeSpell extends Spell {
                 player.displayClientMessage(Arcanus.translate("spell", "no_target"), false);
             }
         }
+    }
+
+    @Override
+    public boolean enabled() {
+        return ArcanusConfig.enableSolarStrike;
     }
 }

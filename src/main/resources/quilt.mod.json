@@ -48,6 +48,13 @@
         "versions": "=1.20.1"
       },
       {
+        "id": "sparkweave",
+        "mc-publish": {
+          "modrinth": "nf68xfAw",
+          "curseforge": "911456"
+        }
+      },
+      {
         "id": "midnightlib",
         "mc-publish": {
           "modrinth": "codAaoxh",

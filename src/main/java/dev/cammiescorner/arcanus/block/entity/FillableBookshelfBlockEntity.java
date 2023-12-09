@@ -23,7 +23,7 @@ public class FillableBookshelfBlockEntity extends BlockEntity implements MenuPro
     private final NonNullList<ItemStack> inventory = NonNullList.withSize(16, ItemStack.EMPTY);
 
     public FillableBookshelfBlockEntity(BlockPos pos, BlockState state) {
-        super(ArcanusBlockEntities.FILLABLE_BOOKSHELF, pos, state);
+        super(ArcanusBlockEntities.FILLABLE_BOOKSHELF.get(), pos, state);
     }
 
     @Override

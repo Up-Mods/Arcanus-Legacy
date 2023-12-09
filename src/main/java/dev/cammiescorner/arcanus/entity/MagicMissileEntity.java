@@ -19,7 +19,7 @@ import org.quiltmc.qsl.networking.api.PlayerLookup;
 public class MagicMissileEntity extends AbstractArrow {
 
     public MagicMissileEntity(LivingEntity owner, Level world) {
-        super(ArcanusEntities.MAGIC_MISSILE, owner, world);
+        super(ArcanusEntities.MAGIC_MISSILE.get(), owner, world);
         setNoGravity(true);
         setBaseDamage(1.5D);
     }
@@ -43,7 +43,7 @@ public class MagicMissileEntity extends AbstractArrow {
                 double deltaY = (random.nextInt(3) - 1) * random.nextDouble();
                 double deltaZ = (random.nextInt(3) - 1) * random.nextDouble();
 
-                PlayerLookup.tracking(this).forEach(player -> ((ServerLevel) level()).sendParticles(player, (ParticleOptions) ArcanusParticles.MAGIC_MISSILE, true, x, y, z, 1, deltaX, deltaY, deltaZ, 0.1));
+                PlayerLookup.tracking(this).forEach(player -> ((ServerLevel) level()).sendParticles(player, ArcanusParticles.MAGIC_MISSILE.get(), true, x, y, z, 1, deltaX, deltaY, deltaZ, 0.1));
             }
         }
 

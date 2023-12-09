@@ -3,9 +3,10 @@ package dev.cammiescorner.arcanus.spell;
 import dev.cammiescorner.arcanus.component.base.MagicCaster;
 import dev.cammiescorner.arcanus.registry.ArcanusParticles;
 import dev.cammiescorner.arcanus.registry.ArcanusSoundEvents;
+import dev.cammiescorner.arcanus.util.ArcanusConfig;
 import dev.cammiescorner.arcanus.util.ArcanusHelper;
+import dev.cammiescorner.arcanus.util.CanBeDisabled;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 
-public class TelekinesisSpell extends Spell {
+public class TelekinesisSpell extends Spell implements CanBeDisabled {
 
     public TelekinesisSpell(Pattern first, Pattern second, Pattern last, int manaCost) {
         super(first, second, last, manaCost);
@@ -37,10 +38,10 @@ public class TelekinesisSpell extends Spell {
             Vec3 startPos = entity.getEyePosition(1F).add((entity.getRandom().nextInt(3) - 1) / startDivisor, (entity.getRandom().nextInt(3) - 1) / startDivisor, (entity.getRandom().nextInt(3) - 1) / startDivisor);
             Vec3 endPos = result.getLocation().add((entity.getRandom().nextInt(3) - 1) / endDivisor, (entity.getRandom().nextInt(3) - 1) / endDivisor, (entity.getRandom().nextInt(3) - 1) / endDivisor);
 
-            ArcanusHelper.drawLine(startPos, endPos, entity.level(), 0.5F, (ParticleOptions) ArcanusParticles.TELEKINETIC_SHOCK);
+            ArcanusHelper.drawLine(startPos, endPos, entity.level(), 0.5F, ArcanusParticles.TELEKINETIC_SHOCK.get());
         }
 
-        entity.level().playSound(null, entity, ArcanusSoundEvents.TELEKINETIC_SHOCK, SoundSource.PLAYERS, 2F, entity.getRandom().nextFloat() * 0.2F + 1.0F);
+        entity.level().playSound(null, entity, ArcanusSoundEvents.TELEKINETIC_SHOCK.get(), SoundSource.PLAYERS, 2F, entity.getRandom().nextFloat() * 0.2F + 1.0F);
 
         switch (result.getType()) {
             case ENTITY -> {
@@ -85,5 +86,10 @@ public class TelekinesisSpell extends Spell {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean enabled() {
+        return ArcanusConfig.enableTelekineticShock;
     }
 }

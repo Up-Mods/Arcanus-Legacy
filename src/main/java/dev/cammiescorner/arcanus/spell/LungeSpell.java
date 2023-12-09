@@ -1,6 +1,8 @@
 package dev.cammiescorner.arcanus.spell;
 
 import dev.cammiescorner.arcanus.component.base.MagicCaster;
+import dev.cammiescorner.arcanus.util.ArcanusConfig;
+import dev.cammiescorner.arcanus.util.CanBeDisabled;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -14,7 +16,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
-public class LungeSpell extends Spell {
+public class LungeSpell extends Spell implements CanBeDisabled {
 
     private final WeakHashMap<LivingEntity, Set<UUID>> affectedEntities = new WeakHashMap<>();
 
@@ -94,5 +96,10 @@ public class LungeSpell extends Spell {
                 affectedEntities.remove(entity);
             }
         }
+    }
+
+    @Override
+    public boolean enabled() {
+        return ArcanusConfig.enableLunge;
     }
 }

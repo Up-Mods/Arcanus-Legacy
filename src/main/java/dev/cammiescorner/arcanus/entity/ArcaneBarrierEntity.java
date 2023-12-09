@@ -26,7 +26,7 @@ public class ArcaneBarrierEntity extends Entity {
     private Player owner;
 
     public ArcaneBarrierEntity(Level world) {
-        super(ArcanusEntities.ARCANE_BARRIER, world);
+        super(ArcanusEntities.ARCANE_BARRIER.get(), world);
     }
 
     public ArcaneBarrierEntity(Level world, double x, double y, double z) {

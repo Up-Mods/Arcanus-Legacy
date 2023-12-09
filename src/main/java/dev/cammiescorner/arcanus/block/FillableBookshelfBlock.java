@@ -1,6 +1,7 @@
 package dev.cammiescorner.arcanus.block;
 
 import dev.cammiescorner.arcanus.block.entity.FillableBookshelfBlockEntity;
+import dev.upcraft.sparkweave.api.registry.block.BlockItemProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -8,6 +9,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -19,12 +22,17 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class FillableBookshelfBlock extends BaseEntityBlock {
+public class FillableBookshelfBlock extends BaseEntityBlock implements BlockItemProvider {
     public static final IntegerProperty BOOK_COUNT = IntegerProperty.create("book_count", 0, 16);
 
     public FillableBookshelfBlock(Properties settings) {
         super(settings);
         registerDefaultState(defaultBlockState().setValue(BOOK_COUNT, 0));
+    }
+
+    @Override
+    public Item createItem() {
+        return new BlockItem(this, new Item.Properties());
     }
 
     @Deprecated

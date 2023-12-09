@@ -1,6 +1,8 @@
 package dev.cammiescorner.arcanus.spell;
 
 import dev.cammiescorner.arcanus.component.base.MagicCaster;
+import dev.cammiescorner.arcanus.util.ArcanusConfig;
+import dev.cammiescorner.arcanus.util.CanBeDisabled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -12,7 +14,7 @@ import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.Vec3;
 import org.quiltmc.qsl.worldgen.dimension.api.QuiltDimensions;
 
-public class DreamWarpSpell extends Spell {
+public class DreamWarpSpell extends Spell implements CanBeDisabled {
 
     public DreamWarpSpell(Pattern first, Pattern second, Pattern last, int manaCost) {
         super(first, second, last, manaCost);
@@ -40,5 +42,10 @@ public class DreamWarpSpell extends Spell {
 
             serverPlayer.displayClientMessage(Component.translatable("block.minecraft.spawn.not_valid"), false);
         }
+    }
+
+    @Override
+    public boolean enabled() {
+        return ArcanusConfig.enableDreamWarp;
     }
 }

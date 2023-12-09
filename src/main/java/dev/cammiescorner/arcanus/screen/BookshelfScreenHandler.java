@@ -21,7 +21,7 @@ public class BookshelfScreenHandler extends AbstractContainerMenu {
     }
 
     public BookshelfScreenHandler(int syncId, Inventory playerInventory, Container inventory) {
-        super(ArcanusScreens.BOOKSHELF_SCREEN_HANDLER, syncId);
+        super(ArcanusScreens.BOOKSHELF_SCREEN_HANDLER.get(), syncId);
         checkContainerSize(inventory, 16);
         this.inventory = inventory;
         inventory.startOpen(playerInventory.player);

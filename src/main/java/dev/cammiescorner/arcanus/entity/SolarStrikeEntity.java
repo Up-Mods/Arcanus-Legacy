@@ -25,7 +25,7 @@ public class SolarStrikeEntity extends AbstractArrow {
     public final List<Entity> hasHit = new ArrayList<>();
 
     public SolarStrikeEntity(LivingEntity owner, Level world) {
-        super(ArcanusEntities.SOLAR_STRIKE, owner, world);
+        super(ArcanusEntities.SOLAR_STRIKE.get(), owner, world);
     }
 
     public SolarStrikeEntity(EntityType<? extends SolarStrikeEntity> type, Level world) {
@@ -60,7 +60,7 @@ public class SolarStrikeEntity extends AbstractArrow {
                 kill();
         } else {
             if (tickCount == 1)
-                level().playLocalSound(getX(), getY(), getZ(), ArcanusSoundEvents.SOLAR_STRIKE, SoundSource.PLAYERS, Mth.clamp(1 - (Minecraft.getInstance().player.distanceTo(this) / 256F), 0, 1), (1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F) * 0.7F, false);
+                level().playLocalSound(getX(), getY(), getZ(), ArcanusSoundEvents.SOLAR_STRIKE.get(), SoundSource.PLAYERS, Mth.clamp(1 - (Minecraft.getInstance().player.distanceTo(this) / 256F), 0, 1), (1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F) * 0.7F, false);
 
             if (tickCount >= 2 && tickCount <= 5) {
                 level().addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() + 2, getY(), getZ(), 1.0D, 0.0D, 0.0D);

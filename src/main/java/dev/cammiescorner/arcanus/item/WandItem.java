@@ -35,13 +35,13 @@ public class WandItem extends Item {
         this.maxExp = maxExp;
         this.upgrade = upgrade;
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(ArcanusEntityAttributes.MANA_COST, new AttributeModifier(MANA_COST, "Mana Cost", castingMultiplier, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        builder.put(ArcanusEntityAttributes.MANA_COST.get(), new AttributeModifier(MANA_COST, "Mana Cost", castingMultiplier, AttributeModifier.Operation.MULTIPLY_TOTAL));
         this.attributeModifiers = builder.build();
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
-        CompoundTag nbt = stack.getTagElement(Arcanus.MOD_ID);
+        CompoundTag nbt = stack.getTagElement(Arcanus.MODID);
         int xp = nbt != null ? nbt.getInt("Exp") : 0;
         tooltip.add(Component.literal(xp + "/" + getMaxExp()).append(" Exp").withStyle(ChatFormatting.DARK_AQUA));
         if (hasUpgrade()) {

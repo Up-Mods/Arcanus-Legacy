@@ -1,28 +1,17 @@
 package dev.cammiescorner.arcanus.registry;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import java.util.LinkedHashMap;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import dev.upcraft.sparkweave.api.registry.RegistryHandler;
+import dev.upcraft.sparkweave.api.registry.RegistrySupplier;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 
 public class ArcanusSoundEvents {
 
-    public static final LinkedHashMap<SoundEvent, ResourceLocation> SOUNDS = new LinkedHashMap<>();
+    public static final RegistryHandler<SoundEvent> SOUND_EVENTS = RegistryHandler.create(Registries.SOUND_EVENT, Arcanus.MODID);
 
-    public static final SoundEvent MAGIC_MISSILE = create("magic_missile");
-    public static final SoundEvent TELEKINETIC_SHOCK = create("telekinetic_shock");
-    public static final SoundEvent SOLAR_STRIKE = create("solar_strike");
-    public static final SoundEvent HEAL = create("heal");
-
-    public static void register() {
-        SOUNDS.forEach((sound, id) -> Registry.register(BuiltInRegistries.SOUND_EVENT, id, sound));
-    }
-
-    private static SoundEvent create(String name) {
-        SoundEvent sound = SoundEvent.createVariableRangeEvent(Arcanus.id(name));
-        SOUNDS.put(sound, Arcanus.id(name));
-        return sound;
-    }
+    public static final RegistrySupplier<SoundEvent> MAGIC_MISSILE = SOUND_EVENTS.register("magic_missile",()->SoundEvent.createVariableRangeEvent(Arcanus.id("magic_missile")));
+    public static final RegistrySupplier<SoundEvent> TELEKINETIC_SHOCK = SOUND_EVENTS.register("telekinetic_shock",()->SoundEvent.createVariableRangeEvent(Arcanus.id("telekinetic_shock")));
+    public static final RegistrySupplier<SoundEvent> SOLAR_STRIKE = SOUND_EVENTS.register("solar_strike",()->SoundEvent.createVariableRangeEvent(Arcanus.id("solar_strike")));
+    public static final RegistrySupplier<SoundEvent> HEAL = SOUND_EVENTS.register("heal",()->SoundEvent.createVariableRangeEvent(Arcanus.id("heal")));
 }

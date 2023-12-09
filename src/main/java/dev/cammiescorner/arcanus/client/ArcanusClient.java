@@ -56,24 +56,24 @@ public class ArcanusClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient(ModContainer mod) {
-        MenuScreens.register(ArcanusScreens.BOOKSHELF_SCREEN_HANDLER, BookshelfScreen::new);
+        MenuScreens.register(ArcanusScreens.BOOKSHELF_SCREEN_HANDLER.get(), BookshelfScreen::new);
 
-        EntityRendererRegistry.register(ArcanusEntities.SOLAR_STRIKE, SolarStrikeEntityRenderer::new);
-        EntityRendererRegistry.register(ArcanusEntities.ARCANE_BARRIER, ArcaneBarrierEntityRenderer::new);
-        EntityRendererRegistry.register(ArcanusEntities.MAGIC_MISSILE, MagicMissileEntityRenderer::new);
+        EntityRendererRegistry.register(ArcanusEntities.SOLAR_STRIKE.get(), SolarStrikeEntityRenderer::new);
+        EntityRendererRegistry.register(ArcanusEntities.ARCANE_BARRIER.get(), ArcaneBarrierEntityRenderer::new);
+        EntityRendererRegistry.register(ArcanusEntities.MAGIC_MISSILE.get(), MagicMissileEntityRenderer::new);
 
-        ParticleFactoryRegistry.getInstance().register(ArcanusParticles.MAGIC_MISSILE, MagicMissileParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(ArcanusParticles.TELEKINETIC_SHOCK, TelekineticShockParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(ArcanusParticles.HEAL, HealParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(ArcanusParticles.DISCOMBOBULATE, DiscombobulateParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ArcanusParticles.MAGIC_MISSILE.get(), MagicMissileParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ArcanusParticles.TELEKINETIC_SHOCK.get(), TelekineticShockParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ArcanusParticles.HEAL.get(), HealParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ArcanusParticles.DISCOMBOBULATE.get(), DiscombobulateParticle.Factory::new);
 
-        BlockEntityRenderers.register(ArcanusBlockEntities.DISPLAY_CASE, DisplayCaseBlockEntityRenderer::new);
-        BlockRenderLayerMap.put(RenderType.cutout(), ArcanusBlocks.DISPLAY_CASE);
+        BlockEntityRenderers.register(ArcanusBlockEntities.DISPLAY_CASE.get(), DisplayCaseBlockEntityRenderer::new);
+        BlockRenderLayerMap.put(RenderType.cutout(), ArcanusBlocks.DISPLAY_CASE.get());
 
         EventHandler.clientEvents();
 
         ItemProperties.registerGeneric(Arcanus.id("mana"), (stack, world, entity, seed) -> {
-            CompoundTag tag = stack.getTagElement(Arcanus.MOD_ID);
+            CompoundTag tag = stack.getTagElement(Arcanus.MODID);
 
             if (tag == null)
                 return 0;

@@ -20,7 +20,7 @@ public class DisplayCaseBlockEntity extends BlockEntity implements Container {
     private final NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
 
     public DisplayCaseBlockEntity(BlockPos pos, BlockState state) {
-        super(ArcanusBlockEntities.DISPLAY_CASE, pos, state);
+        super(ArcanusBlockEntities.DISPLAY_CASE.get(), pos, state);
     }
 
     @Override

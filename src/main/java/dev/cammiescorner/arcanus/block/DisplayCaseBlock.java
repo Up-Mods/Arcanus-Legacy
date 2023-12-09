@@ -1,6 +1,7 @@
 package dev.cammiescorner.arcanus.block;
 
 import dev.cammiescorner.arcanus.block.entity.DisplayCaseBlockEntity;
+import dev.upcraft.sparkweave.api.registry.block.BlockItemProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -10,6 +11,8 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -28,7 +31,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class DisplayCaseBlock extends BaseEntityBlock {
+public class DisplayCaseBlock extends BaseEntityBlock implements BlockItemProvider {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     private static final VoxelShape SHAPE = Shapes.or(
@@ -42,6 +45,11 @@ public class DisplayCaseBlock extends BaseEntityBlock {
     public DisplayCaseBlock(Properties settings) {
         super(settings);
         registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(OPEN, false));
+    }
+
+    @Override
+    public Item createItem() {
+        return new BlockItem(this, new Item.Properties());
     }
 
     @Deprecated

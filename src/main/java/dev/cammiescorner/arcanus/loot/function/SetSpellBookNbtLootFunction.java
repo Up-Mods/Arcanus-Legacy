@@ -23,7 +23,7 @@ public class SetSpellBookNbtLootFunction extends LootItemConditionalFunction {
 
     @Override
     public LootItemFunctionType getType() {
-        return ArcanusLootFunctions.SET_SPELL_BOOK_NBT;
+        return ArcanusLootFunctions.SET_SPELL_BOOK_NBT.get();
     }
 
     public static class Builder extends LootItemConditionalFunction.Builder<SetSpellBookNbtLootFunction.Builder> {

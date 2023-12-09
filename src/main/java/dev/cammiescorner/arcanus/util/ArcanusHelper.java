@@ -34,7 +34,7 @@ import static dev.cammiescorner.arcanus.registry.ArcanusEntityAttributes.*;
 
 public class ArcanusHelper {
 
-    public static final Set<Attribute> INVERSE_ENTITY_ATTRIBUTES = Set.of(MANA_COST, MANA_REGEN, BURNOUT_REGEN, MANA_LOCK);
+    public static final Set<Attribute> INVERSE_ENTITY_ATTRIBUTES = Set.of(MANA_COST.get(), MANA_REGEN.get(), BURNOUT_REGEN.get(), MANA_LOCK.get());
 
     public static HitResult raycast(Entity origin, double maxDistance, boolean hitsEntities) {
         Vec3 startPos = origin.getEyePosition(1F);
@@ -75,16 +75,16 @@ public class ArcanusHelper {
     }
 
     public static void addWandsToTab(CreativeModeTab.Output entries) {
-        ItemStack stack = new ItemStack(ArcanusItems.INITIATE_WAND);
+        ItemStack stack = new ItemStack(ArcanusItems.INITIATE_WAND.get());
         entries.accept(stack);
 
-        stack = new ItemStack(ArcanusItems.ADEPT_WAND);
-        CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
+        stack = new ItemStack(ArcanusItems.ADEPT_WAND.get());
+        CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MODID);
         tag.putInt("Exp", 3200);
         entries.accept(stack);
 
-        stack = new ItemStack(ArcanusItems.MASTER_WAND);
-        tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
+        stack = new ItemStack(ArcanusItems.MASTER_WAND.get());
+        tag = stack.getOrCreateTagElement(Arcanus.MODID);
         tag.putInt("Exp", 6400);
         entries.accept(stack);
     }

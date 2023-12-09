@@ -33,7 +33,7 @@ public class BookshelfReplacerStructureProcessor extends StructureProcessor {
             return structureInfoWorld;
 
         int bookCount = random.nextInt(5);
-        BlockState state = ArcanusBlocks.BOOKSHELF.defaultBlockState();
+        BlockState state = ArcanusBlocks.BOOKSHELF.get().defaultBlockState();
         NonNullList<ItemStack> inventory = NonNullList.withSize(16, ItemStack.EMPTY);
         CompoundTag nbt = new CompoundTag();
 
@@ -48,6 +48,6 @@ public class BookshelfReplacerStructureProcessor extends StructureProcessor {
 
     @Override
     protected StructureProcessorType<?> getType() {
-        return ArcanusStructureProcessors.BOOKSHELF_PROCESSOR;
+        return ArcanusStructureProcessors.BOOKSHELF_PROCESSOR.get();
     }
 }

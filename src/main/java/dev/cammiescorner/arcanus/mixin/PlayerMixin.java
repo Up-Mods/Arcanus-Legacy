@@ -20,6 +20,7 @@ public abstract class PlayerMixin extends LivingEntity {
 
     @ModifyReturnValue(method = "createAttributes", at = @At("RETURN"))
     private static AttributeSupplier.Builder createAttributes(AttributeSupplier.Builder builder) {
-        return builder.add(ArcanusEntityAttributes.MANA_COST).add(ArcanusEntityAttributes.MANA_REGEN).add(ArcanusEntityAttributes.BURNOUT_REGEN).add(ArcanusEntityAttributes.MANA_LOCK);
+        if (!ArcanusEntityAttributes.isInitialized()) return builder;
+        return builder.add(ArcanusEntityAttributes.MANA_COST.get()).add(ArcanusEntityAttributes.MANA_REGEN.get()).add(ArcanusEntityAttributes.BURNOUT_REGEN.get()).add(ArcanusEntityAttributes.MANA_LOCK.get());
     }
 }

@@ -5,6 +5,7 @@ import dev.cammiescorner.arcanus.registry.*;
 import dev.cammiescorner.arcanus.spell.Spell;
 import dev.cammiescorner.arcanus.util.ArcanusConfig;
 import dev.cammiescorner.arcanus.util.EventHandler;
+import dev.upcraft.sparkweave.api.registry.RegistryService;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.ChatFormatting;
@@ -24,14 +25,14 @@ import java.util.List;
 
 public class Arcanus implements ModInitializer {
 
-    public static final String MOD_ID = "arcanus";
+    public static final String MODID = "arcanus";
     public static final Logger LOGGER = LogManager.getLogger("Arcanus");
 
     public static final ResourceKey<Registry<Spell>> SPELL_KEY = ResourceKey.createRegistryKey(id("spell"));
     public static final Registry<Spell> SPELL = FabricRegistryBuilder.createSimple(SPELL_KEY).buildAndRegister();
 
     public static ResourceLocation id(String name) {
-        return new ResourceLocation(MOD_ID, name);
+        return new ResourceLocation(MODID, name);
     }
 
     public static MutableComponent translate(@Nullable String prefix, String... value) {
@@ -43,7 +44,7 @@ public class Arcanus implements ModInitializer {
     }
 
     public static String translationKey(@Nullable String prefix, String... value) {
-        String translationKey = Arcanus.MOD_ID + "." + String.join(".", value);
+        String translationKey = Arcanus.MODID + "." + String.join(".", value);
         return prefix != null ? (prefix + "." + translationKey) : translationKey;
     }
 
@@ -53,22 +54,24 @@ public class Arcanus implements ModInitializer {
 
     @Override
     public void onInitialize(ModContainer mod) {
-        MidnightConfig.init(MOD_ID, ArcanusConfig.class);
+        MidnightConfig.init(MODID, ArcanusConfig.class);
 
         ServerPlayNetworking.registerGlobalReceiver(CastSpellPacket.ID, CastSpellPacket::handle);
 
-        ArcanusBlocks.register();
-        ArcanusItems.register();
-        ArcanusBlockEntities.register();
+        RegistryService registryService = RegistryService.get();
+        ArcanusEntityAttributes.register(registryService);
+        ArcanusEntities.ENTITIES.accept(registryService);
+        ArcanusBlocks.BLOCKS.accept(registryService);
+        ArcanusItems.CREATIVE_TABS.accept(registryService);
+        ArcanusItems.ITEMS.accept(registryService);
+        ArcanusBlockEntities.BLOCK_ENTITIES.accept(registryService);
+        ArcanusParticles.PARTICLES.accept(registryService);
+        ArcanusScreens.SCREENS.accept(registryService);
+        ArcanusLootFunctions.LOOT_FUNCTIONS.accept(registryService);
+        ArcanusSoundEvents.SOUND_EVENTS.accept(registryService);
+        ArcanusStructureProcessors.STRUCTURE_PROCESSORS.accept(registryService);
+        ArcanusSpells.SPELLS.accept(registryService);
         ArcanusCommands.register();
-        ArcanusEntities.register();
-        ArcanusEntityAttributes.register();
-        ArcanusLootFunctions.register();
-        ArcanusParticles.register();
-        ArcanusScreens.register();
-        ArcanusSoundEvents.register();
-        ArcanusSpells.register();
-        ArcanusStructureProcessors.register();
 
         EventHandler.commonEvents();
 

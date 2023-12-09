@@ -8,17 +8,11 @@ import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.*;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
@@ -26,15 +20,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class ManaFlaskItem extends Item {
-    public ManaFlaskItem() {
-        super(new Item.Properties().stacksTo(1).food(new FoodProperties.Builder().alwaysEat().build()));
+
+    public ManaFlaskItem(Properties properties) {
+        super(properties);
     }
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity user) {
         if (!world.isClientSide() && user instanceof Player player) {
             MagicCaster caster = player.getComponent(ArcanusComponents.MAGIC_CASTER);
-            CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
+            CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MODID);
 
             if (player.isShiftKeyDown() && tag.getInt("Mana") < 4 && caster.getMana() >= 5) {
                 if (!player.isCreative()) {
@@ -62,7 +57,7 @@ public class ManaFlaskItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
-        CompoundTag tag = user.getItemInHand(hand).getOrCreateTagElement(Arcanus.MOD_ID);
+        CompoundTag tag = user.getItemInHand(hand).getOrCreateTagElement(Arcanus.MODID);
         MagicCaster caster = user.getComponent(ArcanusComponents.MAGIC_CASTER);
 
         tag.putBoolean("Filling", user.isShiftKeyDown() && tag.getInt("Mana") < 4 && caster.getMana() >= 5);
@@ -76,13 +71,13 @@ public class ManaFlaskItem extends Item {
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        int mana = stack.getOrCreateTagElement(Arcanus.MOD_ID).getInt("Mana");
+        int mana = stack.getOrCreateTagElement(Arcanus.MODID).getInt("Mana");
         return mana > 0;
     }
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        int mana = stack.getOrCreateTagElement(Arcanus.MOD_ID).getInt("Mana");
+        int mana = stack.getOrCreateTagElement(Arcanus.MODID).getInt("Mana");
         return Math.round((mana * 13F) / 4F);
     }
 
@@ -93,13 +88,13 @@ public class ManaFlaskItem extends Item {
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
-        CompoundTag tag = stack.getTagElement(Arcanus.MOD_ID);
+        CompoundTag tag = stack.getTagElement(Arcanus.MODID);
         return tag == null || tag.getBoolean("Filling") ? UseAnim.BOW : UseAnim.DRINK;
     }
 
     @Override
     public String getDescriptionId(ItemStack stack) {
-        CompoundTag tag = stack.getTagElement(Arcanus.MOD_ID);
+        CompoundTag tag = stack.getTagElement(Arcanus.MODID);
 
         if (tag == null || tag.getInt("Mana") <= 0) {
             return Util.makeDescriptionId("item", BuiltInRegistries.ITEM.getKey(this)) + "_empty";
