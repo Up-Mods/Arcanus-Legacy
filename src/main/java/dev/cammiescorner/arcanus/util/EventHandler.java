@@ -140,19 +140,18 @@ public class EventHandler {
     //TODO make tag-like thing
     public static void addStructureProcessors(Registry<StructureTemplatePool> templatePoolRegistry) {
         templatePoolRegistry.forEach(pool -> pool.templates.forEach(element -> {
-            if (element instanceof SinglePoolElement singleElement && singleElement.template.left().isPresent()) {
-                String currentElement = singleElement.template.left().get().toString();
+            if (element instanceof SinglePoolElement singleElement) {
                 StructureProcessorList originalProcessorList = singleElement.processors.value();
                 List<StructureProcessor> mutableProcessorList = new ArrayList<>(originalProcessorList.list());
+
+                String currentElement = singleElement.template.left().map(ResourceLocation::toString).orElse("");
 
                 if (ArcanusConfig.doLecternProcessor && !ArcanusConfig.excludeStructuresWithLecterns.contains(currentElement))
                     mutableProcessorList.add(LecternStructureProcessor.INSTANCE);
                 if (ArcanusConfig.doBookshelfProcessor && !ArcanusConfig.excludeStructuresWithBookshelves.contains(currentElement))
                     mutableProcessorList.add(BookshelfReplacerStructureProcessor.INSTANCE);
 
-                StructureProcessorList newProcessorList = new StructureProcessorList(mutableProcessorList);
-
-                singleElement.processors = Holder.direct(newProcessorList);
+                singleElement.processors = Holder.direct(new StructureProcessorList(mutableProcessorList));
             }
         }));
     }

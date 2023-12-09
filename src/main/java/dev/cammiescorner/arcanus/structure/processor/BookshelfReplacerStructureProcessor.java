@@ -29,7 +29,7 @@ public class BookshelfReplacerStructureProcessor extends StructureProcessor {
     public StructureTemplate.StructureBlockInfo processBlock(LevelReader world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo structureInfoLocal, StructureTemplate.StructureBlockInfo structureInfoWorld, StructurePlaceSettings data) {
         RandomSource random = data.getRandom(structureInfoWorld.pos());
 
-        if (!structureInfoWorld.state().is(Blocks.BOOKSHELF) || random.nextInt(5) > 0)
+        if (!structureInfoWorld.state().is(Blocks.BOOKSHELF) || random.nextFloat() < 0.8F)
             return structureInfoWorld;
 
         int bookCount = random.nextInt(5);
