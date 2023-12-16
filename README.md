@@ -1,13 +1,15 @@
 # **Arcanus**
 
 <p align="center">
-<a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api"><img src="https://i.imgur.com/Ol1Tcf8.png" width="215" height="72" title="Fabric API" alt="Fabric API"></a>
+<a href="https://www.curseforge.com/minecraft/mc-mods/qsl"><img src="https://raw.githubusercontent.com/intergrav/devins-badges/v3/assets/cozy/requires/quilt-standard-libraries_64h.png" width="311" height="64" title="Quilt Standard Libraries" alt="Quilt Standard Libraries"></a>
 </p>
+
 
 ---
 
 Arcanus is a small mod with a magic system inspired by Wynncraft and Electroblob's Wizardry, along with new trinkets, structures, and threats sometime Soon<sup>TM</sup> in future updates.
 <br>
+
 <details>
     <summary>Quick Start Guide</summary>
 
