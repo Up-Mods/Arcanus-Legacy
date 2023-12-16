@@ -10,18 +10,31 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.Nullable;
 
 public class SpellBooks {
+
+    /**
+     * value used in recipe outputs to create a spell book
+     */
+    public static final String RECIPE_IDENTIFIER = Arcanus.id("spell_book").toString();
     private static final int MAX_AUTHORS = 21;
 
     public static ItemStack getSpellBook(ItemStack stack, Spell spell, RandomSource random) {
-        int randInt = random.nextInt(MAX_AUTHORS);
-        String number = randInt < 10 ? "0" + randInt : String.valueOf(randInt);
+        return getSpellBookWithAuthor(stack, spell, getAuthorKey(random.nextInt(MAX_AUTHORS)));
+    }
+
+    public static String getAuthorKey(int index) {
+        return Arcanus.translationKey("book", String.format("%02d", index), "author");
+    }
+
+    public static ItemStack getSpellBookWithAuthor(ItemStack stack, Spell spell, @Nullable String authorKey) {
         CompoundTag tag = stack.getOrCreateTag();
         ListTag listTag = tag.getList("pages", Tag.TAG_STRING);
 
         tag.putString("title", Arcanus.SPELL.getKey(spell).toLanguageKey("book", "title").replace('/', '.'));
-        tag.putString("author", Arcanus.translationKey("book", number, "author"));
+        if (authorKey != null)
+            tag.putString("author", authorKey);
         tag.putString("spell", Arcanus.SPELL.getKey(spell).toString());
         listTag.add(StringTag.valueOf(Component.Serializer.toJson(Component.translatable(Arcanus.SPELL.getKey(spell).toLanguageKey("book", "description").replace('/', '.'))
                 .append(Arcanus.translate("book", "casting_pattern"))
@@ -35,6 +48,12 @@ public class SpellBooks {
         ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
 
         return SpellBooks.getSpellBook(stack, spell, random);
+    }
+
+    public static ItemStack getSpellBookWithAuthor(Spell spell, String authorKey) {
+        ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
+
+        return SpellBooks.getSpellBookWithAuthor(stack, spell, authorKey);
     }
 
     public static ItemStack getRandomSpellBook(ItemStack stack, RandomSource random) {
