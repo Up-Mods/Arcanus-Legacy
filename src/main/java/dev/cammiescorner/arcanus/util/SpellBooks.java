@@ -18,7 +18,7 @@ public class SpellBooks {
      * value used in recipe outputs to create a spell book
      */
     public static final String RECIPE_IDENTIFIER = Arcanus.id("spell_book").toString();
-    private static final int MAX_AUTHORS = 21;
+    private static final int MAX_AUTHORS = 22;
 
     public static ItemStack getSpellBook(ItemStack stack, Spell spell, RandomSource random) {
         return getSpellBookWithAuthor(stack, spell, getAuthorKey(random.nextInt(MAX_AUTHORS)));
