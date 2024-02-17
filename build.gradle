@@ -15,7 +15,7 @@ boolean isPreviewBuild = !ENV.TAG || ENV.TAG.matches(".+-.+")
 def buildNumber = !ENV.TAG ? ("${ENV.BUILD_NUMBER ? "build.${ENV.BUILD_NUMBER}" : buildTime}-${libs.versions.minecraft.get()}") : ""
 version = (ENV.TAG ?: "development") + ((isPreviewBuild && !ENV.TAG) ? "+${buildNumber}" : "")
 
-// messy workaround for bug in quilt loom 1.3.3
+// messy workaround for bug in quilt loom 1.3.3+
 project.configurations.configureEach {
     exclude(group: "net.fabricmc", module: "fabric-loader")
     exclude(group: "net.fabricmc.fabric-api")
@@ -75,7 +75,13 @@ dependencies {
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/arcanus.accesswidener")
+    mods {
+        "arcanus" {
+            // Tell Loom about each source set used by your mod here. This ensures that your mod's classes are properly transformed by Loader.
+            sourceSet("main")
+        }
+    }
+    accessWidenerPath.set(file("src/main/resources/arcanus.accesswidener"))
 }
 
 processResources {
