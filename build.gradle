@@ -61,10 +61,6 @@ dependencies {
 
     modImplementation libs.midnightlib
 
-    include libs.mixinextras
-    implementation libs.mixinextras
-    annotationProcessor libs.mixinextras
-
     modImplementation libs.bundles.cca
 
     modImplementation(libs.sparkweave) {
