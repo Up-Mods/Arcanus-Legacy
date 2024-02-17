@@ -25,7 +25,7 @@ midnightlib = { module = "maven.modrinth:midnightlib", version.ref = "midnightli
 mixinextras = { module = "io.github.llamalad7:mixinextras-fabric", version.ref = "mixinextras" }
 cca_base = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-base", version.ref = "cca" }
 cca_entity = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-entity", version.ref = "cca" }
-sparkweave = { module = "dev.upcraft:Sparkweave", version.ref = "sparkweave" }
+sparkweave = { module = "dev.upcraft.sparkweave:Sparkweave-Quilt", version.ref = "sparkweave" }
 
 modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
 lazydfu = { module = "maven.modrinth:lazydfu", version.ref = "lazydfu" }
